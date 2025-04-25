@@ -1,0 +1,9 @@
+[versions]
+paper-api = "1.21.4-R0.1-SNAPSHOT"
+
+shadow = "8.1.8"
+paperweight-userdev = "2.0.0-beta.16"
+
+[plugins]
+shadow = { id = "io.github.goooler.shadow", version.ref = "shadow" }
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight-userdev" }
