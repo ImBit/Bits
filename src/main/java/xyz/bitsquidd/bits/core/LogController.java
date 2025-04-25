@@ -39,7 +39,7 @@ public class LogController {
     }
 
     public static void debug(String message) {
-
+        bukkitLogger.info("[" + LogType.DEBUG.prefix + "] "+ message);
     }
 
     public static void info(String message) {
@@ -47,15 +47,15 @@ public class LogController {
     }
 
     public static void warning(String message) {
-
+        bukkitLogger.info("[" + LogType.WARNING.prefix + "] "+ message);
     }
 
     public static void error(String message) {
-
+        bukkitLogger.info("[" + LogType.ERROR.prefix + "] "+ message);
     }
 
     public static void critical(String message) {
-
+        bukkitLogger.info("[" + LogType.CRITICAL.prefix + "] "+ message);
     }
 
 
