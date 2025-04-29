@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command;
+package xyz.bitsquidd.bits.lib.command.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 public @interface Command {
     String name();
     String description() default "";
-    String permission() default "";
-    String permissionMessage() default "You don't have permission to use this command.";
     String[] aliases() default {};
-    String usage() default "";
+    String permission() default ""; // Added permission attribute
     boolean playerOnly() default false;
+    boolean hidden() default false;
+    String parent() default "";
 }
