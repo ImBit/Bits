@@ -2,7 +2,8 @@ package xyz.bitsquidd.bits.lib.command.examples;
 
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.core.LogController;
-import xyz.bitsquidd.bits.lib.command.CommandContextNew;
+import xyz.bitsquidd.bits.lib.command.CommandArgumentInfo;
+import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.CommandPathNew;
 import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
 
@@ -39,50 +40,80 @@ public abstract class AbstractCommandNew {
 
     public abstract void initialisePaths();
 
-    public boolean execute(CommandContextNew commandContextNew) {
+    public boolean execute(CommandContext commandContext) {
         try {
-            executeCommand(commandContextNew);
+            executeCommand(commandContext);
             return true;
         } catch (Exception e) {
-            commandContextNew.sender.sendMessage("An unexpected error occurred: " + e.getMessage());
+            commandContext.sender.sendMessage("An unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
 
-    private void executeCommand(CommandContextNew commandContextNew) {
+    private void executeCommand(CommandContext commandContext) {
         try {
-            for (CommandPathNew path : getValidPaths(commandContextNew)) {
-                path.execute(commandContextNew);
+            for (CommandPathNew path : getValidPaths(commandContext)) {
+                path.execute(commandContext);
             }
             return;
         } catch (Exception e) {
-            commandContextNew.sender.sendMessage("Error executing command: " + e.getMessage());
+            commandContext.sender.sendMessage("Error executing command: " + e.getMessage());
             e.printStackTrace();
         }
 
         // No path matched
-        showUsage(commandContextNew);
+        showUsage(commandContext);
     }
 
-    public List<String> tabComplete(@NotNull CommandContextNew commandContextNew) {
+    public List<String> tabComplete(@NotNull CommandContext commandContext) {
         List<String> availableCompletions = new ArrayList<>();
 
-        LogController.warning(getValidPaths(commandContextNew) + "");
-        for (CommandPathNew path : getValidPaths(commandContextNew)) {
-            availableCompletions.addAll(path.tabComplete(commandContextNew));
+        LogController.warning(getValidPaths(commandContext) + "");
+        for (CommandPathNew path : getValidPaths(commandContext)) {
+            availableCompletions.addAll(path.tabComplete(commandContext));
         }
 
         return availableCompletions;
     }
 
-    private Set<CommandPathNew> getValidPaths(CommandContextNew commandContextNew) {
+    private Set<CommandPathNew> getValidPaths(CommandContext commandContext) {
         return paths.stream()
-                .filter(path -> path.matchesPartial(commandContextNew))
+                .filter(path -> path.matchesPartial(commandContext))
                 .collect(Collectors.toSet());
     }
 
-    private void showUsage(CommandContextNew commandContextNew) {
-        commandContextNew.sender.sendMessage("USAGE HERE!");
+    // Add to AbstractCommandNew
+    private void showUsage(CommandContext commandContext) {
+        commandContext.sender.sendMessage("§6=== " + name + " Command Help ===");
+
+        List<CommandPathNew> availablePaths = paths.stream()
+                .filter(path -> hasPermissions(commandContext, path.permission))
+                .toList();
+
+        if (availablePaths.isEmpty()) {
+            commandContext.sender.sendMessage("§cYou don't have permission to use this command.");
+            return;
+        }
+
+        for (CommandPathNew path : availablePaths) {
+            StringBuilder usage = new StringBuilder("§e/" + name + " ");
+            StringBuilder params = new StringBuilder();
+
+            for (CommandArgumentInfo arg : path.params) {
+                params.append("<").append(arg.name).append(": ").append(arg.param.getTypeName()).append("> ");
+            }
+
+            usage.append(params);
+            commandContext.sender.sendMessage(usage + "§7- " + path.description);
+        }
+    }
+
+    public boolean hasPermissions(CommandContext commandContext, String permission) {
+        if (permission == null || permission.isEmpty()) {
+            return true;
+        }
+
+        return commandContext.sender.hasPermission(permission);
     }
 }

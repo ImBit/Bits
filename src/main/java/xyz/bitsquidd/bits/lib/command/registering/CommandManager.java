@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandManagerNew {
+public class CommandManager {
     private static Plugin plugin;
     private static CommandMap commandMap;
 
     private static final Map<String, AbstractCommandNew> commands = new HashMap<>();
 
     public static void initialise(Plugin plugin) {
-        CommandManagerNew.plugin = plugin;
+        CommandManager.plugin = plugin;
         try {
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);

@@ -2,8 +2,8 @@ package xyz.bitsquidd.bits;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.bitsquidd.bits.core.LogController;
-import xyz.bitsquidd.bits.lib.command.examples.TeleportCommandNew;
-import xyz.bitsquidd.bits.lib.command.registering.CommandManagerNew;
+import xyz.bitsquidd.bits.lib.command.examples.TeleportCommand;
+import xyz.bitsquidd.bits.lib.command.registering.CommandManager;
 
 // TODO:
 //  BitsConfig.DEBUGMODE
@@ -18,19 +18,15 @@ public class Bits extends JavaPlugin {
 
     @Override
     public void onEnable() {
-//        CommandManager.initialise(this);
-//        CommandManager.register(new TeleportCommand());
-//        CommandManager.register(new GameModeCommand());
-
-        CommandManagerNew.initialise(this);
-        CommandManagerNew.register(new TeleportCommandNew());
+        CommandManager.initialise(this);
+        CommandManager.register(new TeleportCommand());
 
         LogController.success("Enabled " + getName());
     }
 
     @Override
     public void onDisable() {
-        CommandManagerNew.unregisterAll();
+        CommandManager.unregisterAll();
 
         LogController.success("Disabled " + getName());
     }

@@ -1,0 +1,97 @@
+package xyz.bitsquidd.bits.lib.command.params;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import xyz.bitsquidd.bits.core.LogController;
+import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class LocationArgument implements CommandArgument<Location> {
+    public static final LocationArgument INSTANCE = new LocationArgument();
+
+    @Override
+    public String getTypeName() {
+        return "location";
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 3;
+    }
+
+    @Override
+    public Location parse(CommandContext context, int startIndex) throws ArgumentParseException {
+        try {
+            double x = parseCoordinate(context.args[startIndex]);
+            double y = parseCoordinate(context.args[startIndex + 1]);
+            double z = parseCoordinate(context.args[startIndex + 2]);
+
+            World world = context.getWorld();
+            if (world == null) {
+                throw new ArgumentParseException("Cannot parse location: no world specified");
+            }
+
+            return new Location(world, x, y, z);
+        } catch (NumberFormatException e) {
+            throw new ArgumentParseException("Invalid coordinate format: " + e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ArgumentParseException("Not enough coordinates provided");
+        }
+    }
+
+    @Override
+    public boolean canParseArg(CommandContext context, int argIndex) {
+        if (argIndex >= context.args.length) {
+            return false;
+        }
+
+        try {
+            parseCoordinate(context.args[argIndex]);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public List<String> tabComplete(CommandContext context, int startIndex) {
+        int relativeArgIndex = context.getArgLength()-1-startIndex;
+        LogController.warning(Arrays.toString(context.args) + "  " +relativeArgIndex);
+
+        return suggestCoordinate(context.getLastArg(), relativeArgIndex);
+    }
+
+    private double parseCoordinate(String input) {
+        if (input.startsWith("~")) {
+            if (input.length() == 1) {
+                return 0;
+            }
+            return Double.parseDouble(input.substring(1));
+        }
+        return Double.parseDouble(input);
+    }
+
+    private List<String> suggestCoordinate(String prefix, double baseValue) {
+        if (prefix.startsWith("~")) {
+            return List.of(prefix);
+        }
+
+        List<String> suggestions = new ArrayList<>(List.of(prefix));
+
+        if (baseValue <=0) {
+            suggestions.add("~ ~ ~");
+        }
+        if (baseValue <=1) {
+            suggestions.add("~ ~");
+        }
+        if (baseValue <=2) {
+            suggestions.add("~");
+        }
+
+        return suggestions;
+    }
+}

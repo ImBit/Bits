@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandContextNew {
+public class CommandContext {
     public final @NotNull CommandSender sender;
     public final @NotNull String[] args;
 
     private final @NotNull Map<String, Object> params = new HashMap<>();
 
-    public CommandContextNew(@NotNull CommandSender sender, @NotNull String[] args) {
+    public CommandContext(@NotNull CommandSender sender, @NotNull String[] args) {
         this.sender = sender;
         this.args = args;
     }
@@ -49,14 +50,23 @@ public class CommandContextNew {
         return (T) params.get(name);
     }
 
-
-
     // Helpers for parsers:
-    public World getWorld() {
-        if (sender instanceof Player player) {
-            return player.getWorld();
+    public boolean isPlayer() {
+        return sender instanceof Player;
+    }
+
+    public @NotNull Location getLocation() {
+        if (isPlayer()) {
+            return ((Player)sender).getLocation();
         } else {
-            return Bukkit.getWorld("world");
+            return new Location(getWorld(), 0,0,0); //TODO error
+        }
+    }
+    public @NotNull World getWorld() {
+        if (isPlayer()) {
+            return ((Player)sender).getWorld();
+        } else {
+            return Bukkit.getWorld("world"); //TODO error
         }
     }
 }

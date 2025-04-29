@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
-import xyz.bitsquidd.bits.lib.command.CommandContextNew;
+import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.examples.AbstractCommandNew;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class BukkitCommand extends Command implements CommandExecutor, TabComple
         
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            return command.execute(new CommandContextNew(sender, args));
+            return command.execute(new CommandContext(sender, args));
         }
         
         @Override
@@ -34,7 +34,7 @@ public class BukkitCommand extends Command implements CommandExecutor, TabComple
         
         @Override
         public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) {
-            return command.tabComplete(new CommandContextNew(sender, args));
+            return command.tabComplete(new CommandContext(sender, args));
         }
         
         @Override

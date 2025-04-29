@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.core.LogController;
-import xyz.bitsquidd.bits.lib.command.exceptions.ParamParseException;
+import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.List;
 
@@ -10,50 +10,49 @@ import java.util.List;
 public class CommandPathNew {
     public final String name;
     public final String description;
-    public final List<String> permissions;
+    public final String permission;
 
-    public final List<CommandParamInfo> params;
-    public final CommandHandlerNew handler;
+    public final List<CommandArgumentInfo> params;
+    public final CommandHandler handler;
 
-    public CommandPathNew(String name, String description, List<String> permissions, List<CommandParamInfo> params, CommandHandlerNew handler) {
+    public CommandPathNew(String name, String description, String permission, List<CommandArgumentInfo> params, CommandHandler handler) {
         this.name = name;
         this.description = description;
-        this.permissions = permissions;
+        this.permission = permission;
         this.params = params;
         this.handler = handler;
     }
 
 
-    public boolean matchesPartial(CommandContextNew commandContextNew) {
-        if (commandContextNew.args.length > getArgLength()) {
+    public boolean matchesPartial(CommandContext commandContext) {
+        if (commandContext.args.length > getArgLength()) {
             LogController.warning("EXIT 1");
             return false;
         }
 
-        for (int i = 0; i < commandContextNew.args.length; i++) {
-            CommandParamInfo commandParamInfo = getCommandParamAtIndex(i);
-            LogController.warning(commandParamInfo.name);
-            if (!commandContextNew.getArg(i).isEmpty() && !commandParamInfo.param.canParseArg(commandContextNew, i)) {
-                LogController.warning("EXIT 2");
+        for (int i = 0; i < commandContext.args.length; i++) {
+            CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(i);
+            if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
+                LogController.warning("EXIT 2   " + commandArgumentInfo.name + " " + commandContext.getArg(i) + "  " + i);
                 return false;
             }
         }
 
         return true;
     }
-    public boolean matchesFully(CommandContextNew commandContextNew) {
-        int argLength = commandContextNew.getArgLength();
+    public boolean matchesFully(CommandContext commandContext) {
+        int argLength = commandContext.getArgLength();
 
         if (argLength != getArgLength()) {
             return false;
         }
 
         int argIndex = 0;
-        for (CommandParamInfo commandParamInfo : params) {
-            if (!commandParamInfo.param.canParseFull(commandContextNew, argIndex)) {
+        for (CommandArgumentInfo commandArgumentInfo : params) {
+            if (!commandArgumentInfo.param.canParseFull(commandContext, argIndex)) {
                 return false;
             }
-            argIndex += commandParamInfo.param.getRequiredArgs();
+            argIndex += commandArgumentInfo.param.getRequiredArgs();
         }
 
         return true;
@@ -61,43 +60,54 @@ public class CommandPathNew {
 
     public int getArgLength() {
         int argLength = 0;
-        for (CommandParamInfo commandParamInfo : params) {
-            argLength += commandParamInfo.param.getRequiredArgs();
+        for (CommandArgumentInfo commandArgumentInfo : params) {
+            argLength += commandArgumentInfo.param.getRequiredArgs();
         }
 
         return argLength;
     }
 
-    private @NotNull CommandParamInfo getCommandParamAtIndex(int index) {
-        int argIndex = 0;
-        for (CommandParamInfo commandParamInfo : params) {
-            argIndex += commandParamInfo.param.getRequiredArgs();
-            if (argIndex >= index) {
-                return commandParamInfo;
+    private @NotNull CommandArgumentInfo getCommandParamAtIndex(int index) {
+        for (CommandArgumentInfo commandArgumentInfo : params) {
+            if (index < commandArgumentInfo.param.getRequiredArgs()) {
+                return commandArgumentInfo;
             }
+            index -= commandArgumentInfo.param.getRequiredArgs();
         }
+
         //TODO error here
         return null;
     }
+    private int getCommandParamIndex(CommandArgumentInfo commandArgumentInfo) {
+        int argIndex = 0;
+        for (CommandArgumentInfo param : params) {
+            if (param.equals(commandArgumentInfo)) {
+                return argIndex;
+            }
+            argIndex += param.param.getRequiredArgs();
+        }
+        //TODO error here
+        return -1;
+    }
 
-    public void execute(CommandContextNew commandContextNew) {
+    public void execute(CommandContext commandContext) {
         int argIndex = 0;
 
         try {
-            for (CommandParamInfo commandParamInfo : params) {
-                commandContextNew.set(commandParamInfo.name, commandParamInfo.param.parse(commandContextNew, argIndex));
-                argIndex += commandParamInfo.param.getRequiredArgs();
+            for (CommandArgumentInfo commandArgumentInfo : params) {
+                commandContext.set(commandArgumentInfo.name, commandArgumentInfo.param.parse(commandContext, argIndex));
+                argIndex += commandArgumentInfo.param.getRequiredArgs();
             }
-        } catch (ParamParseException e) {
+        } catch (ArgumentParseException e) {
             LogController.error("Command Parsing Exception: " + e.getMessage());
             return;
         }
 
-        handler.execute(commandContextNew);
+        handler.execute(commandContext);
     }
 
-    public List<String> tabComplete(@NotNull CommandContextNew commandContextNew) {
-        CommandParamInfo commandParamInfo = getCommandParamAtIndex(commandContextNew.getArgLength());
-        return commandParamInfo.param.tabComplete(commandContextNew);
+    public List<String> tabComplete(@NotNull CommandContext commandContext) {
+        CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
+        return commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo));
     }
 }
