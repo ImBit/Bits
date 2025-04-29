@@ -6,19 +6,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.examples.AbstractCommandNew;
+import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 
 import java.util.List;
 
 public class BukkitCommand extends Command implements CommandExecutor, TabCompleter {
-        private final AbstractCommandNew command;
+        private final AbstractCommand command;
         
-        public BukkitCommand(String name, String description, String usageMessage, List<String> aliases, AbstractCommandNew command) {
+        public BukkitCommand(String name, String description, String usageMessage, List<String> aliases, AbstractCommand command) {
             super(name, description, usageMessage, aliases);
             this.command = command;
             
-            if (command.permissions != null && !command.permissions.isEmpty()) {
-                setPermission(command.permissions);
+            if (command.commandPermission != null && !command.commandPermission.isEmpty()) {
+                setPermission(command.commandPermission);
             }
         }
         

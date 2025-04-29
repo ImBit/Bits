@@ -1,10 +1,6 @@
-package xyz.bitsquidd.bits.lib.command.examples;
+package xyz.bitsquidd.bits.lib.command;
 
 import org.jetbrains.annotations.NotNull;
-import xyz.bitsquidd.bits.core.LogController;
-import xyz.bitsquidd.bits.lib.command.CommandArgumentInfo;
-import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.CommandPathNew;
 import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
 
 import java.util.ArrayList;
@@ -12,15 +8,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCommandNew {
-    private final List<CommandPathNew> paths = new ArrayList<>();
+public abstract class AbstractCommand {
+    private final List<CommandPath> paths = new ArrayList<>();
 
-    public final String name;
-    public final String[] aliases;
-    public final String description;
-    public final String permissions;
+    public final @NotNull String name;
+    public final @NotNull String[] aliases;
+    public final @NotNull String description;
+    public final @NotNull String commandPermission;
 
-    public AbstractCommandNew() {
+    public AbstractCommand() {
         CommandNew annotation = getClass().getAnnotation(CommandNew.class);
         if (annotation == null) {
             throw new IllegalStateException("Command classes must have the @Command annotation");
@@ -29,20 +25,27 @@ public abstract class AbstractCommandNew {
         this.name = annotation.name();
         this.aliases = annotation.aliases();
         this.description = annotation.description();
-        this.permissions = annotation.permission();
+        this.commandPermission = annotation.permission();
 
         initialisePaths();
     }
 
-    public void addPath(CommandPathNew commandPathNew) {
-        paths.add(commandPathNew);
+    public void addPath(CommandPath commandPath) {
+        paths.add(commandPath);
     }
 
     public abstract void initialisePaths();
 
+    public boolean defaultExecute(CommandContext commandContext) {
+        // Executes every time this command is called, even if there are no args.
+        return false;
+    }
+
     public boolean execute(CommandContext commandContext) {
         try {
-            executeCommand(commandContext);
+            if (hasPermission(commandContext)) {
+                executeCommand(commandContext);
+            }
             return true;
         } catch (Exception e) {
             commandContext.sender.sendMessage("An unexpected error occurred: " + e.getMessage());
@@ -52,25 +55,31 @@ public abstract class AbstractCommandNew {
     }
 
     private void executeCommand(CommandContext commandContext) {
+        boolean hasExecutedPath = false;
+
         try {
-            for (CommandPathNew path : getValidPaths(commandContext)) {
-                path.execute(commandContext);
+            hasExecutedPath = hasExecutedPath || defaultExecute(commandContext);
+
+            if (!commandContext.isEmpty()) {
+                for (CommandPath path : getValidPaths(commandContext)) {
+                    hasExecutedPath = hasExecutedPath || path.execute(commandContext);
+                }
             }
-            return;
         } catch (Exception e) {
             commandContext.sender.sendMessage("Error executing command: " + e.getMessage());
             e.printStackTrace();
+            hasExecutedPath = false;
         }
 
-        // No path matched
-        showUsage(commandContext);
+        if (!hasExecutedPath) {
+            showUsage(commandContext);
+        }
     }
 
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
         List<String> availableCompletions = new ArrayList<>();
 
-        LogController.warning(getValidPaths(commandContext) + "");
-        for (CommandPathNew path : getValidPaths(commandContext)) {
+        for (CommandPath path : getValidPaths(commandContext)) {
             availableCompletions.addAll(path.tabComplete(commandContext));
         }
 
@@ -82,18 +91,17 @@ public abstract class AbstractCommandNew {
         return availableCompletions;
     }
 
-    private Set<CommandPathNew> getValidPaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidPaths(CommandContext commandContext) {
         return paths.stream()
                 .filter(path -> path.matchesPartial(commandContext))
                 .collect(Collectors.toSet());
     }
 
-    // Add to AbstractCommandNew
     private void showUsage(CommandContext commandContext) {
         commandContext.sender.sendMessage("§6=== " + name + " Command Help ===");
 
-        List<CommandPathNew> availablePaths = paths.stream()
-                .filter(path -> hasPermissions(commandContext, path.permission))
+        List<CommandPath> availablePaths = paths.stream()
+                .filter(path -> path.hasPermissions(commandContext))
                 .toList();
 
         if (availablePaths.isEmpty()) {
@@ -101,12 +109,12 @@ public abstract class AbstractCommandNew {
             return;
         }
 
-        for (CommandPathNew path : availablePaths) {
+        for (CommandPath path : availablePaths) {
             StringBuilder usage = new StringBuilder("§e/" + name + " ");
             StringBuilder params = new StringBuilder();
 
-            for (CommandArgumentInfo arg : path.params) {
-                params.append("<").append(arg.name).append(": ").append(arg.param.getTypeName()).append("> ");
+            for (CommandArgumentInfo arg : path.getParams()) {
+                params.append("<").append(arg.name).append(" : ").append(arg.param.getTypeName()).append("> ");
             }
 
             usage.append(params);
@@ -114,11 +122,10 @@ public abstract class AbstractCommandNew {
         }
     }
 
-    public boolean hasPermissions(CommandContext commandContext, String permission) {
-        if (permission == null || permission.isEmpty()) {
+    private boolean hasPermission(CommandContext commandContext) {
+        if (commandPermission.isEmpty()) {
             return true;
         }
-
-        return commandContext.sender.hasPermission(permission);
+        return commandContext.sender.hasPermission(commandPermission);
     }
 }

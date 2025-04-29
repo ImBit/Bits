@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.bitsquidd.bits.core.LogController;
+import xyz.bitsquidd.bits.lib.command.examples.ClearAllCommandsCommand;
 import xyz.bitsquidd.bits.lib.command.examples.TeleportCommand;
 import xyz.bitsquidd.bits.lib.command.registering.CommandManager;
 
@@ -20,6 +21,7 @@ public class Bits extends JavaPlugin {
     public void onEnable() {
         CommandManager.initialise(this);
         CommandManager.register(new TeleportCommand());
+        CommandManager.register(new ClearAllCommandsCommand());
 
         LogController.success("Enabled " + getName());
     }

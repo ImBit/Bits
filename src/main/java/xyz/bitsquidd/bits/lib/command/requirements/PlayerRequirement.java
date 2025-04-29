@@ -5,14 +5,16 @@ import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
 public class PlayerRequirement implements CommandRequirement {
+    public static final PlayerRequirement INSTANCE = new PlayerRequirement();
+
 
     @Override
-    public boolean check(CommandContext context, String[] args) {
+    public boolean check(CommandContext context) {
         return context.sender instanceof Player;
     }
 
     @Override
-    public String getFailMessage(CommandContext context, String[] args) {
+    public String getFailMessage(CommandContext context) {
         return "You must be a player to execute this command.";
     }
 }

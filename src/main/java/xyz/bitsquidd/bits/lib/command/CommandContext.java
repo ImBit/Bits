@@ -22,18 +22,16 @@ public class CommandContext {
     }
 
 
-    // Arg handling - these are the arguments passed to the command
+    // Vanilla Arg handling - these are the arguments passed to the command
     public @NotNull String getArg(int index) {
         if (index < 0 || index >= args.length) {
-            // TODO error?
-            return "ERROR_ARG";
+            return "";
         }
         return args[index];
     }
     public @NotNull String getLastArg() {
         if (args.length == 0) {
-            // TODO error?
-            return "ERROR_ARG";
+            return "";
         }
         return args[args.length - 1];
     }
@@ -41,16 +39,27 @@ public class CommandContext {
         return args.length;
     }
 
-    // Parameter handling - these are the parameters parsed from the command
+
+    // Argument handling - these are the parameters parsed from the command
     public void set(String name, Object value) {
         params.put(name, value);
     }
+
+    @SuppressWarnings("unchecked")
     public @NotNull <T> T get(String name) {
-        // TODO: error if doesnt exist
-        return (T) params.get(name);
+        if (params.get(name) == null) {
+            throw new IllegalArgumentException("Parameter " + name + " not found");
+        } else {
+            return (T) params.get(name);
+        }
     }
 
+
     // Helpers for parsers:
+    public boolean isEmpty() {
+        return args.length == 0 || args[0].isEmpty();
+    }
+
     public boolean isPlayer() {
         return sender instanceof Player;
     }
@@ -59,14 +68,20 @@ public class CommandContext {
         if (isPlayer()) {
             return ((Player)sender).getLocation();
         } else {
-            return new Location(getWorld(), 0,0,0); //TODO error
+            return new Location(getWorld(), 0,0,0);
         }
     }
+
     public @NotNull World getWorld() {
         if (isPlayer()) {
             return ((Player)sender).getWorld();
         } else {
-            return Bukkit.getWorld("world"); //TODO error
+            World world = Bukkit.getWorld("world");
+            if (world == null) {
+                throw new IllegalArgumentException("Default world: `world` not found");
+            } else {
+                return world;
+            }
         }
     }
 }

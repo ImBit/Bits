@@ -14,7 +14,7 @@ public interface CommandArgument<T> {
         return 1;
     }
     default List<String> tabComplete(CommandContext context, int startIndex) {
-        return List.of("HI"+context.getArgLength());
+        return List.of("");
     }
 
     default boolean canParseFull(CommandContext context, int startIndex) {

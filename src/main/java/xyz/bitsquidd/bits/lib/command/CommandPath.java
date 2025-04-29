@@ -3,22 +3,23 @@ package xyz.bitsquidd.bits.lib.command;
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.core.LogController;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
+import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 
 import java.util.List;
 
 // Sub-command paths.
-public class CommandPathNew {
-    public final String name;
-    public final String description;
-    public final String permission;
+public class CommandPath {
+    public final @NotNull String name;
+    public final @NotNull String description;
 
-    public final List<CommandArgumentInfo> params;
-    public final CommandHandler handler;
+    private final @NotNull List<CommandRequirement> requirements;
+    private final @NotNull List<CommandArgumentInfo> params;
+    private final @NotNull CommandHandler handler;
 
-    public CommandPathNew(String name, String description, String permission, List<CommandArgumentInfo> params, CommandHandler handler) {
+    public CommandPath(@NotNull String name, @NotNull String description, @NotNull List<CommandRequirement> requirements, @NotNull List<CommandArgumentInfo> params, @NotNull CommandHandler handler) {
         this.name = name;
         this.description = description;
-        this.permission = permission;
+        this.requirements = requirements;
         this.params = params;
         this.handler = handler;
     }
@@ -26,14 +27,12 @@ public class CommandPathNew {
 
     public boolean matchesPartial(CommandContext commandContext) {
         if (commandContext.args.length > getArgLength()) {
-            LogController.warning("EXIT 1");
             return false;
         }
 
         for (int i = 0; i < commandContext.args.length; i++) {
             CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
-                LogController.warning("EXIT 2   " + commandArgumentInfo.name + " " + commandContext.getArg(i) + "  " + i);
                 return false;
             }
         }
@@ -90,7 +89,7 @@ public class CommandPathNew {
         return -1;
     }
 
-    public void execute(CommandContext commandContext) {
+    public boolean execute(CommandContext commandContext) {
         int argIndex = 0;
 
         try {
@@ -100,14 +99,35 @@ public class CommandPathNew {
             }
         } catch (ArgumentParseException e) {
             LogController.error("Command Parsing Exception: " + e.getMessage());
-            return;
+            return false;
         }
 
         handler.execute(commandContext);
+        return true;
     }
 
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
         CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
         return commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo));
+    }
+
+    public boolean hasPermissions(CommandContext commandContext) {
+        for (CommandRequirement commandRequirement : requirements) {
+            if (!commandRequirement.check(commandContext)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    ///  Getters  ///
+    public @NotNull List<CommandRequirement> getRequirements() {
+        return requirements;
+    }
+    public @NotNull List<CommandArgumentInfo> getParams() {
+        return params;
+    }
+    public @NotNull CommandHandler getHandler() {
+        return handler;
     }
 }

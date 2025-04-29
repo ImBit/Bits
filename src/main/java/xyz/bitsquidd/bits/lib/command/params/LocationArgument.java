@@ -2,12 +2,10 @@ package xyz.bitsquidd.bits.lib.command.params;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import xyz.bitsquidd.bits.core.LogController;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LocationArgument implements CommandArgument<Location> {
@@ -60,7 +58,6 @@ public class LocationArgument implements CommandArgument<Location> {
     @Override
     public List<String> tabComplete(CommandContext context, int startIndex) {
         int relativeArgIndex = context.getArgLength()-1-startIndex;
-        LogController.warning(Arrays.toString(context.args) + "  " +relativeArgIndex);
 
         return suggestCoordinate(context.getLastArg(), relativeArgIndex);
     }

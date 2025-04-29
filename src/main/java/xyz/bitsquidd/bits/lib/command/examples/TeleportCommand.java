@@ -2,52 +2,55 @@ package xyz.bitsquidd.bits.lib.command.examples;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 import xyz.bitsquidd.bits.lib.command.CommandArgumentInfo;
-import xyz.bitsquidd.bits.lib.command.CommandPathNew;
+import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.CommandPath;
 import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
 import xyz.bitsquidd.bits.lib.command.params.LocationArgument;
+import xyz.bitsquidd.bits.lib.command.params.MultiPlayerArgument;
 import xyz.bitsquidd.bits.lib.command.params.SinglePlayerArgument;
+import xyz.bitsquidd.bits.lib.command.requirements.PermissionRequirement;
+import xyz.bitsquidd.bits.lib.command.requirements.PlayerRequirement;
 
+import java.util.Collection;
 import java.util.List;
 
-//TODO:
-// Add requirements to paths - e.g. player != null etc.
-// Add permissions to paths - e.g. teleport self teleport others etc.
-@CommandNew(name = "tpnew29", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
-public class TeleportCommand extends AbstractCommandNew {
+@CommandNew(name = "tpnew", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
+public class TeleportCommand extends AbstractCommand {
 
     @Override
     public void initialisePaths() {
-        addPath(new CommandPathNew(
+        addPath(new CommandPath(
                 "teleportToPlayer",
                 "Teleport to a player",
-                "minecraft.command.teleport",
+                List.of(PlayerRequirement.INSTANCE),
                 List.of(new CommandArgumentInfo("target", SinglePlayerArgument.INSTANCE)),
                 this::teleportSelfToPlayer
         ));
-        addPath(new CommandPathNew(
+        addPath(new CommandPath(
                 "teleportToLocation",
                 "Teleport to a Location",
-                "minecraft.command.teleport",
+                List.of(PlayerRequirement.INSTANCE),
                 List.of(new CommandArgumentInfo("targetLocation", LocationArgument.INSTANCE)),
                 this::teleportSelfToLocation
         ));
-        addPath(new CommandPathNew(
+        addPath(new CommandPath(
                 "teleportPlayerToLocation",
                 "Teleport a player to a location",
-                "minecraft.command.teleport",
-                List.of(new CommandArgumentInfo("target", SinglePlayerArgument.INSTANCE), new CommandArgumentInfo("targetLocation", LocationArgument.INSTANCE)),
+                List.of(new PermissionRequirement("minecraft.command.teleport.others")),
+                List.of(new CommandArgumentInfo("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo("targetLocation", LocationArgument.INSTANCE)),
                 this::teleportPlayerToLocation
         ));
-        addPath(new CommandPathNew(
+        addPath(new CommandPath(
                 "teleportPlayerToPlayer",
                 "Teleport a player to a player",
-                "minecraft.command.teleport",
-                List.of(new CommandArgumentInfo("target", SinglePlayerArgument.INSTANCE), new CommandArgumentInfo("targetPlayer", SinglePlayerArgument.INSTANCE)),
+                List.of(new PermissionRequirement("minecraft.command.teleport.others")),
+                List.of(new CommandArgumentInfo("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo("targetPlayer", SinglePlayerArgument.INSTANCE)),
                 this::teleportPlayerToPlayer
         ));
     }
+
 
 
 
@@ -70,19 +73,19 @@ public class TeleportCommand extends AbstractCommandNew {
 
     private void teleportPlayerToLocation(CommandContext context) {
         Player sender = (Player) context.sender;
-        Player target = context.get("target");
+        Collection<Player> targets = context.get("target");
         Location location = context.get("targetLocation");
 
-        target.teleport(location);
+        targets.forEach(p -> p.teleport(location));
         sender.sendMessage("&aTeleported to " + location);
     }
 
     private void teleportPlayerToPlayer(CommandContext context) {
         Player sender = (Player) context.sender;
-        Player target = context.get("target");
+        Collection<Player> targets = context.get("target");
         Player targetPlayer = context.get("targetPlayer");
 
-        target.teleport(targetPlayer);
+        targets.forEach(p -> p.teleport(targetPlayer));
         sender.sendMessage("&aTeleported to " + targetPlayer);
     }
 }
