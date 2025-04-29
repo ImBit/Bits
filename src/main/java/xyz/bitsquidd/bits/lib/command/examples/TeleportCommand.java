@@ -14,7 +14,7 @@ import java.util.List;
 //TODO:
 // Add requirements to paths - e.g. player != null etc.
 // Add permissions to paths - e.g. teleport self teleport others etc.
-@CommandNew(name = "tpnew25", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
+@CommandNew(name = "tpnew29", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
 public class TeleportCommand extends AbstractCommandNew {
 
     @Override

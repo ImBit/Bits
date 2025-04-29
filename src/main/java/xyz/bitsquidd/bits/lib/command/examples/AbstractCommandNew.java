@@ -74,6 +74,11 @@ public abstract class AbstractCommandNew {
             availableCompletions.addAll(path.tabComplete(commandContext));
         }
 
+        String currentArgument = commandContext.getLastArg().toLowerCase();
+        if (!currentArgument.isEmpty()) {
+            availableCompletions.removeIf(completion -> !completion.toLowerCase().startsWith(currentArgument));
+        }
+
         return availableCompletions;
     }
 
