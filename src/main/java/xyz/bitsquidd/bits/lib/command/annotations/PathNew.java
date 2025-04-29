@@ -5,14 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Command {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PathNew {
     String name();
     String description() default "";
-    String[] aliases() default {};
-    String permission() default ""; // Added permission attribute
-    boolean playerOnly() default false;
-    boolean hidden() default false;
-    String parent() default "";
+    String[] permissions() default {};
 }

@@ -5,13 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Marks a parameter as a command parameter.
- */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface Param {
-    String type() default "";
-    String instance() default "INSTANCE";
-    String name() default "";
+public @interface CommandNew {
+    String name();
+    String[] aliases() default {};
+    String description() default "";
+    String permission() default "";
 }

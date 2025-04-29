@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 public @interface Permission {
     String value();
     String message() default "";
-
     boolean active() default true;
 }
