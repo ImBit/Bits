@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.params.interfaces.AbstractPlayerArgument;
-import xyz.bitsquidd.bits.lib.helper.EntityHelper;
+import xyz.bitsquidd.bits.lib.entity.EntityHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

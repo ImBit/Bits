@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.helper;
+package xyz.bitsquidd.bits.lib.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
