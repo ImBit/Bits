@@ -1,7 +1,14 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
-import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
+import xyz.bitsquidd.bits.lib.command.annotations.Command;
+import xyz.bitsquidd.bits.lib.component.color.ColorStore;
+import xyz.bitsquidd.bits.lib.logging.LogController;
+import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +24,7 @@ public abstract class AbstractCommand {
     public final @NotNull String commandPermission;
 
     public AbstractCommand() {
-        CommandNew annotation = getClass().getAnnotation(CommandNew.class);
+        Command annotation = getClass().getAnnotation(Command.class);
         if (annotation == null) {
             throw new IllegalStateException("Command classes must have the @Command annotation");
         }
@@ -48,17 +55,17 @@ public abstract class AbstractCommand {
             }
             return true;
         } catch (Exception e) {
-            commandContext.sender.sendMessage("An unexpected error occurred: " + e.getMessage());
-            e.printStackTrace();
+            Text.of("<b>An unexpected error occurred:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.sender);
+            LogController.exception(e);
         }
         return false;
     }
 
     private void executeCommand(CommandContext commandContext) {
-        boolean hasExecutedPath = false;
+        boolean hasExecutedPath;
 
         try {
-            hasExecutedPath = hasExecutedPath || defaultExecute(commandContext);
+            hasExecutedPath = defaultExecute(commandContext);
 
             if (!commandContext.isEmpty()) {
                 for (CommandPath path : getValidPaths(commandContext)) {
@@ -66,8 +73,8 @@ public abstract class AbstractCommand {
                 }
             }
         } catch (Exception e) {
-            commandContext.sender.sendMessage("Error executing command: " + e.getMessage());
-            e.printStackTrace();
+            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.sender);
+            LogController.exception(e);
             hasExecutedPath = false;
         }
 
@@ -98,28 +105,50 @@ public abstract class AbstractCommand {
     }
 
     private void showUsage(CommandContext commandContext) {
-        commandContext.sender.sendMessage("§6=== " + name + " Command Help ===");
+        Component usageComponent = Component.empty().appendNewline().appendNewline().appendNewline();
+
+        usageComponent = usageComponent
+                .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
+                .append(Component.text(" /"+name+" ").decorate(TextDecoration.BOLD))
+                .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
+                .appendNewline();
 
         List<CommandPath> availablePaths = paths.stream()
                 .filter(path -> path.hasPermissions(commandContext))
                 .toList();
 
         if (availablePaths.isEmpty()) {
-            commandContext.sender.sendMessage("§cYou don't have permission to use this command.");
+            Text.of(
+                    "You don't have permission to use this command",
+                    new CommandReturnDecorator(CommandReturnType.ERROR)
+            ).send(commandContext.sender);
             return;
         }
 
         for (CommandPath path : availablePaths) {
-            StringBuilder usage = new StringBuilder("§e/" + name + " ");
-            StringBuilder params = new StringBuilder();
+            usageComponent = usageComponent
+                    .append(Component.text("/" + name + " ", ColorStore.INFO.getTextColor()));
+
 
             for (CommandArgumentInfo arg : path.getParams()) {
-                params.append("<").append(arg.name).append(" : ").append(arg.param.getTypeName()).append("> ");
+                    String paramText = "<" + arg.name + " : " + arg.param.getTypeName() + "> ";
+                    usageComponent = usageComponent.append(
+                            Component.text(paramText, ColorStore.INFO.getTextColor())
+                    );
             }
 
-            usage.append(params);
-            commandContext.sender.sendMessage(usage + "§7- " + path.description);
+            usageComponent = usageComponent
+                    .appendNewline()
+                    .append(Component.text("  ⏵ " + path.description, NamedTextColor.GRAY)
+                    .appendNewline()
+            );
         }
+
+        usageComponent = usageComponent.append(
+                Component.text("                              ").decorate(TextDecoration.STRIKETHROUGH)
+        );
+
+        Text.of(usageComponent).send(commandContext.sender);
     }
 
     private boolean hasPermission(CommandContext commandContext) {

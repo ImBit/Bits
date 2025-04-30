@@ -3,9 +3,9 @@ package xyz.bitsquidd.bits.lib.command.examples;
 import org.bukkit.Bukkit;
 import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
+import xyz.bitsquidd.bits.lib.command.annotations.Command;
 
-@CommandNew(name = "clearallcommands", description = "Teleport players to a location", permission = "minecraft.command.teleport")
+@Command(name = "clearallcommands", description = "Teleport players to a location", permission = "minecraft.command.teleport")
 public class ClearAllCommandsCommand extends AbstractCommand {
 
     @Override

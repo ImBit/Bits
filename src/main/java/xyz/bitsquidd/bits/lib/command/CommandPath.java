@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.lib.command;
 
 import org.jetbrains.annotations.NotNull;
-import xyz.bitsquidd.bits.core.LogController;
+import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 

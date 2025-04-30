@@ -6,7 +6,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.bitsquidd.bits.core.LogController;
+import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 
 import java.lang.reflect.Field;

@@ -2,21 +2,21 @@ package xyz.bitsquidd.bits.lib.command.examples;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import xyz.bitsquidd.bits.lib.command.AbstractCommand;
-import xyz.bitsquidd.bits.lib.command.CommandArgumentInfo;
-import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.CommandPath;
-import xyz.bitsquidd.bits.lib.command.annotations.CommandNew;
+import xyz.bitsquidd.bits.lib.command.*;
+import xyz.bitsquidd.bits.lib.command.annotations.Command;
 import xyz.bitsquidd.bits.lib.command.params.LocationArgument;
 import xyz.bitsquidd.bits.lib.command.params.MultiPlayerArgument;
 import xyz.bitsquidd.bits.lib.command.params.SinglePlayerArgument;
 import xyz.bitsquidd.bits.lib.command.requirements.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.command.requirements.PlayerRequirement;
+import xyz.bitsquidd.bits.lib.sendable.text.FormatHelper;
+import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
 
 import java.util.Collection;
 import java.util.List;
 
-@CommandNew(name = "tpnew", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
+@Command(name = "tpnew", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
 public class TeleportCommand extends AbstractCommand {
 
     @Override
@@ -60,24 +60,32 @@ public class TeleportCommand extends AbstractCommand {
         Player target = context.get("target");
 
         sender.teleport(target);
-        sender.sendMessage("&aTeleported to " + target);
+        Text.of(
+                "Teleported to " + target,
+                new CommandReturnDecorator(CommandReturnType.SUCCESS)
+        ).send(sender);
     }
 
     private void teleportSelfToLocation(CommandContext context) {
         Player sender = (Player) context.sender;
-        Location target = context.get("targetLocation");
+        Location targetLocation = context.get("targetLocation");
 
-        sender.teleport(target);
-        sender.sendMessage("&aTeleported to " + target);
+        sender.teleport(targetLocation);
+        Text.of(
+                "Teleported to " + FormatHelper.formatLocation(targetLocation, false),
+                new CommandReturnDecorator(CommandReturnType.SUCCESS)
+        ).send(sender);
     }
 
     private void teleportPlayerToLocation(CommandContext context) {
         Player sender = (Player) context.sender;
         Collection<Player> targets = context.get("target");
-        Location location = context.get("targetLocation");
+        Location targetLocation = context.get("targetLocation");
 
-        targets.forEach(p -> p.teleport(location));
-        sender.sendMessage("&aTeleported to " + location);
+        targets.forEach(p -> p.teleport(targetLocation));
+        Text.of("Teleported "+FormatHelper.formatPlayers(targets)+" to " + FormatHelper.formatLocation(targetLocation, false),
+                new CommandReturnDecorator(CommandReturnType.SUCCESS)
+        ).send(sender);
     }
 
     private void teleportPlayerToPlayer(CommandContext context) {
@@ -86,6 +94,8 @@ public class TeleportCommand extends AbstractCommand {
         Player targetPlayer = context.get("targetPlayer");
 
         targets.forEach(p -> p.teleport(targetPlayer));
-        sender.sendMessage("&aTeleported to " + targetPlayer);
+        Text.of("Teleported "+FormatHelper.formatPlayers(targets)+" to " + targetPlayer.getName(),
+                new CommandReturnDecorator(CommandReturnType.SUCCESS)
+        ).send(sender);
     }
 }
