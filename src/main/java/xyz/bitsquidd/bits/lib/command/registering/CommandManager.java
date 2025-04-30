@@ -12,30 +12,34 @@ import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class CommandManager {
-    private static Plugin plugin;
-    private static CommandMap commandMap;
+public abstract class CommandManager {
+    private final Plugin plugin;
 
-    private static final Map<String, BukkitCommand> registeredCommands = new HashMap<>();
-    private static final Set<Command> commandSet = new HashSet<>();
+    private CommandMap commandMap;
+    private final Map<String, BukkitCommand> registeredCommands = new HashMap<>();
+    private final Set<Command> commandSet = new HashSet<>();
 
-    public static void initialise(Plugin plugin) {
-        CommandManager.plugin = plugin;
+    protected CommandManager(Plugin plugin) {
+        this.plugin = plugin;
+
         initialiseCommandMap();
+        registerCommands();
     }
 
-    private static void initialiseCommandMap() {
+    private void initialiseCommandMap() {
         try {
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to access command map: " + e.getMessage());
-            e.printStackTrace();
+            LogController.error("Failed to access command map: " + e.getMessage());
+            LogController.exception(e);
         }
     }
 
-    public static void register(AbstractCommand command) {
+    protected abstract void registerCommands();
+
+    public void register(AbstractCommand command) {
         if (plugin == null || commandMap == null) {
             throw new IllegalStateException("CommandManager has not been initialized. Call initialise() first.");
         }
@@ -61,10 +65,10 @@ public class CommandManager {
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bukkitCommand);
         commandSet.add(bukkitCommand);
         commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bukkitCommand);
-        plugin.getLogger().info("Registered command: " + name);
+        LogController.info("Registered command: " + name);
     }
 
-    public static void unregisterAll() {
+    public void unregisterAll() {
         CommandMap commandMap = Bukkit.getCommandMap();
 
         registeredCommands.keySet().forEach(s -> {
@@ -79,12 +83,12 @@ public class CommandManager {
     }
 
     @NotNull
-    public static Set<Command> getCommands() {
+    public Set<Command> getCommands() {
         return Collections.unmodifiableSet(commandSet);
     }
 
     @Nullable
-    public static BukkitCommand getCommand(String name) {
+    public BukkitCommand getCommand(String name) {
         return registeredCommands.get(name.toLowerCase(Locale.ROOT));
     }
 }
