@@ -8,6 +8,7 @@ import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 import java.util.List;
 
 // Sub-command paths.
+// TODO: allow for nested command paths - i.e. Whitelist mode/limit/add CommandPath1/2/3
 public class CommandPath {
     public final @NotNull String name;
     public final @NotNull String description;
@@ -26,11 +27,11 @@ public class CommandPath {
 
 
     public boolean matchesPartial(CommandContext commandContext) {
-        if (commandContext.args.length > getArgLength()) {
+        if (commandContext.getArgsLength() > getArgLength()) {
             return false;
         }
 
-        for (int i = 0; i < commandContext.args.length; i++) {
+        for (int i = 0; i < commandContext.getArgsLength(); i++) {
             CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;

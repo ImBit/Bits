@@ -12,7 +12,7 @@ public class ExampleCommandManager extends CommandManager {
     }
 
     @Override
-    protected void registerCommands() {
+    public void registerCommands() {
         register(new TestFormattingCommand());
         register(new TeleportCommand());
         register(new ClearAllCommandsCommand());

@@ -1,6 +1,6 @@
 package xyz.bitsquidd.bits.lib.logging;
 
-import xyz.bitsquidd.bits.Bits;
+import org.bukkit.Bukkit;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.LogDecorator;
 
@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class LogController {
-    private static final Logger bukkitLogger = Bits.getInstance().getLogger();
+    private static final Logger bukkitLogger = Bukkit.getLogger(); //Bits.getInstance().getLogger()
 
     public static void log(LogType logType, String message) {
         String prefix = logType.prefix;

@@ -14,11 +14,11 @@ public class StringRemainderArgument implements CommandArgument<String> {
     
     @Override
     public String parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
-        if (startIndex >= context.args.length) {
+        if (startIndex >= context.getArgsLength()) {
             return "";
         }
 
-        return String.join(" ", Arrays.copyOfRange(context.args, startIndex, context.args.length));
+        return String.join(" ", Arrays.copyOfRange(context.getArgs(), startIndex, context.getArgsLength()));
     }
     
     @Override

@@ -15,10 +15,9 @@ public class PermissionRequirement implements CommandRequirement {
         this.permission = new Permission(permission);
     }
 
-
     @Override
     public boolean check(CommandContext context) {
-        return context.sender.hasPermission(permission);
+        return context.getSender().hasPermission(permission);
     }
 
     @Override

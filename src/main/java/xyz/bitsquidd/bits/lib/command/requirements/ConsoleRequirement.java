@@ -1,15 +1,15 @@
 package xyz.bitsquidd.bits.lib.command.requirements;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.ConsoleCommandSender;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
-public class PlayerRequirement implements CommandRequirement {
-    public static final PlayerRequirement INSTANCE = new PlayerRequirement();
+public class ConsoleRequirement implements CommandRequirement {
+    public static final ConsoleRequirement INSTANCE = new ConsoleRequirement();
 
     @Override
     public boolean check(CommandContext context) {
-        return context.getSender() instanceof Player;
+        return context.getSender() instanceof ConsoleCommandSender;
     }
 
     @Override

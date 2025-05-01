@@ -27,13 +27,13 @@ public class TestFormattingCommand extends AbstractCommand {
 
     @Override
     public boolean defaultExecute(CommandContext commandContext) {
-        new Text("<b>Hel <i> lo </b> there </i> how <u> are <s>you </u> ?</s>", new CommandReturnDecorator(CommandReturnType.SUCCESS)).send(commandContext.sender);
+        new Text("<b>Hel <i> lo </b> there </i> how <u> are <s>you </u> ?</s>", new CommandReturnDecorator(CommandReturnType.SUCCESS)).send(commandContext.getSender());
         return true;
     }
 
     private void executeCommand(CommandContext context) {
         LogController.info("1");
 
-        new Text(context.get("optional1")+"   "+context.get("optional2")).send(context.sender);
+        new Text(context.get("optional1")+"   "+context.get("optional2")).send(context.getSender());
     }
 }

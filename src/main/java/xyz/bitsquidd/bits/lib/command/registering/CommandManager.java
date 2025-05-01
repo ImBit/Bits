@@ -23,7 +23,6 @@ public abstract class CommandManager {
         this.plugin = plugin;
 
         initialiseCommandMap();
-        registerCommands();
     }
 
     private void initialiseCommandMap() {
@@ -37,7 +36,7 @@ public abstract class CommandManager {
         }
     }
 
-    protected abstract void registerCommands();
+    public abstract void registerCommands();
 
     public void register(AbstractCommand command) {
         if (plugin == null || commandMap == null) {

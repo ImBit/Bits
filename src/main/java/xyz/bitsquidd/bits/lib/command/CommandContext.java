@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandContext {
-    public final @NotNull CommandSender sender;
-    public final @NotNull String[] args;
+    private final @NotNull CommandSender sender;
+    private final @NotNull String[] args;
 
     private final @NotNull Map<String, Object> params = new HashMap<>();
 
@@ -36,6 +36,15 @@ public class CommandContext {
         return args[args.length - 1];
     }
     public int getArgLength() {
+        return args.length;
+    }
+    public @NotNull CommandSender getSender() {
+        return sender;
+    }
+    public @NotNull String[] getArgs() {
+        return args.clone();
+    }
+    public int getArgsLength() {
         return args.length;
     }
 

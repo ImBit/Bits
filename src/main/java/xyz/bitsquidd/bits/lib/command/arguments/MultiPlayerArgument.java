@@ -22,12 +22,12 @@ public class MultiPlayerArgument extends AbstractPlayerArgument<Collection<Playe
                 case "@a":
                     return new ArrayList<>(Bukkit.getOnlinePlayers());
                 case "@s":
-                    if (context.sender instanceof Player player) {
+                    if (context.getSender() instanceof Player player) {
                         return Collections.singletonList(player);
                     }
                     throw new ArgumentParseException("Selector @s can only be used by players");
                 case "@p":
-                    Player nearest = EntityHelper.getNearestEntity(context.getLocation(), Player.class, p -> !p.equals(context.sender));
+                    Player nearest = EntityHelper.getNearestEntity(context.getLocation(), Player.class, p -> !p.equals(context.getSender()));
                     
                     if (nearest != null) {
                         return Collections.singletonList(nearest);
@@ -63,7 +63,7 @@ public class MultiPlayerArgument extends AbstractPlayerArgument<Collection<Playe
 
     @Override
     public String getTypeName() {
-        return "players";
+        return "Player(s)";
     }
     
     @Override

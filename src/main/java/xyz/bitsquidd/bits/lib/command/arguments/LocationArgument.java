@@ -24,9 +24,9 @@ public class LocationArgument implements CommandArgument<Location> {
     @Override
     public Location parse(CommandContext context, int startIndex) throws ArgumentParseException {
         try {
-            double x = parseCoordinate(context.args[startIndex]);
-            double y = parseCoordinate(context.args[startIndex + 1]);
-            double z = parseCoordinate(context.args[startIndex + 2]);
+            double x = parseCoordinate(context.getArgs()[startIndex]);
+            double y = parseCoordinate(context.getArgs()[startIndex + 1]);
+            double z = parseCoordinate(context.getArgs()[startIndex + 2]);
 
             World world = context.getWorld();
             if (world == null) {
@@ -43,12 +43,12 @@ public class LocationArgument implements CommandArgument<Location> {
 
     @Override
     public boolean canParseArg(CommandContext context, int argIndex) {
-        if (argIndex >= context.args.length) {
+        if (argIndex >= context.getArgsLength()) {
             return false;
         }
 
         try {
-            parseCoordinate(context.args[argIndex]);
+            parseCoordinate(context.getArgs()[argIndex]);
             return true;
         } catch (Exception e) {
             return false;

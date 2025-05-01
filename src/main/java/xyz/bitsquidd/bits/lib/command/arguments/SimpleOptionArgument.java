@@ -34,7 +34,7 @@ public class SimpleOptionArgument implements CommandArgument<String> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "String";
+        return "";
     }
 
     @Override

@@ -22,8 +22,8 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
         Player player = null;
         if (arg.startsWith("@")) {
             switch (arg) {
-                case "@s" -> player = context.sender instanceof Player ? (Player) context.sender : null;
-                case "@p" -> player = EntityHelper.getNearestEntity(context.getLocation(), Player.class, p -> !p.equals(context.sender));
+                case "@s" -> player = context.getSender() instanceof Player ? (Player) context.getSender() : null;
+                case "@p" -> player = EntityHelper.getNearestEntity(context.getLocation(), Player.class, p -> !p.equals(context.getSender()));
                 default -> throw new ArgumentParseException("Unsupported player selector: " + arg);
             }
         } else {
@@ -48,7 +48,7 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
 
     @Override
     public String getTypeName() {
-        return "player";
+        return "Player";
     }
 
     @Override

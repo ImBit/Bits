@@ -55,7 +55,7 @@ public abstract class AbstractCommand {
             }
             return true;
         } catch (Exception e) {
-            Text.of("<b>An unexpected error occurred:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.sender);
+            Text.of("<b>An unexpected error occurred:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
             LogController.exception(e);
         }
         return false;
@@ -73,7 +73,7 @@ public abstract class AbstractCommand {
                 }
             }
         } catch (Exception e) {
-            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.sender);
+            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
             LogController.exception(e);
             hasExecutedPath = false;
         }
@@ -121,20 +121,24 @@ public abstract class AbstractCommand {
             Text.of(
                     "You don't have permission to use this command",
                     new CommandReturnDecorator(CommandReturnType.ERROR)
-            ).send(commandContext.sender);
+            ).send(commandContext.getSender());
             return;
         }
 
         for (CommandPath path : availablePaths) {
-            usageComponent = usageComponent
-                    .append(Component.text("/" + name + " ", ColorStore.INFO.getTextColor()));
-
+            usageComponent = usageComponent.append(
+                    Component.text("/" + name + " ", ColorStore.INFO.getTextColor()));
 
             for (CommandArgumentInfo<?> arg : path.getParams()) {
-                    String paramText = "<" + arg.name + " : " + arg.param.getTypeName() + "> ";
-                    usageComponent = usageComponent.append(
-                            Component.text(paramText, ColorStore.INFO.getTextColor())
-                    );
+                String paramName = arg.param.getTypeName();
+                if (paramName.isEmpty()) {
+                    paramName = "<"+arg.name+"> ";
+                } else {
+                    paramName = "<" + arg.name + " : " + paramName + "> ";
+                }
+
+                usageComponent = usageComponent.append(
+                        Component.text(paramName, ColorStore.INFO.getTextColor()));
             }
 
             usageComponent = usageComponent
@@ -145,16 +149,15 @@ public abstract class AbstractCommand {
         }
 
         usageComponent = usageComponent.append(
-                Component.text("                              ").decorate(TextDecoration.STRIKETHROUGH)
-        );
+                Component.text("                              ").decorate(TextDecoration.STRIKETHROUGH));
 
-        Text.of(usageComponent).send(commandContext.sender);
+        Text.of(usageComponent).send(commandContext.getSender());
     }
 
     private boolean hasPermission(CommandContext commandContext) {
         if (commandPermission.isEmpty()) {
             return true;
         }
-        return commandContext.sender.hasPermission(commandPermission);
+        return commandContext.getSender().hasPermission(commandPermission);
     }
 }

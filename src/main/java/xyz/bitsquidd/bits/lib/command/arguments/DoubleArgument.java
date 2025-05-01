@@ -4,24 +4,24 @@ import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
-public class IntegerArgument implements CommandArgument<Integer> {
-    public static final IntegerArgument INSTANCE = new IntegerArgument();
+public class DoubleArgument implements CommandArgument<Double> {
+    public static final DoubleArgument INSTANCE = new DoubleArgument();
 
     @Override
     public @NotNull String getTypeName() {
-        return "Int";
+        return "Double";
     }
 
     @Override
-    public Integer parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
+    public Double parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
         if (startIndex >= context.getArgsLength()) {
-            throw new ArgumentParseException("No integer argument provided");
+            throw new ArgumentParseException("No double argument provided");
         }
 
         try {
-            return Integer.parseInt(context.getArgs()[startIndex]);
+            return Double.parseDouble(context.getArgs()[startIndex]);
         } catch (NumberFormatException e) {
-            throw new ArgumentParseException("Cannot parse '" + context.getArgs()[startIndex] + "' as an integer");
+            throw new ArgumentParseException("Cannot parse '" + context.getArgs()[startIndex] + "' as an double");
         }
     }
 
@@ -32,7 +32,7 @@ public class IntegerArgument implements CommandArgument<Integer> {
         }
 
         try {
-            Integer.parseInt(context.getArgs()[argIndex]);
+            Double.parseDouble(context.getArgs()[argIndex]);
             return true;
         } catch (NumberFormatException e) {
             return false;

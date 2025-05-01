@@ -26,11 +26,11 @@ public class BooleanArgument implements CommandArgument<Boolean> {
 
     @Override
     public Boolean parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
-        if (startIndex >= context.args.length) {
+        if (startIndex >= context.getArgsLength()) {
             throw new ArgumentParseException("No boolean argument provided");
         }
 
-        String input = context.args[startIndex].toLowerCase();
+        String input = context.getArgs()[startIndex].toLowerCase();
         
         if (TRUE_VALUES.contains(input)) {
             return true;
@@ -40,16 +40,16 @@ public class BooleanArgument implements CommandArgument<Boolean> {
             return false;
         }
 
-        throw new ArgumentParseException("Cannot parse '" + context.args[startIndex] + "' as a boolean");
+        throw new ArgumentParseException("Cannot parse '" + context.getArgs()[startIndex] + "' as a boolean");
     }
 
     @Override
     public boolean canParseArg(@NotNull CommandContext context, int argIndex) {
-        if (argIndex >= context.args.length) {
+        if (argIndex >= context.getArgsLength()) {
             return false;
         }
 
-        String input = context.args[argIndex].toLowerCase();
+        String input = context.getArgs()[argIndex].toLowerCase();
         return TRUE_VALUES.contains(input) || FALSE_VALUES.contains(input);
     }
 }

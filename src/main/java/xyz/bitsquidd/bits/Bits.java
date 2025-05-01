@@ -20,6 +20,7 @@ public class Bits extends JavaPlugin {
     @Override
     public void onEnable() {
         exampleCommandManager = new ExampleCommandManager(this);
+        exampleCommandManager.registerCommands();
 
         LogController.success("Enabled " + getName());
     }

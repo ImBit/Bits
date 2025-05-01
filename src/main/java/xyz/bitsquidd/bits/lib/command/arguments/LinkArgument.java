@@ -42,11 +42,11 @@ public class LinkArgument implements CommandArgument<String> {
 
     @Override
     public String parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
-        if (startIndex >= context.args.length) {
+        if (startIndex >= context.getArgsLength()) {
             throw new ArgumentParseException("No URL provided");
         }
 
-        String url = context.args[startIndex];
+        String url = context.getArgs()[startIndex];
 
         if (url.startsWith("www.")) {
             url = "https://" + url;
@@ -70,11 +70,11 @@ public class LinkArgument implements CommandArgument<String> {
 
     @Override
     public boolean canParseArg(@NotNull CommandContext context, int argIndex) {
-        if (argIndex >= context.args.length) {
+        if (argIndex >= context.getArgsLength()) {
             return false;
         }
 
-        String url = context.args[argIndex];
+        String url = context.getArgs()[argIndex];
         if (url.startsWith("www.")) {
             url = "https://" + url;
         }

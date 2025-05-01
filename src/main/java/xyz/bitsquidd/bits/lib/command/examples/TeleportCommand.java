@@ -56,7 +56,7 @@ public class TeleportCommand extends AbstractCommand {
 
 
     private void teleportSelfToPlayer(CommandContext context) {
-        Player sender = (Player) context.sender;
+        Player sender = (Player) context.getSender();
         Player target = context.get("target");
 
         sender.teleport(target);
@@ -67,7 +67,7 @@ public class TeleportCommand extends AbstractCommand {
     }
 
     private void teleportSelfToLocation(CommandContext context) {
-        Player sender = (Player) context.sender;
+        Player sender = (Player) context.getSender();
         Location targetLocation = context.get("targetLocation");
 
         sender.teleport(targetLocation);
@@ -78,7 +78,7 @@ public class TeleportCommand extends AbstractCommand {
     }
 
     private void teleportPlayerToLocation(CommandContext context) {
-        Player sender = (Player) context.sender;
+        Player sender = (Player) context.getSender();
         Collection<Player> targets = context.get("target");
         Location targetLocation = context.get("targetLocation");
 
@@ -89,7 +89,7 @@ public class TeleportCommand extends AbstractCommand {
     }
 
     private void teleportPlayerToPlayer(CommandContext context) {
-        Player sender = (Player) context.sender;
+        Player sender = (Player) context.getSender();
         Collection<Player> targets = context.get("target");
         Player targetPlayer = context.get("targetPlayer");
 
