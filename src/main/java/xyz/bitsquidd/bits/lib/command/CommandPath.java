@@ -13,10 +13,10 @@ public class CommandPath {
     public final @NotNull String description;
 
     private final @NotNull List<CommandRequirement> requirements;
-    private final @NotNull List<CommandArgumentInfo> params;
+    private final @NotNull List<CommandArgumentInfo<?>> params;
     private final @NotNull CommandHandler handler;
 
-    public CommandPath(@NotNull String name, @NotNull String description, @NotNull List<CommandRequirement> requirements, @NotNull List<CommandArgumentInfo> params, @NotNull CommandHandler handler) {
+    public CommandPath(@NotNull String name, @NotNull String description, @NotNull List<CommandRequirement> requirements, @NotNull List<CommandArgumentInfo<?>> params, @NotNull CommandHandler handler) {
         this.name = name;
         this.description = description;
         this.requirements = requirements;
@@ -31,7 +31,7 @@ public class CommandPath {
         }
 
         for (int i = 0; i < commandContext.args.length; i++) {
-            CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(i);
+            CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;
             }
@@ -47,7 +47,7 @@ public class CommandPath {
         }
 
         int argIndex = 0;
-        for (CommandArgumentInfo commandArgumentInfo : params) {
+        for (CommandArgumentInfo<?> commandArgumentInfo : params) {
             if (!commandArgumentInfo.param.canParseFull(commandContext, argIndex)) {
                 return false;
             }
@@ -59,15 +59,15 @@ public class CommandPath {
 
     public int getArgLength() {
         int argLength = 0;
-        for (CommandArgumentInfo commandArgumentInfo : params) {
+        for (CommandArgumentInfo<?> commandArgumentInfo : params) {
             argLength += commandArgumentInfo.param.getRequiredArgs();
         }
 
         return argLength;
     }
 
-    private @NotNull CommandArgumentInfo getCommandParamAtIndex(int index) {
-        for (CommandArgumentInfo commandArgumentInfo : params) {
+    private @NotNull CommandArgumentInfo<?> getCommandParamAtIndex(int index) {
+        for (CommandArgumentInfo<?> commandArgumentInfo : params) {
             if (index < commandArgumentInfo.param.getRequiredArgs()) {
                 return commandArgumentInfo;
             }
@@ -77,9 +77,9 @@ public class CommandPath {
         //TODO error here
         return null;
     }
-    private int getCommandParamIndex(CommandArgumentInfo commandArgumentInfo) {
+    private int getCommandParamIndex(CommandArgumentInfo<?> commandArgumentInfo) {
         int argIndex = 0;
-        for (CommandArgumentInfo param : params) {
+        for (CommandArgumentInfo<?> param : params) {
             if (param.equals(commandArgumentInfo)) {
                 return argIndex;
             }
@@ -93,7 +93,7 @@ public class CommandPath {
         int argIndex = 0;
 
         try {
-            for (CommandArgumentInfo commandArgumentInfo : params) {
+            for (CommandArgumentInfo<?> commandArgumentInfo : params) {
                 commandContext.set(commandArgumentInfo.name, commandArgumentInfo.param.parse(commandContext, argIndex));
                 argIndex += commandArgumentInfo.param.getRequiredArgs();
             }
@@ -107,7 +107,7 @@ public class CommandPath {
     }
 
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
-        CommandArgumentInfo commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
+        CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
         return commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo));
     }
 
@@ -124,7 +124,7 @@ public class CommandPath {
     public @NotNull List<CommandRequirement> getRequirements() {
         return requirements;
     }
-    public @NotNull List<CommandArgumentInfo> getParams() {
+    public @NotNull List<CommandArgumentInfo<?>> getParams() {
         return params;
     }
     public @NotNull CommandHandler getHandler() {

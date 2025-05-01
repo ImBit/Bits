@@ -4,9 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.bitsquidd.bits.lib.command.*;
 import xyz.bitsquidd.bits.lib.command.annotations.Command;
-import xyz.bitsquidd.bits.lib.command.params.LocationArgument;
-import xyz.bitsquidd.bits.lib.command.params.MultiPlayerArgument;
-import xyz.bitsquidd.bits.lib.command.params.SinglePlayerArgument;
+import xyz.bitsquidd.bits.lib.command.arguments.LocationArgument;
+import xyz.bitsquidd.bits.lib.command.arguments.MultiPlayerArgument;
+import xyz.bitsquidd.bits.lib.command.arguments.SinglePlayerArgument;
 import xyz.bitsquidd.bits.lib.command.requirements.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.command.requirements.PlayerRequirement;
 import xyz.bitsquidd.bits.lib.sendable.text.FormatHelper;
@@ -25,28 +25,28 @@ public class TeleportCommand extends AbstractCommand {
                 "teleportToPlayer",
                 "Teleport to a player",
                 List.of(PlayerRequirement.INSTANCE),
-                List.of(new CommandArgumentInfo("target", SinglePlayerArgument.INSTANCE)),
+                List.of(new CommandArgumentInfo<>("target", SinglePlayerArgument.INSTANCE)),
                 this::teleportSelfToPlayer
         ));
         addPath(new CommandPath(
                 "teleportToLocation",
                 "Teleport to a Location",
                 List.of(PlayerRequirement.INSTANCE),
-                List.of(new CommandArgumentInfo("targetLocation", LocationArgument.INSTANCE)),
+                List.of(new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)),
                 this::teleportSelfToLocation
         ));
         addPath(new CommandPath(
                 "teleportPlayerToLocation",
                 "Teleport a player to a location",
                 List.of(new PermissionRequirement("minecraft.command.teleport.others")),
-                List.of(new CommandArgumentInfo("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo("targetLocation", LocationArgument.INSTANCE)),
+                List.of(new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)),
                 this::teleportPlayerToLocation
         ));
         addPath(new CommandPath(
                 "teleportPlayerToPlayer",
                 "Teleport a player to a player",
                 List.of(new PermissionRequirement("minecraft.command.teleport.others")),
-                List.of(new CommandArgumentInfo("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo("targetPlayer", SinglePlayerArgument.INSTANCE)),
+                List.of(new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE), new CommandArgumentInfo<>("targetPlayer", SinglePlayerArgument.INSTANCE)),
                 this::teleportPlayerToPlayer
         ));
     }

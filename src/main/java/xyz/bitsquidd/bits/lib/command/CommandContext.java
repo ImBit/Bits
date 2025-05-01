@@ -54,6 +54,14 @@ public class CommandContext {
         }
     }
 
+    public @NotNull <T> T getOrDefault(String name, T defaultValue) {
+        if (params.get(name) == null) {
+            return defaultValue;
+        } else {
+            return (T) params.get(name);
+        }
+    }
+
 
     // Helpers for parsers:
     public boolean isEmpty() {

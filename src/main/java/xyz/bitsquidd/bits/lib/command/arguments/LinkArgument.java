@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.params;
+package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;

@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCommand {
-    private final List<CommandPath> paths = new ArrayList<>();
+    private final @NotNull List<CommandPath> paths = new ArrayList<>();
 
     public final @NotNull String name;
     public final @NotNull String[] aliases;
@@ -130,7 +130,7 @@ public abstract class AbstractCommand {
                     .append(Component.text("/" + name + " ", ColorStore.INFO.getTextColor()));
 
 
-            for (CommandArgumentInfo arg : path.getParams()) {
+            for (CommandArgumentInfo<?> arg : path.getParams()) {
                     String paramText = "<" + arg.name + " : " + arg.param.getTypeName() + "> ";
                     usageComponent = usageComponent.append(
                             Component.text(paramText, ColorStore.INFO.getTextColor())

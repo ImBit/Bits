@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.params;
+package xyz.bitsquidd.bits.lib.command.arguments;
 
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;

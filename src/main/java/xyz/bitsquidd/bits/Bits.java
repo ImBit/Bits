@@ -9,7 +9,7 @@ import xyz.bitsquidd.bits.lib.logging.LogController;
 public class Bits extends JavaPlugin {
     private static Bits instance;
 
-    private final ExampleCommandManager exampleCommandManager = new ExampleCommandManager(this);
+    private ExampleCommandManager exampleCommandManager;
 
     public Bits() {
         instance = this;
@@ -19,6 +19,8 @@ public class Bits extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        exampleCommandManager = new ExampleCommandManager(this);
+
         LogController.success("Enabled " + getName());
     }
 

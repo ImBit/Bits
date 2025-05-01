@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.params;
+package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.bukkit.Location;
 import org.bukkit.World;

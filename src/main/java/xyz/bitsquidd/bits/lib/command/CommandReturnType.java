@@ -4,6 +4,7 @@ import xyz.bitsquidd.bits.lib.component.color.ColorStore;
 
 public enum CommandReturnType {
     SUCCESS(ColorStore.SUCCESS.color, "#"),
+    INFO(ColorStore.DEBUG.color, "#"),
     ERROR(ColorStore.ERROR.color, "#");
 
     public final int color;
