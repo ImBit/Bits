@@ -1,2 +1,2 @@
 # Bits
-🦑 Utility plugin for Minecraft development.
+🦑 Utility plugin for Minecraft plugin development.
