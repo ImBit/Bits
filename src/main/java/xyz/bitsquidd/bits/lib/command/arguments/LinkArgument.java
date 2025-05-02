@@ -6,10 +6,11 @@ import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class LinkArgument implements CommandArgument<String> {
+public class LinkArgument extends CommandArgument<String> {
     public static final LinkArgument INSTANCE = new LinkArgument();
 
     private final Set<String> allowedDomains;
@@ -80,5 +81,10 @@ public class LinkArgument implements CommandArgument<String> {
         }
 
         return urlPattern.matcher(url).matches();
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
+        return List.of("https://", "http://", "www.");
     }
 }

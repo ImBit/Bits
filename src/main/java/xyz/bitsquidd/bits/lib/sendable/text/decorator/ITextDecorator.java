@@ -26,6 +26,6 @@ public interface ITextDecorator {
 
         return Component.empty()
                 .append(Component.text(getPrefix()+" "))
-                .append(ComponentHelper.styleAll(component, getStyle()));
+                .append(Component.text(componentContent).style(getStyle())); //ComponentHelper.styleAll(component, getStyle()))
     }
 }

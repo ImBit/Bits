@@ -6,7 +6,7 @@ import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.List;
 
-public class SimpleOptionArgument implements CommandArgument<String> {
+public class SimpleOptionArgument extends CommandArgument<String> {
     private final String expectedValue;
 
     private SimpleOptionArgument(String expectedValue) {
@@ -39,10 +39,6 @@ public class SimpleOptionArgument implements CommandArgument<String> {
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
-        String input = context.getArg(index).toLowerCase();
-        if (expectedValue.toLowerCase().startsWith(input)) {
-            return List.of(expectedValue);
-        }
-        return List.of();
+        return List.of(expectedValue);
     }
 }

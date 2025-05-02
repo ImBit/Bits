@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class StringRemainderArgument implements CommandArgument<String> {
+public class StringRemainderArgument extends CommandArgument<String> {
     public static final StringRemainderArgument INSTANCE = new StringRemainderArgument();
     
     @Override

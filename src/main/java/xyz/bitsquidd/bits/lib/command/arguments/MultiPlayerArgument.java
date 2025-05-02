@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractPlayerArgument;
@@ -46,17 +47,9 @@ public class MultiPlayerArgument extends AbstractPlayerArgument<Collection<Playe
     }
 
     @Override
-    public List<String> tabComplete(CommandContext context, int startIndex) {
-        String prefix = context.getLastArg().toLowerCase();
-        List<String> completions = new ArrayList<>(getPlayerNameCompletions(prefix));
-        
-        for (String selector : SUPPORTED_SELECTORS) {
-            if (selector.startsWith(prefix)) {
-                completions.add(selector);
-            }
-        }
-
-        completions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
+        List<String> completions = new ArrayList<>(getPlayerNameCompletions());
+        completions.addAll(SUPPORTED_SELECTORS);
 
         return completions;
     }

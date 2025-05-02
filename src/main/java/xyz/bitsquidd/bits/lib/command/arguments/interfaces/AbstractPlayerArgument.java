@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.arguments.CommandArgument;
 
 import java.util.List;
 
-public abstract class AbstractPlayerArgument<T> implements CommandArgument<T> {
+public abstract class AbstractPlayerArgument<T> extends CommandArgument<T> {
 
     protected boolean isObviouslyNotPlayerName(String input) {
         if (input.isEmpty()) {
@@ -39,13 +39,12 @@ public abstract class AbstractPlayerArgument<T> implements CommandArgument<T> {
         return false;
     }
 
-    protected List<String> getPlayerNameCompletions(String prefix) {
+    protected List<String> getPlayerNameCompletions() {
         return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
-                .filter(name -> name.toLowerCase().startsWith(prefix.toLowerCase()))
                 .toList();
     }
-    
+
     @Override
     public boolean canParseArg(CommandContext context, int argIndex) {
         if (argIndex >= context.getArgLength()) {

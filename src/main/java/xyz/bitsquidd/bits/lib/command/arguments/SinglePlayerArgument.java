@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractPlayerArgument;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: have a way to disable @ args. not all commands should have this - e.g. /msg
 public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
     public static final SinglePlayerArgument INSTANCE = new SinglePlayerArgument();
     private static final List<String> SUPPORTED_SELECTORS = Arrays.asList("@s", "@p");
@@ -37,10 +39,8 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
     }
 
     @Override
-    public List<String> tabComplete(CommandContext context, int startIndex) {
-        String prefix = context.getLastArg().toLowerCase();
-        List<String> completions = new ArrayList<>(getPlayerNameCompletions(prefix));
-
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
+        List<String> completions = new ArrayList<>(getPlayerNameCompletions());
         completions.addAll(SUPPORTED_SELECTORS);
 
         return completions;

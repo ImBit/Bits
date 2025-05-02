@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
-public class DoubleArgument implements CommandArgument<Double> {
+public class DoubleArgument extends CommandArgument<Double> {
     public static final DoubleArgument INSTANCE = new DoubleArgument();
 
     @Override

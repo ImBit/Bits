@@ -1,30 +1,20 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
-import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-public interface CommandArgument<T> {
-    String getTypeName();
+public abstract class CommandArgument<T> implements ICommandArgument<T> {
+    protected ArrayList<String> addedTabCompletions = new ArrayList<>();
 
-    T parse(CommandContext context, int startIndex) throws ArgumentParseException;
-    boolean canParseArg(CommandContext context, int argIndex);
-    default int getRequiredArgs() {
-        return 1;
-    }
-    default List<String> tabComplete(CommandContext context, int startIndex) {
-        return Collections.emptyList();
+    @Override
+    public void addTabCompletions(List<String> completions) {
+        addedTabCompletions.addAll(completions);
     }
 
-    default boolean canParseFull(CommandContext context, int startIndex) {
-        try {
-            parse(context, startIndex);
-            return true;
-        } catch (ArgumentParseException e) {
-            return false;
-        }
+    @Override
+    public @NotNull List<String> getAddedTabCompletions() {
+        return addedTabCompletions;
     }
-
 }

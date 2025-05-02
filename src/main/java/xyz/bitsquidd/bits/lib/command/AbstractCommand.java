@@ -66,14 +66,13 @@ public abstract class AbstractCommand {
 
         try {
             hasExecutedPath = defaultExecute(commandContext);
+            Set<CommandPath> validPaths = getValidPaths(commandContext);
 
-            if (!commandContext.isEmpty()) {
-                for (CommandPath path : getValidPaths(commandContext)) {
-                    hasExecutedPath = hasExecutedPath || path.execute(commandContext);
-                }
+            for (CommandPath path : validPaths) {
+                hasExecutedPath = hasExecutedPath || path.execute(commandContext);
             }
         } catch (Exception e) {
-            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
+//            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
             LogController.exception(e);
             hasExecutedPath = false;
         }

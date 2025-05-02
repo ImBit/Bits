@@ -16,8 +16,8 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDeco
 import java.util.Collection;
 import java.util.List;
 
-@Command(name = "tpnew", aliases = {"tp"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
-public class TeleportCommand extends AbstractCommand {
+@Command(name = "tp-example", aliases = {"tp-example-2"}, description = "Teleport players to a location", permission = "minecraft.command.teleport")
+public class ExampleTeleportCommand extends AbstractCommand {
 
     @Override
     public void initialisePaths() {

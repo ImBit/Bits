@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EnumArgument<T extends Enum<T>> implements CommandArgument<T> {
+public class EnumArgument<T extends Enum<T>> extends CommandArgument<T> {
     private final Class<T> enumClass;
     private final Set<T> allowedValues;
 
@@ -63,17 +63,15 @@ public class EnumArgument<T extends Enum<T>> implements CommandArgument<T> {
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
-        String input = context.getArg(index).toUpperCase();
         if (allowedValues.isEmpty()) {
             return Arrays.stream(enumClass.getEnumConstants())
                     .map(Enum::name)
-                    .filter(name -> name.startsWith(input))
+                    .collect(Collectors.toList());
+        } else {
+            return allowedValues.stream()
+                    .map(Enum::name)
                     .collect(Collectors.toList());
         }
-        return allowedValues.stream()
-                .map(Enum::name)
-                .filter(name -> name.startsWith(input))
-                .collect(Collectors.toList());
     }
 
     private String getAllowedValuesString() {

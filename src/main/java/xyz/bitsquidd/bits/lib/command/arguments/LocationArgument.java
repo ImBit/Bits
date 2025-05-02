@@ -1,14 +1,14 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationArgument implements CommandArgument<Location> {
+public class LocationArgument extends CommandArgument<Location> {
     public static final LocationArgument INSTANCE = new LocationArgument();
 
     @Override
@@ -28,12 +28,7 @@ public class LocationArgument implements CommandArgument<Location> {
             double y = parseCoordinate(context.getArgs()[startIndex + 1]);
             double z = parseCoordinate(context.getArgs()[startIndex + 2]);
 
-            World world = context.getWorld();
-            if (world == null) {
-                throw new ArgumentParseException("Cannot parse location: no world specified");
-            }
-
-            return new Location(world, x, y, z);
+            return new Location(context.getWorld(), x, y, z);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException("Invalid coordinate format: " + e.getMessage());
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -56,7 +51,7 @@ public class LocationArgument implements CommandArgument<Location> {
     }
 
     @Override
-    public List<String> tabComplete(CommandContext context, int startIndex) {
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
         int relativeArgIndex = context.getArgLength()-1-startIndex;
 
         return suggestCoordinate(context.getLastArg(), relativeArgIndex);

@@ -15,7 +15,6 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.StyleFormatter;
 import java.util.*;
 
 public abstract class TextTagDecorator implements ITextDecorator {
-
     private final Set<StyleFormatter> formatters;
 
     protected TextTagDecorator() {

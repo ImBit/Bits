@@ -9,7 +9,7 @@ import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WorldArgument implements CommandArgument<World> {
+public class WorldArgument extends CommandArgument<World> {
     public static final WorldArgument INSTANCE = new WorldArgument();
 
     @Override
@@ -38,10 +38,9 @@ public class WorldArgument implements CommandArgument<World> {
     }
 
     @Override
-    public List<String> tabComplete(CommandContext context, int startIndex) {
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
         return Bukkit.getWorlds().stream()
                 .map(World::getName)
-                .filter(name -> name.toLowerCase().startsWith(context.getLastArg().toLowerCase()))
                 .collect(Collectors.toList());
     }
 }

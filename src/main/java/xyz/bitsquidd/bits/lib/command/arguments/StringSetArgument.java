@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StringSetArgument implements CommandArgument<String> {
+public class StringSetArgument extends CommandArgument<String> {
     private final Set<String> allowedValues;
     private final String typeName;
     private final boolean caseSensitive;
@@ -67,13 +67,7 @@ public class StringSetArgument implements CommandArgument<String> {
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
-        String input = caseSensitive ? 
-                context.getArg(index) : 
-                context.getArg(index).toLowerCase();
-                
-        return allowedValues.stream()
-                .filter(value -> value.startsWith(input))
-                .collect(Collectors.toList());
+        return allowedValues.stream().toList();
     }
 
     private String getAllowedValuesString() {

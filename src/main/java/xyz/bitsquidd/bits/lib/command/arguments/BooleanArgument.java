@@ -4,11 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class BooleanArgument implements CommandArgument<Boolean> {
+public class BooleanArgument extends CommandArgument<Boolean> {
     public static final BooleanArgument INSTANCE = new BooleanArgument();
     
     private static final Set<String> TRUE_VALUES = new HashSet<>(Arrays.asList(
@@ -51,5 +49,13 @@ public class BooleanArgument implements CommandArgument<Boolean> {
 
         String input = context.getArgs()[argIndex].toLowerCase();
         return TRUE_VALUES.contains(input) || FALSE_VALUES.contains(input);
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
+        ArrayList<String> completions = new ArrayList<>(TRUE_VALUES);
+        completions.addAll(FALSE_VALUES);
+
+        return completions;
     }
 }

@@ -5,6 +5,7 @@ import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Sub-command paths.
@@ -27,11 +28,17 @@ public class CommandPath {
 
 
     public boolean matchesPartial(CommandContext commandContext) {
-        if (commandContext.getArgsLength() > getArgLength()) {
+        int argLength = commandContext.getArgLength();
+
+        if (getArgLength() == 0 && argLength == 0) {
+            return true;
+        }
+
+        if (argLength > getArgLength()) {
             return false;
         }
 
-        for (int i = 0; i < commandContext.getArgsLength(); i++) {
+        for (int i = 0; i < argLength; i++) {
             CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;
@@ -42,6 +49,10 @@ public class CommandPath {
     }
     public boolean matchesFully(CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
+
+        if (getArgLength() == 0 && argLength == 0) {
+            return true;
+        }
 
         if (argLength != getArgLength()) {
             return false;
@@ -109,7 +120,11 @@ public class CommandPath {
 
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
         CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
-        return commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo));
+
+        ArrayList<String> availableCompletions = new ArrayList<>(commandArgumentInfo.param.getAddedTabCompletions());
+        availableCompletions.addAll(commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo)));
+
+        return availableCompletions;
     }
 
     public boolean hasPermissions(CommandContext commandContext) {

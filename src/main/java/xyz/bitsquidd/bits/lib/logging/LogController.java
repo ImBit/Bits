@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.LogDecorator;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class LogController {
@@ -50,7 +49,8 @@ public class LogController {
     }
 
     public static void exception(Exception exception) {
-        bukkitLogger.severe(exception.getMessage() + ": \n" + Arrays.toString(exception.getStackTrace()));
+        bukkitLogger.severe(exception.getMessage() + ":");
+        Thread.dumpStack();
     }
 
 }

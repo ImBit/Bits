@@ -6,7 +6,7 @@ import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.List;
 
-public class SimpleStringArgument implements CommandArgument<String> {
+public class SimpleStringArgument extends CommandArgument<String> {
     public static final SimpleStringArgument INSTANCE = new SimpleStringArgument();
 
     private SimpleStringArgument() {}

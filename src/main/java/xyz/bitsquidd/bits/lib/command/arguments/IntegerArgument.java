@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
-public class IntegerArgument implements CommandArgument<Integer> {
+public class IntegerArgument extends CommandArgument<Integer> {
     public static final IntegerArgument INSTANCE = new IntegerArgument();
 
     @Override
