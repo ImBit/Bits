@@ -10,10 +10,10 @@ import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 
 import java.util.List;
 
-public class BukkitCommand extends Command implements CommandExecutor, TabCompleter {
+public class BitsCommand extends Command implements CommandExecutor, TabCompleter {
         private final AbstractCommand command;
         
-        public BukkitCommand(String name, String description, String usageMessage, List<String> aliases, AbstractCommand command) {
+        public BitsCommand(String name, String description, String usageMessage, List<String> aliases, AbstractCommand command) {
             super(name, description, usageMessage, aliases);
             this.command = command;
             
@@ -41,4 +41,9 @@ public class BukkitCommand extends Command implements CommandExecutor, TabComple
         public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
             return tabComplete(sender, alias, args);
         }
+
+    @Override
+    public boolean canBeOverriden() {
+        return true;
     }
+}

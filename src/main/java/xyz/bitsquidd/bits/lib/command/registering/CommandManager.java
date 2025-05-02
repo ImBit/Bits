@@ -6,17 +6,16 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.command.AbstractCommand;
+import xyz.bitsquidd.bits.lib.logging.LogController;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public abstract class CommandManager {
     private final Plugin plugin;
 
     private CommandMap commandMap;
-    private final Map<String, BukkitCommand> registeredCommands = new HashMap<>();
+    private final Map<String, BitsCommand> registeredCommands = new HashMap<>();
     private final Set<Command> commandSet = new HashSet<>();
 
     protected CommandManager(Plugin plugin) {
@@ -27,9 +26,7 @@ public abstract class CommandManager {
 
     private void initialiseCommandMap() {
         try {
-            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+            commandMap = Bukkit.getCommandMap();
         } catch (Exception e) {
             LogController.error("Failed to access command map: " + e.getMessage());
             LogController.exception(e);
@@ -40,7 +37,7 @@ public abstract class CommandManager {
 
     public void register(AbstractCommand command) {
         if (plugin == null || commandMap == null) {
-            throw new IllegalStateException("CommandManager has not been initialized. Call initialise() first.");
+            throw new IllegalStateException("The commandMap has not been correctly initialized.");
         }
 
         String name = command.name;
@@ -53,7 +50,7 @@ public abstract class CommandManager {
             return;
         }
 
-        BukkitCommand bukkitCommand = new BukkitCommand(
+        BitsCommand bitsCommand = new BitsCommand(
                 name,
                 command.description,
                 "/" + name,
@@ -61,9 +58,9 @@ public abstract class CommandManager {
                 command
         );
 
-        registeredCommands.put(name.toLowerCase(Locale.ROOT), bukkitCommand);
-        commandSet.add(bukkitCommand);
-        commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bukkitCommand);
+        registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
+        commandSet.add(bitsCommand);
+        commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bitsCommand);
         LogController.info("Registered command: " + name);
     }
 
@@ -75,9 +72,10 @@ public abstract class CommandManager {
             commandMap.getCommand(s).unregister(commandMap);
         });
 
-
         registeredCommands.clear();
         commandSet.clear();
+
+        Bukkit.reloadCommandAliases();
         LogController.info("Unregistered all commands");
     }
 
@@ -87,7 +85,7 @@ public abstract class CommandManager {
     }
 
     @Nullable
-    public BukkitCommand getCommand(String name) {
+    public BitsCommand getCommand(String name) {
         return registeredCommands.get(name.toLowerCase(Locale.ROOT));
     }
 }
