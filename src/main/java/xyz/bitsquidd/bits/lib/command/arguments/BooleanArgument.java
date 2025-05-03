@@ -10,11 +10,11 @@ public class BooleanArgument extends CommandArgument<Boolean> {
     public static final BooleanArgument INSTANCE = new BooleanArgument();
     
     private static final Set<String> TRUE_VALUES = new HashSet<>(Arrays.asList(
-            "true", "enable"
+            "true", "enable", "1"
     ));
     
     private static final Set<String> FALSE_VALUES = new HashSet<>(Arrays.asList(
-            "false", "disable"
+            "false", "disable", "0"
     ));
 
     @Override

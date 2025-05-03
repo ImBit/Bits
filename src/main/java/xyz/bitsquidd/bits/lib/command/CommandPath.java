@@ -38,7 +38,7 @@ public class CommandPath {
             return false;
         }
 
-        for (int i = 0; i < argLength; i++) {
+        for (int i = 0; i < argLength-1; i++) { //We subtract 1 here as to help partial tab completion
             CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;
