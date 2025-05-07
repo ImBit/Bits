@@ -66,7 +66,7 @@ public abstract class AbstractCommand {
 
         try {
             hasExecutedPath = defaultExecute(commandContext);
-            Set<CommandPath> validPaths = getValidPaths(commandContext);
+            Set<CommandPath> validPaths = getValidCommandPaths(commandContext);
 
             for (CommandPath path : validPaths) {
                 hasExecutedPath = hasExecutedPath || path.execute(commandContext);
@@ -85,7 +85,7 @@ public abstract class AbstractCommand {
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
         List<String> availableCompletions = new ArrayList<>();
 
-        for (CommandPath path : getValidPaths(commandContext)) {
+        for (CommandPath path : getValidTabCompletablePaths(commandContext)) {
             availableCompletions.addAll(path.tabComplete(commandContext));
         }
 
@@ -97,9 +97,15 @@ public abstract class AbstractCommand {
         return availableCompletions;
     }
 
-    private Set<CommandPath> getValidPaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidTabCompletablePaths(CommandContext commandContext) {
         return paths.stream()
                 .filter(path -> path.matchesPartial(commandContext))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<CommandPath> getValidCommandPaths(CommandContext commandContext) {
+        return paths.stream()
+                .filter(path -> path.matchesFully(commandContext))
                 .collect(Collectors.toSet());
     }
 

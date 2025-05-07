@@ -17,7 +17,7 @@ public class BitsCommand extends Command implements CommandExecutor, TabComplete
             super(name, description, usageMessage, aliases);
             this.command = command;
             
-            if (command.commandPermission != null && !command.commandPermission.isEmpty()) {
+            if (!command.commandPermission.isEmpty()) {
                 setPermission(command.commandPermission);
             }
         }
