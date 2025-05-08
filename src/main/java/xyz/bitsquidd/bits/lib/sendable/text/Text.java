@@ -8,8 +8,8 @@ import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 
 public class Text implements Sendable {
-    protected @NotNull Component component;
-    protected @Nullable ITextDecorator decorator;
+    protected final @NotNull Component component;
+    protected final @Nullable ITextDecorator decorator;
 
     public Text(@NotNull Component component, @Nullable ITextDecorator decorator) {
         this.component = component;
