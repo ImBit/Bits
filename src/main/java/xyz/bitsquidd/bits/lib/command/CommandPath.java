@@ -1,9 +1,9 @@
 package xyz.bitsquidd.bits.lib.command;
 
 import org.jetbrains.annotations.NotNull;
-import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
+import xyz.bitsquidd.bits.lib.logging.LogController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,13 @@ public class CommandPath {
     }
     public boolean matchesFully(CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
+        int actualArgLength = getArgLength();
 
-        if (getArgLength() == 0 && argLength == 0) {
+        if (actualArgLength == 0 && argLength == 0) {
             return true;
         }
 
-        if (argLength != getArgLength()) {
+        if (argLength != actualArgLength && params.stream().noneMatch(arg -> arg.param.getRequiredArgs() == Integer.MAX_VALUE)) {
             return false;
         }
 

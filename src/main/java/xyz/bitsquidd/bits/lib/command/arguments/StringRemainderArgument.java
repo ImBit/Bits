@@ -20,7 +20,12 @@ public class StringRemainderArgument extends CommandArgument<String> {
 
         return String.join(" ", Arrays.copyOfRange(context.getArgs(), startIndex, context.getArgsLength()));
     }
-    
+
+    @Override
+    public int getRequiredArgs() {
+        return Integer.MAX_VALUE;
+    }
+
     @Override
     public boolean canParseArg(@NotNull CommandContext context, int index) {
         return true;
