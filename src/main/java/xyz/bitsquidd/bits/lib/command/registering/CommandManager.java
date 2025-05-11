@@ -68,8 +68,11 @@ public abstract class CommandManager {
         CommandMap commandMap = Bukkit.getCommandMap();
 
         registeredCommands.keySet().forEach(s -> {
-            LogController.info("Unregistered command: " + s);
-            commandMap.getCommand(s).unregister(commandMap);
+            Command command = commandMap.getCommand(s);
+            if (command != null) {
+                command.unregister(commandMap);
+                LogController.info("Unregistered command: " + s);
+            }
         });
 
         registeredCommands.clear();
