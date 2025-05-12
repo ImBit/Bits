@@ -28,12 +28,12 @@ public class StringRemainderArgument extends CommandArgument<String> {
 
     @Override
     public boolean canParseArg(@NotNull CommandContext context, int index) {
-        return true;
+        return !context.isEmpty();
     }
     
     @Override
     public boolean canParseFull(@NotNull CommandContext context, int startIndex) {
-        return true;
+        return !context.isEmpty();
     }
 
     @Override
