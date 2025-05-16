@@ -55,7 +55,7 @@ public class CommandPath {
             return true;
         }
 
-        if (argLength != actualArgLength && params.stream().noneMatch(arg -> arg.param.getRequiredArgs() == Integer.MAX_VALUE)) {
+        if (argLength != actualArgLength && params.stream().noneMatch(arg -> arg.param.isGreedy())) {
             return false;
         }
 

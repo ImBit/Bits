@@ -47,10 +47,6 @@ public abstract class AbstractPlayerArgument<T> extends CommandArgument<T> {
 
     @Override
     public boolean canParseArg(CommandContext context, int argIndex) {
-        if (argIndex >= context.getArgLength()) {
-            return false;
-        }
-        
         String arg = context.getArg(argIndex);
         if (arg.startsWith("@")) {
             return true; //getSupportedSelectors().contains(arg.toLowerCase())

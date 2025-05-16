@@ -11,36 +11,42 @@ import java.util.List;
 
 public class StringRemainderArgument extends CommandArgument<String> {
     public static final StringRemainderArgument INSTANCE = new StringRemainderArgument();
-    
+
     @Override
     public String parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
         if (startIndex >= context.getArgsLength()) {
-            return "";
+            throw new ArgumentParseException("No string argument provided");
         }
 
-        return String.join(" ", Arrays.copyOfRange(context.getArgs(), startIndex, context.getArgsLength()));
-    }
+        String result = String.join(" ", Arrays.copyOfRange(context.getArgs(), startIndex, context.getArgsLength()));
 
-    @Override
-    public int getRequiredArgs() {
-        return Integer.MAX_VALUE;
+        if (result.isEmpty()) {
+            throw new ArgumentParseException("Empty string is not allowed");
+        }
+
+        return result;
     }
 
     @Override
     public boolean canParseArg(@NotNull CommandContext context, int index) {
-        return !context.isEmpty();
+        return index < context.getArgsLength() && !context.getArg(index).isEmpty();
     }
-    
+
     @Override
     public boolean canParseFull(@NotNull CommandContext context, int startIndex) {
-        return !context.isEmpty();
+        if (startIndex >= context.getArgsLength()) {
+            return false;
+        }
+
+        String result = String.join(" ", Arrays.copyOfRange(context.getArgs(), startIndex, context.getArgsLength()));
+        return !result.isEmpty();
     }
 
     @Override
     public @NotNull String getTypeName() {
-        return "string...";
+        return "String...";
     }
-    
+
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         return Collections.emptyList();

@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractPlayerArgument;
+import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.entity.EntityHelper;
 
 import java.util.ArrayList;
@@ -54,5 +54,10 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
     @Override
     protected List<String> getSupportedSelectors() {
         return SUPPORTED_SELECTORS;
+    }
+
+    @Override
+    public boolean isGreedy() {
+        return true;
     }
 }
