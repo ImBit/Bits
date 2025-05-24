@@ -3,10 +3,10 @@ package xyz.bitsquidd.bits.lib.command;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.annotations.Command;
 import xyz.bitsquidd.bits.lib.component.color.ColorStore;
-import xyz.bitsquidd.bits.lib.logging.LogController;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
 
@@ -56,7 +56,7 @@ public abstract class AbstractCommand {
             return true;
         } catch (Exception e) {
             Text.of("<b>An unexpected error occurred:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
-            LogController.exception(e);
+            Bukkit.getLogger().severe(e.getMessage());
         }
         return false;
     }
@@ -72,8 +72,8 @@ public abstract class AbstractCommand {
                 hasExecutedPath = hasExecutedPath || path.execute(commandContext);
             }
         } catch (Exception e) {
-//            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
-            LogController.exception(e);
+            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
+            Bukkit.getLogger().severe(e.getMessage());
             hasExecutedPath = false;
         }
 

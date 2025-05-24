@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.AbstractCommand;
-import xyz.bitsquidd.bits.lib.logging.LogController;
 
 import java.util.*;
 
@@ -28,8 +27,7 @@ public abstract class CommandManager {
         try {
             commandMap = Bukkit.getCommandMap();
         } catch (Exception e) {
-            LogController.error("Failed to access command map: " + e.getMessage());
-            LogController.exception(e);
+            Bukkit.getLogger().severe("Failed to access command map: " + e.getMessage());
         }
     }
 
@@ -46,7 +44,7 @@ public abstract class CommandManager {
         }
 
         if (registeredCommands.containsKey(name.toLowerCase())) {
-            LogController.warning("Command with name '" + name + "' is already registered. Skipping registration.");
+            Bukkit.getLogger().warning("Command with name '" + name + "' is already registered. Skipping registration.");
             return;
         }
 
@@ -61,7 +59,7 @@ public abstract class CommandManager {
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
         commandSet.add(bitsCommand);
         commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bitsCommand);
-        LogController.info("Registered command: " + name);
+        Bukkit.getLogger().info("Registered command: " + name);
     }
 
     public void unregisterAll() {
@@ -71,7 +69,7 @@ public abstract class CommandManager {
             Command command = commandMap.getCommand(s);
             if (command != null) {
                 command.unregister(commandMap);
-                LogController.info("Unregistered command: " + s);
+                Bukkit.getLogger().info("Unregistered command: " + s);
             }
         });
 
@@ -79,7 +77,7 @@ public abstract class CommandManager {
         commandSet.clear();
 
         Bukkit.reloadCommandAliases();
-        LogController.info("Unregistered all commands");
+        Bukkit.getLogger().info("Unregistered all commands");
     }
 
     @NotNull

@@ -1,9 +1,9 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
-import xyz.bitsquidd.bits.lib.logging.LogController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public class CommandPath {
                 argIndex += commandArgumentInfo.param.getRequiredArgs();
             }
         } catch (ArgumentParseException e) {
-            LogController.error("Command Parsing Exception: " + e.getMessage());
+            Bukkit.getLogger().severe("Command Parsing Exception: " + e.getMessage());
             return false;
         }
 

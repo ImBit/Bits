@@ -2,14 +2,14 @@ package xyz.bitsquidd.bits;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.bitsquidd.bits.example.ExampleCommandManager;
-import xyz.bitsquidd.bits.lib.logging.LogController;
+import xyz.bitsquidd.bits.example.ExampleLogger;
 
 // TODO:
 //  BitsConfig.DEBUGMODE
 public class Bits extends JavaPlugin {
     private static Bits instance;
 
-    private ExampleCommandManager exampleCommandManager;
+    private static ExampleCommandManager exampleCommandManager;
 
     public Bits() {
         instance = this;
@@ -19,16 +19,18 @@ public class Bits extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new ExampleLogger(this);
+
         exampleCommandManager = new ExampleCommandManager(this);
         exampleCommandManager.registerCommands();
 
-        LogController.success("Enabled " + getName());
+        ExampleLogger.success("Enabled " + getName());
     }
 
     @Override
     public void onDisable() {
         exampleCommandManager.unregisterAll();
 
-        LogController.success("Disabled " + getName());
+        ExampleLogger.success("Disabled " + getName());
     }
 }
