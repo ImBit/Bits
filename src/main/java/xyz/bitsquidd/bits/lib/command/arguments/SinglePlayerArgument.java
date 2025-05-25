@@ -55,9 +55,4 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
     protected List<String> getSupportedSelectors() {
         return SUPPORTED_SELECTORS;
     }
-
-    @Override
-    public boolean isGreedy() {
-        return true;
-    }
 }

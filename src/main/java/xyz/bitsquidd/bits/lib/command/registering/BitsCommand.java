@@ -24,7 +24,7 @@ public class BitsCommand extends Command implements CommandExecutor, TabComplete
         
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            return command.execute(new CommandContext(sender, args));
+            return command.vanillaExecute(new CommandContext(sender, args));
         }
         
         @Override

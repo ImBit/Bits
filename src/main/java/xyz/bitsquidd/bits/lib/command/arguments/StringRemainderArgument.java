@@ -51,4 +51,9 @@ public class StringRemainderArgument extends CommandArgument<String> {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         return Collections.emptyList();
     }
+
+    @Override
+    public boolean isGreedy() {
+        return true;
+    }
 }

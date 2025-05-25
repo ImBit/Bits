@@ -21,9 +21,4 @@ public class CommandArgumentInfo<T> {
         this.param = param;
         this.defaultValue = defaultValue;
     }
-
-    @ApiStatus.Experimental
-    public boolean isOptional() {
-        return defaultValue != null;
-    }
 }

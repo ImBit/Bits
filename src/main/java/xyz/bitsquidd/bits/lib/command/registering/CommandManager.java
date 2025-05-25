@@ -27,7 +27,7 @@ public abstract class CommandManager {
         try {
             commandMap = Bukkit.getCommandMap();
         } catch (Exception e) {
-            Bukkit.getLogger().severe("Failed to access command map: " + e.getMessage());
+            plugin.getLogger().severe("Failed to access command map: " + e.getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ public abstract class CommandManager {
         }
 
         if (registeredCommands.containsKey(name.toLowerCase())) {
-            Bukkit.getLogger().warning("Command with name '" + name + "' is already registered. Skipping registration.");
+            plugin.getLogger().warning("Command with name '" + name + "' is already registered. Skipping registration.");
             return;
         }
 
@@ -59,7 +59,7 @@ public abstract class CommandManager {
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
         commandSet.add(bitsCommand);
         commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bitsCommand);
-        Bukkit.getLogger().info("Registered command: " + name);
+        plugin.getLogger().info("Registered command: " + name);
     }
 
     public void unregisterAll() {
@@ -69,7 +69,7 @@ public abstract class CommandManager {
             Command command = commandMap.getCommand(s);
             if (command != null) {
                 command.unregister(commandMap);
-                Bukkit.getLogger().info("Unregistered command: " + s);
+                plugin.getLogger().info("Unregistered command: " + s);
             }
         });
 
@@ -77,7 +77,7 @@ public abstract class CommandManager {
         commandSet.clear();
 
         Bukkit.reloadCommandAliases();
-        Bukkit.getLogger().info("Unregistered all commands");
+        plugin.getLogger().info("Unregistered all commands");
     }
 
     @NotNull

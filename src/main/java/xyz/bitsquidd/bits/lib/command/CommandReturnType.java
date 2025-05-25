@@ -1,11 +1,9 @@
 package xyz.bitsquidd.bits.lib.command;
 
-import xyz.bitsquidd.bits.lib.component.color.ColorStore;
-
 public enum CommandReturnType {
-    SUCCESS(ColorStore.SUCCESS.color, "#"),
-    INFO(ColorStore.DEBUG.color, "#"),
-    ERROR(ColorStore.ERROR.color, "#");
+    SUCCESS(0x77FF00, "#"),
+    INFO(0xBBBBFF, "#"),
+    ERROR(0xFF2244, "#");
 
     public final int color;
     public final String icon;
