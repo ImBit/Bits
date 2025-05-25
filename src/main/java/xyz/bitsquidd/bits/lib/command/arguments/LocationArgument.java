@@ -24,9 +24,11 @@ public class LocationArgument extends CommandArgument<Location> {
     @Override
     public Location parse(CommandContext context, int startIndex) throws ArgumentParseException {
         try {
-            double x = parseCoordinate(context.getArgs()[startIndex]);
-            double y = parseCoordinate(context.getArgs()[startIndex + 1]);
-            double z = parseCoordinate(context.getArgs()[startIndex + 2]);
+            Location base = context.getLocation();
+
+            double x = parseCoordinate(context.getArgs()[startIndex], base != null ? base.getX() : 0);
+            double y = parseCoordinate(context.getArgs()[startIndex + 1], base != null ? base.getY() : 0);
+            double z = parseCoordinate(context.getArgs()[startIndex + 2], base != null ? base.getZ() : 0);
 
             return new Location(context.getWorld(), x, y, z);
         } catch (NumberFormatException e) {
@@ -43,7 +45,7 @@ public class LocationArgument extends CommandArgument<Location> {
         }
 
         try {
-            parseCoordinate(context.getArgs()[argIndex]);
+            parseCoordinate(context.getArgs()[argIndex], 0);
             return true;
         } catch (Exception e) {
             return false;
@@ -57,12 +59,12 @@ public class LocationArgument extends CommandArgument<Location> {
         return suggestCoordinate(context.getLastArg(), relativeArgIndex);
     }
 
-    private double parseCoordinate(String input) {
+    private double parseCoordinate(String input, double base) {
         if (input.startsWith("~")) {
             if (input.length() == 1) {
-                return 0;
+                return base;
             }
-            return Double.parseDouble(input.substring(1));
+            return base + Double.parseDouble(input.substring(1));
         }
         return Double.parseDouble(input);
     }
