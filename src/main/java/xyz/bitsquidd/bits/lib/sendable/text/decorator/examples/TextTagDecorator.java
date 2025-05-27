@@ -2,24 +2,26 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.component.ComponentHelper;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.StyleFormatter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class TextTagDecorator implements ITextDecorator {
-    private final Set<StyleFormatter> formatters;
+    protected final Set<AbstractFormatter> globalFormatters = new HashSet<>();
+    protected final Set<AbstractFormatter> formatters = new HashSet<>();
 
     protected TextTagDecorator() {
-        this.formatters = new HashSet<>();
-
         formatters.add(new StyleFormatter("b", TextDecoration.BOLD));
         formatters.add(new StyleFormatter("i", TextDecoration.ITALIC));
         formatters.add(new StyleFormatter("s", TextDecoration.STRIKETHROUGH));
@@ -28,17 +30,15 @@ public abstract class TextTagDecorator implements ITextDecorator {
     }
 
     @Override
-    public @NotNull Component format(Component component, CommandSender target) {
+    public @NotNull Component format(@NotNull Component component, @Nullable CommandSender target) {
         String content = ComponentHelper.getContent(component, target instanceof Player player ? player.locale() : null);
         Component formatted = processContent(content);
 
-        return Component.empty()
-                .append(Component.text(getPrefix() + " "))
-                .append(formatted);
+        return Component.empty().append(formatted);
     }
 
-    private Component processContent(String content) {
-        if (content == null || content.isEmpty()) {
+    private @NotNull Component processContent(@NotNull String content) {
+        if (content.isEmpty()) {
             return Component.empty();
         }
 
@@ -46,16 +46,16 @@ public abstract class TextTagDecorator implements ITextDecorator {
         return buildComponent(tokens);
     }
 
-    private List<TextToken> tokenize(String content) {
+    private @NotNull List<TextToken> tokenize(@NotNull String content) {
         List<TextToken> tokens = new ArrayList<>();
         StringBuilder currentText = new StringBuilder();
-        Set<StyleFormatter> activeFormatters = new HashSet<>();
+        Set<AbstractFormatter> activeFormatters = new HashSet<>();
 
         int i = 0;
         while (i < content.length()) {
             boolean tagProcessed = false;
 
-            for (StyleFormatter formatter : formatters) {
+            for (AbstractFormatter formatter : formatters) {
                 if (i + formatter.getOpenTag().length() <= content.length() && content.startsWith(formatter.getOpenTag(), i)) {
                     if (!currentText.isEmpty()) {
                         tokens.add(new TextToken(currentText.toString(), new HashSet<>(activeFormatters)));
@@ -92,31 +92,24 @@ public abstract class TextTagDecorator implements ITextDecorator {
         return tokens;
     }
 
-    private Component buildComponent(List<TextToken> tokens) {
+    private @NotNull Component buildComponent(@NotNull List<TextToken> tokens) {
         TextComponent.Builder builder = Component.text();
 
         for (TextToken token : tokens) {
-            Style.Builder style = Style.style();
+            Component textPlaceholder = Component.text(token.text);
 
-            style.color(TextColor.color(getColor()));
+            Set<AbstractFormatter> activeFormatters = new HashSet<>(globalFormatters);
+            activeFormatters.addAll(token.activeFormatters);
 
-            for (StyleFormatter formatter : token.activeFormatters) {
-                formatter.decorate(style);
+            for (AbstractFormatter formatter : activeFormatters) {
+                textPlaceholder = formatter.format(textPlaceholder);
             }
 
-            builder.append(Component.text(token.text).style(style.build()));
+            builder.append(textPlaceholder);
         }
 
         return builder.build();
     }
 
-    private static class TextToken {
-        final String text;
-        final Set<StyleFormatter> activeFormatters;
-
-        TextToken(String text, Set<StyleFormatter> activeFormatters) {
-            this.text = text;
-            this.activeFormatters = activeFormatters;
-        }
-    }
+    private record TextToken(String text, Set<AbstractFormatter> activeFormatters) {}
 }

@@ -40,8 +40,10 @@ public class Text implements Sendable {
 
     @Override
     public <T extends CommandSender> void send(@NotNull T target) {
-        Component formattedMessage = decorator != null ? decorator.format(component, target) : component;
+        target.sendMessage(getComponent(target));
+    }
 
-        target.sendMessage(formattedMessage);
+    public <T extends CommandSender> Component getComponent(@Nullable T target) {
+        return decorator != null ? decorator.format(component, target) : component;
     }
 }

@@ -1,28 +1,20 @@
 package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters;
 
-import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.jetbrains.annotations.NotNull;
 
-public class StyleFormatter {
-    private final String openTag;
-    private final String closeTag;
-    private final TextDecoration decoration;
+public class StyleFormatter extends AbstractFormatter {
+    public final @NotNull TextDecoration decoration;
 
-    public StyleFormatter(String tag, TextDecoration decoration) {
-        this.openTag = "<" + tag + ">";
-        this.closeTag = "</" + tag + ">";
+    public StyleFormatter(@NotNull String tag, @NotNull TextDecoration decoration) {
+        super(tag);
         this.decoration = decoration;
     }
 
-    public String getOpenTag() {
-        return openTag;
-    }
 
-    public String getCloseTag() {
-        return closeTag;
-    }
-
-    public Style.Builder decorate(Style.Builder style) {
-        return style.decorate(decoration);
+    @Override
+    public @NotNull Component format(@NotNull Component input) {
+        return input.decorate(decoration);
     }
 }

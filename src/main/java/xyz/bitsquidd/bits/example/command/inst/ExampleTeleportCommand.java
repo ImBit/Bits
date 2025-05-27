@@ -66,7 +66,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
 
         sender.teleport(target);
         Text.of(
-                "Teleported to " + target,
+                "Teleported to <b>"+target+"</b>.",
                 new CommandReturnDecorator(CommandReturnType.SUCCESS)
         ).send(sender);
     }
@@ -77,7 +77,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
 
         sender.teleport(targetLocation);
         Text.of(
-                "Teleported to " + FormatHelper.formatLocation(targetLocation, false),
+                "Teleported to <b>"+FormatHelper.formatLocation(targetLocation, false)+"</b>.",
                 new CommandReturnDecorator(CommandReturnType.SUCCESS)
         ).send(sender);
     }
@@ -88,7 +88,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         targets.forEach(p -> p.teleport(targetLocation));
-        Text.of("Teleported "+FormatHelper.formatPlayers(targets)+" to " + FormatHelper.formatLocation(targetLocation, false),
+        Text.of("Teleported <b>"+FormatHelper.formatPlayers(targets)+"</b> to <b>"+FormatHelper.formatLocation(targetLocation, false)+"</b>.",
                 new CommandReturnDecorator(CommandReturnType.SUCCESS)
         ).send(sender);
     }
@@ -99,7 +99,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Player targetPlayer = context.get("targetPlayer");
 
         targets.forEach(p -> p.teleport(targetPlayer));
-        Text.of("Teleported "+FormatHelper.formatPlayers(targets)+" to " + targetPlayer.getName(),
+        Text.of("Teleported <b>"+FormatHelper.formatPlayers(targets)+"</b> to <b>"+targetPlayer.getName()+"</b>.",
                 new CommandReturnDecorator(CommandReturnType.SUCCESS)
         ).send(sender);
     }
