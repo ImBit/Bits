@@ -7,11 +7,9 @@ import org.jetbrains.annotations.NotNull;
 public class StyleFormatter extends AbstractFormatter {
     public final @NotNull TextDecoration decoration;
 
-    public StyleFormatter(@NotNull String tag, @NotNull TextDecoration decoration) {
-        super(tag);
+    public StyleFormatter(@NotNull TextDecoration decoration) {
         this.decoration = decoration;
     }
-
 
     @Override
     public @NotNull Component format(@NotNull Component input) {

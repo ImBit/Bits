@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public class FontFormatter extends AbstractFormatter {
     public final @NotNull NamespacedKey fontKey;
 
-    public FontFormatter(@NotNull String tag, @NotNull NamespacedKey fontKey) {
-        super(tag);
+    public FontFormatter(@NotNull NamespacedKey fontKey) {
         this.fontKey = fontKey;
     }
 

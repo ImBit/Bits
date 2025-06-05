@@ -7,21 +7,20 @@ import org.jetbrains.annotations.NotNull;
 public class ColorFormatter extends AbstractFormatter {
     public final int color;
 
-    public ColorFormatter(@NotNull String tag, int color) {
-        super(tag);
+    public ColorFormatter(int color) {
         this.color = color;
     }
 
-    public ColorFormatter(@NotNull String tag, @NotNull TextColor color) {
-        this(tag, color.value());
+    public ColorFormatter(@NotNull TextColor color) {
+        this(color.value());
     }
 
-    public ColorFormatter(@NotNull String tag, @NotNull org.bukkit.Color color) {
-        this(tag, color.asRGB());
+    public ColorFormatter(@NotNull org.bukkit.Color color) {
+        this(color.asRGB());
     }
 
-    public ColorFormatter(@NotNull String tag, @NotNull java.awt.Color color) {
-        this(tag, color.getRGB());
+    public ColorFormatter(@NotNull java.awt.Color color) {
+        this(color.getRGB());
     }
 
 
