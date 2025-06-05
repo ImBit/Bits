@@ -12,8 +12,8 @@ public class LocationHelper {
         World world1 = loc1.getWorld();
         World world2 = loc2.getWorld();
 
-        if (world1 == null || world2 == null || !world1.equals(world2)) {
-            return false; // Locations are in different worlds or one of them has a null world
+        if (world1 == null || !world1.equals(world2)) {
+            return false;
         }
 
         return loc1.distance(loc2) <= distance;
@@ -26,8 +26,8 @@ public class LocationHelper {
         World world1 = loc1.getWorld();
         World world2 = loc2.getWorld();
 
-        if (world1 == null || world2 == null || !world1.equals(world2)) {
-            return null; // Locations are in different worlds or one of them has a null world
+        if (world1 == null || !world1.equals(world2)) {
+            return null;
         }
 
         double midX = (loc1.getX() + loc2.getX()) / 2;
