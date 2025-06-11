@@ -28,10 +28,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     }
 
     private @NotNull Component processContent(@NotNull String content) {
-        if (content.isEmpty()) {
-            return Component.empty();
-        }
-
+        if (content.isEmpty()) return Component.empty();
         List<TextToken> tokens = tokenize(content);
         return buildComponent(tokens);
     }
@@ -39,46 +36,35 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     private @NotNull List<TextToken> tokenize(@NotNull String content) {
         List<TextToken> tokens = new ArrayList<>();
         StringBuilder currentText = new StringBuilder();
-        Set<String> activeTags = new LinkedHashSet<>();
-
+        HashMap<String, String> activeTags = new LinkedHashMap<>();
         Matcher matcher = TAG_PATTERN.matcher(content);
         int lastEnd = 0;
 
         while (matcher.find()) {
             String beforeTag = content.substring(lastEnd, matcher.start());
             currentText.append(beforeTag);
-
             String tagContent = matcher.group(1);
 
             if (!currentText.isEmpty()) {
-                tokens.add(new TextToken(currentText.toString(), new LinkedHashSet<>(activeTags)));
+                tokens.add(new TextToken(currentText.toString(), new LinkedHashMap<>(activeTags)));
                 currentText = new StringBuilder();
             }
 
             processTagOperations(tagContent, activeTags);
-
             lastEnd = matcher.end();
         }
 
-        if (lastEnd < content.length()) {
-            currentText.append(content.substring(lastEnd));
-        }
-
-        if (!currentText.isEmpty()) {
-            tokens.add(new TextToken(currentText.toString(), new LinkedHashSet<>(activeTags)));
-        }
+        if (lastEnd < content.length()) currentText.append(content.substring(lastEnd));
+        if (!currentText.isEmpty()) tokens.add(new TextToken(currentText.toString(), new LinkedHashMap<>(activeTags)));
 
         return tokens;
     }
 
-    private void processTagOperations(@NotNull String tagContent, @NotNull Set<String> activeTags) {
+    private void processTagOperations(@NotNull String tagContent, @NotNull HashMap<String, String> activeTags) {
         boolean hasLeadingSlash = tagContent.startsWith("/");
-        if (hasLeadingSlash) {
-            tagContent = tagContent.substring(1);
-        }
+        if (hasLeadingSlash) tagContent = tagContent.substring(1);
 
         String[] tagParts = tagContent.split(",");
-
         for (String tagPart : tagParts) {
             tagPart = tagPart.trim();
             if (tagPart.isEmpty()) continue;
@@ -86,77 +72,63 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
             boolean isClosing = tagPart.startsWith("/");
             String tagName = isClosing ? tagPart.substring(1).trim() : tagPart;
 
-            if (hasLeadingSlash && !isClosing) {
-                isClosing = true;
-            }
+            if (hasLeadingSlash && !isClosing) isClosing = true;
 
             if (!tagName.isEmpty() && isKnownTag(tagName)) {
                 if (isClosing) {
-                    activeTags.remove(tagName);
+                    activeTags.remove(getTagKey(tagName));
                 } else {
-                    activeTags.add(tagName);
+                    String[] parts = tagName.split(":", 2);
+                    String key = parts[0];
+                    String data = parts.length > 1 ? parts[1] : "";
+                    activeTags.put(key, data);
                 }
             }
         }
     }
 
-    private boolean isKnownTag(@NotNull String tag) {
-        // Check if this tag appears in any formatter key
-        for (String formatterKey : formatters.keySet()) {
-            String[] formatterTags = formatterKey.split("\\|");
-            for (String formatterTag : formatterTags) {
-                if (formatterTag.trim().equals(tag)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    private String getTagKey(@NotNull String tagName) {
+        return tagName.split(":", 2)[0]; // For closing tags, data is optional. We could have "c" or "c:data", both are valid.
+    }
+
+    protected boolean isKnownTag(@NotNull String tag) {
+        String tagKey = getTagKey(tag);
+        return formatters.containsKey(tagKey);
     }
 
     private @NotNull Component buildComponent(@NotNull List<TextToken> tokens) {
         TextComponent.Builder builder = Component.text();
 
         for (TextToken token : tokens) {
-            Component textPlaceholder = Component.text(token.text);
-
-            List<AbstractFormatter> applicableFormatters = getApplicableFormattersInOrder(token.activeTags);
+            Component textComponent = Component.text(token.text);
+            List<AbstractFormatter> applicableFormatters = getApplicableFormatters(token.activeTags);
 
             for (AbstractFormatter formatter : applicableFormatters) {
-                textPlaceholder = formatter.format(textPlaceholder);
+                try {
+                    textComponent = formatter.format(textComponent);
+                } catch (Exception e) {}
             }
 
-            builder.append(textPlaceholder);
+            builder.append(textComponent);
         }
 
         return builder.build();
     }
 
-    private @NotNull List<AbstractFormatter> getApplicableFormattersInOrder(@NotNull Set<String> activeTags) {
-        List<AbstractFormatter> applicableFormatters = new ArrayList<>(globalFormatters);
+    private @NotNull List<AbstractFormatter> getApplicableFormatters(@NotNull HashMap<String, String> activeTags) {
+        List<AbstractFormatter> applicable = new ArrayList<>(globalFormatters);
 
-        for (Map.Entry<String, AbstractFormatter> entry : formatters.entrySet()) {
-            String formatterKey = entry.getKey();
-            AbstractFormatter formatter = entry.getValue();
-
-            if (shouldApplyFormatter(formatterKey, activeTags)) {
-                applicableFormatters.add(formatter);
+        for (String formatterTag : formatters.keySet()) {
+            if (activeTags.containsKey(formatterTag)) {
+                AbstractFormatter formatter = formatters.get(formatterTag);
+                if (formatter != null) {
+                    applicable.add(formatter.createFromData(activeTags.get(formatterTag)));
+                }
             }
         }
 
-        return applicableFormatters;
+        return applicable;
     }
 
-    private boolean shouldApplyFormatter(@NotNull String formatterKey, @NotNull Set<String> activeTags) {
-        String[] requiredTags = formatterKey.split("\\|");
-
-        for (String requiredTag : requiredTags) {
-            if (activeTags.contains(requiredTag.trim())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private record TextToken(String text, Set<String> activeTags) {}
+    private record TextToken(String text, HashMap<String, String> activeTags) {}
 }

@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.ColorFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.BasicColorFormatter;
 
 public class CommandReturnDecorator extends StyleDecorator {
     private final @NotNull CommandReturnType commandReturnType;
@@ -14,7 +14,7 @@ public class CommandReturnDecorator extends StyleDecorator {
         super();
         this.commandReturnType = commandReturnType;
 
-        this.globalFormatters.add(new ColorFormatter(commandReturnType.color));
+        this.globalFormatters.add(new BasicColorFormatter(commandReturnType.color));
     }
 
     @Override

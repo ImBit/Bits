@@ -4,22 +4,22 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
-public class ColorFormatter extends AbstractFormatter {
+public class BasicColorFormatter extends AbstractFormatter {
     public final int color;
 
-    public ColorFormatter(int color) {
+    public BasicColorFormatter(int color) {
         this.color = color;
     }
 
-    public ColorFormatter(@NotNull TextColor color) {
+    public BasicColorFormatter(@NotNull TextColor color) {
         this(color.value());
     }
 
-    public ColorFormatter(@NotNull org.bukkit.Color color) {
+    public BasicColorFormatter(@NotNull org.bukkit.Color color) {
         this(color.asRGB());
     }
 
-    public ColorFormatter(@NotNull java.awt.Color color) {
+    public BasicColorFormatter(@NotNull java.awt.Color color) {
         this(color.getRGB());
     }
 

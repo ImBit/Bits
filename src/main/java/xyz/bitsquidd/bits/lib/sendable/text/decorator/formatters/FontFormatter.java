@@ -11,7 +11,6 @@ public class FontFormatter extends AbstractFormatter {
         this.fontKey = fontKey;
     }
 
-
     @Override
     public @NotNull Component format(@NotNull Component input) {
         return input.font(fontKey);
