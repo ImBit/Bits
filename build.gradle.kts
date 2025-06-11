@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "xyz.bitsquidd"
-version = "0.0.3-SNAPSHOT"
+version = "0.0.3"
 description = "🦑 Utility plugin for Minecraft development."
 
 repositories {
