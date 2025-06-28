@@ -14,9 +14,11 @@ public class TranslationDecorator extends StyleDecorator {
     @Override
     public @NotNull Component format(@NotNull Component component, @Nullable CommandSender target) {
         if (component instanceof TranslatableComponent translatableComponent) {
-            Locale locale = Locale.getDefault();
+            Locale locale;
             if (target instanceof Player player) {
                 locale = player.locale();
+            } else {
+                locale = Locale.getDefault();
             }
 
             component = GlobalTranslator.render(translatableComponent, locale);
