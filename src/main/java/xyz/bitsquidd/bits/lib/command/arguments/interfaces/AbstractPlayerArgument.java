@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.command.arguments.interfaces;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
-import xyz.bitsquidd.bits.lib.command.arguments.CommandArgument;
 
 import java.util.List;
 

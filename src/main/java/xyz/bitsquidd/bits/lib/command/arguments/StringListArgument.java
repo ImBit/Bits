@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.List;

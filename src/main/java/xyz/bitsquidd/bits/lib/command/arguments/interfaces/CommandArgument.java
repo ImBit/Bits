@@ -1,6 +1,7 @@
-package xyz.bitsquidd.bits.lib.command.arguments;
+package xyz.bitsquidd.bits.lib.command.arguments.interfaces;
 
 import org.jetbrains.annotations.NotNull;
+import xyz.bitsquidd.bits.lib.command.arguments.ICommandArgument;
 
 import java.util.ArrayList;
 import java.util.List;
