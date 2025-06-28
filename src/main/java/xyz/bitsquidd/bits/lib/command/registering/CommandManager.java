@@ -64,7 +64,6 @@ public abstract class CommandManager {
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
         commandSet.add(bitsCommand);
         commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bitsCommand);
-        plugin.getLogger().info("Registered command: " + name);
     }
 
     private void registerCommandPermission(AbstractCommand command) {
@@ -156,7 +155,6 @@ public abstract class CommandManager {
             Command command = commandMap.getCommand(s);
             if (command != null) {
                 command.unregister(commandMap);
-                plugin.getLogger().info("Unregistered command: " + s);
             }
         });
 
@@ -164,7 +162,6 @@ public abstract class CommandManager {
             Permission permission = pm.getPermission(permissionName);
             if (permission != null) {
                 pm.removePermission(permission);
-                plugin.getLogger().info("Unregistered permission: " + permissionName);
             }
         });
 
