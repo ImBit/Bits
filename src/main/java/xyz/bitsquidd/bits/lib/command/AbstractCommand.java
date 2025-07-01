@@ -1,7 +1,9 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.annotations.Command;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
@@ -11,6 +13,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract base class for commands.
+ * <p>
+ * Used for commands, including their paths, aliases, descriptions, and permissions.
+ * It also handles command execution and tab completion.
+ */
 public abstract class AbstractCommand {
     protected final @NotNull List<CommandPath> paths = new ArrayList<>();
 
@@ -34,6 +42,7 @@ public abstract class AbstractCommand {
     }
 
     protected abstract void showUsage(@NotNull CommandContext commandContext);
+
     public abstract void initialisePaths();
 
     public void addPath(CommandPath commandPath) {
@@ -50,7 +59,9 @@ public abstract class AbstractCommand {
             if (hasPermission(commandContext)) executeCommand(commandContext);
             return true;
         } catch (Exception e) {
-            Text.of("<b>An unexpected error occurred:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
+            Text.of(Component.text("<b>An unexpected error occurred:</b> " + e.getMessage()))
+                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
         return false;
@@ -67,7 +78,9 @@ public abstract class AbstractCommand {
                 break;
             }
         } catch (Exception e) {
-            Text.of("<b>Error executing command:</b> " + e.getMessage(), new CommandReturnDecorator(CommandReturnType.ERROR)).send(commandContext.getSender());
+            Text.of(Component.text("<b>Error executing command:</b> " + e.getMessage()))
+                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
 
@@ -93,14 +106,14 @@ public abstract class AbstractCommand {
 
     private Set<CommandPath> getValidTabCompletablePaths(CommandContext commandContext) {
         return paths.stream()
-                .filter(path -> path.matchesPartial(commandContext))
-                .collect(Collectors.toSet());
+                    .filter(path -> path.matchesPartial(commandContext))
+                    .collect(Collectors.toSet());
     }
 
     private Set<CommandPath> getValidCommandPaths(CommandContext commandContext) {
         return paths.stream()
-                .filter(path -> path.matchesFully(commandContext))
-                .collect(Collectors.toSet());
+                    .filter(path -> path.matchesFully(commandContext))
+                    .collect(Collectors.toSet());
     }
 
     private boolean hasPermission(CommandContext commandContext) {

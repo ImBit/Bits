@@ -96,11 +96,11 @@ public class Text implements Sendable {
         return new Text(component);
     }
 
-    public static Text withDecorators(@NotNull List<ITextDecorator> decorators) {
+    public Text decorate(@NotNull List<ITextDecorator> decorators) {
         return new Text(Component.empty(), decorators);
     }
 
-    public static Text withDecorators(@NotNull ITextDecorator... decorators) {
+    public Text decorate(@NotNull ITextDecorator... decorators) {
         return new Text(Component.empty(), new ArrayList<>(List.of(decorators)));
     }
 

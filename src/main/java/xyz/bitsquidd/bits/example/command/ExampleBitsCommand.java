@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.*;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
@@ -18,19 +19,18 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
 
         usageComponent = usageComponent
                 .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
-                .append(Component.text(" /"+name+" ").decorate(TextDecoration.BOLD))
+                .append(Component.text(" /" + name + " ").decorate(TextDecoration.BOLD))
                 .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
                 .appendNewline();
 
         List<CommandPath> availablePaths = paths.stream()
-                .filter(path -> path.hasPermissions(commandContext))
-                .toList();
+                                                .filter(path -> path.hasPermissions(commandContext))
+                                                .toList();
 
         if (availablePaths.isEmpty()) {
-            Text.of(
-                    "You don't have permission to use this command",
-                    new CommandReturnDecorator(CommandReturnType.ERROR)
-            ).send(commandContext.getSender());
+            Text.of(Component.text("You don't have permission to use this command."))
+                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                .send(commandContext.getSender());
         } else {
 
             for (CommandPath path : availablePaths) {
@@ -53,7 +53,7 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
                 usageComponent = usageComponent
                         .appendNewline()
                         .append(Component.text("  ⏵ " + path.description, NamedTextColor.GRAY)
-                                .appendNewline()
+                                         .appendNewline()
                         );
             }
 
