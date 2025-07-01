@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.BlankDecorator;
@@ -44,7 +45,6 @@ import java.util.List;
  * // Text with formatting tags
  * Text.of("This <b>text is bold<b> and this is <i>italic<i>, <b,i>this is both</b,/i>", new FancyTagDecorator()).send(player);
  * }</pre>
- *
  */
 public class Text implements Sendable {
     protected final @NotNull Component component;
@@ -72,39 +72,37 @@ public class Text implements Sendable {
         this(component, List.of());
     }
 
-    @Deprecated(forRemoval = true)
-    public Text(@NotNull String text, @NotNull ITextDecorator formatter) {
-        this(Component.text(text), formatter);
-    }
-
-    @Deprecated(forRemoval = true)
-    public Text(@NotNull String text) {
-        this(Component.text(text), List.of());
-    }
-
-
+    @Deprecated(forRemoval = true, since = "0.0.4")
     public static Text of(@NotNull Component component, @NotNull List<ITextDecorator> decorators) {
         return new Text(component, decorators);
     }
 
+    @Deprecated(forRemoval = true, since = "0.0.4")
     public static Text of(@NotNull Component component, @NotNull ITextDecorator decorator) {
         return new Text(component, decorator);
+    }
+
+    @Deprecated(forRemoval = true, since = "0.0.4")
+    public static Text of(@NotNull String text, @NotNull ITextDecorator decorator) {
+        return new Text(Component.text(text), decorator);
+    }
+
+    @Deprecated(forRemoval = true, since = "0.0.4")
+    public static Text of(@NotNull String text) {
+        return new Text(Component.text(text));
     }
 
     public static Text of(@NotNull Component component) {
         return new Text(component);
     }
 
-    public static Text of(@NotNull String text, @NotNull List<ITextDecorator> decorators) {
-        return new Text(Component.text(text), decorators);
-    }
-    public static Text of(@NotNull String text, @NotNull ITextDecorator decorator) {
-        return new Text(Component.text(text), decorator);
-    }
-    public static Text of(@NotNull String text) {
-        return new Text(Component.text(text));
+    public static Text withDecorators(@NotNull List<ITextDecorator> decorators) {
+        return new Text(Component.empty(), decorators);
     }
 
+    public static Text withDecorators(@NotNull ITextDecorator... decorators) {
+        return new Text(Component.empty(), new ArrayList<>(List.of(decorators)));
+    }
 
 
     @Override
