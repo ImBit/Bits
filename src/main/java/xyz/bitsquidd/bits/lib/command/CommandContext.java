@@ -29,21 +29,26 @@ public class CommandContext {
         }
         return args[index];
     }
+
     public @NotNull String getLastArg() {
         if (args.length == 0) {
             return "";
         }
         return args[args.length - 1];
     }
+
     public int getArgLength() {
         return args.length;
     }
+
     public @NotNull CommandSender getSender() {
         return sender;
     }
+
     public @NotNull String[] getArgs() {
         return args.clone();
     }
+
     public int getArgsLength() {
         return args.length;
     }
@@ -59,7 +64,7 @@ public class CommandContext {
         if (params.get(name) == null) {
             throw new IllegalArgumentException("Parameter " + name + " not found");
         } else {
-            return (T) params.get(name);
+            return (T)params.get(name);
         }
     }
 
@@ -67,7 +72,7 @@ public class CommandContext {
         if (params.get(name) == null) {
             return defaultValue;
         } else {
-            return (T) params.get(name);
+            return (T)params.get(name);
         }
     }
 
@@ -85,7 +90,7 @@ public class CommandContext {
         if (isPlayer()) {
             return ((Player)sender).getLocation();
         } else {
-            return new Location(getWorld(), 0,0,0);
+            return new Location(getWorld(), 0, 0, 0);
         }
     }
 

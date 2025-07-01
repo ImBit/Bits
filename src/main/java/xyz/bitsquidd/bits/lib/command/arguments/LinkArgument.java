@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
@@ -22,7 +23,7 @@ public class LinkArgument extends CommandArgument<String> {
 
         if (allowedDomains.length > 0) {
             String domainPattern = String.join("|", allowedDomains)
-                    .replace(".", "\\.");
+                                         .replace(".", "\\.");
 
             this.urlPattern = Pattern.compile(
                     "^(https?://(?:www\\.)?|www\\.)(?:" + domainPattern + ")(?:/[\\w\\-./]*)*(?:\\?[\\w=&\\-.]*)?$"

@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 
@@ -38,7 +39,7 @@ public class CommandPath {
             return false;
         }
 
-        for (int i = 0; i < argLength-1; i++) { // We subtract 1 here as to help partial tab completion
+        for (int i = 0; i < argLength - 1; i++) { // We subtract 1 here as to help partial tab completion
             CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;
@@ -91,6 +92,7 @@ public class CommandPath {
         //TODO error here
         return null;
     }
+
     private int getCommandParamIndex(CommandArgumentInfo<?> commandArgumentInfo) {
         int argIndex = 0;
         for (CommandArgumentInfo<?> param : params) {
@@ -121,7 +123,7 @@ public class CommandPath {
     }
 
     public List<String> tabComplete(@NotNull CommandContext commandContext) {
-        CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
+        CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength() - 1);
 
         ArrayList<String> availableCompletions = new ArrayList<>(commandArgumentInfo.param.getAddedTabCompletions());
         availableCompletions.addAll(commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo)));
@@ -142,9 +144,11 @@ public class CommandPath {
     public @NotNull List<CommandRequirement> getRequirements() {
         return requirements;
     }
+
     public @NotNull List<CommandArgumentInfo<?>> getParams() {
         return params;
     }
+
     public @NotNull CommandHandler getHandler() {
         return handler;
     }

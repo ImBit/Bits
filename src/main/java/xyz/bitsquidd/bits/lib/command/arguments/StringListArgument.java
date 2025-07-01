@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
@@ -53,7 +54,7 @@ public class StringListArgument extends CommandArgument<String> {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         String prefix = context.getArg(index).toLowerCase();
         return options.stream()
-                .filter(opt -> opt.toLowerCase().startsWith(prefix))
-                .toList();
+                      .filter(opt -> opt.toLowerCase().startsWith(prefix))
+                      .toList();
     }
 }

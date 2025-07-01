@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.arguments.interfaces;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
@@ -49,7 +50,7 @@ public abstract class AbstractNumberArgument<T extends Number> extends CommandAr
         try {
             T value = parseValue(context.getArgs()[argIndex]);
             if ((min != null && value.doubleValue() < min.doubleValue()) ||
-                (max != null && value.doubleValue() > max.doubleValue())) {
+                    (max != null && value.doubleValue() > max.doubleValue())) {
                 return false;
             }
             return true;

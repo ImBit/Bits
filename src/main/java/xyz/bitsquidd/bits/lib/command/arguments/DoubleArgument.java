@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractNumberArgument;
 
 public class DoubleArgument extends AbstractNumberArgument<Double> {

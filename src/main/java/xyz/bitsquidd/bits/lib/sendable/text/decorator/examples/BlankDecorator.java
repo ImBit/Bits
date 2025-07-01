@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.Style;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lib.component.ComponentHelper;
 
 public class BlankDecorator extends StyleDecorator {

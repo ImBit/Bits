@@ -37,15 +37,17 @@ public class LocationHelper {
         return new Location(world1, midX, midY, midZ);
     }
 
-   
+
     public static String toString(Location location) {
         if (location == null) {
             return "null";
         }
         World world = location.getWorld();
         String worldName = world != null ? world.getName() : "Unknown World";
-        return String.format("World: %s, X: %.2f, Y: %.2f, Z: %.2f, Pitch: %.2f, Yaw: %.2f",
+        return String.format(
+                "World: %s, X: %.2f, Y: %.2f, Z: %.2f, Pitch: %.2f, Yaw: %.2f",
                 worldName, location.getX(), location.getY(), location.getZ(),
-                location.getPitch(), location.getYaw());
+                location.getPitch(), location.getYaw()
+        );
     }
 }

@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
 
 import net.kyori.adventure.text.format.TextDecoration;
+
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.AbstractTagDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.DynamicColorFormatter;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.StyleFormatter;

@@ -10,13 +10,13 @@ public class ColorHelper {
         int blue = color & 0xFF;
 
         if (lightness >= 0) {
-            red = (int) (red + ((255 - red) * lightness));
-            green = (int) (green + ((255 - green) * lightness));
-            blue = (int) (blue + ((255 - blue) * lightness));
+            red = (int)(red + ((255 - red) * lightness));
+            green = (int)(green + ((255 - green) * lightness));
+            blue = (int)(blue + ((255 - blue) * lightness));
         } else {
-            red = (int) (red * (1 + lightness));
-            green = (int) (green * (1 + lightness));
-            blue = (int) (blue * (1 + lightness));
+            red = (int)(red * (1 + lightness));
+            green = (int)(green * (1 + lightness));
+            blue = (int)(blue * (1 + lightness));
         }
 
         return (red << 16) | (green << 8) | blue;
@@ -45,9 +45,9 @@ public class ColorHelper {
         int green2 = (color2 >> 8) & 0xFF;
         int blue2 = color2 & 0xFF;
 
-        int red = (int) ((red1 * (1 - ratio)) + (red2 * ratio));
-        int green = (int) ((green1 * (1 - ratio)) + (green2 * ratio));
-        int blue = (int) ((blue1 * (1 - ratio)) + (blue2 * ratio));
+        int red = (int)((red1 * (1 - ratio)) + (red2 * ratio));
+        int green = (int)((green1 * (1 - ratio)) + (green2 * ratio));
+        int blue = (int)((blue1 * (1 - ratio)) + (blue2 * ratio));
 
         return (red << 16) | (green << 8) | blue;
     }

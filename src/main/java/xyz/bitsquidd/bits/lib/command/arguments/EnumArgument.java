@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
@@ -37,7 +38,7 @@ public class EnumArgument<T extends Enum<T>> extends CommandArgument<T> {
     @Override
     public T parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
         String input = context.getArg(startIndex).toUpperCase();
-        
+
         try {
             T value = Enum.valueOf(enumClass, input);
             if (allowedValues.isEmpty() || allowedValues.contains(value)) {
@@ -66,18 +67,18 @@ public class EnumArgument<T extends Enum<T>> extends CommandArgument<T> {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         if (allowedValues.isEmpty()) {
             return Arrays.stream(enumClass.getEnumConstants())
-                    .map(Enum::name)
-                    .collect(Collectors.toList());
+                         .map(Enum::name)
+                         .collect(Collectors.toList());
         } else {
             return allowedValues.stream()
-                    .map(Enum::name)
-                    .collect(Collectors.toList());
+                                .map(Enum::name)
+                                .collect(Collectors.toList());
         }
     }
 
     private String getAllowedValuesString() {
         return allowedValues.stream()
-                .map(Enum::name)
-                .collect(Collectors.joining(", "));
+                            .map(Enum::name)
+                            .collect(Collectors.joining(", "));
     }
 }

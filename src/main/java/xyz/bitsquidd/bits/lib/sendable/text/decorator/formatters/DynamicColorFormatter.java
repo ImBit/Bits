@@ -5,8 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-
 public class DynamicColorFormatter extends AbstractFormatter {
     @Override
     public @NotNull Component format(@NotNull Component input) {

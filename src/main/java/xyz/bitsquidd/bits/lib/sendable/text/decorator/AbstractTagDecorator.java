@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lib.component.ComponentHelper;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;
 
@@ -130,5 +131,8 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return applicable;
     }
 
-    private record TextToken(String text, HashMap<String, String> activeTags) {}
+    private record TextToken(
+            String text,
+            HashMap<String, String> activeTags
+    ) {}
 }

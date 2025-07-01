@@ -13,6 +13,7 @@ public class BlockPos {
         this.y = y;
         this.z = z;
     }
+
     public static BlockPos of(float x, float y, float z) {
         return new BlockPos(x, y, z);
     }

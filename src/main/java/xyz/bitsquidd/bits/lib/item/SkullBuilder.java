@@ -19,7 +19,7 @@ public class SkullBuilder {
     }
 
     public SkullBuilder owner(OfflinePlayer player) {
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        SkullMeta meta = (SkullMeta)item.getItemMeta();
         meta.setPlayerProfile(player.getPlayerProfile());
         item.setItemMeta(meta);
         return this;

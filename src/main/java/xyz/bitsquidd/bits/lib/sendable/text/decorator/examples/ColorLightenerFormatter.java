@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.component.ComponentHelper;
 import xyz.bitsquidd.bits.lib.component.color.ColorHelper;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;

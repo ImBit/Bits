@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lib.location.BlockPos;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 

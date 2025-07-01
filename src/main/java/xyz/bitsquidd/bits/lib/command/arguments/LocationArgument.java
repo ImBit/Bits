@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
@@ -55,7 +56,7 @@ public class LocationArgument extends CommandArgument<Location> {
 
     @Override
     public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
-        int relativeArgIndex = context.getArgLength()-1-startIndex;
+        int relativeArgIndex = context.getArgLength() - 1 - startIndex;
 
         return suggestCoordinate(context.getLastArg(), relativeArgIndex);
     }
@@ -77,13 +78,13 @@ public class LocationArgument extends CommandArgument<Location> {
 
         List<String> suggestions = new ArrayList<>(List.of(prefix));
 
-        if (baseValue <=0) {
+        if (baseValue <= 0) {
             suggestions.add("~ ~ ~");
         }
-        if (baseValue <=1) {
+        if (baseValue <= 1) {
             suggestions.add("~ ~");
         }
-        if (baseValue <=2) {
+        if (baseValue <= 2) {
             suggestions.add("~");
         }
 
