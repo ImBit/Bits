@@ -54,7 +54,7 @@ public class StringListArgument extends CommandArgument<String> {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         String prefix = context.getArg(index).toLowerCase();
         return options.stream()
-                      .filter(opt -> opt.toLowerCase().startsWith(prefix))
-                      .toList();
+              .filter(opt -> opt.toLowerCase().startsWith(prefix))
+              .toList();
     }
 }

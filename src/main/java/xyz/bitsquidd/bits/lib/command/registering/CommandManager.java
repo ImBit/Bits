@@ -55,11 +55,11 @@ public abstract class CommandManager {
         registerCommandPermission(command);
 
         BitsCommand bitsCommand = new BitsCommand(
-                name,
-                command.description,
-                "/" + name,
-                new ArrayList<>(List.of(command.aliases)),
-                command
+              name,
+              command.description,
+              "/" + name,
+              new ArrayList<>(List.of(command.aliases)),
+              command
         );
 
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
@@ -81,9 +81,9 @@ public abstract class CommandManager {
 
         try {
             Permission permission = new Permission(
-                    permissionName,
-                    command.description.isEmpty() ? "Command permission" : command.description,
-                    PermissionDefault.OP
+                  permissionName,
+                  command.description.isEmpty() ? "Command permission" : command.description,
+                  PermissionDefault.OP
             );
 
             pm.addPermission(permission);
@@ -113,9 +113,9 @@ public abstract class CommandManager {
 
                 if (pm.getPermission(parentPermission) == null) {
                     Permission parent = new Permission(
-                            parentPermission,
-                            "Parent permission for " + parentPermission + " commands",
-                            PermissionDefault.OP
+                          parentPermission,
+                          "Parent permission for " + parentPermission + " commands",
+                          PermissionDefault.OP
                     );
                     pm.addPermission(parent);
                     registeredPermissions.add(parentPermission);
@@ -124,9 +124,9 @@ public abstract class CommandManager {
                 String wildcardPermission = parentPermission + ".*";
                 if (pm.getPermission(wildcardPermission) == null) {
                     Permission wildcard = new Permission(
-                            wildcardPermission,
-                            "Wildcard permission for " + parentPermission + " commands",
-                            PermissionDefault.OP
+                          wildcardPermission,
+                          "Wildcard permission for " + parentPermission + " commands",
+                          PermissionDefault.OP
                     );
                     pm.addPermission(wildcard);
                     registeredPermissions.add(wildcardPermission);

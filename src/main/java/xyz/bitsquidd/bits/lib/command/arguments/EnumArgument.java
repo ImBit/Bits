@@ -45,10 +45,10 @@ public class EnumArgument<T extends Enum<T>> extends CommandArgument<T> {
                 return value;
             }
             throw new ArgumentParseException("Invalid " + enumClass.getSimpleName() + ". Valid values: " +
-                    getAllowedValuesString());
+                  getAllowedValuesString());
         } catch (IllegalArgumentException e) {
             throw new ArgumentParseException("Invalid " + enumClass.getSimpleName() + ". Valid values: " +
-                    getAllowedValuesString());
+                  getAllowedValuesString());
         }
     }
 
@@ -67,18 +67,18 @@ public class EnumArgument<T extends Enum<T>> extends CommandArgument<T> {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context, int index) {
         if (allowedValues.isEmpty()) {
             return Arrays.stream(enumClass.getEnumConstants())
-                         .map(Enum::name)
-                         .collect(Collectors.toList());
+                  .map(Enum::name)
+                  .collect(Collectors.toList());
         } else {
             return allowedValues.stream()
-                                .map(Enum::name)
-                                .collect(Collectors.toList());
+                  .map(Enum::name)
+                  .collect(Collectors.toList());
         }
     }
 
     private String getAllowedValuesString() {
         return allowedValues.stream()
-                            .map(Enum::name)
-                            .collect(Collectors.joining(", "));
+              .map(Enum::name)
+              .collect(Collectors.joining(", "));
     }
 }

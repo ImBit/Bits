@@ -18,24 +18,24 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
         Component usageComponent = Component.empty().appendNewline().appendNewline().appendNewline();
 
         usageComponent = usageComponent
-                .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
-                .append(Component.text(" /" + name + " ").decorate(TextDecoration.BOLD))
-                .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
-                .appendNewline();
+              .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
+              .append(Component.text(" /" + name + " ").decorate(TextDecoration.BOLD))
+              .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
+              .appendNewline();
 
         List<CommandPath> availablePaths = paths.stream()
-                                                .filter(path -> path.hasPermissions(commandContext))
-                                                .toList();
+              .filter(path -> path.hasPermissions(commandContext))
+              .toList();
 
         if (availablePaths.isEmpty()) {
             Text.of(Component.text("You don't have permission to use this command."))
-                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
-                .send(commandContext.getSender());
+                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                  .send(commandContext.getSender());
         } else {
 
             for (CommandPath path : availablePaths) {
                 usageComponent = usageComponent.append(
-                        Component.text("/" + name + " ", TextColor.color(0x11DDFF))
+                      Component.text("/" + name + " ", TextColor.color(0x11DDFF))
                 );
 
                 for (CommandArgumentInfo<?> arg : path.getParams()) {
@@ -47,18 +47,18 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
                     }
 
                     usageComponent = usageComponent.append(
-                            Component.text(paramName, TextColor.color(0x11DDFF)));
+                          Component.text(paramName, TextColor.color(0x11DDFF)));
                 }
 
                 usageComponent = usageComponent
-                        .appendNewline()
-                        .append(Component.text("  ⏵ " + path.description, NamedTextColor.GRAY)
-                                         .appendNewline()
-                        );
+                      .appendNewline()
+                      .append(Component.text("  ⏵ " + path.description, NamedTextColor.GRAY)
+                            .appendNewline()
+                      );
             }
 
             usageComponent = usageComponent.append(
-                    Component.text("                              ").decorate(TextDecoration.STRIKETHROUGH));
+                  Component.text("                              ").decorate(TextDecoration.STRIKETHROUGH));
 
             Text.of(usageComponent).send(commandContext.getSender());
         }

@@ -49,11 +49,8 @@ public abstract class AbstractNumberArgument<T extends Number> extends CommandAr
         }
         try {
             T value = parseValue(context.getArgs()[argIndex]);
-            if ((min != null && value.doubleValue() < min.doubleValue()) ||
-                    (max != null && value.doubleValue() > max.doubleValue())) {
-                return false;
-            }
-            return true;
+            return (min == null || !(value.doubleValue() < min.doubleValue())) &&
+                  (max == null || !(value.doubleValue() > max.doubleValue()));
         } catch (NumberFormatException e) {
             return false;
         }

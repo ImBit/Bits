@@ -60,8 +60,8 @@ public abstract class AbstractCommand {
             return true;
         } catch (Exception e) {
             Text.of(Component.text("<b>An unexpected error occurred:</b> " + e.getMessage()))
-                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
-                .send(commandContext.getSender());
+                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                  .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
         return false;
@@ -79,8 +79,8 @@ public abstract class AbstractCommand {
             }
         } catch (Exception e) {
             Text.of(Component.text("<b>Error executing command:</b> " + e.getMessage()))
-                .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
-                .send(commandContext.getSender());
+                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                  .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
 
@@ -106,14 +106,14 @@ public abstract class AbstractCommand {
 
     private Set<CommandPath> getValidTabCompletablePaths(CommandContext commandContext) {
         return paths.stream()
-                    .filter(path -> path.matchesPartial(commandContext))
-                    .collect(Collectors.toSet());
+              .filter(path -> path.matchesPartial(commandContext))
+              .collect(Collectors.toSet());
     }
 
     private Set<CommandPath> getValidCommandPaths(CommandContext commandContext) {
         return paths.stream()
-                    .filter(path -> path.matchesFully(commandContext))
-                    .collect(Collectors.toSet());
+              .filter(path -> path.matchesFully(commandContext))
+              .collect(Collectors.toSet());
     }
 
     private boolean hasPermission(CommandContext commandContext) {

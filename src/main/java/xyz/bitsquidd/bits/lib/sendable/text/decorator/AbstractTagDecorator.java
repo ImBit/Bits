@@ -132,7 +132,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     }
 
     private record TextToken(
-            String text,
-            HashMap<String, String> activeTags
+          String text,
+          HashMap<String, String> activeTags
     ) {}
 }

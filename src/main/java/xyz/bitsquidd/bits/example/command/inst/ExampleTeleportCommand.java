@@ -29,38 +29,38 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
     @Override
     public void initialisePaths() {
         addPath(new CommandPath(
-                "teleportToPlayer",
-                "Teleport to a player",
-                List.of(PlayerRequirement.INSTANCE),
-                List.of(new CommandArgumentInfo<>("target", SinglePlayerArgument.INSTANCE)),
-                this::teleportSelfToPlayer
+              "teleportToPlayer",
+              "Teleport to a player",
+              List.of(PlayerRequirement.INSTANCE),
+              List.of(new CommandArgumentInfo<>("target", SinglePlayerArgument.INSTANCE)),
+              this::teleportSelfToPlayer
         ));
         addPath(new CommandPath(
-                "teleportToLocation",
-                "Teleport to a Location",
-                List.of(PlayerRequirement.INSTANCE),
-                List.of(new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)),
-                this::teleportSelfToLocation
+              "teleportToLocation",
+              "Teleport to a Location",
+              List.of(PlayerRequirement.INSTANCE),
+              List.of(new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)),
+              this::teleportSelfToLocation
         ));
         addPath(new CommandPath(
-                "teleportPlayerToLocation",
-                "Teleport a player to a location",
-                List.of(new PermissionRequirement("minecraft.command.teleport.others")),
-                List.of(
-                        new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE),
-                        new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)
-                ),
-                this::teleportPlayerToLocation
+              "teleportPlayerToLocation",
+              "Teleport a player to a location",
+              List.of(new PermissionRequirement("minecraft.command.teleport.others")),
+              List.of(
+                    new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE),
+                    new CommandArgumentInfo<>("targetLocation", LocationArgument.INSTANCE)
+              ),
+              this::teleportPlayerToLocation
         ));
         addPath(new CommandPath(
-                "teleportPlayerToPlayer",
-                "Teleport a player to a player",
-                List.of(new PermissionRequirement("minecraft.command.teleport.others")),
-                List.of(
-                        new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE),
-                        new CommandArgumentInfo<>("targetPlayer", SinglePlayerArgument.INSTANCE)
-                ),
-                this::teleportPlayerToPlayer
+              "teleportPlayerToPlayer",
+              "Teleport a player to a player",
+              List.of(new PermissionRequirement("minecraft.command.teleport.others")),
+              List.of(
+                    new CommandArgumentInfo<>("target", MultiPlayerArgument.INSTANCE),
+                    new CommandArgumentInfo<>("targetPlayer", SinglePlayerArgument.INSTANCE)
+              ),
+              this::teleportPlayerToPlayer
         ));
     }
 
@@ -70,8 +70,8 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Player target = context.get("target");
 
         sender.teleportAsync(target.getLocation()).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + target + "</b>."))
-                                                                              .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
-                                                                              .send(sender));
+              .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+              .send(sender));
     }
 
     private void teleportSelfToLocation(CommandContext context) {
@@ -79,8 +79,8 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         sender.teleportAsync(targetLocation).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + FormatHelper.formatLocation(targetLocation, false) + "</b>."))
-                                                                        .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
-                                                                        .send(sender));
+              .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+              .send(sender));
     }
 
     private void teleportPlayerToLocation(CommandContext context) {
@@ -89,12 +89,12 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         targets.forEach(p -> p.teleportAsync(targetLocation)
-                              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + FormatHelper.formatLocation(
-                                                                  targetLocation,
-                                                                  false
-                                                          ) + "</b>."))
-                                                          .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
-                                                          .send(sender)));
+              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + FormatHelper.formatLocation(
+                          targetLocation,
+                          false
+                    ) + "</b>."))
+                    .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+                    .send(sender)));
     }
 
     private void teleportPlayerToPlayer(CommandContext context) {
@@ -104,12 +104,12 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = targetPlayer.getLocation();
 
         Collection<CompletableFuture<Boolean>> futures = targets.stream()
-                                                                .map(p -> p.teleportAsync(targetLocation))
-                                                                .toList();
+              .map(p -> p.teleportAsync(targetLocation))
+              .toList();
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-                         .thenRun(() -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
-                                            .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
-                                            .send(sender));
+              .thenRun(() -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
+                    .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+                    .send(sender));
     }
 }

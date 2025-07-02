@@ -22,8 +22,8 @@ public class EntityHelper {
         Collection<T> entities = location.getWorld().getEntitiesByClass(entityClass);
 
         return entities.stream()
-                       .filter(filter)
-                       .min(Comparator.comparingDouble(entity -> entity.getLocation().distanceSquared(location)))
-                       .orElse(null);
+              .filter(filter)
+              .min(Comparator.comparingDouble(entity -> entity.getLocation().distanceSquared(location)))
+              .orElse(null);
     }
 }

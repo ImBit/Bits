@@ -42,7 +42,7 @@ public class WorldArgument extends CommandArgument<World> {
     @Override
     public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
         return Bukkit.getWorlds().stream()
-                     .map(World::getName)
-                     .collect(Collectors.toList());
+              .map(World::getName)
+              .collect(Collectors.toList());
     }
 }

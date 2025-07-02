@@ -36,7 +36,7 @@ public interface ICommandArgument<T> {
         }
     }
 
-    public default boolean isGreedy() {
+    default boolean isGreedy() {
         return false; // Note: if an argument is greedy, RequiredArgs would not be necessary (as long as it appears at the end of the command).
     }
 

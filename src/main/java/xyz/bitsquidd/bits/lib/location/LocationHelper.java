@@ -45,9 +45,9 @@ public class LocationHelper {
         World world = location.getWorld();
         String worldName = world != null ? world.getName() : "Unknown World";
         return String.format(
-                "World: %s, X: %.2f, Y: %.2f, Z: %.2f, Pitch: %.2f, Yaw: %.2f",
-                worldName, location.getX(), location.getY(), location.getZ(),
-                location.getPitch(), location.getYaw()
+              "World: %s, X: %.2f, Y: %.2f, Z: %.2f, Pitch: %.2f, Yaw: %.2f",
+              worldName, location.getX(), location.getY(), location.getZ(),
+              location.getPitch(), location.getYaw()
         );
     }
 }

@@ -46,6 +46,6 @@ public class Pair<A, B> {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.first, this.second});
+        return Objects.hash(this.first, this.second);
     }
 }

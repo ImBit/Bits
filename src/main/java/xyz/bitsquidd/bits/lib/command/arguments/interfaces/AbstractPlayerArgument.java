@@ -41,8 +41,8 @@ public abstract class AbstractPlayerArgument<T> extends CommandArgument<T> {
 
     protected List<String> getPlayerNameCompletions() {
         return Bukkit.getOnlinePlayers().stream()
-                     .map(Player::getName)
-                     .toList();
+              .map(Player::getName)
+              .toList();
     }
 
     @Override

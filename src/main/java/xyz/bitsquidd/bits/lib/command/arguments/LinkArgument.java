@@ -23,14 +23,14 @@ public class LinkArgument extends CommandArgument<String> {
 
         if (allowedDomains.length > 0) {
             String domainPattern = String.join("|", allowedDomains)
-                                         .replace(".", "\\.");
+                  .replace(".", "\\.");
 
             this.urlPattern = Pattern.compile(
-                    "^(https?://(?:www\\.)?|www\\.)(?:" + domainPattern + ")(?:/[\\w\\-./]*)*(?:\\?[\\w=&\\-.]*)?$"
+                  "^(https?://(?:www\\.)?|www\\.)(?:" + domainPattern + ")(?:/[\\w\\-./]*)*(?:\\?[\\w=&\\-.]*)?$"
             );
         } else {
             this.urlPattern = Pattern.compile(
-                    "^(https?://(?:www\\.)?|www\\.)[a-zA-Z0-9\\-]+(?:\\.[a-zA-Z]{2,})+(?:/[\\w\\-./]*)*(?:\\?[\\w=&\\-.]*)?$"
+                  "^(https?://(?:www\\.)?|www\\.)[a-zA-Z0-9\\-]+(?:\\.[a-zA-Z]{2,})+(?:/[\\w\\-./]*)*(?:\\?[\\w=&\\-.]*)?$"
             );
         }
     }
@@ -58,12 +58,12 @@ public class LinkArgument extends CommandArgument<String> {
         if (!urlPattern.matcher(url).matches()) {
             if (!allowedDomains.isEmpty()) {
                 throw new ArgumentParseException(
-                        "Invalid URL format: '" + url + "'. URL must start with http://, https://, or www. " +
-                                "and must be from one of these domains: " + String.join(", ", allowedDomains)
+                      "Invalid URL format: '" + url + "'. URL must start with http://, https://, or www. " +
+                            "and must be from one of these domains: " + String.join(", ", allowedDomains)
                 );
             } else {
                 throw new ArgumentParseException(
-                        "Invalid URL format: '" + url + "'. URL must start with http://, https://, or www."
+                      "Invalid URL format: '" + url + "'. URL must start with http://, https://, or www."
                 );
             }
         }

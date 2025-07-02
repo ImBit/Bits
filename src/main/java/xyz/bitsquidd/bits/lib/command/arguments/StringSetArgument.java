@@ -20,25 +20,25 @@ public class StringSetArgument extends CommandArgument<String> {
         this.allowedValues = caseSensitive ?
                              allowedValues :
                              allowedValues.stream()
-                                          .map(String::toLowerCase)
-                                          .collect(Collectors.toSet());
+                                   .map(String::toLowerCase)
+                                   .collect(Collectors.toSet());
         this.typeName = typeName;
         this.caseSensitive = caseSensitive;
     }
 
     public static StringSetArgument of(String typeName, String... allowedValues) {
         return new StringSetArgument(
-                Arrays.stream(allowedValues).collect(Collectors.toSet()),
-                typeName,
-                false
+              Arrays.stream(allowedValues).collect(Collectors.toSet()),
+              typeName,
+              false
         );
     }
 
     public static StringSetArgument of(String typeName, boolean caseSensitive, String... allowedValues) {
         return new StringSetArgument(
-                Arrays.stream(allowedValues).collect(Collectors.toSet()),
-                typeName,
-                caseSensitive
+              Arrays.stream(allowedValues).collect(Collectors.toSet()),
+              typeName,
+              caseSensitive
         );
     }
 
@@ -52,7 +52,7 @@ public class StringSetArgument extends CommandArgument<String> {
         }
 
         throw new ArgumentParseException("Invalid " + typeName + ". Valid values: " +
-                getAllowedValuesString());
+              getAllowedValuesString());
     }
 
     @Override

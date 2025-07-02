@@ -51,12 +51,12 @@ public class Text implements Sendable {
     protected final @NotNull List<ITextDecorator> decorators = new ArrayList<>();
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
-            // These will always be applied first.
-            new TranslationDecorator()
+          // These will always be applied first.
+          new TranslationDecorator()
     );
     private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
-            // These will always be applied last.
-            new BlankDecorator()
+          // These will always be applied last.
+          new BlankDecorator()
     );
 
     public Text(@NotNull Component component, @NotNull List<ITextDecorator> decorators) {
