@@ -2,12 +2,12 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.component.ComponentHelper;
+import xyz.bitsquidd.bits.lib.sendable.text.AdventureFormatterFactory;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;
 
 import java.util.*;
@@ -22,19 +22,46 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
 
     @Override
     public @NotNull Component format(@NotNull Component component, @Nullable CommandSender target) {
-        String content = ComponentHelper.getContent(component, target instanceof Player player ? player.locale() : null);
-        Component formatted = processContent(content);
-
-        return Component.empty().append(formatted);
+        List<FormattedTextToken> extractedTokens = extractComponentTokens(component, target);
+        List<TextToken> processedTokens = processTokensWithTags(extractedTokens);
+        return buildComponent(processedTokens);
     }
 
-    private @NotNull Component processContent(@NotNull String content) {
-        if (content.isEmpty()) return Component.empty();
-        List<TextToken> tokens = tokenize(content);
-        return buildComponent(tokens);
+    private @NotNull List<FormattedTextToken> extractComponentTokens(@NotNull Component component, @Nullable CommandSender target) {
+        List<FormattedTextToken> tokens = new ArrayList<>();
+        extractTokensRecursively(component, Style.empty(), tokens, target);
+        return tokens;
     }
 
-    private @NotNull List<TextToken> tokenize(@NotNull String content) {
+    private void extractTokensRecursively(@NotNull Component component, @NotNull Style inheritedStyle, @NotNull List<FormattedTextToken> tokens, @Nullable CommandSender target) {
+        Style mergedStyle = inheritedStyle.merge(component.style());
+
+        if (component instanceof TextComponent textComponent) {
+            String content = textComponent.content();
+            if (!content.isEmpty()) {
+                tokens.add(new FormattedTextToken(content, mergedStyle));
+            }
+        }
+
+        for (Component child : component.children()) {
+            extractTokensRecursively(child, mergedStyle, tokens, target);
+        }
+    }
+
+    private @NotNull List<TextToken> processTokensWithTags(@NotNull List<FormattedTextToken> extractedTokens) {
+        List<TextToken> result = new ArrayList<>();
+
+        for (FormattedTextToken token : extractedTokens) {
+            List<AbstractFormatter> baseFormatters = AdventureFormatterFactory.fromStyle(token.style);
+
+            List<TextToken> tagTokens = tokenizeWithTags(token.text, baseFormatters);
+            result.addAll(tagTokens);
+        }
+
+        return result;
+    }
+
+    private @NotNull List<TextToken> tokenizeWithTags(@NotNull String content, @NotNull List<AbstractFormatter> baseFormatters) {
         List<TextToken> tokens = new ArrayList<>();
         StringBuilder currentText = new StringBuilder();
         HashMap<String, String> activeTags = new LinkedHashMap<>();
@@ -47,7 +74,9 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
             String tagContent = matcher.group(1);
 
             if (!currentText.isEmpty()) {
-                tokens.add(new TextToken(currentText.toString(), new LinkedHashMap<>(activeTags)));
+                List<AbstractFormatter> tokenFormatters = new ArrayList<>(baseFormatters);
+                tokenFormatters.addAll(getTagFormatters(activeTags));
+                tokens.add(new TextToken(currentText.toString(), tokenFormatters));
                 currentText = new StringBuilder();
             }
 
@@ -56,7 +85,11 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         }
 
         if (lastEnd < content.length()) currentText.append(content.substring(lastEnd));
-        if (!currentText.isEmpty()) tokens.add(new TextToken(currentText.toString(), new LinkedHashMap<>(activeTags)));
+        if (!currentText.isEmpty()) {
+            List<AbstractFormatter> tokenFormatters = new ArrayList<>(baseFormatters);
+            tokenFormatters.addAll(getTagFormatters(activeTags));
+            tokens.add(new TextToken(currentText.toString(), tokenFormatters));
+        }
 
         return tokens;
     }
@@ -89,7 +122,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     }
 
     private String getTagKey(@NotNull String tagName) {
-        return tagName.split(":", 2)[0]; // For closing tags, data is optional. We could have "c" or "c:data", both are valid.
+        return tagName.split(":", 2)[0];
     }
 
     protected boolean isKnownTag(@NotNull String tag) {
@@ -97,17 +130,32 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return formatters.containsKey(tagKey);
     }
 
+    private @NotNull List<AbstractFormatter> getTagFormatters(@NotNull HashMap<String, String> activeTags) {
+        List<AbstractFormatter> tagFormatters = new ArrayList<>(globalFormatters);
+
+        for (String formatterTag : formatters.keySet()) {
+            if (activeTags.containsKey(formatterTag)) {
+                AbstractFormatter formatter = formatters.get(formatterTag);
+                if (formatter != null) {
+                    tagFormatters.add(formatter.createFromData(activeTags.get(formatterTag)));
+                }
+            }
+        }
+
+        return tagFormatters;
+    }
+
     private @NotNull Component buildComponent(@NotNull List<TextToken> tokens) {
         TextComponent.Builder builder = Component.text();
 
         for (TextToken token : tokens) {
             Component textComponent = Component.text(token.text);
-            List<AbstractFormatter> applicableFormatters = getApplicableFormatters(token.activeTags);
 
-            for (AbstractFormatter formatter : applicableFormatters) {
+            for (AbstractFormatter formatter : token.formatters) {
                 try {
                     textComponent = formatter.format(textComponent);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }
 
             builder.append(textComponent);
@@ -116,23 +164,13 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return builder.build();
     }
 
-    private @NotNull List<AbstractFormatter> getApplicableFormatters(@NotNull HashMap<String, String> activeTags) {
-        List<AbstractFormatter> applicable = new ArrayList<>(globalFormatters);
-
-        for (String formatterTag : formatters.keySet()) {
-            if (activeTags.containsKey(formatterTag)) {
-                AbstractFormatter formatter = formatters.get(formatterTag);
-                if (formatter != null) {
-                    applicable.add(formatter.createFromData(activeTags.get(formatterTag)));
-                }
-            }
-        }
-
-        return applicable;
-    }
+    private record FormattedTextToken(
+          String text,
+          Style style
+    ) {}
 
     private record TextToken(
           String text,
-          HashMap<String, String> activeTags
+          List<AbstractFormatter> formatters
     ) {}
 }
