@@ -10,14 +10,14 @@ import xyz.bitsquidd.bits.lib.location.BlockPos;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 
 //TODO make it nullable safe with default values.
-public class Soundable implements Sendable {
+public class BitSound implements Sendable {
     protected final @NotNull NamespacedKey soundKey;
     protected final float volume;
     protected final float pitch;
     protected final @Nullable BlockPos blockPos;
     protected final @Nullable Sound.Source soundSource;
 
-    public Soundable(@NotNull NamespacedKey soundKey, float volume, float pitch, @Nullable BlockPos blockPos, @Nullable Sound.Source soundSource) {
+    public BitSound(@NotNull NamespacedKey soundKey, float volume, float pitch, @Nullable BlockPos blockPos, @Nullable Sound.Source soundSource) {
         this.soundKey = soundKey;
         this.volume = volume;
         this.pitch = pitch;
