@@ -35,8 +35,12 @@ jobs:
                 env:
                     CENTRAL_TOKEN_USER: ${{ secrets.CENTRAL_TOKEN_USER }}
                     CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
-                    BUNDLE_PATH: ${{ github.event.inputs.bundle_path || 'build/central-bundle.zip' }}
                 run: |
+                    PROJECT_NAME="Bits"
+                    VERSION=$(grep '^version' build.gradle.kts | head -1 | sed -E 's/.*"(.*)".*/\1/')
+                    BUNDLE_NAME="${PROJECT_NAME}-${VERSION}"
+                    BUNDLE_PATH="build/central-bundle.zip"
+                    
                     if [ ! -f "$BUNDLE_PATH" ]; then
                       echo "ERROR: Bundle not found at $BUNDLE_PATH"
                       exit 1
@@ -47,5 +51,5 @@ jobs:
                     
                     curl --fail --show-error --request POST \
                       --header "Authorization: Bearer $TOKEN" \
-                      --form bundle=@"$BUNDLE_PATH" \
-                      https://central.sonatype.com/api/v1/publisher/upload
+                      --form bundle=@"$BUNDLE_PATH";filename="$BUNDLE_NAME.zip" \
+                      "https://central.sonatype.com/api/v1/publisher/upload?name=$BUNDLE_NAME"

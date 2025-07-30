@@ -101,17 +101,20 @@ jobs:
                     CENTRAL_TOKEN_USER: ${{ secrets.CENTRAL_TOKEN_USER }}
                     CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
                 run: |
-                    BUNDLE=build/central-bundle.zip
-
-                    if [ ! -f "$BUNDLE" ]; then
-                      echo "ERROR: Bundle not found at $BUNDLE"
+                    PROJECT_NAME="Bits"
+                    VERSION=$(grep '^version' build.gradle.kts | head -1 | sed -E 's/.*"(.*)".*/\1/')
+                    BUNDLE_NAME="${PROJECT_NAME}-${VERSION}"
+                    BUNDLE_PATH="build/central-bundle.zip"
+                    
+                    if [ ! -f "$BUNDLE_PATH" ]; then
+                      echo "ERROR: Bundle not found at $BUNDLE_PATH"
                       exit 1
                     fi
-
+                    
                     TOKEN=$(printf "%s:%s" "$CENTRAL_TOKEN_USER" "$CENTRAL_TOKEN_PASSWORD" | base64)
                     echo "Uploading bundle to Maven Central Portal API..."
-
+                    
                     curl --fail --show-error --request POST \
-                        --header "Authorization: Bearer $TOKEN" \
-                        --form bundle=@"$BUNDLE" \
-                        https://central.sonatype.com/api/v1/publisher/upload
+                      --header "Authorization: Bearer $TOKEN" \
+                      --form bundle=@"$BUNDLE_PATH";filename="$BUNDLE_NAME.zip" \
+                      "https://central.sonatype.com/api/v1/publisher/upload?name=$BUNDLE_NAME"
