@@ -21,9 +21,7 @@ public abstract class AbstractCommand {
 
     public AbstractCommand() {
         Command annotation = getClass().getAnnotation(Command.class);
-        if (annotation == null) {
-            throw new IllegalStateException("Command classes must have the @Command annotation");
-        }
+        if (annotation == null) throw new IllegalStateException("Command classes must have the @Command annotation");
 
         this.name = annotation.name();
         this.aliases = annotation.aliases();
@@ -34,18 +32,19 @@ public abstract class AbstractCommand {
     }
 
     protected abstract void showUsage(@NotNull CommandContext commandContext);
+
     public abstract void initialisePaths();
 
-    public void addPath(CommandPath commandPath) {
+    public final void addPath(@NotNull CommandPath commandPath) {
         paths.add(commandPath);
     }
 
-    public boolean defaultExecute(CommandContext commandContext) {
+    public boolean defaultExecute(@NotNull CommandContext commandContext) {
         // Executes every time this command is called, even if there are no args.
         return false;
     }
 
-    public boolean vanillaExecute(CommandContext commandContext) {
+    public final boolean vanillaExecute(@NotNull CommandContext commandContext) {
         try {
             if (hasPermission(commandContext)) executeCommand(commandContext);
             return true;
@@ -56,7 +55,7 @@ public abstract class AbstractCommand {
         return false;
     }
 
-    private void executeCommand(CommandContext commandContext) {
+    private void executeCommand(@NotNull CommandContext commandContext) {
         boolean hasExecutedPath = false;
 
         try {
@@ -91,13 +90,13 @@ public abstract class AbstractCommand {
         return availableCompletions;
     }
 
-    private Set<CommandPath> getValidTabCompletablePaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidTabCompletablePaths(@NotNull CommandContext commandContext) {
         return paths.stream()
                 .filter(path -> path.matchesPartial(commandContext))
                 .collect(Collectors.toSet());
     }
 
-    private Set<CommandPath> getValidCommandPaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidCommandPaths(@NotNull CommandContext commandContext) {
         return paths.stream()
                 .filter(path -> path.matchesFully(commandContext))
                 .collect(Collectors.toSet());

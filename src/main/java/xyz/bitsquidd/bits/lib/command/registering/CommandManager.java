@@ -11,11 +11,11 @@ import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 import java.util.*;
 
 public abstract class CommandManager {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
+    private @NotNull CommandMap commandMap;
 
-    private CommandMap commandMap;
-    private final Map<String, BitsCommand> registeredCommands = new HashMap<>();
-    private final Set<Command> commandSet = new HashSet<>();
+    private final @NotNull Map<String, BitsCommand> registeredCommands = new HashMap<>();
+    private final @NotNull Set<Command> commandSet = new HashSet<>();
 
     protected CommandManager(Plugin plugin) {
         this.plugin = plugin;
@@ -31,12 +31,19 @@ public abstract class CommandManager {
         }
     }
 
+    private void verify() {
+        if (plugin == null) {
+            throw new IllegalStateException("Plugin instance is null. Ensure it is initialized properly.");
+        }
+        if (commandMap == null) {
+            throw new IllegalStateException("CommandMap has not been initialized. Call initialiseCommandMap() first.");
+        }
+    }
+
     public abstract void registerCommands();
 
     public void register(AbstractCommand command) {
-        if (plugin == null || commandMap == null) {
-            throw new IllegalStateException("The commandMap has not been correctly initialized.");
-        }
+        verify();
 
         String name = command.name;
         if (name == null || name.isEmpty()) {
@@ -63,7 +70,7 @@ public abstract class CommandManager {
     }
 
     public void unregisterAll() {
-        CommandMap commandMap = Bukkit.getCommandMap();
+        verify();
 
         registeredCommands.keySet().forEach(s -> {
             Command command = commandMap.getCommand(s);

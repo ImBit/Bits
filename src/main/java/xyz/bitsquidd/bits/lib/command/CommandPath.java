@@ -27,7 +27,7 @@ public class CommandPath {
     }
 
 
-    public boolean matchesPartial(CommandContext commandContext) {
+    public final boolean matchesPartial(@NotNull CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
 
         if (getArgLength() == 0 && argLength == 0) {
@@ -38,7 +38,7 @@ public class CommandPath {
             return false;
         }
 
-        for (int i = 0; i < argLength-1; i++) { // We subtract 1 here as to help partial tab completion
+        for (int i = 0; i < argLength - 1; i++) { // We subtract 1 here as to help partial tab completion
             CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(i);
             if (!commandContext.getArg(i).isEmpty() && !commandArgumentInfo.param.canParseArg(commandContext, i)) {
                 return false;
@@ -48,7 +48,7 @@ public class CommandPath {
         return true;
     }
 
-    public boolean matchesFully(CommandContext commandContext) {
+    public final boolean matchesFully(@NotNull CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
         int actualArgLength = getArgLength();
 
@@ -71,7 +71,7 @@ public class CommandPath {
         return true;
     }
 
-    public int getArgLength() {
+    public final int getArgLength() {
         int argLength = 0;
         for (CommandArgumentInfo<?> commandArgumentInfo : params) {
             argLength += commandArgumentInfo.param.getRequiredArgs();
@@ -88,10 +88,10 @@ public class CommandPath {
             index -= commandArgumentInfo.param.getRequiredArgs();
         }
 
-        //TODO error here
-        return null;
+        throw new IllegalStateException("Index out of bounds for command parameters: " + index + " in path: " + name);
     }
-    private int getCommandParamIndex(CommandArgumentInfo<?> commandArgumentInfo) {
+
+    private int getCommandParamIndex(@NotNull CommandArgumentInfo<?> commandArgumentInfo) {
         int argIndex = 0;
         for (CommandArgumentInfo<?> param : params) {
             if (param.equals(commandArgumentInfo)) {
@@ -103,7 +103,7 @@ public class CommandPath {
         return -1;
     }
 
-    public boolean execute(CommandContext commandContext) {
+    public final boolean execute(@NotNull CommandContext commandContext) {
         int argIndex = 0;
 
         try {
@@ -120,8 +120,8 @@ public class CommandPath {
         return true;
     }
 
-    public List<String> tabComplete(@NotNull CommandContext commandContext) {
-        CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength()-1);
+    public @NotNull List<String> tabComplete(@NotNull CommandContext commandContext) {
+        CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength() - 1);
 
         ArrayList<String> availableCompletions = new ArrayList<>(commandArgumentInfo.param.getAddedTabCompletions());
         availableCompletions.addAll(commandArgumentInfo.param.tabComplete(commandContext, getCommandParamIndex(commandArgumentInfo)));
@@ -129,7 +129,7 @@ public class CommandPath {
         return availableCompletions;
     }
 
-    public boolean hasPermissions(CommandContext commandContext) {
+    public boolean hasPermissions(@NotNull CommandContext commandContext) {
         for (CommandRequirement commandRequirement : requirements) {
             if (!commandRequirement.check(commandContext)) {
                 return false;
@@ -142,9 +142,11 @@ public class CommandPath {
     public @NotNull List<CommandRequirement> getRequirements() {
         return requirements;
     }
+
     public @NotNull List<CommandArgumentInfo<?>> getParams() {
         return params;
     }
+
     public @NotNull CommandHandler getHandler() {
         return handler;
     }

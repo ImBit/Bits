@@ -9,7 +9,8 @@ import xyz.bitsquidd.bits.lib.command.arguments.ICommandArgument;
 public class CommandArgumentInfo<T> {
     public final @NotNull String name;
     public final @NotNull ICommandArgument<T> param;
-    @ApiStatus.Experimental public final @Nullable T defaultValue;
+    @ApiStatus.Experimental
+    public final @Nullable T defaultValue;
 
     public CommandArgumentInfo(@NotNull String name, @NotNull ICommandArgument<T> param) {
         this(name, param, null);

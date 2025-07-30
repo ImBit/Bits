@@ -29,21 +29,26 @@ public class CommandContext {
         }
         return args[index];
     }
+
     public @NotNull String getLastArg() {
         if (args.length == 0) {
             return "";
         }
         return args[args.length - 1];
     }
+
     public int getArgLength() {
         return args.length;
     }
+
     public @NotNull CommandSender getSender() {
         return sender;
     }
+
     public @NotNull String[] getArgs() {
         return args.clone();
     }
+
     public int getArgsLength() {
         return args.length;
     }
@@ -83,15 +88,15 @@ public class CommandContext {
 
     public @NotNull Location getLocation() {
         if (isPlayer()) {
-            return ((Player)sender).getLocation();
+            return ((Player) sender).getLocation();
         } else {
-            return new Location(getWorld(), 0,0,0);
+            return new Location(getWorld(), 0, 0, 0);
         }
     }
 
     public @NotNull World getWorld() {
         if (isPlayer()) {
-            return ((Player)sender).getWorld();
+            return ((Player) sender).getWorld();
         } else {
             World world = Bukkit.getWorld("world");
             if (world == null) {

@@ -18,7 +18,7 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
 
         usageComponent = usageComponent
                 .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
-                .append(Component.text(" /"+name+" ").decorate(TextDecoration.BOLD))
+                .append(Component.text(" /" + name + " ").decorate(TextDecoration.BOLD))
                 .append(Component.text("          ").decorate(TextDecoration.STRIKETHROUGH))
                 .appendNewline();
 
