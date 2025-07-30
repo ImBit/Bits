@@ -12,11 +12,12 @@ public class Permission {
         this.name = name;
         this.description = "";
     }
+
     public static Permission of(@NotNull String name) {
         return new Permission(name);
     }
 
-    public boolean hasPermission(CommandSender commandSender) {        
+    public boolean hasPermission(CommandSender commandSender) {
         return name.isEmpty() || commandSender.hasPermission(name);
     }
 }

@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import xyz.bitsquidd.bits.example.command.ExampleCommandManager;
 
 // TODO:
@@ -14,7 +15,9 @@ public class Bits extends JavaPlugin {
         instance = this;
     }
 
-    public static Bits getInstance() {return instance;}
+    public static Bits getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {

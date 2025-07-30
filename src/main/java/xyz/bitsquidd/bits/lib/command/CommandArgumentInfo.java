@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.command;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lib.command.arguments.ICommandArgument;
 
 // Used to store params and their names in commands.

@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.requirements;
 
 import org.bukkit.permissions.Permission;
-import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
@@ -17,12 +17,12 @@ public class PermissionRequirement implements CommandRequirement {
     }
 
     @Override
-    public boolean check(@NotNull CommandContext context) {
+    public boolean check(CommandContext context) {
         return context.getSender().hasPermission(permission);
     }
 
     @Override
-    public String getFailMessage(@NotNull CommandContext context) {
+    public String getFailMessage(CommandContext context) {
         return "You do not have permission to use this command.";
     }
 }

@@ -11,7 +11,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
     @NotNull String name();
+
     @NotNull String[] aliases() default {};
+
     @NotNull String description() default "";
+
     @NotNull String permission() default "";
 }

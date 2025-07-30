@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.wrappers;
 
 import java.util.Objects;
 
-public class Pair<A, B> {
+public final class Pair<A, B> {
     private A first;
     private B second;
 
@@ -46,6 +46,6 @@ public class Pair<A, B> {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.first, this.second});
+        return Objects.hash(this.first, this.second);
     }
 }

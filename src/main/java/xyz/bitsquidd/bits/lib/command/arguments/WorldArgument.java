@@ -3,7 +3,9 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public class WorldArgument extends CommandArgument<World> {
     @Override
     public @NotNull List<String> tabComplete(CommandContext context, int startIndex) {
         return Bukkit.getWorlds().stream()
-                .map(World::getName)
-                .collect(Collectors.toList());
+              .map(World::getName)
+              .collect(Collectors.toList());
     }
 }

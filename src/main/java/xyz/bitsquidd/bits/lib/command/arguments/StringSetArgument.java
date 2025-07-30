@@ -1,7 +1,9 @@
 package xyz.bitsquidd.bits.lib.command.arguments;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
+import xyz.bitsquidd.bits.lib.command.arguments.interfaces.CommandArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 
 import java.util.Arrays;
@@ -15,28 +17,28 @@ public class StringSetArgument extends CommandArgument<String> {
     private final boolean caseSensitive;
 
     private StringSetArgument(Set<String> allowedValues, String typeName, boolean caseSensitive) {
-        this.allowedValues = caseSensitive ? 
-                allowedValues : 
-                allowedValues.stream()
-                        .map(String::toLowerCase)
-                        .collect(Collectors.toSet());
+        this.allowedValues = caseSensitive ?
+                             allowedValues :
+                             allowedValues.stream()
+                                   .map(String::toLowerCase)
+                                   .collect(Collectors.toSet());
         this.typeName = typeName;
         this.caseSensitive = caseSensitive;
     }
 
     public static StringSetArgument of(String typeName, String... allowedValues) {
         return new StringSetArgument(
-                Arrays.stream(allowedValues).collect(Collectors.toSet()),
-                typeName,
-                false
+              Arrays.stream(allowedValues).collect(Collectors.toSet()),
+              typeName,
+              false
         );
     }
 
     public static StringSetArgument of(String typeName, boolean caseSensitive, String... allowedValues) {
         return new StringSetArgument(
-                Arrays.stream(allowedValues).collect(Collectors.toSet()),
-                typeName,
-                caseSensitive
+              Arrays.stream(allowedValues).collect(Collectors.toSet()),
+              typeName,
+              caseSensitive
         );
     }
 
@@ -44,13 +46,13 @@ public class StringSetArgument extends CommandArgument<String> {
     public String parse(@NotNull CommandContext context, int startIndex) throws ArgumentParseException {
         String input = context.getArg(startIndex);
         String compareInput = caseSensitive ? input : input.toLowerCase();
-        
+
         if (allowedValues.contains(compareInput)) {
             return input;
         }
-        
+
         throw new ArgumentParseException("Invalid " + typeName + ". Valid values: " +
-                getAllowedValuesString());
+              getAllowedValuesString());
     }
 
     @Override

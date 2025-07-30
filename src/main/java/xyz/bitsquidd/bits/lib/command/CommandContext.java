@@ -64,7 +64,7 @@ public class CommandContext {
         if (params.get(name) == null) {
             throw new IllegalArgumentException("Parameter " + name + " not found");
         } else {
-            return (T) params.get(name);
+            return (T)params.get(name);
         }
     }
 
@@ -72,7 +72,7 @@ public class CommandContext {
         if (params.get(name) == null) {
             return defaultValue;
         } else {
-            return (T) params.get(name);
+            return (T)params.get(name);
         }
     }
 

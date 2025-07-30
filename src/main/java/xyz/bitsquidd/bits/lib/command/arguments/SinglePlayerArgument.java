@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.command.arguments;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractPlayerArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
@@ -24,7 +25,7 @@ public class SinglePlayerArgument extends AbstractPlayerArgument<Player> {
         Player player = null;
         if (arg.startsWith("@")) {
             switch (arg) {
-                case "@s" -> player = context.getSender() instanceof Player ? (Player) context.getSender() : null;
+                case "@s" -> player = context.getSender() instanceof Player ? (Player)context.getSender() : null;
                 case "@p" -> player = EntityHelper.getNearestEntity(context.getLocation(), Player.class, p -> !p.equals(context.getSender()));
                 default -> throw new ArgumentParseException("Unsupported player selector: " + arg);
             }

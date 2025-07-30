@@ -2,6 +2,7 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 
@@ -27,7 +28,7 @@ public class CommandPath {
     }
 
 
-    public final boolean matchesPartial(@NotNull CommandContext commandContext) {
+    public boolean matchesPartial(CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
 
         if (getArgLength() == 0 && argLength == 0) {
@@ -48,7 +49,7 @@ public class CommandPath {
         return true;
     }
 
-    public final boolean matchesFully(@NotNull CommandContext commandContext) {
+    public boolean matchesFully(CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
         int actualArgLength = getArgLength();
 
@@ -71,7 +72,7 @@ public class CommandPath {
         return true;
     }
 
-    public final int getArgLength() {
+    public int getArgLength() {
         int argLength = 0;
         for (CommandArgumentInfo<?> commandArgumentInfo : params) {
             argLength += commandArgumentInfo.param.getRequiredArgs();
@@ -88,10 +89,11 @@ public class CommandPath {
             index -= commandArgumentInfo.param.getRequiredArgs();
         }
 
-        throw new IllegalStateException("Index out of bounds for command parameters: " + index + " in path: " + name);
+        //TODO error here
+        return null;
     }
 
-    private int getCommandParamIndex(@NotNull CommandArgumentInfo<?> commandArgumentInfo) {
+    private int getCommandParamIndex(CommandArgumentInfo<?> commandArgumentInfo) {
         int argIndex = 0;
         for (CommandArgumentInfo<?> param : params) {
             if (param.equals(commandArgumentInfo)) {
@@ -103,7 +105,7 @@ public class CommandPath {
         return -1;
     }
 
-    public final boolean execute(@NotNull CommandContext commandContext) {
+    public boolean execute(CommandContext commandContext) {
         int argIndex = 0;
 
         try {
@@ -120,7 +122,7 @@ public class CommandPath {
         return true;
     }
 
-    public @NotNull List<String> tabComplete(@NotNull CommandContext commandContext) {
+    public List<String> tabComplete(@NotNull CommandContext commandContext) {
         CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength() - 1);
 
         ArrayList<String> availableCompletions = new ArrayList<>(commandArgumentInfo.param.getAddedTabCompletions());
@@ -129,7 +131,7 @@ public class CommandPath {
         return availableCompletions;
     }
 
-    public boolean hasPermissions(@NotNull CommandContext commandContext) {
+    public boolean hasPermissions(CommandContext commandContext) {
         for (CommandRequirement commandRequirement : requirements) {
             if (!commandRequirement.check(commandContext)) {
                 return false;
