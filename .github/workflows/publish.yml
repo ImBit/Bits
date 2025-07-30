@@ -104,7 +104,7 @@ jobs:
                     PROJECT_NAME="Bits"
                     VERSION=$(grep '^version' build.gradle.kts | head -1 | sed -E 's/.*"(.*)".*/\1/')
                     BUNDLE_NAME="${PROJECT_NAME}-${VERSION}.zip"
-                    BUNDLE_PATH="build/${BUNDLE_NAME}"
+                    BUNDLE_PATH="build/libs/${BUNDLE_NAME}"
                     
                     if [ ! -f "$BUNDLE_PATH" ]; then
                       echo "ERROR: Bundle not found at $BUNDLE_PATH"
