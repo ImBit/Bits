@@ -1,97 +1,120 @@
-# Creates GitHub releases and publishes to GitHub Packages
+# Creates GitHub releases and publishes to GitHub Packages and Maven Central
 
 name: Release and Publish
 
 permissions:
-  contents: write
-  packages: write
-
+    contents: write
+    packages: write
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release'
-        required: true
-        type: string
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'Version to release'
+                required: true
+                type: string
 
 jobs:
-  build:
-    name: Build Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    build:
+        name: Build Release
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+                with:
+                    fetch-depth: 0
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: gradle
+            -   name: Set up JDK 22
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '22'
+                    distribution: 'temurin'
+                    cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+            -   name: Build with Gradle
+                run: ./gradlew build
 
-      - name: Determine version
-        id: determine-version
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-          else
-            TAG=${GITHUB_REF#refs/tags/v}
-            echo "VERSION=$TAG" >> $GITHUB_ENV
-          fi
-          echo "VERSION=${{ env.VERSION }}"
+            -   name: Determine version
+                id: determine-version
+                run: |
+                    if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+                      echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+                    else
+                      TAG=${GITHUB_REF#refs/tags/v}
+                      echo "VERSION=$TAG" >> $GITHUB_ENV
+                    fi
+                    echo "VERSION=${{ env.VERSION }}"
 
-      - name: Generate Changelog
-        id: changelog
-        run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          
-          if [ -z "$PREVIOUS_TAG" ]; then
-            echo "## 🚀 Initial Release v${{ env.VERSION }}" > changelog.md
-            echo "" >> changelog.md
-            echo "This is the first official release." >> changelog.md
-          else
-            echo "## 🚀 Release v${{ env.VERSION }}" > changelog.md
-            echo "" >> changelog.md
-            echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
-            echo "" >> changelog.md
-          
-            git log --pretty=format:"* %s (%h)" $PREVIOUS_TAG..HEAD | grep -v "Merge" >> changelog.md
-          fi
-          
-          cat changelog.md
-          
-          CHANGELOG=$(cat changelog.md)
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+            -   name: Generate Changelog
+                id: changelog
+                run: |
+                    PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+                    
+                    if [ -z "$PREVIOUS_TAG" ]; then
+                      echo "## 🚀 Initial Release v${{ env.VERSION }}" > changelog.md
+                      echo "" >> changelog.md
+                      echo "This is the first official release." >> changelog.md
+                    else
+                      echo "## 🚀 Release v${{ env.VERSION }}" > changelog.md
+                      echo "" >> changelog.md
+                      echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
+                      echo "" >> changelog.md
+                    
+                      git log --pretty=format:"* %s (%h)" $PREVIOUS_TAG..HEAD | grep -v "Merge" >> changelog.md
+                    fi
+                    
+                    cat changelog.md
+                    
+                    CHANGELOG=$(cat changelog.md)
+                    echo "changelog<<EOF" >> $GITHUB_OUTPUT
+                    echo "$CHANGELOG" >> $GITHUB_OUTPUT
+                    echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          name: Release v${{ env.VERSION }}
-          body: ${{ steps.changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
-          files: |
-            build/libs/*.jar
-            LICENSE
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Create Release
+                id: create_release
+                uses: softprops/action-gh-release@v1
+                with:
+                    tag_name: v${{ env.VERSION }}
+                    name: Release v${{ env.VERSION }}
+                    body: ${{ steps.changelog.outputs.changelog }}
+                    draft: false
+                    prerelease: false
+                    files: |
+                        build/libs/*.jar
+                        LICENSE
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to GitHub Packages
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.VERSION }}
+            -   name: Publish to GitHub Packages
+                uses: gradle/gradle-build-action@v2
+                with:
+                    arguments: publish
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    VERSION: ${{ env.VERSION }}
+
+            -   name: Publish bundle to Maven Central via Portal API
+                if: always()
+                env:
+                    CENTRAL_TOKEN_USER: ${{ secrets.CENTRAL_TOKEN_USER }}
+                    CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+                run: |
+                    PROJECT_NAME="Bits"
+                    VERSION=$(grep '^version' build.gradle.kts | head -1 | sed -E 's/.*"(.*)".*/\1/')
+                    BUNDLE_NAME="${PROJECT_NAME}-${VERSION}.zip"
+                    BUNDLE_PATH="build/libs/${BUNDLE_NAME}"
+                    
+                    if [ ! -f "$BUNDLE_PATH" ]; then
+                      echo "ERROR: Bundle not found at $BUNDLE_PATH"
+                      exit 1
+                    fi
+                    
+                    TOKEN=$(printf "%s:%s" "$CENTRAL_TOKEN_USER" "$CENTRAL_TOKEN_PASSWORD" | base64)
+                    echo "Uploading bundle to Maven Central Portal API..."
+                    
+                    curl --fail --show-error --request POST \
+                      --header "Authorization: Bearer $TOKEN" \
+                      --form bundle=@"$BUNDLE_PATH";filename="$BUNDLE_NAME.zip" \
+                      "https://central.sonatype.com/api/v1/publisher/upload?name=$BUNDLE_NAME"

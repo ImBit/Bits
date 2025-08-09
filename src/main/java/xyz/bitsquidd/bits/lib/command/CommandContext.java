@@ -88,7 +88,7 @@ public class CommandContext {
 
     public @NotNull Location getLocation() {
         if (isPlayer()) {
-            return ((Player)sender).getLocation();
+            return ((Player) sender).getLocation();
         } else {
             return new Location(getWorld(), 0, 0, 0);
         }
@@ -96,7 +96,7 @@ public class CommandContext {
 
     public @NotNull World getWorld() {
         if (isPlayer()) {
-            return ((Player)sender).getWorld();
+            return ((Player) sender).getWorld();
         } else {
             World world = Bukkit.getWorld("world");
             if (world == null) {

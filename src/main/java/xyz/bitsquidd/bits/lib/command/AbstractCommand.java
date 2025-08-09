@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.command;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-
 import xyz.bitsquidd.bits.lib.command.annotations.Command;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
@@ -29,9 +28,7 @@ public abstract class AbstractCommand {
 
     public AbstractCommand() {
         Command annotation = getClass().getAnnotation(Command.class);
-        if (annotation == null) {
-            throw new IllegalStateException("Command classes must have the @Command annotation");
-        }
+        if (annotation == null) throw new IllegalStateException("Command classes must have the @Command annotation");
 
         this.name = annotation.name();
         this.aliases = annotation.aliases();
@@ -45,29 +42,29 @@ public abstract class AbstractCommand {
 
     public abstract void initialisePaths();
 
-    public void addPath(CommandPath commandPath) {
+    public final void addPath(@NotNull CommandPath commandPath) {
         paths.add(commandPath);
     }
 
-    public boolean defaultExecute(CommandContext commandContext) {
+    public boolean defaultExecute(@NotNull CommandContext commandContext) {
         // Executes every time this command is called, even if there are no args.
         return false;
     }
 
-    public boolean vanillaExecute(CommandContext commandContext) {
+    public final boolean vanillaExecute(@NotNull CommandContext commandContext) {
         try {
             if (hasPermission(commandContext)) executeCommand(commandContext);
             return true;
         } catch (Exception e) {
             Text.of(Component.text("<b>An unexpected error occurred:</b> " + e.getMessage()))
-                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
-                  .send(commandContext.getSender());
+                    .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                    .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
         return false;
     }
 
-    private void executeCommand(CommandContext commandContext) {
+    private void executeCommand(@NotNull CommandContext commandContext) {
         boolean hasExecutedPath = false;
 
         try {
@@ -79,8 +76,8 @@ public abstract class AbstractCommand {
             }
         } catch (Exception e) {
             Text.of(Component.text("<b>Error executing command:</b> " + e.getMessage()))
-                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
-                  .send(commandContext.getSender());
+                    .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                    .send(commandContext.getSender());
             Bukkit.getLogger().severe(e.getMessage());
         }
 
@@ -104,19 +101,19 @@ public abstract class AbstractCommand {
         return availableCompletions;
     }
 
-    private Set<CommandPath> getValidTabCompletablePaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidTabCompletablePaths(@NotNull CommandContext commandContext) {
         return paths.stream()
-              .filter(path -> path.matchesPartial(commandContext))
-              .collect(Collectors.toSet());
+                .filter(path -> path.matchesPartial(commandContext))
+                .collect(Collectors.toSet());
     }
 
-    private Set<CommandPath> getValidCommandPaths(CommandContext commandContext) {
+    private Set<CommandPath> getValidCommandPaths(@NotNull CommandContext commandContext) {
         return paths.stream()
-              .filter(path -> path.matchesFully(commandContext))
-              .collect(Collectors.toSet());
+                .filter(path -> path.matchesFully(commandContext))
+                .collect(Collectors.toSet());
     }
 
-    private boolean hasPermission(CommandContext commandContext) {
+    private boolean hasPermission(@NotNull CommandContext commandContext) {
         if (commandPermission.isEmpty()) {
             return true;
         } else {

@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
 import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
 
@@ -28,7 +27,7 @@ public class CommandPath {
     }
 
 
-    public boolean matchesPartial(CommandContext commandContext) {
+    public final boolean matchesPartial(@NotNull CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
 
         if (getArgLength() == 0 && argLength == 0) {
@@ -49,7 +48,7 @@ public class CommandPath {
         return true;
     }
 
-    public boolean matchesFully(CommandContext commandContext) {
+    public final boolean matchesFully(@NotNull CommandContext commandContext) {
         int argLength = commandContext.getArgLength();
         int actualArgLength = getArgLength();
 
@@ -93,7 +92,7 @@ public class CommandPath {
         return null;
     }
 
-    private int getCommandParamIndex(CommandArgumentInfo<?> commandArgumentInfo) {
+    private int getCommandParamIndex(@NotNull CommandArgumentInfo<?> commandArgumentInfo) {
         int argIndex = 0;
         for (CommandArgumentInfo<?> param : params) {
             if (param.equals(commandArgumentInfo)) {
@@ -105,7 +104,7 @@ public class CommandPath {
         return -1;
     }
 
-    public boolean execute(CommandContext commandContext) {
+    public final boolean execute(@NotNull CommandContext commandContext) {
         int argIndex = 0;
 
         try {
@@ -122,7 +121,7 @@ public class CommandPath {
         return true;
     }
 
-    public List<String> tabComplete(@NotNull CommandContext commandContext) {
+    public final @NotNull List<String> tabComplete(@NotNull CommandContext commandContext) {
         CommandArgumentInfo<?> commandArgumentInfo = getCommandParamAtIndex(commandContext.getArgLength() - 1);
 
         ArrayList<String> availableCompletions = new ArrayList<>(commandArgumentInfo.param.getAddedTabCompletions());
@@ -131,7 +130,7 @@ public class CommandPath {
         return availableCompletions;
     }
 
-    public boolean hasPermissions(CommandContext commandContext) {
+    public boolean hasPermissions(@NotNull CommandContext commandContext) {
         for (CommandRequirement commandRequirement : requirements) {
             if (!commandRequirement.check(commandContext)) {
                 return false;

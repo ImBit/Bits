@@ -33,26 +33,3 @@ tasks.withType<JavaCompile> {
 tasks.javadoc {
     options.encoding = "UTF-8"
 }
-
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-
-            pom {
-                name.set(project.name)
-                description.set(project.description)
-                url.set("https://github.com/ImBit/Bits")
-
-                developers {
-                    developer {
-                        id.set("imbit")
-                        name.set("ImBit")
-                        email.set("bitsquiddbusiness@gmail.com")
-                    }
-                }
-            }
-        }
-    }
-}

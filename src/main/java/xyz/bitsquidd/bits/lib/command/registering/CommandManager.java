@@ -9,22 +9,31 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import xyz.bitsquidd.bits.lib.command.AbstractCommand;
 
 import java.util.*;
 
 public abstract class CommandManager {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
+    private @NotNull CommandMap commandMap;
 
-    private CommandMap commandMap;
-    private final Map<String, BitsCommand> registeredCommands = new HashMap<>();
-    private final Set<Command> commandSet = new HashSet<>();
-    private final Set<String> registeredPermissions = new HashSet<>();
+    private final @NotNull Map<String, BitsCommand> registeredCommands = new HashMap<>();
+    private final @NotNull Set<Command> commandSet = new HashSet<>();
+    private final @NotNull Set<String> registeredPermissions = new HashSet<>();
 
     protected CommandManager(Plugin plugin) {
         this.plugin = plugin;
         initialiseCommandMap();
+    }
+
+    private boolean validate() {
+        if (plugin == null) {
+            throw new IllegalStateException("Plugin instance is null. CommandManager must be initialized with a valid plugin.");
+        }
+        if (commandMap == null) {
+            throw new IllegalStateException("CommandMap is not initialized. Ensure initialiseCommandMap() is called.");
+        }
+        return true;
     }
 
     private void initialiseCommandMap() {
@@ -37,13 +46,11 @@ public abstract class CommandManager {
 
     public abstract void registerCommands();
 
-    public void register(AbstractCommand command) {
-        if (plugin == null || commandMap == null) {
-            throw new IllegalStateException("The commandMap has not been correctly initialized.");
-        }
+    public void register(@NotNull AbstractCommand command) {
+        validate();
 
         String name = command.name;
-        if (name == null || name.isEmpty()) {
+        if (name.isEmpty()) {
             throw new IllegalArgumentException("Command name cannot be empty");
         }
 
@@ -55,11 +62,11 @@ public abstract class CommandManager {
         registerCommandPermission(command);
 
         BitsCommand bitsCommand = new BitsCommand(
-              name,
-              command.description,
-              "/" + name,
-              new ArrayList<>(List.of(command.aliases)),
-              command
+                name,
+                command.description,
+                "/" + name,
+                new ArrayList<>(List.of(command.aliases)),
+                command
         );
 
         registeredCommands.put(name.toLowerCase(Locale.ROOT), bitsCommand);
@@ -67,23 +74,19 @@ public abstract class CommandManager {
         commandMap.register(plugin.getName().toLowerCase(Locale.ROOT), bitsCommand);
     }
 
-    private void registerCommandPermission(AbstractCommand command) {
-        if (command.commandPermission.isEmpty()) {
-            return;
-        }
+    private void registerCommandPermission(@NotNull AbstractCommand command) {
+        if (command.commandPermission.isEmpty()) return;
 
         PluginManager pm = Bukkit.getPluginManager();
         String permissionName = command.commandPermission;
 
-        if (pm.getPermission(permissionName) != null) {
-            return;
-        }
+        if (pm.getPermission(permissionName) != null) return;
 
         try {
             Permission permission = new Permission(
-                  permissionName,
-                  command.description.isEmpty() ? "Command permission" : command.description,
-                  PermissionDefault.OP
+                    permissionName,
+                    command.description.isEmpty() ? "Command permission" : command.description,
+                    PermissionDefault.OP
             );
 
             pm.addPermission(permission);
@@ -98,7 +101,7 @@ public abstract class CommandManager {
         }
     }
 
-    private void registerParentPermissions(String permissionName) {
+    private void registerParentPermissions(@NotNull String permissionName) {
         PluginManager pm = Bukkit.getPluginManager();
 
         String[] parts = permissionName.split("\\.");
@@ -113,9 +116,9 @@ public abstract class CommandManager {
 
                 if (pm.getPermission(parentPermission) == null) {
                     Permission parent = new Permission(
-                          parentPermission,
-                          "Parent permission for " + parentPermission + " commands",
-                          PermissionDefault.OP
+                            parentPermission,
+                            "Parent permission for " + parentPermission + " commands",
+                            PermissionDefault.OP
                     );
                     pm.addPermission(parent);
                     registeredPermissions.add(parentPermission);
@@ -124,9 +127,9 @@ public abstract class CommandManager {
                 String wildcardPermission = parentPermission + ".*";
                 if (pm.getPermission(wildcardPermission) == null) {
                     Permission wildcard = new Permission(
-                          wildcardPermission,
-                          "Wildcard permission for " + parentPermission + " commands",
-                          PermissionDefault.OP
+                            wildcardPermission,
+                            "Wildcard permission for " + parentPermission + " commands",
+                            PermissionDefault.OP
                     );
                     pm.addPermission(wildcard);
                     registeredPermissions.add(wildcardPermission);
@@ -148,8 +151,9 @@ public abstract class CommandManager {
         }
     }
 
-    public void unregisterAll() {
-        CommandMap commandMap = Bukkit.getCommandMap();
+    public final void unregisterAll() {
+        validate();
+
         PluginManager pm = Bukkit.getPluginManager();
 
         registeredCommands.keySet().forEach(s -> {
@@ -174,18 +178,15 @@ public abstract class CommandManager {
         plugin.getLogger().info("Unregistered all commands and permissions");
     }
 
-    @NotNull
-    public Set<Command> getCommands() {
+    public @NotNull Set<Command> getCommands() {
         return Collections.unmodifiableSet(commandSet);
     }
 
-    @Nullable
-    public BitsCommand getCommand(String name) {
+    public @Nullable BitsCommand getCommand(@NotNull String name) {
         return registeredCommands.get(name.toLowerCase(Locale.ROOT));
     }
 
-    @NotNull
-    public Set<String> getRegisteredPermissions() {
+    public @NotNull Set<String> getRegisteredPermissions() {
         return Collections.unmodifiableSet(registeredPermissions);
     }
 }
