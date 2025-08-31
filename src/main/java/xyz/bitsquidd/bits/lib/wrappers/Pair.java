@@ -1,39 +1,43 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 public final class Pair<A, B> {
-    private A first;
-    private B second;
+    private @Nullable A first;
+    private @Nullable B second;
 
-    public Pair(A first, B second) {
+    public Pair(@Nullable A first, @Nullable B second) {
         this.first = first;
         this.second = second;
     }
 
-    public static <A, B> Pair<A, B> of(A first, B second) {
+    public static <A, B> @NotNull Pair<A, B> of(@Nullable A first, @Nullable B second) {
         return new Pair<>(first, second);
     }
 
 
-    public A getFirst() {
+    public @Nullable A getFirst() {
         return this.first;
     }
 
-    public B getSecond() {
+    public @Nullable B getSecond() {
         return this.second;
     }
 
-    public void setFirst(A first) {
+    public void setFirst(@Nullable A first) {
         this.first = first;
     }
 
-    public void setSecond(B second) {
+    public void setSecond(@Nullable B second) {
         this.second = second;
     }
 
 
     @SuppressWarnings("RawUseOfParameterized")
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -45,7 +49,16 @@ public final class Pair<A, B> {
         }
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(this.first, this.second);
+    }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+              "first=" + first +
+              ", second=" + second +
+              '}';
     }
 }
