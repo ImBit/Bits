@@ -3,16 +3,19 @@ plugins {
     `maven-publish`
     alias(libs.plugins.shadow)
     alias(libs.plugins.paperweight.userdev)
+    alias(libs.plugins.dotenv)
 }
 
 group = "xyz.bitsquidd"
-version = "0.0.4-SNAPSHOT"
+version = "0.0.4"
 
 allprojects {
     group = rootProject.group
     version = rootProject.version
 
     plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
+    plugins.apply("java-library")
+    plugins.apply("maven-publish")
 
     repositories {
         mavenLocal()
@@ -36,3 +39,5 @@ java {
     withSourcesJar()
     withJavadocJar()
 }
+
+

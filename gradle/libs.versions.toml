@@ -2,7 +2,9 @@
 paper-api = "1.21.8-R0.1-SNAPSHOT"
 shadow = "9.0.1"
 paperweight-userdev = "2.0.0-beta.18"
+dotenv = "4.0.0"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight-userdev" }
+dotenv = { id = "co.uzzu.dotenv.gradle", version.ref = "dotenv" }
