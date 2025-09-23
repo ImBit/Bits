@@ -65,7 +65,9 @@ jobs:
                       echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
                       echo "" >> changelog.md
                     
-                    git log --pretty=format:"* %s (%h)" "$PREVIOUS_TAG"..HEAD | grep -v "Merge" >> changelog.md
+                      git log --pretty=format:"* %s (%h)" "$PREVIOUS_TAG"..HEAD \
+                        | grep -v "Merge" \
+                        | grep -v "Merge remote-tracking branch" >> changelog.md
                     fi
                     
                     cat changelog.md
