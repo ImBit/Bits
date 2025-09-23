@@ -9,13 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 public class ComponentHelper {
 
-    public static Stream<Component> getChildren(Component component) {
-        return component.children().stream();
-    }
 
     public static Component styleAll(Component component, Style style) {
         List<Component> children = component.children();

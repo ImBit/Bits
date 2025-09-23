@@ -1,8 +1,8 @@
 package xyz.bitsquidd.bits.lib.sendable.sound;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ public class BitSound implements Sendable {
     }
 
     @Override
-    public <T extends CommandSender> void send(@NotNull T target) {
+    public <T extends Audience> void send(@NotNull T target) {
         target.playSound(Sound.sound(soundKey, soundSource, pitch, volume), blockPos.x, blockPos.y, blockPos.z);
     }
 }

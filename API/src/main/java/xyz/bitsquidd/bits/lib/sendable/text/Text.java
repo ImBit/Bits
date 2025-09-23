@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.lib.sendable.text;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,11 +50,11 @@ public class Text implements Sendable {
     protected final @NotNull Component component;
     protected final @NotNull List<ITextDecorator> decorators = new ArrayList<>();
 
-    private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
+    private static final @NotNull List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
           new TranslationDecorator()
     );
-    private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
+    private static final @NotNull List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
           // These will always be applied last.
           new BlankDecorator()
     );
@@ -92,25 +92,25 @@ public class Text implements Sendable {
         return new Text(Component.text(text));
     }
 
-    public static Text of(@NotNull Component component) {
+    public static @NotNull Text of(@NotNull Component component) {
         return new Text(component);
     }
 
-    public Text decorate(@NotNull List<ITextDecorator> decorators) {
+    public final @NotNull Text decorate(@NotNull List<ITextDecorator> decorators) {
         return new Text(component, decorators);
     }
 
-    public Text decorate(@NotNull ITextDecorator... decorators) {
+    public final @NotNull Text decorate(@NotNull ITextDecorator... decorators) {
         return new Text(component, new ArrayList<>(List.of(decorators)));
     }
 
 
     @Override
-    public <T extends CommandSender> void send(@NotNull T target) {
+    public <T extends Audience> void send(@NotNull T target) {
         target.sendMessage(getComponent(target));
     }
 
-    public <T extends CommandSender> Component getComponent(@Nullable T target) {
+    public final @NotNull <T extends Audience> Component getComponent(@Nullable T target) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);

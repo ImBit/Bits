@@ -1,9 +1,9 @@
 package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.Style;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,25 +15,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractTagDecorator implements ITextDecorator {
-
     protected final LinkedHashSet<AbstractFormatter> globalFormatters = new LinkedHashSet<>();
     protected final LinkedHashMap<String, AbstractFormatter> formatters = new LinkedHashMap<>();
     private static final Pattern TAG_PATTERN = Pattern.compile("<([^>]+)>");
 
     @Override
-    public @NotNull Component format(@NotNull Component component, @Nullable CommandSender target) {
+    public @NotNull Component format(@NotNull Component component, @Nullable Audience target) {
         List<FormattedTextToken> extractedTokens = extractComponentTokens(component, target);
         List<TextToken> processedTokens = processTokensWithTags(extractedTokens);
         return buildComponent(processedTokens);
     }
 
-    private @NotNull List<FormattedTextToken> extractComponentTokens(@NotNull Component component, @Nullable CommandSender target) {
+    private @NotNull List<FormattedTextToken> extractComponentTokens(@NotNull Component component, @Nullable Audience target) {
         List<FormattedTextToken> tokens = new ArrayList<>();
         extractTokensRecursively(component, Style.empty(), tokens, target);
         return tokens;
     }
 
-    private void extractTokensRecursively(@NotNull Component component, @NotNull Style inheritedStyle, @NotNull List<FormattedTextToken> tokens, @Nullable CommandSender target) {
+    private void extractTokensRecursively(@NotNull Component component, @NotNull Style inheritedStyle, @NotNull List<FormattedTextToken> tokens, @Nullable Audience target) {
         Style mergedStyle = inheritedStyle.merge(component.style());
 
         if (component instanceof TextComponent textComponent) {
