@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class BitsCommand {
     protected abstract @NotNull LiteralArgumentBuilder<CommandSourceStack> generateTree(final @NotNull LiteralArgumentBuilder<CommandSourceStack> root);
 
-    public final @NotNull List<LiteralCommandNode<CommandSourceStack>> build(final @NotNull BitsCommandAnnotation annotation) {
+    public final @NotNull List<LiteralCommandNode<CommandSourceStack>> build(final @NotNull BitsCommandAnnotation annotation, final @NotNull List<String> addedPermissions) {
         String rootName = annotation.name();
         if (rootName.isEmpty()) throw new IllegalStateException("Command class " + this.getClass().getName() + " has an empty name.");
 
@@ -26,9 +26,12 @@ public abstract class BitsCommand {
 
         List<LiteralCommandNode<CommandSourceStack>> commandNodes = new ArrayList<>();
 
+        List<String> allPermissions = new ArrayList<>(List.of(annotation.permissions()));
+        allPermissions.addAll(addedPermissions);
+
         commandNames.forEach(commandName -> {
             LiteralArgumentBuilder<CommandSourceStack> builder = generateTree(Commands.literal(commandName))
-                  .requires(ctx -> Arrays.stream(annotation.permissions())
+                  .requires(ctx -> allPermissions.stream()
                         .allMatch(perm -> ctx.getSender().hasPermission(perm)));
 
             commandNodes.add(builder.build());

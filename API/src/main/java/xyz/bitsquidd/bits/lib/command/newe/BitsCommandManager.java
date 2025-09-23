@@ -22,6 +22,15 @@ public abstract class BitsCommandManager {
     protected abstract @NotNull List<BitsCommand> getAllCommands();
 
     /**
+     * Defines the base permission string for all commands.
+     * <p>
+     * For example: {@code bitsplugin.command},
+     *
+     * @return The base permission string for all commands.
+     */
+    protected abstract @NotNull String commandBasePermission();
+
+    /**
      * Registers all {@link BitsCommand}s.
      * <p>
      * Ensure this method is run on {@link JavaPlugin#onEnable()}.
@@ -32,7 +41,7 @@ public abstract class BitsCommandManager {
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> {
                   bitCommands.forEach(bitCommand -> {
-                      buildCommand(bitCommand).forEach(builtCommand -> {
+                      buildCommands(bitCommand).forEach(builtCommand -> {
                           commands.registrar().register(builtCommand);
                       });
                   });
@@ -40,11 +49,11 @@ public abstract class BitsCommandManager {
         );
     }
 
-    protected @NotNull List<LiteralCommandNode<CommandSourceStack>> buildCommand(@NotNull BitsCommand command) {
+    protected @NotNull List<LiteralCommandNode<CommandSourceStack>> buildCommands(@NotNull BitsCommand command) {
         BitsCommandAnnotation annotation = command.getClass().getAnnotation(BitsCommandAnnotation.class);
         if (annotation == null) throw new IllegalStateException("Command class " + command.getClass().getName() + " is not annotated with @BitsCommandAnnotation");
 
-        return command.build(annotation);
+        return command.build(annotation, List.of(commandBasePermission() + "." + annotation.name().replaceAll(" ", "_").toLowerCase()));
     }
 
 
