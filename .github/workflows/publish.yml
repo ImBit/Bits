@@ -50,20 +50,22 @@ jobs:
             -   name: Generate Changelog
                 id: changelog
                 run: |
+                    git fetch --tags --force
+                    
                     CURRENT_TAG="v${{ env.VERSION }}"
-                    PREVIOUS_TAG=$(git tag --sort=-creatordate | grep -vx "$CURRENT_TAG" | head -n1)
+                    PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -vx "$CURRENT_TAG" | tail -n1)
                     
                     if [ -z "$PREVIOUS_TAG" ]; then
-                    echo "## 🚀 Initial Release $CURRENT_TAG" > changelog.md
-                    echo "" >> changelog.md
-                    echo "This is the first official release." >> changelog.md
+                      echo "## 🚀 Initial Release $CURRENT_TAG" > changelog.md
+                      echo "" >> changelog.md
+                      echo "This is the first official release." >> changelog.md
                     else
-                    echo "## 🚀 Release $CURRENT_TAG" > changelog.md
-                    echo "" >> changelog.md
-                    echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
-                    echo "" >> changelog.md
+                      echo "## 🚀 Release $CURRENT_TAG" > changelog.md
+                      echo "" >> changelog.md
+                      echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
+                      echo "" >> changelog.md
                     
-                    git log --pretty=format:"* %s (%h)" $PREVIOUS_TAG..$CURRENT_TAG | grep -v "Merge" >> changelog.md
+                    git log --pretty=format:"* %s (%h)" "$PREVIOUS_TAG"..HEAD | grep -v "Merge" >> changelog.md
                     fi
                     
                     cat changelog.md
