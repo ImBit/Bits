@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "xyz.bitsquidd"
-version = "0.0.4"
+version = "0.0.5"
 
 allprojects {
     group = rootProject.group
