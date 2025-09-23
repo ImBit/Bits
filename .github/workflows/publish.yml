@@ -82,7 +82,7 @@ jobs:
                     draft: false
                     prerelease: false
                     files: |
-                        build/libs/*.jar
+                        api/build/libs/*.jar
                         LICENSE
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
