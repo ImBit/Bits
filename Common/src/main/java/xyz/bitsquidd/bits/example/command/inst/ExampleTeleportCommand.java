@@ -70,7 +70,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Player target = context.get("target");
 
         sender.teleportAsync(target.getLocation()).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + target + "</b>."))
-              .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+              .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
               .send(sender));
     }
 
@@ -79,7 +79,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         sender.teleportAsync(targetLocation).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + FormatHelper.formatLocation(targetLocation, false) + "</b>."))
-              .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+              .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
               .send(sender));
     }
 
@@ -93,7 +93,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
                           targetLocation,
                           false
                     ) + "</b>."))
-                    .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+                    .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
                     .send(sender)));
     }
 
@@ -109,7 +109,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
               .thenRun(() -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
-                    .decorate(new CommandReturnDecorator(CommandReturnType.SUCCESS))
+                    .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
                     .send(sender));
     }
 }

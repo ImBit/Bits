@@ -11,11 +11,15 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.BasicColorForma
 public class CommandReturnDecorator extends StyleDecorator {
     private final @NotNull CommandReturnType commandReturnType;
 
-    public CommandReturnDecorator(@NotNull CommandReturnType commandReturnType) {
+    private CommandReturnDecorator(@NotNull CommandReturnType commandReturnType) {
         super();
         this.commandReturnType = commandReturnType;
 
         this.globalFormatters.add(new BasicColorFormatter(commandReturnType.color));
+    }
+
+    public static @NotNull CommandReturnDecorator of(@NotNull CommandReturnType commandReturnType) {
+        return CommandReturnDecorator.of(commandReturnType);
     }
 
     @Override

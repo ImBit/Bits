@@ -29,7 +29,7 @@ public abstract class ExampleBitsCommand extends AbstractCommand {
 
         if (availablePaths.isEmpty()) {
             Text.of(Component.text("You don't have permission to use this command."))
-                  .decorate(new CommandReturnDecorator(CommandReturnType.ERROR))
+                  .decorate(CommandReturnDecorator.of(CommandReturnType.ERROR))
                   .send(commandContext.getSender());
         } else {
 
