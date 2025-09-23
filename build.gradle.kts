@@ -27,9 +27,16 @@ allprojects {
     dependencies {
         paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
     }
-
+    
     tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
     tasks.javadoc { options.encoding = "UTF-8" }
+}
+
+subprojects {
+    extensions.configure<JavaPluginExtension>("java") {
+        withSourcesJar()
+        withJavadocJar()
+    }
 }
 
 
