@@ -6,6 +6,9 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.FinePositionResolver;
+import io.papermc.paper.command.brigadier.argument.resolvers.RotationResolver;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.EntitySelectorArgumentResolver;
 import io.papermc.paper.math.FinePosition;
 import io.papermc.paper.math.Rotation;
 import org.bukkit.Location;
@@ -53,15 +56,15 @@ public class TeleportCommandExample extends BitsCommand {
     }
 
     private static int teleportToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
-        Location location = ctx.getArgument("entity", Entity.class).getLocation();
+        Location location = resolveArg(ctx, "entity", EntitySelectorArgumentResolver.class).getFirst().getLocation();
         Player player = (Player)ctx.getSource().getSender();
 
         return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
     private static int teleportToLocation(@NotNull CommandContext<CommandSourceStack> ctx) {
-        FinePosition finePosition = getArg(ctx, "location", FinePosition.class);
-        Rotation rotation = getArgOrDefault(ctx, "rotation", Rotation.class, Rotation.rotation(0.0f, 0.0f));
+        FinePosition finePosition = resolveArg(ctx, "location", FinePositionResolver.class);
+        Rotation rotation = resolveArgOrDefault(ctx, "rotation", RotationResolver.class, Rotation.rotation(0.0f, 0.0f));
         World world = getArgOrDefault(ctx, "world", World.class, ctx.getSource().getLocation().getWorld());
 
         Location location = new Location(
@@ -78,18 +81,16 @@ public class TeleportCommandExample extends BitsCommand {
         return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
-    @SuppressWarnings("unchecked")
     private static int teleportEntitiesToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
-        Location location = ctx.getArgument("entity", Entity.class).getLocation();
-        List<Entity> entities = (List<Entity>)ctx.getArgument("entities", List.class);
+        Location location = resolveArg(ctx, "entity", EntitySelectorArgumentResolver.class).getFirst().getLocation();
+        List<Entity> entities = resolveArg(ctx, "targets", EntitySelectorArgumentResolver.class);
 
         return teleportToLocationInternal(entities, location);
     }
 
-    @SuppressWarnings("unchecked")
     private static int teleportEntitiesToLocation(@NotNull CommandContext<CommandSourceStack> ctx) {
-        FinePosition finePosition = getArg(ctx, "location", FinePosition.class);
-        Rotation rotation = getArgOrDefault(ctx, "rotation", Rotation.class, Rotation.rotation(0.0f, 0.0f));
+        FinePosition finePosition = resolveArg(ctx, "location", FinePositionResolver.class);
+        Rotation rotation = resolveArgOrDefault(ctx, "rotation", RotationResolver.class, Rotation.rotation(0.0f, 0.0f));
         World world = getArgOrDefault(ctx, "world", World.class, ctx.getSource().getLocation().getWorld());
 
         Location location = new Location(
@@ -101,7 +102,7 @@ public class TeleportCommandExample extends BitsCommand {
               rotation.pitch()
         );
 
-        List<Entity> entities = (List<Entity>)ctx.getArgument("entities", List.class);
+        List<Entity> entities = resolveArg(ctx, "targets", EntitySelectorArgumentResolver.class);
 
         return teleportToLocationInternal(entities, location);
     }
