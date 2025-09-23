@@ -21,5 +21,5 @@ tasks.processResources {
 }
 
 tasks.withType<Jar> {
-    archiveBaseName.set("Bits")
+    archiveBaseName.set("Bits-Plugin")
 }
