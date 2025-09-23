@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class BitsCommandNew {
+public abstract class BitsCommand {
     protected abstract @NotNull LiteralArgumentBuilder<CommandSourceStack> generateTree(final @NotNull LiteralArgumentBuilder<CommandSourceStack> root);
 
     public final @NotNull List<LiteralCommandNode<CommandSourceStack>> build(final @NotNull BitsCommandAnnotation annotation) {
@@ -25,7 +25,7 @@ public abstract class BitsCommandNew {
         List<LiteralCommandNode<CommandSourceStack>> commandNodes = new ArrayList<>();
 
         commandNames.forEach(commandName -> {
-            LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(commandName)
+            LiteralArgumentBuilder<CommandSourceStack> builder = generateTree(Commands.literal(commandName))
                   .requires(ctx -> Arrays.stream(annotation.permissions())
                         .allMatch(perm -> ctx.getSender().hasPermission(perm)));
 

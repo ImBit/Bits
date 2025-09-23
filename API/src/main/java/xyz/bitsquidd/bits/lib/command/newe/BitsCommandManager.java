@@ -8,22 +8,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public abstract class BitsCommandManagerNew {
+// TODO:
+//  Personalised Show usage
+//  Automatic permission registration? - have a string for a base, then use the name of each command to auto permission?
+
+public abstract class BitsCommandManager {
     private final @NotNull JavaPlugin plugin;
 
-    protected BitsCommandManagerNew(@NotNull JavaPlugin plugin) {
+    protected BitsCommandManager(@NotNull JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    abstract @NotNull List<BitsCommandNew> getAllCommands();
+    protected abstract @NotNull List<BitsCommand> getAllCommands();
 
     /**
-     * Registers all {@link BitsCommandNew}s.
+     * Registers all {@link BitsCommand}s.
      * <p>
      * Ensure this method is run on {@link JavaPlugin#onEnable()}.
      */
     public void enableAllCommands() {
-        List<BitsCommandNew> bitCommands = getAllCommands();
+        List<BitsCommand> bitCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> {
@@ -36,7 +40,7 @@ public abstract class BitsCommandManagerNew {
         );
     }
 
-    protected @NotNull List<LiteralCommandNode<CommandSourceStack>> buildCommand(@NotNull BitsCommandNew command) {
+    protected @NotNull List<LiteralCommandNode<CommandSourceStack>> buildCommand(@NotNull BitsCommand command) {
         BitsCommandAnnotation annotation = command.getClass().getAnnotation(BitsCommandAnnotation.class);
         if (annotation == null) throw new IllegalStateException("Command class " + command.getClass().getName() + " is not annotated with @BitsCommandAnnotation");
 

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.function.Predicate;
 
@@ -19,7 +19,7 @@ public final class PlayerSenderRequirement implements Predicate<CommandSourceSta
     public boolean test(CommandSourceStack commandSourceStack) {
         CommandSender sender = commandSourceStack.getSender();
 
-        if (!(sender instanceof Player senderPlayer)) {
+        if (!(sender instanceof Player)) {
             Text.of(Component.text("Only players can use this command."))
                   .decorate(CommandReturnDecorator.of(CommandReturnType.ERROR))
                   .send(sender);
