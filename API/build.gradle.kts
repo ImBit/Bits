@@ -23,11 +23,15 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url = uri("https://repo.biomebattle.net/repository/biomebattle-repo/")
-            credentials {
-                username = env.BB_REPO_USERNAME.value
-                password = env.BB_REPO_PASSWORD.value
+        val repoUser = System.getenv("BB_REPO_USERNAME")
+        val repoPass = System.getenv("BB_REPO_PASSWORD")
+        if (repoUser != null && repoPass != null) {
+            maven {
+                url = uri("https://repo.biomebattle.net/repository/biomebattle-repo/")
+                credentials {
+                    username = repoUser
+                    password = repoPass
+                }
             }
         }
     }

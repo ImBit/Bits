@@ -87,34 +87,10 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            -   name: Publish to GitHub Packages
+            -   name: Publish to BiomeBattle Maven
                 uses: gradle/gradle-build-action@v2
                 with:
                     arguments: publish
                 env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    VERSION: ${{ env.VERSION }}
-
-            -   name: Publish bundle to Maven Central via Portal API
-                if: always()
-                env:
-                    CENTRAL_TOKEN_USER: ${{ secrets.CENTRAL_TOKEN_USER }}
-                    CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
-                run: |
-                    PROJECT_NAME="Bits"
-                    VERSION=$(grep '^version' build.gradle.kts | head -1 | sed -E 's/.*"(.*)".*/\1/')
-                    BUNDLE_NAME="${PROJECT_NAME}-${VERSION}.zip"
-                    BUNDLE_PATH="build/libs/${BUNDLE_NAME}"
-                    
-                    if [ ! -f "$BUNDLE_PATH" ]; then
-                      echo "ERROR: Bundle not found at $BUNDLE_PATH"
-                      exit 1
-                    fi
-                    
-                    TOKEN=$(printf "%s:%s" "$CENTRAL_TOKEN_USER" "$CENTRAL_TOKEN_PASSWORD" | base64)
-                    echo "Uploading bundle to Maven Central Portal API..."
-                    
-                    curl --fail --show-error --request POST \
-                      --header "Authorization: Bearer $TOKEN" \
-                      --form bundle=@"$BUNDLE_PATH";filename="$BUNDLE_NAME.zip" \
-                      "https://central.sonatype.com/api/v1/publisher/upload?name=$BUNDLE_NAME"
+                    BB_REPO_USERNAME: ${{ secrets.BB_REPO_USERNAME }}
+                    BB_REPO_PASSWORD: ${{ secrets.BB_REPO_PASSWORD }}
