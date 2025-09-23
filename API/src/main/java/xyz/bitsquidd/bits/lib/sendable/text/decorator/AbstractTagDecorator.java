@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.sendable.text.AdventureFormatterFactory;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
 
 import java.util.*;
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
+package xyz.bitsquidd.bits.lib.sendable.text.decorator.impl;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.BasicColorFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.BasicColorFormatter;
 
 public class CommandReturnDecorator extends StyleDecorator {
     private final @NotNull CommandReturnType commandReturnType;
@@ -19,7 +19,7 @@ public class CommandReturnDecorator extends StyleDecorator {
     }
 
     public static @NotNull CommandReturnDecorator of(@NotNull CommandReturnType commandReturnType) {
-        return CommandReturnDecorator.of(commandReturnType);
+        return new CommandReturnDecorator(commandReturnType);
     }
 
     @Override

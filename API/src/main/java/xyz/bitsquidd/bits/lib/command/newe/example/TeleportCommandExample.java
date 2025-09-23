@@ -14,51 +14,34 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import xyz.bitsquidd.bits.lib.command.newe.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.newe.BitsCommandAnnotation;
-import xyz.bitsquidd.bits.lib.command.newe.BitsCommandNew;
 import xyz.bitsquidd.bits.lib.command.newe.requires.PlayerSenderRequirement;
+import xyz.bitsquidd.bits.lib.command.newe.util.CommandArgUtils;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @BitsCommandAnnotation(name = "tp-example", aliases = {"tp-example-a1"}, description = "Teleport players to a location")
-public class TeleportCommandNew extends BitsCommandNew {
+public class TeleportCommandExample extends BitsCommand {
     @Override
     protected @NotNull LiteralArgumentBuilder<CommandSourceStack> generateTree(@NotNull LiteralArgumentBuilder<CommandSourceStack> root) {
         return root
               .then(Commands.argument("entity", ArgumentTypes.entity())
                     .requires(PlayerSenderRequirement.INSTANCE)
-                    .executes(TeleportCommandNew::teleportToEntity)
+                    .executes(TeleportCommandExample::teleportToEntity)
               )
-              .then(Commands.argument("location", ArgumentTypes.finePosition())
-                    .requires(PlayerSenderRequirement.INSTANCE)
-                    .executes(TeleportCommandNew::teleportToLocation)
-                    .then(Commands.argument("rotation", ArgumentTypes.rotation())
-                          .requires(PlayerSenderRequirement.INSTANCE)
-                          .executes(TeleportCommandNew::teleportToLocation)
-                          .then(Commands.argument("world", ArgumentTypes.world())
-                                .requires(PlayerSenderRequirement.INSTANCE)
-                                .executes(TeleportCommandNew::teleportToLocation)
-                          )
-                    )
-              )
+              .then(CommandArgUtils.locationArg(
+                    "location", TeleportCommandExample::teleportToLocation
+              ))
               .then(Commands.argument("targets", ArgumentTypes.entities())
                     .then(Commands.argument("entity", ArgumentTypes.entity())
-                          .executes(TeleportCommandNew::teleportEntitiesToEntity)
+                          .executes(TeleportCommandExample::teleportEntitiesToEntity)
                     )
-                    .then(Commands.argument("location", ArgumentTypes.finePosition())
-                          .requires(PlayerSenderRequirement.INSTANCE)
-                          .executes(TeleportCommandNew::teleportToLocation)
-                          .then(Commands.argument("rotation", ArgumentTypes.rotation())
-                                .requires(PlayerSenderRequirement.INSTANCE)
-                                .executes(TeleportCommandNew::teleportToLocation)
-                                .then(Commands.argument("world", ArgumentTypes.world())
-                                      .requires(PlayerSenderRequirement.INSTANCE)
-                                      .executes(TeleportCommandNew::teleportEntitiesToLocation)
-                                )
-                          )
-                    )
+                    .then(CommandArgUtils.locationArg(
+                          "location", TeleportCommandExample::teleportToLocation
+                    ))
               );
     }
 

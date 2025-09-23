@@ -17,7 +17,7 @@ import xyz.bitsquidd.bits.lib.command.requirements.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.command.requirements.PlayerRequirement;
 import xyz.bitsquidd.bits.lib.sendable.text.FormatHelper;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.Collection;
 import java.util.List;

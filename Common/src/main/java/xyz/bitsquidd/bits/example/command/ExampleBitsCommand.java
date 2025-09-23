@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.*;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.CommandReturnDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.List;
 

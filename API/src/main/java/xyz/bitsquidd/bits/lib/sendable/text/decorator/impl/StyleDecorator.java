@@ -1,8 +1,8 @@
-package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
+package xyz.bitsquidd.bits.lib.sendable.text.decorator.impl;
 
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.AbstractTagDecorator;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.DynamicColorFormatter;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.StyleFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.DynamicColorFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.StyleFormatter;
 
 public class StyleDecorator extends AbstractTagDecorator {
     public StyleDecorator() {

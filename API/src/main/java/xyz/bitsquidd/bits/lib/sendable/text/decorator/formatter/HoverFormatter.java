@@ -1,5 +1,5 @@
 // HoverFormatter.java
-package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters;
+package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;

@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.sendable.text.decorator.examples;
+package xyz.bitsquidd.bits.lib.sendable.text.decorator.impl;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;

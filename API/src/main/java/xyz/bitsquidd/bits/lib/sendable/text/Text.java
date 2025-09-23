@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.BlankDecorator;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.TranslationDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ import java.util.List;
  *
  * <p>Default decorators include:
  * <ul>
- *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.TranslationDecorator} - Applied first to render {@link net.kyori.adventure.text.TranslatableComponent}s</li>
- *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.examples.BlankDecorator} - Applied last as a final processing to remove regular tags</li>
+ *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator} - Applied first to render {@link net.kyori.adventure.text.TranslatableComponent}s</li>
+ *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator} - Applied last as a final processing to remove regular tags</li>
  * </ul>
  *
  * <p>Example usage:

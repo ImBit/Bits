@@ -3,8 +3,8 @@ package xyz.bitsquidd.bits.lib.sendable.text;
 import net.kyori.adventure.text.format.Style;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.AbstractFormatter;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatters.StyleFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.StyleFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
