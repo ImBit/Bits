@@ -60,7 +60,6 @@ public class TeleportCommandNew extends BitsCommandNew {
                           )
                     )
               );
-
     }
 
     private static int teleportToLocationInternal(@NotNull Collection<Entity> entities, @NotNull Location location) {
@@ -73,9 +72,8 @@ public class TeleportCommandNew extends BitsCommandNew {
     private static int teleportToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
         Location location = ctx.getArgument("entity", Entity.class).getLocation();
         Player player = (Player)ctx.getSource().getSender();
-        teleportToLocationInternal(Collections.singleton(player), location);
 
-        return Command.SINGLE_SUCCESS;
+        return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
     private static int teleportToLocation(@NotNull CommandContext<CommandSourceStack> ctx) {
@@ -93,18 +91,16 @@ public class TeleportCommandNew extends BitsCommandNew {
         );
 
         Player player = (Player)ctx.getSource().getSender();
-        teleportToLocationInternal(Collections.singleton(player), location);
 
-        return Command.SINGLE_SUCCESS;
+        return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
     @SuppressWarnings("unchecked")
     private static int teleportEntitiesToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
         Location location = ctx.getArgument("entity", Entity.class).getLocation();
         List<Entity> entities = (List<Entity>)ctx.getArgument("entities", List.class);
-        teleportToLocationInternal(entities, location);
 
-        return Command.SINGLE_SUCCESS;
+        return teleportToLocationInternal(entities, location);
     }
 
     @SuppressWarnings("unchecked")
@@ -124,9 +120,7 @@ public class TeleportCommandNew extends BitsCommandNew {
 
         List<Entity> entities = (List<Entity>)ctx.getArgument("entities", List.class);
 
-        teleportToLocationInternal(entities, location);
-
-        return Command.SINGLE_SUCCESS;
+        return teleportToLocationInternal(entities, location);
     }
 
 }
