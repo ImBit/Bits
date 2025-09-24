@@ -3,17 +3,17 @@ package xyz.bitsquidd.bits.lib.command.newe.requires;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.command.ConsoleCommandSender;
 
-public final class PlayerSenderRequirement extends BitsRequirement {
-    public static final PlayerSenderRequirement INSTANCE = new PlayerSenderRequirement();
+public final class ConsoleSenderRequirement extends BitsRequirement {
+    public static final ConsoleSenderRequirement INSTANCE = new ConsoleSenderRequirement();
 
     @Override
     public boolean test(CommandSourceStack commandSourceStack) {
         CommandSender sender = commandSourceStack.getSender();
 
-        if (!(sender instanceof Player)) {
-            return fail(commandSourceStack, Component.text("This command can only be run by a player."));
+        if (!(sender instanceof ConsoleCommandSender)) {
+            return fail(commandSourceStack, Component.text("This command can only be run by the console."));
         }
 
         return true;
