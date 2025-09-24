@@ -97,13 +97,9 @@ public abstract class BitsCommand {
           @NotNull CommandContext<CommandSourceStack> ctx,
           @NotNull String name,
           @NotNull Class<R> resolverClass
-    ) {
+    ) throws CommandSyntaxException {
         R resolver = ctx.getArgument(name, resolverClass);
-        try {
-            return resolver.resolve(ctx.getSource());
-        } catch (CommandSyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        return resolver.resolve(ctx.getSource());
     }
 
     /**

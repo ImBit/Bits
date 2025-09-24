@@ -42,8 +42,7 @@ public abstract class AbstractEnumArgument<T extends Enum<T>> extends BitsComman
 
     @Override
     protected T parseSafe(StringReader stringReader, CommandSourceStack commandSourceStack) throws CommandSyntaxException {
-        final String name;
-        name = getNativeType().parse(stringReader);
+        final String name = getNativeType().parse(stringReader);
         T enumValue = EnumHelper.valueOf(this.enumClass, name, null);
 
         if (enumValue == null) throw ERROR_NOT_VALID.create(name);

@@ -13,6 +13,11 @@ import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.CommandReturnType;
+import xyz.bitsquidd.bits.lib.command.newe.exception.AbstractCommandException;
+import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
+
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
@@ -34,11 +39,17 @@ public abstract class BitsCommandArgument<T, N> implements CustomArgumentType<T,
     @Override
     public final <S> T parse(StringReader reader, S source) throws CommandSyntaxException {
         if (!(source instanceof CommandSourceStack stack)) throw ERROR_BAD_SOURCE.create();
-
-        return parseSafe(reader, stack);
+        
+        try {
+            return parseSafe(reader, stack);
+        } catch (AbstractCommandException e) {
+            Text.of(e.componentMessage())
+                  .decorate(CommandReturnDecorator.of(CommandReturnType.ERROR))
+                  .send(stack.getSender());
+        }
     }
 
-    protected abstract T parseSafe(StringReader reader, CommandSourceStack stack) throws CommandSyntaxException;
+    protected abstract T parseSafe(StringReader reader, CommandSourceStack stack) throws AbstractCommandException;
 
     @Override
     public final <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
