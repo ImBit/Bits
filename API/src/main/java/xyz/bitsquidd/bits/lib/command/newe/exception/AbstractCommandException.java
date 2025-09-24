@@ -26,4 +26,19 @@ public abstract class AbstractCommandException extends CommandSyntaxException {
               .getComponent(null)); //TODO pass sender in here?
     }
 
+    //public abstract class AbstractCommandException extends Exception implements ComponentMessageThrowable {
+    //    private final @NotNull String message;
+    //
+    //    public AbstractCommandException(@NotNull String message) {
+    //        this.message = message;
+    //    }
+    //
+    //    public final void sendTo(@NotNull CommandSender sender) {
+    //        Text.of(Component.text(message))
+    //              .decorate(CommandReturnDecorator.of(CommandReturnType.ERROR))
+    //              .send(sender);
+    //    }
+    //
+    //}
+
 }

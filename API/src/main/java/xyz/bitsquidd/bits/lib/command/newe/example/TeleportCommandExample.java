@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.command.newe.example;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -55,14 +56,14 @@ public class TeleportCommandExample extends BitsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int teleportToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
+    private static int teleportToEntity(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Location location = resolveArg(ctx, "entity", EntitySelectorArgumentResolver.class).getFirst().getLocation();
         Player player = (Player)ctx.getSource().getSender();
 
         return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
-    private static int teleportToLocation(@NotNull CommandContext<CommandSourceStack> ctx) {
+    private static int teleportToLocation(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         FinePosition finePosition = resolveArg(ctx, "location", FinePositionResolver.class);
         Rotation rotation = resolveArgOrDefault(ctx, "rotation", RotationResolver.class, Rotation.rotation(0.0f, 0.0f));
         World world = getArgOrDefault(ctx, "world", World.class, ctx.getSource().getLocation().getWorld());
@@ -81,14 +82,14 @@ public class TeleportCommandExample extends BitsCommand {
         return teleportToLocationInternal(Collections.singleton(player), location);
     }
 
-    private static int teleportEntitiesToEntity(@NotNull CommandContext<CommandSourceStack> ctx) {
+    private static int teleportEntitiesToEntity(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Location location = resolveArg(ctx, "entity", EntitySelectorArgumentResolver.class).getFirst().getLocation();
         List<Entity> entities = resolveArg(ctx, "targets", EntitySelectorArgumentResolver.class);
 
         return teleportToLocationInternal(entities, location);
     }
 
-    private static int teleportEntitiesToLocation(@NotNull CommandContext<CommandSourceStack> ctx) {
+    private static int teleportEntitiesToLocation(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         FinePosition finePosition = resolveArg(ctx, "location", FinePositionResolver.class);
         Rotation rotation = resolveArgOrDefault(ctx, "rotation", RotationResolver.class, Rotation.rotation(0.0f, 0.0f));
         World world = getArgOrDefault(ctx, "world", World.class, ctx.getSource().getLocation().getWorld());
