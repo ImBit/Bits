@@ -1,22 +1,22 @@
 package xyz.bitsquidd.bits.lib.command.newe.argument;
 
+import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.newe.exception.type.SimpleBitsCommandExceptionType;
-
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public abstract class BitsCommandArgument<T, N> implements CustomArgumentType<T, N> {
-    protected static final SimpleBitsCommandExceptionType ERROR_BAD_SOURCE = new SimpleBitsCommandExceptionType("The source needs to be a CommandSourceStack!");
-    protected static final SimpleBitsCommandExceptionType ERROR_EMPTY = new SimpleBitsCommandExceptionType("The argument cannot be empty!");
+    protected static final SimpleCommandExceptionType ERROR_BAD_SOURCE = new SimpleCommandExceptionType(new LiteralMessage("The source needs to be a CommandSourceStack!"));
+    protected static final SimpleCommandExceptionType ERROR_EMPTY = new SimpleCommandExceptionType(new LiteralMessage("The argument cannot be empty!"));
 
 
     @Override
