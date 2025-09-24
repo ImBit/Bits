@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.command.newe.argument;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -16,30 +17,35 @@ import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public abstract class BitsCommandArgument<T, N> implements CustomArgumentType<T, N> {
-    private static final SimpleCommandExceptionType ERROR_BAD_SOURCE = new SimpleCommandExceptionType(
+    protected static final SimpleCommandExceptionType ERROR_BAD_SOURCE = new SimpleCommandExceptionType(
           MessageComponentSerializer.message().serialize(Component.text("The source needs to be a CommandSourceStack!"))
     );
 
+    protected static final DynamicCommandExceptionType ERROR_EMPTY = new DynamicCommandExceptionType(
+          input -> MessageComponentSerializer.message().serialize(Component.text("No argument specified"))
+    );
+
+
     @Override
-    public T parse(StringReader reader) throws CommandSyntaxException {
+    public final T parse(StringReader reader) throws CommandSyntaxException {
         throw new UnsupportedOperationException("This method will never be called.");
     }
 
     @Override
-    public <S> T parse(StringReader reader, S source) throws CommandSyntaxException {
+    public final <S> T parse(StringReader reader, S source) throws CommandSyntaxException {
         if (!(source instanceof CommandSourceStack stack)) throw ERROR_BAD_SOURCE.create();
 
         return parseSafe(reader, stack);
     }
 
-    abstract T parseSafe(StringReader reader, CommandSourceStack stack);
+    protected abstract T parseSafe(StringReader reader, CommandSourceStack stack) throws CommandSyntaxException;
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
+    public final <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
         if (!(ctx.getSource() instanceof CommandSourceStack)) return builder.buildFuture();
 
         return listSuggestionsSafe(ctx, builder);
     }
 
-    abstract <S> CompletableFuture<Suggestions> listSuggestionsSafe(CommandContext<S> ctx, SuggestionsBuilder builder);
+    protected abstract <S> CompletableFuture<Suggestions> listSuggestionsSafe(CommandContext<S> ctx, SuggestionsBuilder builder);
 }

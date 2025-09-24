@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.newe.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.newe.BitsCommandAnnotation;
-import xyz.bitsquidd.bits.lib.command.newe.requires.PlayerSenderRequirement;
+import xyz.bitsquidd.bits.lib.command.newe.requirement.PlayerSenderRequirement;
 import xyz.bitsquidd.bits.lib.command.newe.util.CommandArgUtils;
 
 import java.util.Collection;

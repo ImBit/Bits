@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.newe.requires;
+package xyz.bitsquidd.bits.lib.command.newe.requirement;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;

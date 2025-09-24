@@ -7,7 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.newe.requires.PlayerSenderRequirement;
+import xyz.bitsquidd.bits.lib.command.newe.requirement.PlayerSenderRequirement;
 
 public final class CommandArgUtils {
     private CommandArgUtils() {}
