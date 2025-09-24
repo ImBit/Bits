@@ -9,13 +9,14 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.newe.exception.BCommandParseException;
+import xyz.bitsquidd.bits.lib.command.newe.exception.type.SimpleBitsCommandExceptionType;
 
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public abstract class BitsCommandArgument<T, N> implements CustomArgumentType<T, N> {
-    protected static final BCommandParseException ERROR_BAD_SOURCE = new BCommandParseException("The source needs to be a CommandSourceStack!");
+    protected static final SimpleBitsCommandExceptionType ERROR_BAD_SOURCE = new SimpleBitsCommandExceptionType("The source needs to be a CommandSourceStack!");
+    protected static final SimpleBitsCommandExceptionType ERROR_EMPTY = new SimpleBitsCommandExceptionType("The argument cannot be empty!");
 
 
     @Override
@@ -25,7 +26,7 @@ public abstract class BitsCommandArgument<T, N> implements CustomArgumentType<T,
 
     @Override
     public final <S> T parse(StringReader reader, S source) throws CommandSyntaxException {
-        if (!(source instanceof CommandSourceStack stack)) throw ERROR_BAD_SOURCE;
+        if (!(source instanceof CommandSourceStack stack)) throw ERROR_BAD_SOURCE.create();
 
         return parseSafe(reader, stack);
     }

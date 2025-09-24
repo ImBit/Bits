@@ -15,8 +15,8 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorato
  * In the future we could consider parsing {@link  com.mojang.brigadier.exceptions.CommandSyntaxException}, as this is
  * what Brigadier uses, and would allow for far more integrated functionality.
  */
-public abstract class AbstractCommandException extends CommandSyntaxException {
-    public AbstractCommandException(@NotNull String message) {
+public class BitsCommandException extends CommandSyntaxException {
+    public BitsCommandException(@NotNull String message) {
         super(new SimpleCommandExceptionType(getAdventureComponent(message)), getAdventureComponent(message));
     }
 

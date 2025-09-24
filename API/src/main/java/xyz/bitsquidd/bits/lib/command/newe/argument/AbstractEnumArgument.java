@@ -5,14 +5,12 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.MessageComponentSerializer;
-import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.newe.exception.type.DynamicBitsCommandExceptionType;
 import xyz.bitsquidd.bits.lib.helper.EnumHelper;
 
 import java.util.concurrent.CompletableFuture;
@@ -24,19 +22,19 @@ public abstract class AbstractEnumArgument<T extends Enum<T>> extends BitsComman
     private final Class<T> enumClass;
     private final Predicate<T> allowedValues;
 
-    private final DynamicCommandExceptionType ERROR_NOT_VALID;
-    private final DynamicCommandExceptionType ERROR_NOT_ALLOWED;
+    private final DynamicBitsCommandExceptionType ERROR_NOT_VALID;
+    private final DynamicBitsCommandExceptionType ERROR_NOT_ALLOWED;
 
     public AbstractEnumArgument(Class<T> enumClass, Predicate<T> allowedValues) {
         this.enumClass = enumClass;
         this.allowedValues = allowedValues;
 
-        ERROR_NOT_VALID = new DynamicCommandExceptionType(
-              name -> MessageComponentSerializer.message().serialize(Component.text(name + " is not a valid " + enumClass.getSimpleName()))
+        ERROR_NOT_VALID = new DynamicBitsCommandExceptionType(
+              name -> name + " is not a valid " + enumClass.getSimpleName()
         );
 
-        ERROR_NOT_ALLOWED = new DynamicCommandExceptionType(
-              name -> MessageComponentSerializer.message().serialize(Component.text(name + " is not allowed to be used in this command!"))
+        ERROR_NOT_ALLOWED = new DynamicBitsCommandExceptionType(
+              name -> name + " is not allowed to be used in this command!"
         );
     }
 

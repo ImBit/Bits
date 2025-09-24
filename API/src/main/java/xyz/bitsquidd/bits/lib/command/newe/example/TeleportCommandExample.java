@@ -44,7 +44,7 @@ public class TeleportCommandExample extends BitsCommand {
                           .executes(TeleportCommandExample::teleportEntitiesToEntity)
                     )
                     .then(CommandArgUtils.locationArg(
-                          "location", TeleportCommandExample::teleportToLocation
+                          "location", TeleportCommandExample::teleportEntitiesToLocation
                     ))
               );
     }
