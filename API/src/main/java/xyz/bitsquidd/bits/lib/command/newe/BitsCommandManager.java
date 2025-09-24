@@ -3,8 +3,15 @@ package xyz.bitsquidd.bits.lib.command.newe;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.spigotmc.SpigotConfig;
+
+import xyz.bitsquidd.bits.lib.command.CommandReturnType;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.List;
 
@@ -14,9 +21,11 @@ import java.util.List;
 
 public abstract class BitsCommandManager {
     private final @NotNull JavaPlugin plugin;
+    private final @NotNull BitsCommandListener listener;
 
     protected BitsCommandManager(@NotNull JavaPlugin plugin) {
         this.plugin = plugin;
+        this.listener = getListenerInternal();
     }
 
     protected abstract @NotNull List<BitsCommand> getAllCommands();
@@ -30,12 +39,34 @@ public abstract class BitsCommandManager {
      */
     protected abstract @NotNull String commandBasePermission();
 
+    public void startup() {
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
+        enableAllCommands();
+    }
+
+    public void shutdown() {
+        HandlerList.unregisterAll(listener);
+    }
+
+    /**
+     * Override this method if you want to use a custom listener.
+     * The default implementation returns a new instance of {@link BitsCommandListener}.
+     * <p>
+     * This default implementation provides basic formatting for unknown/error commands.
+     */
+    protected @NotNull BitsCommandListener getListenerInternal() {
+        return new BitsCommandListener(
+              CommandReturnDecorator.of(CommandReturnType.ERROR),
+              Component.text(SpigotConfig.unknownCommandMessage)
+        );
+    }
+
     /**
      * Registers all {@link BitsCommand}s.
      * <p>
      * Ensure this method is run on {@link JavaPlugin#onEnable()}.
      */
-    public void enableAllCommands() {
+    protected void enableAllCommands() {
         List<BitsCommand> bitCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
