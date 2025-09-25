@@ -9,16 +9,28 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.resolvers.ArgumentResolver;
 import org.jetbrains.annotations.NotNull;
 
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BitsCommand {
+    private final @NotNull BitsCommandAnnotation annotation;
+
+    protected BitsCommand() {
+        this.annotation = getClass().getAnnotation(BitsCommandAnnotation.class);
+        if (this.annotation == null) throw new IllegalStateException("Command class " + getClass().getSimpleName() + " is not annotated with @BitsCommandAnnotation");
+    }
+
     protected abstract @NotNull LiteralArgumentBuilder<CommandSourceStack> generateTree(final @NotNull LiteralArgumentBuilder<CommandSourceStack> root);
 
-    public final @NotNull List<LiteralCommandNode<CommandSourceStack>> build(final @NotNull BitsCommandAnnotation annotation, final @NotNull List<String> addedPermissions) {
+    public final @NotNull List<LiteralCommandNode<CommandSourceStack>> build() {
         String rootName = annotation.name();
         if (rootName.isEmpty()) throw new IllegalStateException("Command class " + this.getClass().getName() + " has an empty name.");
+
+        @NotNull List<String> addedPermissions = new ArrayList<>();
+        addedPermissions.add(getPermissionString());
 
         String[] aliases = annotation.aliases();
         List<String> commandNames = new ArrayList<>(List.of(rootName));
@@ -38,6 +50,10 @@ public abstract class BitsCommand {
         });
 
         return commandNodes;
+    }
+
+    public @NotNull String getPermissionString() {
+        return BitsConfig.COMMAND_BASE_STRING + "." + annotation.name().replaceAll(" ", "_").toLowerCase();
     }
 
     /**

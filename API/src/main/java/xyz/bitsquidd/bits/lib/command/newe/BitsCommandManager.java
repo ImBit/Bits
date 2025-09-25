@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.newe;
 
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -11,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.List;
@@ -20,14 +19,21 @@ import java.util.List;
 //  Automatic permission registration? - have a string for a base, then use the name of each command to auto permission?
 
 public abstract class BitsCommandManager {
-    private final @NotNull JavaPlugin plugin;
-    private final @NotNull BitsCommandListener listener;
+    protected final @NotNull JavaPlugin plugin;
+    protected final @NotNull BitsCommandListener listener;
 
     protected BitsCommandManager(@NotNull JavaPlugin plugin) {
         this.plugin = plugin;
         this.listener = getListenerInternal();
+
+        BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
     }
 
+    /**
+     * Provides all {@link BitsCommand}s to be registered on startup of the manager.
+     *
+     * @return A list of all {@link BitsCommand}s to be registered.
+     */
     protected abstract @NotNull List<BitsCommand> getAllCommands();
 
     /**
@@ -39,11 +45,19 @@ public abstract class BitsCommandManager {
      */
     protected abstract @NotNull String commandBasePermission();
 
+    /**
+     * Registers the command listener and enables all commands.
+     * <p>
+     * Ensure this method is run on {@link JavaPlugin#onEnable()} or equivalent.
+     */
     public void startup() {
         Bukkit.getPluginManager().registerEvents(listener, plugin);
         enableAllCommands();
     }
 
+    /**
+     * Unregisters the command listener.
+     */
     public void shutdown() {
         HandlerList.unregisterAll(listener);
     }
@@ -63,29 +77,19 @@ public abstract class BitsCommandManager {
 
     /**
      * Registers all {@link BitsCommand}s.
-     * <p>
-     * Ensure this method is run on {@link JavaPlugin#onEnable()}.
      */
     protected void enableAllCommands() {
-        List<BitsCommand> bitCommands = getAllCommands();
+        List<BitsCommand> bitsCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> {
-                  bitCommands.forEach(bitCommand -> {
-                      buildCommands(bitCommand).forEach(builtCommand -> {
+                  bitsCommands.forEach(bitsCommand -> {
+                      bitsCommand.build().forEach(builtCommand -> {
                           commands.registrar().register(builtCommand);
                       });
                   });
               }
         );
     }
-
-    protected @NotNull List<LiteralCommandNode<CommandSourceStack>> buildCommands(@NotNull BitsCommand command) {
-        BitsCommandAnnotation annotation = command.getClass().getAnnotation(BitsCommandAnnotation.class);
-        if (annotation == null) throw new IllegalStateException("Command class " + command.getClass().getName() + " is not annotated with @BitsCommandAnnotation");
-
-        return command.build(annotation, List.of(commandBasePermission() + "." + annotation.name().replaceAll(" ", "_").toLowerCase()));
-    }
-
 
 }
