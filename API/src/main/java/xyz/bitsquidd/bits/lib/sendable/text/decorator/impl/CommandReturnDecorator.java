@@ -16,6 +16,7 @@ public class CommandReturnDecorator extends StyleDecorator {
         this.commandReturnType = commandReturnType;
 
         this.globalFormatters.add(new BasicColorFormatter(commandReturnType.color));
+        this.formatters.put("b", new ColorLightenerFormatter(0.4f));
     }
 
     public static @NotNull CommandReturnDecorator of(@NotNull CommandReturnType commandReturnType) {

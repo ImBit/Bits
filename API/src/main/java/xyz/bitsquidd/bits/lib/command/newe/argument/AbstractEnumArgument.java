@@ -31,11 +31,11 @@ public abstract class AbstractEnumArgument<T extends Enum<T>> extends BitsComman
         this.allowedValues = allowedValues;
 
         ERROR_NOT_VALID = new DynamicCommandExceptionType(
-              name -> new LiteralMessage(name + " is not a valid " + enumClass.getSimpleName())
+              name -> new LiteralMessage("<b>" + name + "</b> is not a valid <b>" + enumClass.getSimpleName() + "</b>.")
         );
 
         ERROR_NOT_ALLOWED = new DynamicCommandExceptionType(
-              name -> new LiteralMessage(name + " is not allowed to be used in this command!")
+              name -> new LiteralMessage("<b>" + name + " is not allowed to be used in this command!")
         );
     }
 
