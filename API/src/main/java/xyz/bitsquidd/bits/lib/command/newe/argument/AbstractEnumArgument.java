@@ -52,12 +52,14 @@ public abstract class AbstractEnumArgument<T extends Enum<T>> extends BitsComman
 
     @Override
     protected <S> CompletableFuture<Suggestions> listSuggestionsSafe(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
+        String remaining = suggestionsBuilder.getRemaining().toUpperCase();
+
         for (T value : enumClass.getEnumConstants()) {
-            if (allowedValues.test(value)) {
-                suggestionsBuilder.suggest(value.name().toUpperCase());
+            String suggestion = value.name().toUpperCase();
+            if (allowedValues.test(value) && suggestion.startsWith(remaining)) {
+                suggestionsBuilder.suggest(suggestion);
             }
         }
-
         return suggestionsBuilder.buildFuture();
     }
 
