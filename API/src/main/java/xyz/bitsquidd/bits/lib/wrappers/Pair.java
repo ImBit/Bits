@@ -1,48 +1,76 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public final class Pair<A, B> {
-    private @Nullable A first;
-    private @Nullable B second;
+    private A first;
+    private B second;
 
-    public Pair(@Nullable A first, @Nullable B second) {
+    private Pair(A first, B second) {
         this.first = first;
         this.second = second;
     }
 
-    public static <A, B> @NotNull Pair<A, B> of(@Nullable A first, @Nullable B second) {
+    /**
+     * Static factory method to create a new Pair instance.
+     */
+    public static <A, B> @NotNull Pair<A, B> of(A first, B second) {
         return new Pair<>(first, second);
     }
 
-
-    public @Nullable A getFirst() {
+    /**
+     * Gets the first value of the pair.
+     *
+     * @return the value of the first element
+     */
+    public A getFirst() {
         return this.first;
     }
 
-    public @Nullable B getSecond() {
+    /**
+     * Gets the second value of the pair.
+     *
+     * @return the value of the second element
+     */
+    public B getSecond() {
         return this.second;
     }
 
-    public void setFirst(@Nullable A first) {
+
+    /**
+     * Sets the first value of the pair.
+     *
+     * @param first the new value
+     *
+     * @return the old value (if present)
+     */
+    public A setFirst(A first) {
+        A old = this.first;
         this.first = first;
+        return old;
     }
 
-    public void setSecond(@Nullable B second) {
+    /**
+     * Sets the second value of the pair.
+     *
+     * @param second the new value
+     *
+     * @return the old value (if present)
+     */
+    public B setSecond(B second) {
+        B old = this.second;
         this.second = second;
+        return old;
     }
 
 
-    @SuppressWarnings("RawUseOfParameterized")
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        } else if (o != null && this.getClass() == o.getClass()) {
-            Pair<?, ?> pair = (Pair)o;
+        } else if (o instanceof Pair<?, ?> pair) {
             return Objects.equals(this.first, pair.first) && Objects.equals(this.second, pair.second);
         } else {
             return false;
@@ -61,4 +89,5 @@ public final class Pair<A, B> {
               ", second=" + second +
               '}';
     }
+
 }
