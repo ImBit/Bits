@@ -1,8 +1,10 @@
 package xyz.bitsquidd.bits.lib.helper.color;
 
+import org.jetbrains.annotations.Range;
+
 public class ColorHelper {
 
-    public static int lightenColour(int color, float lightness) {
+    public static int lightenColour(int color, @Range(from = 0, to = 1) double lightness) {
         lightness = Math.clamp(lightness, -1, 1);
 
         int red = (color >> 16) & 0xFF;
@@ -34,7 +36,7 @@ public class ColorHelper {
         return (red << 16) | (green << 8) | blue;
     }
 
-    public static int blendColors(int color1, int color2, float ratio) {
+    public static int blendColors(int color1, int color2, @Range(from = 0, to = 1) double ratio) {
         ratio = Math.clamp(ratio, 0, 1);
 
         int red1 = (color1 >> 16) & 0xFF;
