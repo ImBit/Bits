@@ -89,7 +89,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         targets.forEach(p -> p.teleportAsync(targetLocation)
-              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + Formatter.players(targets) + "</b> to <b>" + Formatter.location(
+              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + Formatter.collection(targets) + "</b> to <b>" + Formatter.location(
                           targetLocation,
                           false
                     ) + "</b>."))
@@ -108,7 +108,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
               .toList();
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-              .thenRun(() -> Text.of(Component.text("Teleported <b>" + Formatter.players(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
+              .thenRun(() -> Text.of(Component.text("Teleported <b>" + Formatter.collection(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
                     .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
                     .send(sender));
     }
