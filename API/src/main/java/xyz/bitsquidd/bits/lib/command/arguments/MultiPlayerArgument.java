@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 import xyz.bitsquidd.bits.lib.command.arguments.interfaces.AbstractPlayerArgument;
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
-import xyz.bitsquidd.bits.lib.entity.EntityHelper;
+import xyz.bitsquidd.bits.lib.helper.entity.EntityHelper;
 
 import java.util.*;
 

@@ -15,7 +15,7 @@ import xyz.bitsquidd.bits.lib.command.arguments.MultiPlayerArgument;
 import xyz.bitsquidd.bits.lib.command.arguments.SinglePlayerArgument;
 import xyz.bitsquidd.bits.lib.command.requirements.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.command.requirements.PlayerRequirement;
-import xyz.bitsquidd.bits.lib.sendable.text.FormatHelper;
+import xyz.bitsquidd.bits.lib.helper.Formatter;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
@@ -78,7 +78,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Player sender = (Player)context.getSender();
         Location targetLocation = context.get("targetLocation");
 
-        sender.teleportAsync(targetLocation).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + FormatHelper.formatLocation(targetLocation, false) + "</b>."))
+        sender.teleportAsync(targetLocation).thenAccept((result) -> Text.of(Component.text("Teleported to <b>" + Formatter.location(targetLocation, false) + "</b>."))
               .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
               .send(sender));
     }
@@ -89,7 +89,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
         Location targetLocation = context.get("targetLocation");
 
         targets.forEach(p -> p.teleportAsync(targetLocation)
-              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + FormatHelper.formatLocation(
+              .thenAccept((result) -> Text.of(Component.text("Teleported <b>" + Formatter.players(targets) + "</b> to <b>" + Formatter.location(
                           targetLocation,
                           false
                     ) + "</b>."))
@@ -108,7 +108,7 @@ public class ExampleTeleportCommand extends ExampleBitsCommand {
               .toList();
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-              .thenRun(() -> Text.of(Component.text("Teleported <b>" + FormatHelper.formatPlayers(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
+              .thenRun(() -> Text.of(Component.text("Teleported <b>" + Formatter.players(targets) + "</b> to <b>" + targetPlayer.getName() + "</b>."))
                     .decorate(CommandReturnDecorator.of(CommandReturnType.SUCCESS))
                     .send(sender));
     }

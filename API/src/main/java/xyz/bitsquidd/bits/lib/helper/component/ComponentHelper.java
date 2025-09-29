@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.component;
+package xyz.bitsquidd.bits.lib.helper.component;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

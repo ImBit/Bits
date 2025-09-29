@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.component.color;
+package xyz.bitsquidd.bits.lib.helper.color;
 
 public class ColorHelper {
 

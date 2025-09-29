@@ -6,7 +6,7 @@ import net.kyori.adventure.text.format.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.component.ComponentHelper;
+import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
 
 public class BlankDecorator extends StyleDecorator {
     @Override
