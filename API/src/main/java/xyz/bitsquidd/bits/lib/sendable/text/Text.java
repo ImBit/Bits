@@ -2,8 +2,8 @@ package xyz.bitsquidd.bits.lib.sendable.text;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
@@ -46,71 +46,52 @@ import java.util.List;
  * Text.of("This <b>text is bold<b> and this is <i>italic<i>, <b,i>this is both</b,/i>", new FancyTagDecorator()).send(player);
  * }</pre>
  */
+@NullMarked
 public class Text implements Sendable {
-    protected final @NotNull Component component;
-    protected final @NotNull List<ITextDecorator> decorators = new ArrayList<>();
+    protected final Component component;
+    protected final List<ITextDecorator> decorators = new ArrayList<>();
 
-    private static final @NotNull List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
+    private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
           new TranslationDecorator()
     );
-    private static final @NotNull List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
+    private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
           // These will always be applied last.
           new BlankDecorator()
     );
 
-    public Text(@NotNull Component component, @NotNull List<ITextDecorator> decorators) {
+    public Text(Component component, List<ITextDecorator> decorators) {
         this.component = component;
         this.decorators.addAll(decorators);
     }
 
-    public Text(@NotNull Component component, @NotNull ITextDecorator decorator) {
+    public Text(Component component, ITextDecorator decorator) {
         this(component, List.of(decorator));
     }
 
-    public Text(@NotNull Component component) {
+    public Text(Component component) {
         this(component, List.of());
     }
 
-    @Deprecated(forRemoval = true, since = "0.0.4")
-    public static Text of(@NotNull Component component, @NotNull List<ITextDecorator> decorators) {
-        return new Text(component, decorators);
-    }
-
-    @Deprecated(forRemoval = true, since = "0.0.4")
-    public static Text of(@NotNull Component component, @NotNull ITextDecorator decorator) {
-        return new Text(component, decorator);
-    }
-
-    @Deprecated(forRemoval = true, since = "0.0.4")
-    public static Text of(@NotNull String text, @NotNull ITextDecorator decorator) {
-        return new Text(Component.text(text), decorator);
-    }
-
-    @Deprecated(forRemoval = true, since = "0.0.4")
-    public static Text of(@NotNull String text) {
-        return new Text(Component.text(text));
-    }
-
-    public static @NotNull Text of(@NotNull Component component) {
+    public static Text of(Component component) {
         return new Text(component);
     }
 
-    public final @NotNull Text decorate(@NotNull List<ITextDecorator> decorators) {
+    public final Text decorate(List<ITextDecorator> decorators) {
         return new Text(component, decorators);
     }
 
-    public final @NotNull Text decorate(@NotNull ITextDecorator... decorators) {
+    public final Text decorate(ITextDecorator... decorators) {
         return new Text(component, new ArrayList<>(List.of(decorators)));
     }
 
 
     @Override
-    public <T extends Audience> void send(@NotNull T target) {
+    public <T extends Audience> void send(T target) {
         target.sendMessage(getComponent(target));
     }
 
-    public final @NotNull <T extends Audience> Component getComponent(@Nullable T target) {
+    public final <T extends Audience> Component getComponent(@Nullable T target) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
