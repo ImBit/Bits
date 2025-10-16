@@ -42,9 +42,9 @@ public class BrigadierTreeGenerator {
 
 
     //TODO allow for alias support here! - dont have repeated code with processing the class.
-    public LiteralCommandNode<CommandSourceStack> createNode(final BitsAnnotatedCommand commandInstance) {
+    public LiteralCommandNode<CommandSourceStack> createNode(final Class<? extends BitsAnnotatedCommand> commandClass) {
         LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("bitsCommand");
-        processCommandClass(root, commandInstance, new ArrayList<>());
+        processCommandClass(root, commandClass, new ArrayList<>());
 
         return root.build();
     }
@@ -54,56 +54,52 @@ public class BrigadierTreeGenerator {
     @SuppressWarnings("unchecked")
     private void processCommandClass(
           final LiteralArgumentBuilder<CommandSourceStack> root,
-          final BitsAnnotatedCommand commandInstance,
+          final Class<? extends BitsAnnotatedCommand> commandClass,
           final List<Parameter> addedParameters
     ) {
-        Command commandAnnotation = commandInstance.getClass().getAnnotation(Command.class);
+        Command commandAnnotation = commandClass.getAnnotation(Command.class);
         if (commandAnnotation == null) throw new IllegalArgumentException("Command class must be annotated with @Command");
 
         String commandName = commandAnnotation.value();
         @Nullable LiteralArgumentBuilder<CommandSourceStack> nextBranch;
         if (commandName.isEmpty()) {
             nextBranch = null;
-            BitsConfig.getPlugin().getLogger().info("Registering command class without name: " + commandInstance.getClass().getName());
+            BitsConfig.getPlugin().getLogger().info("Registering command class without name: " + commandClass.getName());
         } else {
             nextBranch = Commands.literal(commandName);
-            BitsConfig.getPlugin().getLogger().info("Registering command class: " + commandName + "  " + commandInstance.getClass().getName());
+            BitsConfig.getPlugin().getLogger().info("Registering command class: " + commandName + "  " + commandClass.getName());
         }
 
 
         // Calculate requirements required for this branch
-        List<BitsCommandRequirement> requirements = getRequirements(commandInstance, commandName);
+        List<BitsCommandRequirement> requirements = getRequirements(commandClass, commandName);
         root.requires(ctx -> requirements.stream()
               .allMatch(requirement -> requirement.test(new BitsCommandContext(ctx)))
         );
 
         //TODO consider having documentation on which constructor is used
         List<Parameter> nonMutatedParameters = new ArrayList<>(addedParameters);
-        Constructor<?>[] constructors = commandInstance.getClass().getConstructors();
+        Constructor<?>[] constructors = commandClass.getConstructors();
         if (constructors.length > 0) {
             Constructor<?> constructor = constructors[0];
             nonMutatedParameters.addAll(Arrays.stream(constructor.getParameters()).toList());
         }
 
-        List<Class<?>> declaredClasses = Arrays.stream(commandInstance.getClass().getDeclaredClasses()).toList();
-        List<Method> declaredMethods = Arrays.stream(commandInstance.getClass().getDeclaredMethods()).toList();
+        List<Class<?>> declaredClasses = Arrays.stream(commandClass.getDeclaredClasses()).toList();
+        List<Method> declaredMethods = Arrays.stream(commandClass.getDeclaredMethods()).toList();
         // TODO: Add a generic default method if none are present - this could just be in bits command?
 
         // TODO add alias support
 
         for (Class<?> nestedClass : declaredClasses) {
             if (BitsAnnotatedCommand.class.isAssignableFrom(nestedClass) && nestedClass.isAnnotationPresent(Command.class)) {
-                try {
-                    processCommandClass(nextBranch != null ? nextBranch : root, (BitsAnnotatedCommand)nestedClass.getDeclaredConstructor().newInstance(), nonMutatedParameters);
-                } catch (Exception e) {
-                    BitsConfig.getPlugin().getLogger().severe("No default constructor found for command class: " + nestedClass.getName());
-                }
+                processCommandClass(nextBranch != null ? nextBranch : root, (Class<? extends BitsAnnotatedCommand>)nestedClass, nonMutatedParameters);
             }
         }
 
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(Command.class)) {
-                processCommandMethod(nextBranch != null ? nextBranch : root, commandInstance, method, nonMutatedParameters);
+                processCommandMethod(nextBranch != null ? nextBranch : root, commandClass, method, nonMutatedParameters);
             }
         }
 
@@ -111,7 +107,7 @@ public class BrigadierTreeGenerator {
     }
 
     // Builds executions onto the root.
-    private void processCommandMethod(final LiteralArgumentBuilder<CommandSourceStack> root, final BitsAnnotatedCommand commandInstance, final Method method, final List<Parameter> addedParameters) {
+    private void processCommandMethod(final LiteralArgumentBuilder<CommandSourceStack> root, final Class<? extends BitsAnnotatedCommand> commandClass, final Method method, final List<Parameter> addedParameters) {
         Command commandAnnotation = method.getAnnotation(Command.class);
         if (commandAnnotation == null) throw new IllegalArgumentException("Command method must be annotated with @Command");
 
@@ -132,7 +128,7 @@ public class BrigadierTreeGenerator {
 
         if (parameters.isEmpty()) {
             BitsConfig.getPlugin().getLogger().info("Registering command method without parameters: " + method.getName() + "  " + methodInfo.getParameters());
-            (nextBranch != null ? nextBranch : root).executes(createCommandExecution(commandInstance, methodInfo));
+            (nextBranch != null ? nextBranch : root).executes(createCommandExecution(commandClass, methodInfo));
         } else {
             BitsConfig.getPlugin().getLogger().info("Registering command method with parameters: " + method.getName() + "  " + methodInfo.getParameters());
             List<RequiredArgumentBuilder<CommandSourceStack, ?>> iterations = new ArrayList<>();
@@ -143,7 +139,7 @@ public class BrigadierTreeGenerator {
 
             // TODO switch to recursion as well.
             // Work backwards from the command stack, nesting each argument within the previous one.
-            RequiredArgumentBuilder<CommandSourceStack, ?> previous = iterations.getLast().executes(createCommandExecution(commandInstance, methodInfo));
+            RequiredArgumentBuilder<CommandSourceStack, ?> previous = iterations.getLast().executes(createCommandExecution(commandClass, methodInfo));
             if (iterations.size() > 1) {
                 for (int i = iterations.size() - 2; i >= 0; i--) {
                     previous = iterations.get(i).then(previous);
@@ -156,12 +152,15 @@ public class BrigadierTreeGenerator {
         if (nextBranch != null) root.then(nextBranch);
     }
 
-    private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(final BitsAnnotatedCommand commandInstance, final BitsCommandMethodInfo methodInfo) {
+    private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
+          final Class<? extends BitsAnnotatedCommand> commandClass,
+          final BitsCommandMethodInfo methodInfo
+    ) {
         return ctx -> {
             BitsCommandContext bitsContext = new BitsCommandContext(ctx.getSource());
 
-            List<@Nullable Object> arguments = new ArrayList<>();
-            if (methodInfo.requiresContext()) arguments.add(bitsContext);
+            final List<@Nullable Object>[] allArguments = new List[]{new ArrayList<>()};
+            if (methodInfo.requiresContext()) allArguments[0].add(bitsContext);
 
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
                 Object value;
@@ -169,28 +168,44 @@ public class BrigadierTreeGenerator {
                     value = ctx.getArgument(parameter.getName(), parameter.getRawType());
                 } catch (IllegalArgumentException e) {
                     if (parameter.isOptional()) {
-                        value = null; // If the argument isn't present and is optional, set to null
+                        value = null;
                     } else {
-                        throw e; // If the argument just isn't present, we throw.
+                        throw e;
                     }
                 }
-                arguments.add(value);
+                allArguments[0].add(value);
             }
 
-
             Runnable commandExecution = () -> {
-                BitsConfig.getPlugin().getLogger().info("here1");
-
                 try {
-                    BitsConfig.getPlugin().getLogger().info("here2");
-                    methodInfo.getMethod().invoke(commandInstance, arguments.toArray());
+                    Constructor<?>[] constructors = commandClass.getDeclaredConstructors();
+                    Constructor<?> constructor = constructors[0];
+
+                    int constructorParamCount = constructor.getParameterCount();
+                    Object instance;
+
+                    if (constructorParamCount == 0) {
+                        instance = commandClass.getDeclaredConstructor().newInstance();
+                    } else {
+                        int startIndex = methodInfo.requiresContext() ? 1 : 0;
+                        Object[] constructorArgs = allArguments[0].subList(startIndex, startIndex + constructorParamCount).toArray();
+                        instance = constructor.newInstance(constructorArgs);
+
+                        List<@Nullable Object> methodArguments = new ArrayList<>();
+                        if (methodInfo.requiresContext()) methodArguments.add(allArguments[0].getFirst());
+
+                        methodArguments.addAll(allArguments[0].subList(startIndex + constructorParamCount, allArguments[0].size()));
+                        allArguments[0] = methodArguments;
+                    }
+
+                    methodInfo.getMethod().invoke(instance, allArguments[0].toArray());
+
                 } catch (Exception e) {
-                    BitsConfig.getPlugin().getLogger().info("stucture: " + methodInfo.getMethod());
+                    BitsConfig.getPlugin().getLogger().info("structure: " + methodInfo.getMethod());
                     BitsConfig.getPlugin().getLogger().info("THERE IS AN EXCEPTION!: " + e.getMessage());
-                    // TODO: throw a CommandException instead
+                    e.printStackTrace();
                 }
             };
-
 
             if (methodInfo.isAsync()) {
                 Bukkit.getScheduler().runTaskAsynchronously(BitsConfig.getPlugin(), commandExecution);
@@ -203,18 +218,17 @@ public class BrigadierTreeGenerator {
         };
     }
 
-
     ///  Requirements and permissions ///
-    private List<BitsCommandRequirement> getRequirements(final BitsAnnotatedCommand commandInstance, final String commandName) {
+    private List<BitsCommandRequirement> getRequirements(final Class<? extends BitsAnnotatedCommand> commandClass, final String commandName) {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
         if (commandName.isEmpty()) requirements.add(new PermissionRequirement(getDefaultPermissionString(commandName)));
 
         // Gather permission strings
-        Permission permissionAnnotation = commandInstance.getClass().getAnnotation(Permission.class);
+        Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) requirements.addAll(Arrays.stream(permissionAnnotation.value()).map(PermissionRequirement::new).toList());
 
         // Gather requirement instances
-        Requirement requirementAnnotation = commandInstance.getClass().getAnnotation(Requirement.class);
+        Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) requirements.addAll(Arrays.stream(requirementAnnotation.value()).map(this::getRequirementInstance).toList());
 
         return requirements;
