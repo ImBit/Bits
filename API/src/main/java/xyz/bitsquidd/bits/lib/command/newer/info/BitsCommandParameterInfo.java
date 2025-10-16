@@ -1,5 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.newer.info;
 
+import org.jspecify.annotations.NullMarked;
+
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Optional;
 
 import java.lang.reflect.Parameter;
@@ -9,6 +11,7 @@ import java.lang.reflect.Type;
 /**
  * Utility class to encapsulate information about command parameters
  */
+@NullMarked
 public class BitsCommandParameterInfo {
     private final Type type;
     private final String name;

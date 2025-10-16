@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.newer.example;
+package xyz.bitsquidd.bits.example.command.impl;
 
 import org.bukkit.Location;
 import org.bukkit.World;

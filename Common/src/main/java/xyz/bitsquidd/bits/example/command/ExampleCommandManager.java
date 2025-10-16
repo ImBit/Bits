@@ -1,17 +1,23 @@
 package xyz.bitsquidd.bits.example.command;
 
-import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.example.command.inst.ExampleTeleportCommand;
-import xyz.bitsquidd.bits.lib.command.registering.CommandManager;
+import xyz.bitsquidd.bits.example.command.impl.TeleportCommand;
+import xyz.bitsquidd.bits.lib.command.newer.BitsAnnotatedCommand;
+import xyz.bitsquidd.bits.lib.command.newer.CommandManagerNewer;
 
-public class ExampleCommandManager extends CommandManager {
-    public ExampleCommandManager(Plugin plugin) {
-        super(plugin);
+import java.util.List;
+
+public class ExampleCommandManager extends CommandManagerNewer {
+
+    @Override
+    protected @NotNull List<BitsAnnotatedCommand> getAllCommands() {
+        return List.of(new TeleportCommand());
     }
 
     @Override
-    public void registerCommands() {
-        register(new ExampleTeleportCommand());
+    protected @NotNull String commandBasePermission() {
+        return "bits.command";
     }
+
 }

@@ -1,6 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.newer.info;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Async;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * Utility class to encapsulate information about command methods
  */
+@NullMarked
 public class BitsCommandMethodInfo {
     private final Method method;
 
@@ -30,7 +31,7 @@ public class BitsCommandMethodInfo {
     private final List<String> permissions;
     private final List<Class<? extends BitsCommandRequirement>> requirements;
 
-    public BitsCommandMethodInfo(@NotNull Method method) {
+    public BitsCommandMethodInfo(Method method, List<Parameter> addedParameters) {
         this.method = method;
         this.commandAnnotation = method.getAnnotation(Command.class);
         this.isAsync = method.isAnnotationPresent(Async.class);
@@ -44,10 +45,10 @@ public class BitsCommandMethodInfo {
         // If the first parameter is a BitsCommandContext, skip it, we don't need to parse this.
         this.requiresContext = method.getParameterCount() > 0 && method.getParameters()[0].getType().equals(BitsCommandContext.class);
 
-        this.parameters = parseParameters(method);
+        this.parameters = parseParameters(method, addedParameters);
     }
 
-    private List<BitsCommandParameterInfo> parseParameters(Method method) {
+    private List<BitsCommandParameterInfo> parseParameters(Method method, List<Parameter> addedParameters) {
         List<BitsCommandParameterInfo> params = new ArrayList<>();
         Parameter[] methodParams = method.getParameters();
 
@@ -60,11 +61,11 @@ public class BitsCommandMethodInfo {
     }
 
     // Getters
-    public @NotNull Method getMethod() {
+    public Method getMethod() {
         return method;
     }
 
-    public @NotNull List<BitsCommandParameterInfo> getParameters() {
+    public List<BitsCommandParameterInfo> getParameters() {
         return parameters;
     }
 
@@ -76,20 +77,20 @@ public class BitsCommandMethodInfo {
         return requiresContext;
     }
 
-    public @NotNull List<String> getPermissions() {
+    public List<String> getPermissions() {
         return permissions;
     }
 
-    public @NotNull List<Class<? extends BitsCommandRequirement>> getRequirements() {
+    public List<Class<? extends BitsCommandRequirement>> getRequirements() {
         return requirements;
     }
 
-    public @NotNull String getCommandName() {
-        return commandAnnotation != null ? commandAnnotation.value() : "";
+    public String getCommandName() {
+        return commandAnnotation.value();
     }
 
-    public @NotNull String[] getAliases() {
-        return commandAnnotation != null ? commandAnnotation.aliases() : new String[0];
+    public String[] getAliases() {
+        return commandAnnotation.aliases();
     }
 
 }
