@@ -6,8 +6,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.newer.BitsAnnotatedCommand;
-import xyz.bitsquidd.bits.lib.command.newer.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.*;
+import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
+import xyz.bitsquidd.bits.lib.command.newer.annotation.Optional;
+import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
 
 
@@ -23,8 +25,7 @@ import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
  * /teleport all spawn                   - Teleport all to spawn
  */
 @Command(value = "teleport", aliases = {"tp"}, description = "Teleport commands")
-@Permission({"bits.command.teleport"})
-@Requirement({PlayerRequirement.class})
+@Requirement(value = {PlayerRequirement.class})
 public class TeleportCommand extends BitsAnnotatedCommand {
 
     /**
@@ -39,7 +40,6 @@ public class TeleportCommand extends BitsAnnotatedCommand {
             this.targetPlayer = targetPlayer;
         }
 
-        @Default
         public void showPlayerHelp(@NotNull BitsCommandContext context) {
             context.sendMessage("=== Teleport " + targetPlayer.getName() + " ===");
             context.sendMessage("Usage: /teleport " + targetPlayer.getName() + " <entity|location|spawn>");
@@ -88,10 +88,8 @@ public class TeleportCommand extends BitsAnnotatedCommand {
      * All-players teleport commands.
      */
     @Command("all")
-    @Permission({"bits.command.teleport.all"})
     public static class AllPlayersCommands extends BitsAnnotatedCommand {
 
-        @Default
         public void showAllHelp(@NotNull BitsCommandContext context) {
             context.sendMessage("=== Teleport All Players ===");
             context.sendMessage("/teleport all <entity> - Teleport all to entity");

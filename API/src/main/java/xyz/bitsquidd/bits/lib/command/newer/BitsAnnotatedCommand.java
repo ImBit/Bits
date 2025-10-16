@@ -2,6 +2,8 @@ package xyz.bitsquidd.bits.lib.command.newer;
 
 import org.jetbrains.annotations.NotNull;
 
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
+
 public abstract class BitsAnnotatedCommand {
 
     protected void onRegister() {

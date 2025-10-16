@@ -10,12 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.Default;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentTypeRegistry;
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.newer.info.CommandMethodInfo;
 import xyz.bitsquidd.bits.lib.command.newer.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -23,11 +22,11 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 
 
-public class BrigadierTreeGenerator {
+public class BrigadierTreeGeneratorOld {
     private final ArgumentTypeRegistry argumentRegistry;
     private final Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> requirementInstances;
 
-    public BrigadierTreeGenerator(@NotNull ArgumentTypeRegistry argumentRegistry) {
+    public BrigadierTreeGeneratorOld(@NotNull ArgumentTypeRegistry argumentRegistry) {
         this.argumentRegistry = argumentRegistry;
         this.requirementInstances = new HashMap<>();
     }
@@ -264,10 +263,6 @@ public class BrigadierTreeGenerator {
                   .allMatch(requirement -> requirement.test(new BitsCommandContext(ctx, new String[0], "")))
             );
         }
-    }
-
-    public @NotNull String getDefaultPermissionString(@NotNull String commandName) {
-        return BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
     }
 
     private void addPermissionsAndRequirements(

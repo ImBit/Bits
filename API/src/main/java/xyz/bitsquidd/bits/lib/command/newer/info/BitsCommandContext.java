@@ -1,10 +1,13 @@
-package xyz.bitsquidd.bits.lib.command.newer;
+package xyz.bitsquidd.bits.lib.command.newer.info;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Utility class to encapsulate command context
+ */
 public class BitsCommandContext {
     private final @NotNull CommandSourceStack sourceStack;
     private final @NotNull String[] args;

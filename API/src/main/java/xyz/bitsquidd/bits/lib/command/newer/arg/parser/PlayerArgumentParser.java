@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.newer.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 
 public class PlayerArgumentParser implements ArgumentParser<Player> {
     private static final SimpleCommandExceptionType PLAYER_NOT_FOUND = new SimpleCommandExceptionType(new LiteralMessage("Player not found"));

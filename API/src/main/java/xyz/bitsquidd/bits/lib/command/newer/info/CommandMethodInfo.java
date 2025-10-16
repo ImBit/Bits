@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.newer;
+package xyz.bitsquidd.bits.lib.command.newer.info;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,12 +8,14 @@ import xyz.bitsquidd.bits.lib.command.newer.requirement.BitsCommandRequirement;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
+/**
+ * Utility class to encapsulate information about command methods
+ */
 public class CommandMethodInfo {
     private final Method method;
     private final Object instance;
@@ -21,7 +23,6 @@ public class CommandMethodInfo {
     private final Command commandAnnotation;
     private final List<ParameterInfo> parameters;
 
-    private final boolean isDefault;
     private final boolean isAsync;
 
     private final List<String> permissions;
@@ -31,7 +32,6 @@ public class CommandMethodInfo {
         this.method = method;
         this.instance = instance;
         this.commandAnnotation = method.getAnnotation(Command.class);
-        this.isDefault = method.isAnnotationPresent(Default.class);
         this.isAsync = method.isAnnotationPresent(Async.class);
 
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
@@ -48,9 +48,8 @@ public class CommandMethodInfo {
         Parameter[] methodParams = method.getParameters();
 
         int startIndex = 0;
-        if (methodParams.length > 0 && methodParams[0].getType().equals(BitsCommandContext.class)) {
-            startIndex = 1;
-        }
+        // If the first parameter is a BitsCommandContext, skip it, we dont need to parse this.
+        if (methodParams.length > 0 && methodParams[0].getType().equals(BitsCommandContext.class)) startIndex = 1;
 
         for (int i = startIndex; i < methodParams.length; i++) {
             Parameter param = methodParams[i];
@@ -78,10 +77,6 @@ public class CommandMethodInfo {
         return parameters;
     }
 
-    public boolean isDefault() {
-        return isDefault;
-    }
-
     public boolean isAsync() {
         return isAsync;
     }
@@ -100,33 +95,6 @@ public class CommandMethodInfo {
 
     public @NotNull String[] getAliases() {
         return commandAnnotation != null ? commandAnnotation.aliases() : new String[0];
-    }
-
-    /**
-     * Information about a method parameter.
-     */
-    public static class ParameterInfo {
-        private final Type type;
-        private final String name;
-        private final boolean optional;
-
-        public ParameterInfo(Type type, String name, boolean optional) {
-            this.type = type;
-            this.name = name;
-            this.optional = optional;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isOptional() {
-            return optional;
-        }
     }
 
 }

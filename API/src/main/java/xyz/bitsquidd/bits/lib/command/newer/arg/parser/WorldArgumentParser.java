@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.newer.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 
 public class WorldArgumentParser implements ArgumentParser<World> {
     private static final SimpleCommandExceptionType WORLD_NOT_FOUND = new SimpleCommandExceptionType(new LiteralMessage("World not found"));
