@@ -12,6 +12,8 @@ import xyz.bitsquidd.bits.lib.command.newer.arg.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 
+import java.util.List;
+
 public class WorldArgumentParser extends AbstractArgumentParser<@NotNull String, @NotNull World> {
     private static final SimpleCommandExceptionType WORLD_NOT_FOUND = new SimpleCommandExceptionType(new LiteralMessage("World not found"));
 
@@ -26,6 +28,11 @@ public class WorldArgumentParser extends AbstractArgumentParser<@NotNull String,
         if (world == null) throw WORLD_NOT_FOUND.create();
 
         return world;
+    }
+
+    @Override
+    protected @NotNull List<String> getSuggestions(@NotNull BitsCommandContext context) {
+        return Bukkit.getWorlds().stream().map(World::getName).toList();
     }
 
 }

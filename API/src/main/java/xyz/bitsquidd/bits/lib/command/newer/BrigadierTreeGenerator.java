@@ -139,7 +139,10 @@ public class BrigadierTreeGenerator {
             List<RequiredArgumentBuilder<CommandSourceStack, ?>> iterations = new ArrayList<>();
 
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
-                iterations.add(Commands.argument(parameter.getName(), getArgumentType(parameter.getType())));
+                iterations.add(
+                      Commands.argument(parameter.getName(), getArgumentType(parameter.getType()))
+                            .suggests(argumentRegistry.getParser(parameter.getType()).getSuggestionProvider())
+                );
             }
 
             // TODO switch to recursion as well.

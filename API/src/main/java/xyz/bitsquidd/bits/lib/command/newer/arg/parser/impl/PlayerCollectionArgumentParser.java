@@ -40,4 +40,16 @@ public class PlayerCollectionArgumentParser extends AbstractArgumentParser<@NotN
             return List.of(player);
         }
     }
+
+    @Override
+    protected List<String> getSuggestions(BitsCommandContext context) {
+        List<String> suggestions = new ArrayList<>();
+        suggestions.add("@a");
+        try {
+            context.requirePlayer();
+            suggestions.add("@s");
+        } catch (IllegalStateException ignored) {}
+        suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        return suggestions;
+    }
 }

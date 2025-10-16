@@ -2,11 +2,15 @@ package xyz.bitsquidd.bits.lib.command.newer.arg.parser;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.newer.arg.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
+
+import java.util.List;
 
 @NullMarked
 public abstract class AbstractArgumentParser<I, O> {
@@ -24,6 +28,21 @@ public abstract class AbstractArgumentParser<I, O> {
     }
 
     public abstract @NotNull O parse(@NotNull I input, BitsCommandContext context) throws CommandSyntaxException;
+
+    protected List<String> getSuggestions(BitsCommandContext context) {
+        return List.of();
+    }
+
+    public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
+        return (context, builder) -> {
+            BitsCommandContext bitsCtx = new BitsCommandContext(context.getSource());
+            List<String> suggestions = getSuggestions(bitsCtx);
+            for (String suggestion : suggestions) {
+                builder.suggest(suggestion);
+            }
+            return builder.buildFuture();
+        };
+    }
 
     public TypeSignature getTypeSignature() {
         return typeSignature;

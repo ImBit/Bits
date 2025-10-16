@@ -12,6 +12,8 @@ import xyz.bitsquidd.bits.lib.command.newer.arg.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 
+import java.util.List;
+
 public class PlayerArgumentParser extends AbstractArgumentParser<@NotNull String, @NotNull Player> {
     private static final SimpleCommandExceptionType PLAYER_NOT_FOUND = new SimpleCommandExceptionType(new LiteralMessage("Player not found"));
 
@@ -29,4 +31,8 @@ public class PlayerArgumentParser extends AbstractArgumentParser<@NotNull String
         return player;
     }
 
+    @Override
+    protected @NotNull List<String> getSuggestions(@NotNull BitsCommandContext context) {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+    }
 }
