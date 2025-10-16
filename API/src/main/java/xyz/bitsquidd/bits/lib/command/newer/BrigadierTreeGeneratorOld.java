@@ -13,7 +13,7 @@ import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentTypeRegistry;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.newer.info.CommandMethodInfo;
+import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandMethodInfo;
 import xyz.bitsquidd.bits.lib.command.newer.requirement.BitsCommandRequirement;
 
 import java.lang.reflect.Constructor;
@@ -67,7 +67,7 @@ public class BrigadierTreeGeneratorOld {
 
         Method defaultMethod = findDefaultMethod(commandClass);
         if (defaultMethod != null) {
-            CommandMethodInfo methodInfo = new CommandMethodInfo(defaultMethod, null);
+            BitsCommandMethodInfo methodInfo = new BitsCommandMethodInfo(defaultMethod, null);
             builder.executes(createCommandExecution(methodInfo, currentPermissions, new ArrayList<>()));
         } else {
             //todo use the default method here
@@ -94,7 +94,7 @@ public class BrigadierTreeGeneratorOld {
           @NotNull List<String> inheritedPermissions,
           @NotNull List<Object> constructorArgs
     ) {
-        CommandMethodInfo methodInfo = new CommandMethodInfo(method, null);
+        BitsCommandMethodInfo methodInfo = new BitsCommandMethodInfo(method, null);
         String commandName = methodInfo.getCommandName();
 
         if (commandName.isEmpty()) {
@@ -176,11 +176,11 @@ public class BrigadierTreeGeneratorOld {
 
     private void addArgumentsToBuilder(
           @NotNull LiteralArgumentBuilder<CommandSourceStack> builder,
-          @NotNull CommandMethodInfo methodInfo,
+          @NotNull BitsCommandMethodInfo methodInfo,
           @NotNull List<String> inheritedPermissions,
           @NotNull List<Object> constructorArgs
     ) {
-        List<CommandMethodInfo.ParameterInfo> parameters = methodInfo.getParameters();
+        List<BitsCommandMethodInfo.ParameterInfo> parameters = methodInfo.getParameters();
 
         if (parameters.isEmpty()) {
             builder.executes(createCommandExecution(methodInfo, inheritedPermissions, constructorArgs));
@@ -193,8 +193,8 @@ public class BrigadierTreeGeneratorOld {
 
     private void addParameterToBuilder(
           @NotNull LiteralArgumentBuilder<CommandSourceStack> builder,
-          @NotNull CommandMethodInfo methodInfo,
-          @NotNull List<CommandMethodInfo.ParameterInfo> parameters,
+          @NotNull BitsCommandMethodInfo methodInfo,
+          @NotNull List<BitsCommandMethodInfo.ParameterInfo> parameters,
           int parameterIndex,
           @NotNull List<String> inheritedPermissions,
           @NotNull List<Object> constructorArgs
@@ -204,7 +204,7 @@ public class BrigadierTreeGeneratorOld {
             return;
         }
 
-        CommandMethodInfo.ParameterInfo param = parameters.get(parameterIndex);
+        BitsCommandMethodInfo.ParameterInfo param = parameters.get(parameterIndex);
         ArgumentType<?> argumentType = argumentRegistry.getArgumentType(param.getType());
 
         if (argumentType == null) throw new IllegalArgumentException("No argument type registered for: " + param.getType());
@@ -217,7 +217,7 @@ public class BrigadierTreeGeneratorOld {
     }
 
     private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
-          @NotNull CommandMethodInfo methodInfo,
+          @NotNull BitsCommandMethodInfo methodInfo,
           @NotNull List<String> inheritedPermissions,
           @NotNull List<Object> constructorArgs
     ) {
