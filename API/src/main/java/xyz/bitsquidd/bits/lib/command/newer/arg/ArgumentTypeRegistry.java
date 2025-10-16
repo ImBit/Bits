@@ -1,57 +1,53 @@
 package xyz.bitsquidd.bits.lib.command.newer.arg;
 
-import com.mojang.brigadier.arguments.*;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import com.mojang.brigadier.arguments.ArgumentType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.newer.arg.parser.*;
+import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.arg.parser.impl.*;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Type signature is the expected return type of the command.
  * ArgumentType is the native type of the argument.
  */
 public class ArgumentTypeRegistry {
-    private final Map<TypeSignature, ArgumentType<?>> typeMap = new ConcurrentHashMap<>();
-    private final Map<TypeSignature, ArgumentParser<?>> parserMap = new ConcurrentHashMap<>();
+    private final Set<AbstractArgumentParser<?, ?>> parsers = new HashSet<>();
 
     public ArgumentTypeRegistry() {
         registerDefaults();
     }
 
     private void registerDefaults() {
-        register(TypeSignature.of(String.class), StringArgumentType.string(), new StringArgumentParser());
-        register(TypeSignature.of(int.class), IntegerArgumentType.integer(), new IntegerArgumentParser());
-        register(TypeSignature.of(Integer.class), IntegerArgumentType.integer(), new IntegerArgumentParser());
-        register(TypeSignature.of(double.class), DoubleArgumentType.doubleArg(), new DoubleArgumentParser());
-        register(TypeSignature.of(Double.class), DoubleArgumentType.doubleArg(), new DoubleArgumentParser());
-        register(TypeSignature.of(float.class), FloatArgumentType.floatArg(), new FloatArgumentParser());
-        register(TypeSignature.of(Float.class), FloatArgumentType.floatArg(), new FloatArgumentParser());
-        register(TypeSignature.of(long.class), LongArgumentType.longArg(), new LongArgumentParser());
-        register(TypeSignature.of(Long.class), LongArgumentType.longArg(), new LongArgumentParser());
-        register(TypeSignature.of(boolean.class), BoolArgumentType.bool(), new BooleanArgumentParser());
-        register(TypeSignature.of(Boolean.class), BoolArgumentType.bool(), new BooleanArgumentParser());
-
-        register(TypeSignature.of(Player.class), ArgumentTypes.player(), new PlayerArgumentParser());
-        register(TypeSignature.of(Collection.class, Player.class), ArgumentTypes.players(), new PlayerCollectionArgumentParser());
-        register(TypeSignature.of(World.class), ArgumentTypes.world(), new WorldArgumentParser());
+        register(new BooleanArgumentParser());
+        register(new DoubleArgumentParser());
+        register(new FloatArgumentParser());
+        register(new IntegerArgumentParser());
+        register(new LongArgumentParser());
+        register(new PlayerArgumentParser());
+        register(new PlayerCollectionArgumentParser());
+        register(new StringArgumentParser());
+        register(new WorldArgumentParser());
     }
 
-    public <T> void register(@NotNull TypeSignature signature, @NotNull ArgumentType<?> argumentType, @NotNull ArgumentParser<T> parser) {
-        typeMap.put(signature, argumentType);
-        parserMap.put(signature, parser);
+    public <T> void register(@NotNull AbstractArgumentParser<?, ?> parser) {
+        parsers.add(parser);
     }
 
-    public @Nullable ArgumentType<?> getArgumentType(@NotNull Type type) {
-        TypeSignature signature = TypeSignature.of(type);
-        return typeMap.get(signature);
+    public @NotNull AbstractArgumentParser<?, ?> getParser(@NotNull Type type) {
+        for (AbstractArgumentParser<?, ?> parser : parsers) {
+            if (parser.getTypeSignature().matches(type)) {
+                return parser;
+            }
+        }
+        throw new IllegalArgumentException("No parser found for type: " + type);
+    }
+
+    public ArgumentType<?> getArgumentType(@NotNull Type type) {
+        return getParser(type).getArgumentType();
     }
 
 }

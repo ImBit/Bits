@@ -14,6 +14,7 @@ import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentTypeRegistry;
+import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandMethodInfo;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandParameterInfo;
@@ -26,6 +27,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.*;
+
+// TODO:
+//  Bugs:
+//   - Command annotations come before class parameters. e.g. teleport location player
 
 @NullMarked
 public class BrigadierTreeGenerator {
@@ -157,20 +162,22 @@ public class BrigadierTreeGenerator {
           final BitsCommandMethodInfo methodInfo
     ) {
         return ctx -> {
-            BitsCommandContext bitsContext = new BitsCommandContext(ctx.getSource());
-
+            // Create the list of arguments needed to call the method.
             final List<@Nullable Object>[] allArguments = new List[]{new ArrayList<>()};
-            if (methodInfo.requiresContext()) allArguments[0].add(bitsContext);
+            if (methodInfo.requiresContext()) allArguments[0].add(new BitsCommandContext(ctx.getSource()));
 
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
                 Object value;
+
+                AbstractArgumentParser<?, ?> parser = argumentRegistry.getParser(parameter.getType());
+
                 try {
-                    value = ctx.getArgument(parameter.getName(), parameter.getRawType());
+                    value = ctx.getArgument(parameter.getName(), parser.getInputClass());
                 } catch (IllegalArgumentException e) {
                     if (parameter.isOptional()) {
                         value = null;
                     } else {
-                        throw e;
+                        throw new RuntimeException("Failed to get argument: " + parameter.getName(), e);
                     }
                 }
                 allArguments[0].add(value);

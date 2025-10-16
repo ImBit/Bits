@@ -37,16 +37,24 @@ public class TypeSignature {
         return new TypeSignature(rawType, typeArguments);
     }
 
-    public Class<?> getRawType() {
+    public Class<?> toRawType() {
         return rawType;
     }
-
-    public Type[] getTypeArguments() {
-        return typeArguments.clone();
-    }
-
-    public boolean hasTypeArguments() {
-        return typeArguments.length > 0;
+    
+    public boolean matches(@NotNull Type other) {
+        TypeSignature otherSig = TypeSignature.of(other);
+        if (!rawType.equals(otherSig.rawType)) {
+            return false;
+        }
+        if (typeArguments.length != otherSig.typeArguments.length) {
+            return false;
+        }
+        for (int i = 0; i < typeArguments.length; i++) {
+            if (!typeArguments[i].equals(otherSig.typeArguments[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

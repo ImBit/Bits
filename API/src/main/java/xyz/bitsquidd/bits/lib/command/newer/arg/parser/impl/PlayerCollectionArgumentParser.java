@@ -1,45 +1,43 @@
-package xyz.bitsquidd.bits.lib.command.newer.arg.parser;
+package xyz.bitsquidd.bits.lib.command.newer.arg.parser.impl;
 
 import com.mojang.brigadier.LiteralMessage;
-import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.arg.TypeSignature;
+import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PlayerCollectionArgumentParser implements ArgumentParser<Collection<Player>> {
+public class PlayerCollectionArgumentParser extends AbstractArgumentParser<@NotNull String, @NotNull Collection<Player>> {
     private static final SimpleCommandExceptionType NO_PLAYERS_FOUND = new SimpleCommandExceptionType(new LiteralMessage("No players found matching the selector"));
 
-    @Override
-    public @NotNull Collection<Player> parse(@NotNull StringReader reader, @NotNull BitsCommandContext context) throws CommandSyntaxException {
-        String selector = reader.readString();
+    public PlayerCollectionArgumentParser() {
+        super(TypeSignature.of(Collection.class, Player.class), StringArgumentType.string(), String.class, (Class<Collection<Player>>)(Class<?>)Collection.class);
+    }
 
-        if (selector.equals("@a")) {
+
+    @Override
+    public @NotNull Collection<Player> parse(@NotNull String input, @NotNull BitsCommandContext context) throws CommandSyntaxException {
+        if (input.equals("@a")) {
             return new ArrayList<>(Bukkit.getOnlinePlayers());
-        } else if (selector.equals("@s")) {
+        } else if (input.equals("@s")) {
             try {
                 return List.of(context.requirePlayer());
             } catch (IllegalStateException e) {
                 throw NO_PLAYERS_FOUND.create();
             }
         } else {
-            Player player = Bukkit.getPlayer(selector);
+            Player player = Bukkit.getPlayer(input);
             if (player == null) throw NO_PLAYERS_FOUND.create();
             return List.of(player);
         }
     }
-
-    @Override
-    public @NotNull Class<Collection<Player>> getType() {
-        return (Class<Collection<Player>>)(Class<?>)Collection.class;
-    }
-
 }

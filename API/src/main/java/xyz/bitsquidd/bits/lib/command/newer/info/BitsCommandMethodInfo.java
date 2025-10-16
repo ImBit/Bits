@@ -50,10 +50,11 @@ public class BitsCommandMethodInfo {
 
     private List<BitsCommandParameterInfo> parseParameters(Method method, List<Parameter> addedParameters) {
         List<BitsCommandParameterInfo> params = new ArrayList<>();
-        Parameter[] methodParams = method.getParameters();
+        List<Parameter> methodParams = new ArrayList<>(Arrays.stream(method.getParameters()).toList());
+        methodParams.addAll(addedParameters);
 
-        for (int i = (requiresContext ? 1 : 0); i < methodParams.length; i++) {
-            Parameter param = methodParams[i];
+        for (int i = (requiresContext ? 1 : 0); i < methodParams.size(); i++) {
+            Parameter param = methodParams.get(i);
             params.add(new BitsCommandParameterInfo(param));
         }
 
