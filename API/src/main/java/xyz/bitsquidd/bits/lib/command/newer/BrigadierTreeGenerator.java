@@ -15,6 +15,7 @@ import xyz.bitsquidd.bits.lib.command.newer.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.newer.arg.ArgumentTypeRegistry;
 import xyz.bitsquidd.bits.lib.command.newer.requirement.BitsCommandRequirement;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -44,7 +45,7 @@ public class BrigadierTreeGenerator {
         for (String commandName : commandNames) {
             LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(commandName);
 
-            addPermissionsAndRequirements(builder, commandClass);
+            addPermissionsAndRequirements(builder, commandClass, commandName);
             processCommandClass(builder, commandClass, new ArrayList<>());
 
             nodes.add(builder.build());
@@ -56,7 +57,11 @@ public class BrigadierTreeGenerator {
     /**
      * Processes a command class and adds its methods and nested classes to the builder.
      */
-    private void processCommandClass(@NotNull LiteralArgumentBuilder<CommandSourceStack> builder, @NotNull Class<? extends BitsAnnotatedCommand> commandClass, @NotNull List<String> inheritedPermissions) {
+    private void processCommandClass(
+          @NotNull LiteralArgumentBuilder<CommandSourceStack> builder,
+          @NotNull Class<? extends BitsAnnotatedCommand> commandClass,
+          @NotNull List<String> inheritedPermissions
+    ) {
         List<String> currentPermissions = new ArrayList<>(inheritedPermissions);
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) currentPermissions.addAll(Arrays.asList(permissionAnnotation.value()));
@@ -240,30 +245,29 @@ public class BrigadierTreeGenerator {
         return null;
     }
 
-    private void addPermissionsAndRequirements(@NotNull LiteralArgumentBuilder<CommandSourceStack> builder, @NotNull Class<?> commandClass) {
+    private void addPermissionsAndRequirements(@NotNull LiteralArgumentBuilder<CommandSourceStack> builder, @NotNull Class<?> commandClass, String baseCommandName) {
+        // Get all permissions required by this class
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
+        List<String> permissions = new ArrayList<>(List.of(getDefaultPermissionString(baseCommandName)));
         if (permissionAnnotation != null) {
-            builder.requires(sourceStack -> {
-                for (String permission : permissionAnnotation.value()) {
-                    if (!sourceStack.getSender().hasPermission(permission)) {
-                        return false;
-                    }
-                }
-                return true;
-            });
+            permissions.addAll(Arrays.asList(permissionAnnotation.value()));
+
+            builder.requires(ctx -> permissions.stream()
+                  .allMatch(perm -> ctx.getSender().hasPermission(perm)));
         }
 
+        // Get all requirements required by this class
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
-            builder.requires(sourceStack -> {
-                BitsCommandContext context = new BitsCommandContext(sourceStack, new String[0], "");
-                for (Class<? extends BitsCommandRequirement> reqClass : requirementAnnotation.value()) {
-                    BitsCommandRequirement requirement = getRequirementInstance(reqClass);
-                    if (!requirement.test(context)) return false;
-                }
-                return true;
-            });
+            builder.requires(ctx -> Arrays.stream(requirementAnnotation.value())
+                  .map(this::getRequirementInstance)
+                  .allMatch(requirement -> requirement.test(new BitsCommandContext(ctx, new String[0], "")))
+            );
         }
+    }
+
+    public @NotNull String getDefaultPermissionString(@NotNull String commandName) {
+        return BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
     }
 
     private void addPermissionsAndRequirements(
