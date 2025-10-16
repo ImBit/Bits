@@ -30,6 +30,12 @@ import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
 @Requirement(value = {PlayerRequirement.class})
 public class TeleportCommand extends BitsAnnotatedCommand {
 
+    @Command()
+    public void teleportToEntity(@NotNull BitsCommandContext context) {
+        context.sendMessage("Test teleport command!");
+    }
+
+
     /**
      * Player-specific teleport commands.
      * Captures the target player and provides various teleport destinations.
@@ -100,7 +106,7 @@ public class TeleportCommand extends BitsAnnotatedCommand {
         }
 
         // /teleport all <entity>
-        @Command("")
+        @Command()
         public void teleportAllToEntity(@NotNull BitsCommandContext context, @NotNull Player entity) {
             Location targetLocation = entity.getLocation();
 

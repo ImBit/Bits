@@ -89,7 +89,7 @@ public abstract class CommandManagerNewer {
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> {
                   bitsCommands.forEach(bitsCommand -> {
-                      commands.registrar().register(brigadierTreeGenerator.createNode(bitsCommand.getClass()));
+                      commands.registrar().register(brigadierTreeGenerator.createNode(bitsCommand));
                   });
               }
         );

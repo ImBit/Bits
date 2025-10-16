@@ -8,10 +8,9 @@ import java.util.Objects;
 
 public class BitsConfig {
     private static boolean initialized = false;
+    private static @Nullable JavaPlugin plugin;
 
     public static @NotNull String COMMAND_BASE_STRING = "bits.command"; // The base prefix for all commands, can be overridden.
-
-    public static @Nullable JavaPlugin plugin;
 
 
     public static void init(@NotNull JavaPlugin pluginInstance) {
