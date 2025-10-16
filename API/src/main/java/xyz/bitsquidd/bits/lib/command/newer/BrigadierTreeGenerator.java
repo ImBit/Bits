@@ -157,22 +157,24 @@ public class BrigadierTreeGenerator {
         if (nextBranch != null) root.then(nextBranch);
     }
 
-    private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
+    private <I, O> com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
           final Class<? extends BitsAnnotatedCommand> commandClass,
           final BitsCommandMethodInfo methodInfo
     ) {
         return ctx -> {
+            final BitsCommandContext bitsCtx = new BitsCommandContext(ctx.getSource());
+
             // Create the list of arguments needed to call the method.
             final List<@Nullable Object>[] allArguments = new List[]{new ArrayList<>()};
-            if (methodInfo.requiresContext()) allArguments[0].add(new BitsCommandContext(ctx.getSource()));
+            if (methodInfo.requiresContext()) allArguments[0].add(bitsCtx);
 
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
                 Object value;
 
-                AbstractArgumentParser<?, ?> parser = argumentRegistry.getParser(parameter.getType());
+                AbstractArgumentParser<I, O> parser = (AbstractArgumentParser<I, O>)argumentRegistry.getParser(parameter.getType());
 
                 try {
-                    value = ctx.getArgument(parameter.getName(), parser.getInputClass());
+                    value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
                 } catch (IllegalArgumentException e) {
                     if (parameter.isOptional()) {
                         value = null;

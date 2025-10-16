@@ -38,6 +38,26 @@ public class ArgumentTypeRegistry {
     }
 
     public @NotNull AbstractArgumentParser<?, ?> getParser(@NotNull Type type) {
+        if (type instanceof Class<?> clazz) {
+            if (clazz.isPrimitive()) {
+                if (clazz == boolean.class) {
+                    type = Boolean.class;
+                } else if (clazz == byte.class) {
+                    type = Byte.class;
+                } else if (clazz == char.class) {
+                    type = Character.class;
+                } else if (clazz == short.class) {
+                    type = Short.class;
+                } else if (clazz == int.class) {
+                    type = Integer.class;
+                } else if (clazz == long.class) {
+                    type = Long.class;
+                } else if (clazz == float.class) {
+                    type = Float.class;
+                } else if (clazz == double.class) type = Double.class;
+            }
+        }
+
         for (AbstractArgumentParser<?, ?> parser : parsers) {
             if (parser.getTypeSignature().matches(type)) {
                 return parser;
