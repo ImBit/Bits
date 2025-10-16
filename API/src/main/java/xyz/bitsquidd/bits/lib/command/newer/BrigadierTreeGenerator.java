@@ -61,7 +61,7 @@ public class BrigadierTreeGenerator {
         if (commandAnnotation == null) throw new IllegalArgumentException("Command class must be annotated with @Command");
 
         String commandName = commandAnnotation.value();
-        List<String> aliases = Arrays.asList(commandAnnotation.aliases());
+        List<String> aliases = new ArrayList<>(Arrays.asList(commandAnnotation.aliases()));
         aliases.add(commandName);
 
         // Calculate requirements required for this branch

@@ -90,7 +90,6 @@ public abstract class CommandManagerNewer {
               LifecycleEvents.COMMANDS, commands -> {
                   bitsCommands.forEach(bitsCommand -> {
                       commands.registrar().register(brigadierTreeGenerator.createNode(bitsCommand.getClass()));
-
                   });
               }
         );

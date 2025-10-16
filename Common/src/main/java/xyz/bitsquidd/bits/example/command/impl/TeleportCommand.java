@@ -17,14 +17,16 @@ import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
  * Teleport command demonstrating new annotation structure.
  * <p>
  * Commands created:
- * /teleport <player> <entity>           - Direct teleport to entity
- * /teleport <player> location <x> <y> <z> [world] - Teleport to coordinates
- * /teleport <player> spawn              - Teleport to spawn
- * /teleport all <entity>                - Teleport all to entity
- * /teleport all location <x> <y> <z> [world] - Teleport all to coordinates
- * /teleport all spawn                   - Teleport all to spawn
+ * <ul>
+ * <li>/teleport [player] [entity]                - Direct teleport to entity </li>
+ * <li>/teleport [player] location [x] [y] [z] [world] - Teleport to coordinates</li>
+ * <li>/teleport [player] spawn                   - Teleport to spawn</li>
+ * <li>/teleport all [entity]                     - Teleport all to entity</li>
+ * <li>/teleport all location [x] [y] [z] [world] - Teleport all to coordinates</li>
+ * <li>/teleport all spawn                        - Teleport all to spawn</li>
+ * </ul>
  */
-@Command(value = "teleport", aliases = {"tp"}, description = "Teleport commands")
+@Command(value = "test-teleport", aliases = {"tp"}, description = "Teleport commands")
 @Requirement(value = {PlayerRequirement.class})
 public class TeleportCommand extends BitsAnnotatedCommand {
 
