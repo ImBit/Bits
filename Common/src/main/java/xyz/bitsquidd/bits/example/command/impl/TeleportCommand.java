@@ -5,12 +5,12 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.newer.BitsAnnotatedCommand;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.Optional;
-import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerSenderRequirement;
+import xyz.bitsquidd.bits.lib.command.BitsAnnotatedCommand;
+import xyz.bitsquidd.bits.lib.command.annotation.Command;
+import xyz.bitsquidd.bits.lib.command.annotation.Optional;
+import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
+import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
 
 
 /**

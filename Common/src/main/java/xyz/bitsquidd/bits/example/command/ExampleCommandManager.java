@@ -3,8 +3,8 @@ package xyz.bitsquidd.bits.example.command;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.example.command.impl.TeleportCommand;
-import xyz.bitsquidd.bits.lib.command.newer.BitsAnnotatedCommand;
-import xyz.bitsquidd.bits.lib.command.newer.CommandManagerNewer;
+import xyz.bitsquidd.bits.lib.command.BitsAnnotatedCommand;
+import xyz.bitsquidd.bits.lib.command.CommandManagerNewer;
 
 import java.util.List;
 
