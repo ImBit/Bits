@@ -93,12 +93,13 @@ public abstract class CommandManagerNewer {
         Collection<BitsCommand> bitsCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
-              LifecycleEvents.COMMANDS, commands -> bitsCommands
-                    .forEach(bitsCommand -> commands
-                          .registrar().register(
-                                brigadierTreeGenerator.createNode(new BitsCommandBuilder(bitsCommand.getClass()))
-                          )
-                    )
+              LifecycleEvents.COMMANDS, commands -> {
+                  bitsCommands
+                        .forEach(bitsCommand -> {
+                            brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand.getClass()))
+                                  .forEach(node -> commands.registrar().register(node));
+                        });
+              }
         );
     }
 

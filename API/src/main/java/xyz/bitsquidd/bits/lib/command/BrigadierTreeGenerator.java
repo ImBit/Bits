@@ -33,30 +33,37 @@ public class BrigadierTreeGenerator {
     public BrigadierTreeGenerator() {
     }
 
-    public LiteralCommandNode<CommandSourceStack> createNode(BitsCommandBuilder commandBuilder) {
-        LiteralArgumentBuilder<CommandSourceStack> root = createNextBranch(commandBuilder, null);
-        processCommandClass(root, commandBuilder, new ArrayList<>());
+    public List<LiteralCommandNode<CommandSourceStack>> createNodes(BitsCommandBuilder commandBuilder) {
+        List<LiteralArgumentBuilder<CommandSourceStack>> roots = createNextBranches(commandBuilder, null);
+        roots.forEach(root -> processCommandClass(root, commandBuilder, new ArrayList<>()));
 
-        return root.build();
+        return roots.stream().map(LiteralArgumentBuilder::build).toList();
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> createNextBranch(
+    // Returns a non-empty list of branches that will be built upon. This includes command aliases.
+    private List<LiteralArgumentBuilder<CommandSourceStack>> createNextBranches(
           final BitsCommandBuilder commandBuilder,
           final @Nullable LiteralArgumentBuilder<CommandSourceStack> root
     ) {
+        List<LiteralArgumentBuilder<CommandSourceStack>> commandBranches = new ArrayList<>();
+
         String commandName = commandBuilder.getCommandName();
-        LiteralArgumentBuilder<CommandSourceStack> nextBranch;
+        List<String> commandAliases = new ArrayList<>(commandBuilder.getCommandAliases());
+        commandAliases.add(commandBuilder.getCommandName());
+
+        // Note: Aliases are not created for commands without names.
         if (commandName.isEmpty()) {
             if (root == null) throw new CommandParseException("Root command class must have a name.");
-            nextBranch = root;
+            commandBranches.add(root);
             BitsConfig.getPlugin().getLogger().info("Registering command class without name: " + commandBuilder.getCommandName());
         } else {
-            nextBranch = Commands.literal(commandName);
-            if (root != null) root.then(nextBranch);
+            List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream().map(Commands::literal).toList();
+            commandBranches.addAll(nextBranches);
+            if (root != null) nextBranches.forEach(root::then);
             BitsConfig.getPlugin().getLogger().info("Registering command class: " + commandName + "  " + commandBuilder.getCommandName());
         }
 
-        return nextBranch;
+        return commandBranches;
     }
 
     private void processCommandClass(
@@ -74,7 +81,8 @@ public class BrigadierTreeGenerator {
         nonMutatedParameters.addAll(commandBuilder.getParameters());
 
         for (Class<? extends BitsCommand> nestedClass : commandBuilder.getSubcommandClasses()) {
-            processCommandClass(createNextBranch(commandBuilder, branch), new BitsCommandBuilder(nestedClass), nonMutatedParameters);
+            createNextBranches(commandBuilder, branch)
+                  .forEach(nextBranch -> processCommandClass(nextBranch, new BitsCommandBuilder(nestedClass), nonMutatedParameters));
         }
 
         for (Method method : commandBuilder.getCommandMethods()) {
