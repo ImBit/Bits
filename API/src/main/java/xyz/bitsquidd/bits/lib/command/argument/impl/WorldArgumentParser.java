@@ -18,7 +18,7 @@ public class WorldArgumentParser extends AbstractArgumentParser<@NotNull String,
     private static final SimpleCommandExceptionType WORLD_NOT_FOUND = new SimpleCommandExceptionType(new LiteralMessage("World not found"));
 
     public WorldArgumentParser() {
-        super(TypeSignature.of(World.class), StringArgumentType.string(), String.class, World.class);
+        super(TypeSignature.of(World.class), StringArgumentType.string(), String.class, World.class, "World");
     }
 
     @Override

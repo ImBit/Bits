@@ -21,7 +21,7 @@ public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParse
     private final DynamicCommandExceptionType ERROR_NOT_VALID;
 
     public EnumArgumentParser(Class<T> enumClass) {
-        super(TypeSignature.of(enumClass), StringArgumentType.string(), String.class, enumClass);
+        super(TypeSignature.of(enumClass), StringArgumentType.string(), String.class, enumClass, enumClass.getSimpleName());
         this.enumClass = enumClass;
 
         if (!enumClass.isEnum()) throw new IllegalArgumentException("Provided class " + enumClass.getName() + " is not an enum!");

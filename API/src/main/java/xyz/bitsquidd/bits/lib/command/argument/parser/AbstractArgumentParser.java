@@ -19,13 +19,15 @@ public abstract class AbstractArgumentParser<I, O> {
     private final ArgumentType<I> argumentType; // The brigadier type used for clientside highlighting.
     private final Class<I> inputClass;
     private final Class<O> outputClass;
+    private final String argumentName;
 
-    public AbstractArgumentParser(TypeSignature typeSignature, ArgumentType<I> argumentType, Class<I> inputClass, Class<O> outputClass) {
+    public AbstractArgumentParser(TypeSignature typeSignature, ArgumentType<I> argumentType, Class<I> inputClass, Class<O> outputClass, String argumentName) {
         this.typeSignature = typeSignature;
         this.argumentType = argumentType;
 
         this.inputClass = inputClass;
         this.outputClass = outputClass;
+        this.argumentName = argumentName;
     }
 
     public abstract @NotNull O parse(@NotNull I input, BitsCommandContext context) throws CommandSyntaxException;
@@ -67,6 +69,10 @@ public abstract class AbstractArgumentParser<I, O> {
 
     public Class<O> getOutputClass() {
         return outputClass;
+    }
+
+    public String getArgumentName() {
+        return argumentName;
     }
 
 }

@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.VanillaArgumentParser;
 
 public class LongArgumentParser extends VanillaArgumentParser<Long> {
     public LongArgumentParser() {
-        super(TypeSignature.of(Long.class), LongArgumentType.longArg());
+        super(TypeSignature.of(Long.class), LongArgumentType.longArg(), "Long");
     }
 
 }

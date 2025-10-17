@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.VanillaArgumentParser;
 
 public class DoubleArgumentParser extends VanillaArgumentParser<Double> {
     public DoubleArgumentParser() {
-        super(TypeSignature.of(Double.class), DoubleArgumentType.doubleArg());
+        super(TypeSignature.of(Double.class), DoubleArgumentType.doubleArg(), "Double");
     }
 
 }

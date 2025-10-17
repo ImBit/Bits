@@ -19,7 +19,7 @@ public class PlayerArgumentParser extends AbstractArgumentParser<@NotNull String
 
     // Note: Not dealing with brigadier's silly complex parsers yet.
     public PlayerArgumentParser() {
-        super(TypeSignature.of(Player.class), StringArgumentType.string(), String.class, Player.class);
+        super(TypeSignature.of(Player.class), StringArgumentType.string(), String.class, Player.class, "Player");
     }
 
     @Override

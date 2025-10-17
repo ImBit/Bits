@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.VanillaArgumentParser;
 
 public class BooleanArgumentParser extends VanillaArgumentParser<Boolean> {
     public BooleanArgumentParser() {
-        super(TypeSignature.of(Boolean.class), BoolArgumentType.bool());
+        super(TypeSignature.of(Boolean.class), BoolArgumentType.bool(), "Boolean");
     }
 
 }

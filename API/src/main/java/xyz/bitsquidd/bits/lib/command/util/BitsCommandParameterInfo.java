@@ -3,6 +3,8 @@ package xyz.bitsquidd.bits.lib.command.util;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.annotation.Optional;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
@@ -19,8 +21,22 @@ public class BitsCommandParameterInfo {
 
     public BitsCommandParameterInfo(Parameter parameter) {
         this.type = parameter.getParameterizedType();
-        this.name = parameter.getName(); //TODO: if contains "arg" use the parser's name
         this.optional = parameter.isAnnotationPresent(Optional.class);
+
+        this.name = getParameterName(parameter);
+    }
+
+    private String getParameterName(Parameter parameter) {
+        // If the parameter name is synthetic (arg0, arg1), get the name from the argument parser
+        // By default, Java does not retain parameter names at runtime unless compiled with the -parameters flag,
+        // see: https://docs.gradle.org/current/userguide/java_plugin.html#example_registering_incremental_annotation_processors_dynamically
+        if (parameter.getName().contains("arg")) {
+            AbstractArgumentParser<?, ?> parser = ArgumentRegistry.getInstance().getParser(type);
+            return parser.getArgumentName();
+        } else {
+            return parameter.getName();
+        }
+
     }
 
     public Type getType() {

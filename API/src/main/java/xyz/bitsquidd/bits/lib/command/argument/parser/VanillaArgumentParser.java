@@ -9,8 +9,9 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 public class VanillaArgumentParser<T> extends AbstractArgumentParser<@NotNull T, @NotNull T> {
 
-    public VanillaArgumentParser(TypeSignature typeSignature, ArgumentType<T> argumentType) {
-        super(typeSignature, argumentType, (Class<T>)typeSignature.toRawType(), (Class<T>)typeSignature.toRawType());
+    @SuppressWarnings("unchecked")
+    public VanillaArgumentParser(TypeSignature typeSignature, ArgumentType<T> argumentType, String argumentName) {
+        super(typeSignature, argumentType, (Class<T>)typeSignature.toRawType(), (Class<T>)typeSignature.toRawType(), argumentName);
     }
 
     @Override

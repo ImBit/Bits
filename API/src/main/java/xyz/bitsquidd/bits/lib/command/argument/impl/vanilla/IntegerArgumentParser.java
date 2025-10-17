@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.VanillaArgumentParser;
 
 public class IntegerArgumentParser extends VanillaArgumentParser<Integer> {
     public IntegerArgumentParser() {
-        super(TypeSignature.of(Integer.class), IntegerArgumentType.integer());
+        super(TypeSignature.of(Integer.class), IntegerArgumentType.integer(), "Integer");
     }
 
 }

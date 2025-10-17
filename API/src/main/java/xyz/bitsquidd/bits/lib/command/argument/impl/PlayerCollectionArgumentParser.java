@@ -20,7 +20,7 @@ public class PlayerCollectionArgumentParser extends AbstractArgumentParser<@NotN
     private static final SimpleCommandExceptionType NO_PLAYERS_FOUND = new SimpleCommandExceptionType(new LiteralMessage("No players found matching the selector"));
 
     public PlayerCollectionArgumentParser() {
-        super(TypeSignature.of(Collection.class, Player.class), StringArgumentType.string(), String.class, (Class<Collection<Player>>)(Class<?>)Collection.class);
+        super(TypeSignature.of(Collection.class, Player.class), StringArgumentType.string(), String.class, (Class<Collection<Player>>)(Class<?>)Collection.class, "Player(s)");
     }
 
 
@@ -42,7 +42,7 @@ public class PlayerCollectionArgumentParser extends AbstractArgumentParser<@NotN
     }
 
     @Override
-    protected List<String> getSuggestions(BitsCommandContext context) {
+    protected List<String> getSuggestions(@NotNull BitsCommandContext context) {
         List<String> suggestions = new ArrayList<>();
         suggestions.add("@a");
         try {

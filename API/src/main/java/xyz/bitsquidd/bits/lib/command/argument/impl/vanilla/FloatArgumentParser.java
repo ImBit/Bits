@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.VanillaArgumentParser;
 
 public class FloatArgumentParser extends VanillaArgumentParser<Float> {
     public FloatArgumentParser() {
-        super(TypeSignature.of(Float.class), FloatArgumentType.floatArg());
+        super(TypeSignature.of(Float.class), FloatArgumentType.floatArg(), "Float");
     }
 
 }
