@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.info;
+package xyz.bitsquidd.bits.lib.command.util;
 
 import org.jspecify.annotations.NullMarked;
 
@@ -8,6 +8,7 @@ import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
+import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
@@ -93,30 +94,25 @@ public class BitsCommandBuilder {
 
     public List<BitsCommandRequirement> getRequirements() {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
-        if (commandName.isEmpty()) requirements.add(new PermissionRequirement(permissionString));
+        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionString));
 
-        // Gather permission strings
+        // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
-        if (permissionAnnotation != null) requirements.addAll(Arrays.stream(permissionAnnotation.value()).map(PermissionRequirement::new).toList());
+        if (permissionAnnotation != null) {
+            requirements.addAll(Arrays.stream(permissionAnnotation.value())
+                  .map(PermissionRequirement::of)
+                  .toList());
+        }
 
         // Gather requirement instances
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
-        if (requirementAnnotation != null) requirements.addAll(Arrays.stream(requirementAnnotation.value()).map(this::getRequirementInstance).toList());
+        if (requirementAnnotation != null) {
+            requirements.addAll(Arrays.stream(requirementAnnotation.value())
+                  .map(clazz -> RequirementRegistry.getInstance().getRequirement(clazz))
+                  .toList());
+        }
 
         return requirements;
-    }
-
-    //TODO implement static caching of requirement instances
-    private BitsCommandRequirement getRequirementInstance(final Class<? extends BitsCommandRequirement> requirementClass) {
-        return requirementInstances.computeIfAbsent(
-              requirementClass, clazz -> {
-                  try {
-                      return clazz.getDeclaredConstructor().newInstance();
-                  } catch (Exception e) {
-                      throw new RuntimeException("Failed to create requirement instance.", e);
-                  }
-              }
-        );
     }
 
 }

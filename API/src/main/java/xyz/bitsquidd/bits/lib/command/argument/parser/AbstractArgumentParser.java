@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 

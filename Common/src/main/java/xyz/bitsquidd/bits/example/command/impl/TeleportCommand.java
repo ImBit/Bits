@@ -9,8 +9,8 @@ import xyz.bitsquidd.bits.lib.command.BitsAnnotatedCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 
 /**

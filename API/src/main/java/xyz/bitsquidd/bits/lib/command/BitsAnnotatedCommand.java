@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 public abstract class BitsAnnotatedCommand {
 

@@ -3,7 +3,7 @@ package xyz.bitsquidd.bits.lib.command.requirement.impl;
 import org.bukkit.GameMode;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 
 public class PlayerGamemodeRequirement extends PlayerSenderRequirement {

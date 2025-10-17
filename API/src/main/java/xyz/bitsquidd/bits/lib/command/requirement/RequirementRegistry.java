@@ -6,7 +6,6 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.ConsoleSenderRequirement;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class RequirementRegistry {
         if (instance != null) throw new IllegalStateException("RequirementRegistry has already been initialized.");
         instance = this;
 
-        Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialRequirements = new ArrayList<>(initialiseDefaultParsers());
+        Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialRequirements = new HashMap<>(initialiseDefaultParsers());
         initialRequirements.putAll(initialiseParsers());
         requirementInstances.putAll(initialRequirements);
     }

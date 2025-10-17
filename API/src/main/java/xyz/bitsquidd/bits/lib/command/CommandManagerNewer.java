@@ -9,8 +9,8 @@ import org.jspecify.annotations.NullMarked;
 import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 

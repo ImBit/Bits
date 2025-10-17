@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.info;
+package xyz.bitsquidd.bits.lib.command.util;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;

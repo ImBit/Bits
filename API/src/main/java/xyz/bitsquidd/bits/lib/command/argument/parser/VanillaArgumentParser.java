@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 public class VanillaArgumentParser<T> extends AbstractArgumentParser<@NotNull T, @NotNull T> {
 

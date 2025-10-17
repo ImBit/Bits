@@ -12,10 +12,10 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandBuilder;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandMethodInfo;
-import xyz.bitsquidd.bits.lib.command.info.BitsCommandParameterInfo;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandMethodInfo;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandParameterInfo;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
