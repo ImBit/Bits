@@ -144,8 +144,13 @@ public class BrigadierTreeGenerator {
 
         if (parameters.size() == 1) {
             BitsCommandParameterInfo last = new ArrayList<>(parameters).removeFirst();
-            return Commands.argument(last.getName(), ArgumentRegistry.getInstance().getArgumentType(last.getType()))
-                  .executes(createCommandExecution(commandBuilder, methodInfo));
+            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = Commands.argument(last.getName(), ArgumentRegistry.getInstance().getArgumentType(last.getType()));
+
+            AbstractArgumentParser<?, ?> parser = ArgumentRegistry.getInstance().getParser(last.getType());
+
+            return argumentBuilder
+                  .executes(createCommandExecution(commandBuilder, methodInfo))
+                  .suggests(parser.getSuggestionProvider(argumentBuilder.getSuggestionsProvider())); // Add Brigadier's suggestions to our custom suggestion provider.
         }
 
         List<BitsCommandParameterInfo> paramsCopy = new ArrayList<>(parameters);
