@@ -36,14 +36,13 @@ public class BrigadierTreeGenerator {
     }
 
     public List<LiteralCommandNode<CommandSourceStack>> createNodes(BitsCommandBuilder commandBuilder) {
-        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root");
+        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root"); // We create a "dummy_root" to be able to split core aliases.
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
-//        return dummyRoot.getArguments().stream()
-//              .filter(node -> node instanceof LiteralCommandNode)
-//              .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
-//              .toList();
-        return List.of(dummyRoot.build());
+        return dummyRoot.getArguments().stream()
+              .filter(node -> node instanceof LiteralCommandNode)
+              .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
+              .toList();
     }
 
     // Returns a non-empty list of branches that will be built upon. This includes command aliases.
