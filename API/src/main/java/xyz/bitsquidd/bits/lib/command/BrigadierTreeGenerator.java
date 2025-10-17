@@ -26,10 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-// TODO:
-//  Bugs:
-//   - Command annotations come before class parameters. e.g. teleport location player
-
 @NullMarked
 public class BrigadierTreeGenerator {
     public BrigadierTreeGenerator() {
@@ -55,17 +51,15 @@ public class BrigadierTreeGenerator {
 
         String commandName = commandBuilder.getCommandName();
         List<String> commandAliases = new ArrayList<>(commandBuilder.getCommandAliases());
-        commandAliases.add(commandBuilder.getCommandName());
+        commandAliases.add(commandName);
 
         // Note: Aliases are not created for commands without names.
         if (commandName.isEmpty()) {
             if (root == null) throw new CommandParseException("Root command class must have a name.");
             commandBranches.add(root);
-            BitsConfig.getPlugin().getLogger().info("Registering command class without name: " + commandBuilder.getCommandName());
         } else {
             List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream().map(Commands::literal).toList();
             commandBranches.addAll(nextBranches);
-            BitsConfig.getPlugin().getLogger().info("Registering command class: " + commandName + "  " + commandBuilder.getCommandName() + "  " + nextBranches);
         }
 
         return commandBranches;
@@ -82,7 +76,6 @@ public class BrigadierTreeGenerator {
         );
 
         // Create parameters needed for this class.
-        //TODO consider having documentation on which constructor is used
         List<BitsCommandParameterInfo> newParameters = commandBuilder.getParameters().stream().map(BitsCommandParameterInfo::new).toList();
         List<BitsCommandParameterInfo> nonMutatedParameters = new ArrayList<>(addedParameters);
         nonMutatedParameters.addAll(newParameters);

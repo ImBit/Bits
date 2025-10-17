@@ -26,7 +26,7 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
  * <li>/teleport all spawn                        - Teleport all to spawn</li>
  * </ul>
  */
-@Command(value = "test-teleport", aliases = {"tp"}, description = "Teleport commands")
+@Command(value = "test-teleport", aliases = {"test-teleport-alias"}, description = "Teleport commands")
 @Requirement(value = {PlayerSenderRequirement.class})
 public class TeleportCommand extends BitsCommand {
 
