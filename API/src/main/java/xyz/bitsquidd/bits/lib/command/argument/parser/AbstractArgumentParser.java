@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.arg.parser;
+package xyz.bitsquidd.bits.lib.command.argument.parser;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -7,7 +7,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.arg.TypeSignature;
+import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
 
 import java.util.List;

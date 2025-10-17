@@ -5,23 +5,28 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.spigotmc.SpigotConfig;
 
-import xyz.bitsquidd.bits.lib.command.arg.ArgumentTypeRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandBuilder;
+import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 
+/**
+ * Manages the registration and lifecycle of all {@link BitsAnnotatedCommand}s.
+ */
+@NullMarked
 public abstract class CommandManagerNewer {
-    protected final @NotNull JavaPlugin plugin = BitsConfig.getPlugin();
-    protected final @NotNull BitsCommandListener listener;
+    protected final JavaPlugin plugin = BitsConfig.getPlugin();
+    protected final BitsCommandListener listener;
 
-    private final ArgumentTypeRegistry argumentTypeRegistry = new ArgumentTypeRegistry();
-    private final BrigadierTreeGenerator brigadierTreeGenerator = new BrigadierTreeGenerator(argumentTypeRegistry, new HashMap<>());
+    private final ArgumentRegistry argumentRegistry = new ArgumentRegistry();
+    private final RequirementRegistry requirementRegistry = new RequirementRegistry();
+    private final BrigadierTreeGenerator brigadierTreeGenerator = new BrigadierTreeGenerator();
 
 
     protected CommandManagerNewer() {
@@ -33,7 +38,7 @@ public abstract class CommandManagerNewer {
     /**
      * Registers the command listener and enables all commands.
      * <p>
-     * Ensure this method is run on {@link JavaPlugin#onEnable()} or equivalent.
+     * Ensure this method is run on {@link JavaPlugin#onEnable()} oe.
      */
     public void startup() {
         Bukkit.getPluginManager().registerEvents(listener, plugin);
@@ -42,6 +47,8 @@ public abstract class CommandManagerNewer {
 
     /**
      * Unregisters the command listener.
+     * <p>
+     * Ensure this method is run on {@link JavaPlugin#onDisable()} oe.
      */
     public void shutdown() {
         HandlerList.unregisterAll(listener);
@@ -53,25 +60,25 @@ public abstract class CommandManagerNewer {
      *
      * @return A list of all {@link BitsAnnotatedCommand}s to be registered.
      */
-    protected abstract @NotNull List<BitsAnnotatedCommand> getAllCommands();
+    protected abstract Collection<BitsAnnotatedCommand> getAllCommands();
 
     /**
      * Defines the base permission string for all commands.
      * <p>
-     * For example: {@code bitsplugin.command},
+     * For example, if returning the string: {@code bits.command}, all commands will have
+     * permission {@code bits.command.[command_name]}.
      *
      * @return The base permission string for all commands.
      */
-    protected abstract @NotNull String commandBasePermission();
+    protected abstract String commandBasePermission();
 
 
     /**
-     * Gets a command listener, used for certain command functionality.
+     * Returns the default command listener.
+     * We hook into this to provide custom formatting for unknown/error commands.
      * The default implementation returns a new instance of {@link BitsCommandListener}.
-     * <p>
-     * This default implementation provides basic formatting for unknown/error commands.
      */
-    protected @NotNull BitsCommandListener getListenerInternal() {
+    protected BitsCommandListener getListenerInternal() {
         return new BitsCommandListener(
               CommandReturnDecorator.of(CommandReturnType.ERROR),
               Component.text(SpigotConfig.unknownCommandMessage)
@@ -82,15 +89,16 @@ public abstract class CommandManagerNewer {
     /**
      * Registers all {@link BitsAnnotatedCommand}s.
      */
-    protected void enableAllCommands() {
-        List<BitsAnnotatedCommand> bitsCommands = getAllCommands();
+    private void enableAllCommands() {
+        Collection<BitsAnnotatedCommand> bitsCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
-              LifecycleEvents.COMMANDS, commands -> {
-                  bitsCommands.forEach(bitsCommand -> {
-                      commands.registrar().register(brigadierTreeGenerator.createNode(new BitsCommandBuilder(bitsCommand.getClass())));
-                  });
-              }
+              LifecycleEvents.COMMANDS, commands -> bitsCommands
+                    .forEach(bitsCommand -> commands
+                          .registrar().register(
+                                brigadierTreeGenerator.createNode(new BitsCommandBuilder(bitsCommand.getClass()))
+                          )
+                    )
         );
     }
 

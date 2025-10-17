@@ -14,7 +14,8 @@ public class PlayerGamemodeRequirement extends PlayerSenderRequirement {
 
     private final GameMode requiredGamemode;
 
-    public PlayerGamemodeRequirement(GameMode requiredGamemode) {
+    private PlayerGamemodeRequirement(GameMode requiredGamemode) {
+        super();
         this.requiredGamemode = requiredGamemode;
     }
 

@@ -12,6 +12,8 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 public class PlayerSenderRequirement extends BitsCommandRequirement {
     public static final PlayerSenderRequirement INSTANCE = new PlayerSenderRequirement();
 
+    protected PlayerSenderRequirement() {}
+
     @Override
     public boolean test(@NotNull BitsCommandContext context) {
         return context.getSender() instanceof Player;

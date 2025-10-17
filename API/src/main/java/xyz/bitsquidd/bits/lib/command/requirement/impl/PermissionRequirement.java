@@ -16,13 +16,18 @@ import java.util.List;
 public class PermissionRequirement extends BitsCommandRequirement {
     public final @NotNull List<String> permissions = new ArrayList<>();
 
-    public PermissionRequirement(@NotNull Collection<String> permissions) {
+    protected PermissionRequirement(@NotNull Collection<String> permissions) {
         this.permissions.addAll(permissions);
     }
 
-    public PermissionRequirement(@NotNull String permission) {
-        this.permissions.add(permission);
+    public static @NotNull PermissionRequirement of(@NotNull Collection<String> permissions) {
+        return new PermissionRequirement(permissions);
     }
+
+    public static @NotNull PermissionRequirement of(@NotNull String... permissions) {
+        return new PermissionRequirement(List.of(permissions));
+    }
+
 
     @Override
     public boolean test(@NotNull BitsCommandContext context) {

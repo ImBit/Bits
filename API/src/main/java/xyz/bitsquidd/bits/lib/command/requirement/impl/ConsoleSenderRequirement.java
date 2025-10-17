@@ -12,6 +12,8 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 public class ConsoleSenderRequirement extends BitsCommandRequirement {
     public static final ConsoleSenderRequirement INSTANCE = new ConsoleSenderRequirement();
 
+    protected ConsoleSenderRequirement() {}
+
     @Override
     public boolean test(@NotNull BitsCommandContext context) {
         return context.getSender() instanceof ConsoleCommandSender;

@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -10,24 +9,20 @@ import org.bukkit.Bukkit;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.arg.ArgumentTypeRegistry;
-import xyz.bitsquidd.bits.lib.command.arg.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandMethodInfo;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandParameterInfo;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 // TODO:
 //  Bugs:
@@ -35,15 +30,7 @@ import java.util.Objects;
 
 @NullMarked
 public class BrigadierTreeGenerator {
-    private final ArgumentTypeRegistry argumentRegistry;
-    private final Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> requirementInstances;
-
-    public BrigadierTreeGenerator(
-          ArgumentTypeRegistry argumentRegistry, Map<Class<? extends BitsCommandRequirement>,
-                BitsCommandRequirement> requirementInstances
-    ) {
-        this.argumentRegistry = argumentRegistry;
-        this.requirementInstances = requirementInstances;
+    public BrigadierTreeGenerator() {
     }
 
 
@@ -120,8 +107,8 @@ public class BrigadierTreeGenerator {
 
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
                 iterations.add(
-                      Commands.argument(parameter.getName(), getArgumentType(parameter.getType()))
-                            .suggests(argumentRegistry.getParser(parameter.getType()).getSuggestionProvider())
+                      Commands.argument(parameter.getName(), ArgumentRegistry.getInstance().getArgumentType(parameter.getType()))
+                            .suggests(ArgumentRegistry.getInstance().getParser(parameter.getType()).getSuggestionProvider())
                 );
             }
 
@@ -152,7 +139,8 @@ public class BrigadierTreeGenerator {
             for (BitsCommandParameterInfo parameter : methodInfo.getParameters()) {
                 Object value;
 
-                AbstractArgumentParser<I, O> parser = (AbstractArgumentParser<I, O>)argumentRegistry.getParser(parameter.getType());
+                @SuppressWarnings("unchecked")
+                AbstractArgumentParser<I, O> parser = (AbstractArgumentParser<I, O>)ArgumentRegistry.getInstance().getParser(parameter.getType());
 
                 try {
                     value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
@@ -203,13 +191,6 @@ public class BrigadierTreeGenerator {
             ctx.getSource().getSender().sendMessage("Command executed: " + methodInfo.getMethod().getName());
             return com.mojang.brigadier.Command.SINGLE_SUCCESS;
         };
-    }
-
-    ///  Requirements and permissions ///
-
-
-    private ArgumentType<?> getArgumentType(final Type type) {
-        return Objects.requireNonNull(argumentRegistry.getArgumentType(type), "Argument type not registered: " + type.getTypeName());
     }
 
 }

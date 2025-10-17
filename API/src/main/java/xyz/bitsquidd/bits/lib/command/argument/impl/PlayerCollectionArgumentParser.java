@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.arg.impl;
+package xyz.bitsquidd.bits.lib.command.argument.impl;
 
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.arg.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.arg.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.info.BitsCommandContext;
 
 import java.util.ArrayList;
