@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.command.util;
 
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.BitsAnnotatedCommand;
+import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 @NullMarked
 public class BitsCommandBuilder {
-    private final Class<? extends BitsAnnotatedCommand> commandClass;
+    private final Class<? extends BitsCommand> commandClass;
 
     private final Command commandAnnotation;
 
@@ -34,7 +34,7 @@ public class BitsCommandBuilder {
 
     private final String permissionString;
 
-    public BitsCommandBuilder(Class<? extends BitsAnnotatedCommand> commandClass) {
+    public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
         this.commandClass = commandClass;
 
         commandAnnotation = commandClass.getAnnotation(Command.class);
@@ -47,7 +47,7 @@ public class BitsCommandBuilder {
     }
 
 
-    public Class<? extends BitsAnnotatedCommand> getCommandClass() {
+    public Class<? extends BitsCommand> getCommandClass() {
         return commandClass;
     }
 
@@ -74,10 +74,10 @@ public class BitsCommandBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Class<? extends BitsAnnotatedCommand>> getSubcommandClasses() {
+    public List<Class<? extends BitsCommand>> getSubcommandClasses() {
         return Stream.of(commandClass.getDeclaredClasses())
-              .filter(nestedClass -> BitsAnnotatedCommand.class.isAssignableFrom(nestedClass) && nestedClass.isAnnotationPresent(Command.class))
-              .map(nestedClass -> (Class<? extends BitsAnnotatedCommand>)nestedClass)
+              .filter(nestedClass -> BitsCommand.class.isAssignableFrom(nestedClass) && nestedClass.isAnnotationPresent(Command.class))
+              .map(nestedClass -> (Class<? extends BitsCommand>)nestedClass)
               .collect(Collectors.toList());
     }
 

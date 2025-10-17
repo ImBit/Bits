@@ -5,7 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.command.BitsAnnotatedCommand;
+import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
@@ -28,7 +28,7 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
  */
 @Command(value = "test-teleport", aliases = {"tp"}, description = "Teleport commands")
 @Requirement(value = {PlayerSenderRequirement.class})
-public class TeleportCommand extends BitsAnnotatedCommand {
+public class TeleportCommand extends BitsCommand {
 
     @Command()
     public void teleportToEntity(@NotNull BitsCommandContext context) {
@@ -41,7 +41,7 @@ public class TeleportCommand extends BitsAnnotatedCommand {
      * Captures the target player and provides various teleport destinations.
      */
     @Command()
-    public static class PlayerCommands extends BitsAnnotatedCommand {
+    public static class PlayerCommands extends BitsCommand {
         private final Player targetPlayer;
 
         public PlayerCommands(Player targetPlayer) {
@@ -96,7 +96,7 @@ public class TeleportCommand extends BitsAnnotatedCommand {
      * All-players teleport commands.
      */
     @Command("all")
-    public static class AllPlayersCommands extends BitsAnnotatedCommand {
+    public static class AllPlayersCommands extends BitsCommand {
 
         public void showAllHelp(@NotNull BitsCommandContext context) {
             context.sendMessage("=== Teleport All Players ===");

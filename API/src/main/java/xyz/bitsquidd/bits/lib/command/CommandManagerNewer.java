@@ -17,7 +17,7 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorato
 import java.util.Collection;
 
 /**
- * Manages the registration and lifecycle of all {@link BitsAnnotatedCommand}s.
+ * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
 @NullMarked
 public abstract class CommandManagerNewer {
@@ -56,11 +56,11 @@ public abstract class CommandManagerNewer {
 
 
     /**
-     * Provides all {@link BitsAnnotatedCommand}s to be registered on startup of the manager.
+     * Provides all {@link BitsCommand}s to be registered on startup of the manager.
      *
-     * @return A list of all {@link BitsAnnotatedCommand}s to be registered.
+     * @return A list of all {@link BitsCommand}s to be registered.
      */
-    protected abstract Collection<BitsAnnotatedCommand> getAllCommands();
+    protected abstract Collection<BitsCommand> getAllCommands();
 
     /**
      * Defines the base permission string for all commands.
@@ -87,10 +87,10 @@ public abstract class CommandManagerNewer {
 
 
     /**
-     * Registers all {@link BitsAnnotatedCommand}s.
+     * Registers all {@link BitsCommand}s.
      */
     private void enableAllCommands() {
-        Collection<BitsAnnotatedCommand> bitsCommands = getAllCommands();
+        Collection<BitsCommand> bitsCommands = getAllCommands();
 
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> bitsCommands

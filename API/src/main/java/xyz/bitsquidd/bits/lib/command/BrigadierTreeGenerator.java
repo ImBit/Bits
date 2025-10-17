@@ -33,8 +33,6 @@ public class BrigadierTreeGenerator {
     public BrigadierTreeGenerator() {
     }
 
-
-    //TODO allow for alias support here! - dont have repeated code with processing the class.
     public LiteralCommandNode<CommandSourceStack> createNode(BitsCommandBuilder commandBuilder) {
         LiteralArgumentBuilder<CommandSourceStack> root = createNextBranch(commandBuilder, null);
         processCommandClass(root, commandBuilder, new ArrayList<>());
@@ -61,7 +59,6 @@ public class BrigadierTreeGenerator {
         return nextBranch;
     }
 
-    // TODO get the defined variables as well. Use these for params.
     private void processCommandClass(
           final LiteralArgumentBuilder<CommandSourceStack> branch,
           final BitsCommandBuilder commandBuilder,
@@ -76,11 +73,8 @@ public class BrigadierTreeGenerator {
         List<Parameter> nonMutatedParameters = new ArrayList<>(addedParameters);
         nonMutatedParameters.addAll(commandBuilder.getParameters());
 
-        // TODO: Add a generic default method if none are present - this could just be in bits command?
-        // TODO add alias support
-
-        for (Class<?> nestedClass : commandBuilder.getSubcommandClasses()) {
-            processCommandClass(createNextBranch(commandBuilder, branch), commandBuilder, nonMutatedParameters);
+        for (Class<? extends BitsCommand> nestedClass : commandBuilder.getSubcommandClasses()) {
+            processCommandClass(createNextBranch(commandBuilder, branch), new BitsCommandBuilder(nestedClass), nonMutatedParameters);
         }
 
         for (Method method : commandBuilder.getCommandMethods()) {
