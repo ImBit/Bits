@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.jetbrains.annotations.NotNull;
 
-import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 
 public class BitsCommandListener implements Listener {
@@ -22,11 +21,11 @@ public class BitsCommandListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onUnknownCommand(UnknownCommandEvent unknownCommandEvent) {
-        Component message = unknownCommandEvent.message();
-
-        unknownCommandEvent.message(Text.of(message == null ? unknownCommandMessage : message)
-              .decorate(errorDecorator)
-              .getComponent(unknownCommandEvent.getSender())
-        );
+//        Component message = unknownCommandEvent.message();
+//
+//        unknownCommandEvent.message(Text.of(message == null ? unknownCommandMessage : message)
+//              .decorate(errorDecorator)
+//              .getComponent(unknownCommandEvent.getSender())
+//        );
     }
 }

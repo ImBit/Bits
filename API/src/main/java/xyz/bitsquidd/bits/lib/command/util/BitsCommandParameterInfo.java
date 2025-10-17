@@ -19,7 +19,7 @@ public class BitsCommandParameterInfo {
 
     public BitsCommandParameterInfo(Parameter parameter) {
         this.type = parameter.getParameterizedType();
-        this.name = parameter.getName();
+        this.name = parameter.getName(); //TODO: if contains "arg" use the parser's name
         this.optional = parameter.isAnnotationPresent(Optional.class);
     }
 

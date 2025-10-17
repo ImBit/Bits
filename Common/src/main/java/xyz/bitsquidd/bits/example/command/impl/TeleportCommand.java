@@ -31,7 +31,7 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 public class TeleportCommand extends BitsCommand {
 
     @Command()
-    public void teleportToEntity(@NotNull BitsCommandContext context) {
+    public void teleportTest(@NotNull BitsCommandContext context) {
         context.sendMessage("Test teleport command!");
     }
 

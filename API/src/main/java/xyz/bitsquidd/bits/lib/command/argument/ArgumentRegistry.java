@@ -9,6 +9,7 @@ import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerCollectionArgumentPars
 import xyz.bitsquidd.bits.lib.command.argument.impl.WorldArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.impl.vanilla.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -76,12 +77,18 @@ public class ArgumentRegistry {
                     type = Long.class;
                 } else if (clazz == float.class) {
                     type = Float.class;
-                } else if (clazz == double.class) type = Double.class;
+                } else if (clazz == double.class) {
+                    type = Double.class;
+                } else {
+                    throw new IllegalArgumentException("No parser found for primitive type: " + clazz);
+                }
             }
         }
 
         for (AbstractArgumentParser<?, ?> parser : parsers) {
             if (parser.getTypeSignature().matches(type)) {
+                BitsConfig.getPlugin().getLogger().info("Found parser " + parser.getClass().getSimpleName() + " for type " + type + "  " + parser.getArgumentType());
+
                 return parser;
             }
         }

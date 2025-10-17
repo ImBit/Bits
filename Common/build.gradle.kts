@@ -26,6 +26,10 @@ tasks.processResources {
     dependsOn("processPluginYml")
 }
 
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-parameters")
+}
+
 
 tasks {
     jar { enabled = false }

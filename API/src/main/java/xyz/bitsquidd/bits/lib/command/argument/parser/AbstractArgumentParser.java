@@ -9,6 +9,7 @@ import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.List;
 
@@ -34,11 +35,19 @@ public abstract class AbstractArgumentParser<I, O> {
     }
 
     public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
+        BitsConfig.getPlugin().getLogger().info("getting suggestion provider for " + this.typeSignature);
         return (context, builder) -> {
             BitsCommandContext bitsCtx = new BitsCommandContext(context.getSource());
             List<String> suggestions = getSuggestions(bitsCtx);
+            String remaining = builder.getRemaining().toLowerCase();
+
+            BitsConfig.getPlugin().getLogger().info("suggestions: " + suggestions);
+
             for (String suggestion : suggestions) {
-                builder.suggest(suggestion);
+                if (suggestion.toLowerCase().startsWith(remaining)) {
+                    builder.suggest(suggestion);
+                    BitsConfig.getPlugin().getLogger().info("suggesting: " + suggestion);
+                }
             }
             return builder.buildFuture();
         };
