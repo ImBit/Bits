@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.arg.ArgumentTypeRegistry;
-import xyz.bitsquidd.bits.lib.command.newe.BitsCommandListener;
+import xyz.bitsquidd.bits.lib.command.info.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
@@ -88,7 +88,7 @@ public abstract class CommandManagerNewer {
         plugin.getLifecycleManager().registerEventHandler(
               LifecycleEvents.COMMANDS, commands -> {
                   bitsCommands.forEach(bitsCommand -> {
-                      commands.registrar().register(brigadierTreeGenerator.createNode(bitsCommand.getClass()));
+                      commands.registrar().register(brigadierTreeGenerator.createNode(new BitsCommandBuilder(bitsCommand.getClass())));
                   });
               }
         );
