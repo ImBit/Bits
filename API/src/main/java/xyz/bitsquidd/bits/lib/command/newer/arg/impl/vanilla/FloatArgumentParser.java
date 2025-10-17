@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.newer.arg.parser.impl;
+package xyz.bitsquidd.bits.lib.command.newer.arg.impl.vanilla;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 

@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.newer.arg.parser.impl;
+package xyz.bitsquidd.bits.lib.command.newer.arg.impl;
 
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.arguments.StringArgumentType;

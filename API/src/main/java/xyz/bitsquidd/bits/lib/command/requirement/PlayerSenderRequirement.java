@@ -1,12 +1,13 @@
-package xyz.bitsquidd.bits.lib.command.requirements;
+package xyz.bitsquidd.bits.lib.command.requirement;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
-public class PlayerRequirement implements CommandRequirement {
-    public static final PlayerRequirement INSTANCE = new PlayerRequirement();
+public class PlayerSenderRequirement implements CommandRequirement {
+    public static final PlayerSenderRequirement INSTANCE = new PlayerSenderRequirement();
 
     @Override
     public boolean check(@NotNull CommandContext context) {

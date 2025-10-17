@@ -3,8 +3,11 @@ package xyz.bitsquidd.bits.lib.command.newer.arg;
 import com.mojang.brigadier.arguments.ArgumentType;
 import org.jetbrains.annotations.NotNull;
 
+import xyz.bitsquidd.bits.lib.command.newer.arg.impl.PlayerArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.arg.impl.PlayerCollectionArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.arg.impl.WorldArgumentParser;
+import xyz.bitsquidd.bits.lib.command.newer.arg.impl.vanilla.*;
 import xyz.bitsquidd.bits.lib.command.newer.arg.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.newer.arg.parser.impl.*;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;

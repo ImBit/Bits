@@ -9,8 +9,8 @@ import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.newer.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
-public class PlayerRequirement extends BitsCommandRequirement {
-    public static final PlayerRequirement INSTANCE = new PlayerRequirement();
+public class PlayerSenderRequirement extends BitsCommandRequirement {
+    public static final PlayerSenderRequirement INSTANCE = new PlayerSenderRequirement();
 
     @Override
     public boolean test(@NotNull BitsCommandContext context) {

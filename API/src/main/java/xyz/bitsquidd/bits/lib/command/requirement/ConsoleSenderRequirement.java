@@ -1,12 +1,13 @@
-package xyz.bitsquidd.bits.lib.command.requirements;
+package xyz.bitsquidd.bits.lib.command.requirement;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
-public class ConsoleRequirement implements CommandRequirement {
-    public static final ConsoleRequirement INSTANCE = new ConsoleRequirement();
+public class ConsoleSenderRequirement implements CommandRequirement {
+    public static final ConsoleSenderRequirement INSTANCE = new ConsoleSenderRequirement();
 
     @Override
     public boolean check(@NotNull CommandContext context) {
@@ -15,6 +16,6 @@ public class ConsoleRequirement implements CommandRequirement {
 
     @Override
     public @NotNull String getFailMessage(@NotNull CommandContext context) {
-        return "You must be a player to execute this command.";
+        return "You must be the console to execute this command.";
     }
 }

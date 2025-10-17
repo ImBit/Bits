@@ -2,8 +2,9 @@ package xyz.bitsquidd.bits.lib.command;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.exceptions.ArgumentParseException;
-import xyz.bitsquidd.bits.lib.command.requirements.CommandRequirement;
+import xyz.bitsquidd.bits.lib.command.requirement.CommandRequirement;
 
 import java.util.ArrayList;
 import java.util.List;

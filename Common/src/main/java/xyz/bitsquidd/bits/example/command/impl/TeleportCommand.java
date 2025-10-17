@@ -10,7 +10,7 @@ import xyz.bitsquidd.bits.lib.command.newer.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.newer.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.newer.info.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
+import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerSenderRequirement;
 
 
 /**
@@ -27,7 +27,7 @@ import xyz.bitsquidd.bits.lib.command.newer.requirement.impl.PlayerRequirement;
  * </ul>
  */
 @Command(value = "test-teleport", aliases = {"tp"}, description = "Teleport commands")
-@Requirement(value = {PlayerRequirement.class})
+@Requirement(value = {PlayerSenderRequirement.class})
 public class TeleportCommand extends BitsAnnotatedCommand {
 
     @Command()

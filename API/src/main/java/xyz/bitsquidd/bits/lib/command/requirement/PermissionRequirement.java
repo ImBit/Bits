@@ -1,7 +1,8 @@
-package xyz.bitsquidd.bits.lib.command.requirements;
+package xyz.bitsquidd.bits.lib.command.requirement;
 
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 

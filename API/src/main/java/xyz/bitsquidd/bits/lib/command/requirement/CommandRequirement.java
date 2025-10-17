@@ -1,6 +1,7 @@
-package xyz.bitsquidd.bits.lib.command.requirements;
+package xyz.bitsquidd.bits.lib.command.requirement;
 
 import org.jetbrains.annotations.NotNull;
+
 import xyz.bitsquidd.bits.lib.command.CommandContext;
 
 
