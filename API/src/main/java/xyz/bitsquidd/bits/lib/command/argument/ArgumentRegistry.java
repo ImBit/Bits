@@ -9,7 +9,6 @@ import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerCollectionArgumentPars
 import xyz.bitsquidd.bits.lib.command.argument.impl.WorldArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.impl.vanilla.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -87,8 +86,6 @@ public class ArgumentRegistry {
 
         for (AbstractArgumentParser<?, ?> parser : parsers) {
             if (parser.getTypeSignature().matches(type)) {
-                BitsConfig.getPlugin().getLogger().info("Found parser " + parser.getClass().getSimpleName() + " for type " + type + "  " + parser.getArgumentType());
-
                 return parser;
             }
         }

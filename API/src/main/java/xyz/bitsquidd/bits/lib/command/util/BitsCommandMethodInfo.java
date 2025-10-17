@@ -9,7 +9,6 @@ import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +22,8 @@ public class BitsCommandMethodInfo {
     private final Method method;
 
     private final Command commandAnnotation;
-    private final List<BitsCommandParameterInfo> parameters;
+    private final List<BitsCommandParameterInfo> classParameters;
+    private final List<BitsCommandParameterInfo> methodParameters;
 
     private final boolean isAsync;
     private final boolean requiresContext;
@@ -31,7 +31,7 @@ public class BitsCommandMethodInfo {
     private final List<String> permissions;
     private final List<Class<? extends BitsCommandRequirement>> requirements;
 
-    public BitsCommandMethodInfo(Method method, List<Parameter> addedParameters) {
+    public BitsCommandMethodInfo(Method method, List<BitsCommandParameterInfo> addedParameters) {
         this.method = method;
         this.commandAnnotation = method.getAnnotation(Command.class);
         this.isAsync = method.isAnnotationPresent(Async.class);
@@ -45,17 +45,16 @@ public class BitsCommandMethodInfo {
         // If the first parameter is a BitsCommandContext, skip it, we don't need to parse this.
         this.requiresContext = method.getParameterCount() > 0 && method.getParameters()[0].getType().equals(BitsCommandContext.class);
 
-        this.parameters = parseParameters(method, addedParameters);
+        this.methodParameters = parseParameters(Arrays.stream(method.getParameters()).map(BitsCommandParameterInfo::new).toList(), this.requiresContext);
+        this.classParameters = parseParameters(addedParameters, false);
     }
 
-    private List<BitsCommandParameterInfo> parseParameters(Method method, List<Parameter> addedParameters) {
+    private List<BitsCommandParameterInfo> parseParameters(List<BitsCommandParameterInfo> parameters, boolean paramsRequireContext) {
         List<BitsCommandParameterInfo> params = new ArrayList<>();
-        List<Parameter> methodParams = new ArrayList<>(Arrays.stream(method.getParameters()).toList());
-        methodParams.addAll(addedParameters);
 
-        for (int i = (requiresContext ? 1 : 0); i < methodParams.size(); i++) {
-            Parameter param = methodParams.get(i);
-            params.add(new BitsCommandParameterInfo(param));
+        for (int i = (paramsRequireContext ? 1 : 0); i < parameters.size(); i++) {
+            BitsCommandParameterInfo param = parameters.get(i);
+            params.add(param);
         }
 
         return params;
@@ -66,8 +65,18 @@ public class BitsCommandMethodInfo {
         return method;
     }
 
-    public List<BitsCommandParameterInfo> getParameters() {
-        return parameters;
+    public List<BitsCommandParameterInfo> getMethodParameters() {
+        return methodParameters;
+    }
+
+    public List<BitsCommandParameterInfo> getClassParameters() {
+        return classParameters;
+    }
+
+    public List<BitsCommandParameterInfo> getAllParameters() {
+        List<BitsCommandParameterInfo> allParams = new ArrayList<>(classParameters);
+        allParams.addAll(methodParameters);
+        return allParams;
     }
 
     public boolean isAsync() {
