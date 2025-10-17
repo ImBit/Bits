@@ -134,12 +134,12 @@ public class BrigadierTreeGenerator {
     ) {
         BitsCommandMethodInfo methodInfo = new BitsCommandMethodInfo(method, addedParameters);
 
-        if (methodInfo.getAllParameters().isEmpty()) {
-            BitsConfig.getPlugin().getLogger().info("Registering command method without parameters: " + method.getName() + "  " + methodInfo.getAllParameters());
+        if (methodInfo.getMethodParameters().isEmpty()) {
+            BitsConfig.getPlugin().getLogger().info("Registering command method without parameters: " + method.getName() + "  " + methodInfo.getMethodParameters());
             branch.executes(createCommandExecution(commandBuilder, methodInfo));
         } else {
-            BitsConfig.getPlugin().getLogger().info("Registering command method with parameters: " + method.getName() + "  " + methodInfo.getAllParameters());
-            branch.then(addParameters(commandBuilder, methodInfo, methodInfo.getAllParameters()));
+            BitsConfig.getPlugin().getLogger().info("Registering command method with parameters: " + method.getName() + "  " + methodInfo.getMethodParameters());
+            branch.then(addParameters(commandBuilder, methodInfo, methodInfo.getMethodParameters()));
         }
     }
 
