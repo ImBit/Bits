@@ -73,9 +73,15 @@ public class Text implements Sendable {
         this(component, List.of());
     }
 
+
     public static Text of(Component component) {
         return new Text(component);
     }
+
+    public static Text of(String plainText) {
+        return new Text(Component.text(plainText));
+    }
+
 
     public final Text decorate(List<ITextDecorator> decorators) {
         return new Text(component, decorators);
