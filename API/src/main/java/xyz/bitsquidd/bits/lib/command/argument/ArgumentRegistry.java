@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import xyz.bitsquidd.bits.lib.command.argument.impl.GreedyStringArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerCollectionArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.impl.WorldArgumentParser;
@@ -50,6 +51,7 @@ public class ArgumentRegistry {
               new PlayerArgumentParser(),
               new PlayerCollectionArgumentParser(),
               new StringArgumentParser(),
+              new GreedyStringArgumentParser(),
               new WorldArgumentParser()
         );
     }

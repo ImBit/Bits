@@ -18,6 +18,9 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorato
 
 import java.util.Collection;
 
+// TODO:
+//  - Add ability for Restrictions.
+
 /**
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
