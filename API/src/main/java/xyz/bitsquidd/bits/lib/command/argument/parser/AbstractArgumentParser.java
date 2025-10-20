@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -40,7 +41,7 @@ public abstract class AbstractArgumentParser<I, O> {
 
     public final SuggestionProvider<CommandSourceStack> getSuggestionProvider(@Nullable SuggestionProvider<CommandSourceStack> superProvider) {
         return (context, builder) -> {
-            BitsCommandContext bitsCtx = new BitsCommandContext(context.getSource());
+            BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(context.getSource());
             List<String> suggestions = getSuggestions(bitsCtx);
             String remaining = builder.getRemaining().toLowerCase();
 
@@ -60,7 +61,7 @@ public abstract class AbstractArgumentParser<I, O> {
                     }
                 });
             }
-            
+
             return customProvider;
         };
     }

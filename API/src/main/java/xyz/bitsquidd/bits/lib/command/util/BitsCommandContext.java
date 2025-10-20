@@ -5,6 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.sendable.text.Text;
+
 /**
  * Utility class to encapsulate command context
  */
@@ -30,8 +32,8 @@ public class BitsCommandContext {
         return sourceStack;
     }
 
-    public void sendMessage(String message) {
-        getSender().sendMessage(message);
+    public void respond(Text message) {
+        message.send(getSender());
     }
 
 }

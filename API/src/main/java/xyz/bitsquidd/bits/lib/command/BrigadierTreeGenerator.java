@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 @NullMarked
 public class BrigadierTreeGenerator {
+    private final BitsCommandManager bitsCommandManager = BitsConfig.getCommandManager();
+
     public BrigadierTreeGenerator() {
     }
 
@@ -72,7 +74,7 @@ public class BrigadierTreeGenerator {
     ) {
         // Calculate requirements required for this branch
         branch.requires(ctx -> commandBuilder.getRequirements().stream()
-              .allMatch(requirement -> requirement.test(new BitsCommandContext(ctx)))
+              .allMatch(requirement -> requirement.test(bitsCommandManager.createContext(ctx)))
         );
 
         // Create parameters needed for this class.
@@ -166,7 +168,7 @@ public class BrigadierTreeGenerator {
           final BitsCommandMethodInfo methodInfo
     ) {
         return ctx -> {
-            final BitsCommandContext bitsCtx = new BitsCommandContext(ctx.getSource());
+            final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx.getSource());
 
             // Create the list of arguments needed to call the method.
             final List<@Nullable Object>[] allArguments = new List[]{new ArrayList<>()};

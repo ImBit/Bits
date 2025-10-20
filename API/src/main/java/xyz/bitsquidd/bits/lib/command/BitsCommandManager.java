@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.spigotmc.SpigotConfig;
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
@@ -24,15 +26,21 @@ public abstract class BitsCommandManager {
     protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
-    private final ArgumentRegistry argumentRegistry = new ArgumentRegistry();
-    private final RequirementRegistry requirementRegistry = new RequirementRegistry();
-    private final BrigadierTreeGenerator brigadierTreeGenerator = new BrigadierTreeGenerator();
+    private final ArgumentRegistry argumentRegistry;
+    private final RequirementRegistry requirementRegistry;
+    private final BrigadierTreeGenerator brigadierTreeGenerator;
 
 
     protected BitsCommandManager() {
+        BitsConfig.setCommandManager(this);
+
         this.listener = getListenerInternal();
 
         BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
+
+        this.argumentRegistry = new ArgumentRegistry();
+        this.requirementRegistry = new RequirementRegistry();
+        this.brigadierTreeGenerator = new BrigadierTreeGenerator();
     }
 
     /**
@@ -83,6 +91,14 @@ public abstract class BitsCommandManager {
               CommandReturnDecorator.of(CommandReturnType.ERROR),
               Component.text(SpigotConfig.unknownCommandMessage)
         );
+    }
+
+    /**
+     * Creates a new {@link BitsCommandContext} for the given {@link CommandSourceStack}.
+     * This can be overridden to provide custom context implementations i.e. format a command response.
+     */
+    public BitsCommandContext createContext(CommandSourceStack sourceStack) {
+        return new BitsCommandContext(sourceStack);
     }
 
 
