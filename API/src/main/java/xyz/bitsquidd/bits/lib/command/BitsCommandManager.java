@@ -20,7 +20,7 @@ import java.util.Collection;
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
 @NullMarked
-public abstract class CommandManagerNewer {
+public abstract class BitsCommandManager {
     protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
@@ -29,7 +29,7 @@ public abstract class CommandManagerNewer {
     private final BrigadierTreeGenerator brigadierTreeGenerator = new BrigadierTreeGenerator();
 
 
-    protected CommandManagerNewer() {
+    protected BitsCommandManager() {
         this.listener = getListenerInternal();
 
         BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
