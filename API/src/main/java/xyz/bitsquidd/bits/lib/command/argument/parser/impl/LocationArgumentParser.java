@@ -38,4 +38,5 @@ public final class LocationArgumentParser extends AbstractArgumentParserNew<@Not
               new InputTypeContainer(TypeSignature.of(World.class), "world")
         );
     }
+
 }

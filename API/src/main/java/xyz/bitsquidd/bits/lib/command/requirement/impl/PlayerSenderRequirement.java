@@ -15,12 +15,12 @@ public class PlayerSenderRequirement extends BitsCommandRequirement {
     protected PlayerSenderRequirement() {}
 
     @Override
-    public boolean test(@NotNull BitsCommandContext context) {
-        return context.getSender() instanceof Player;
+    public boolean test(@NotNull BitsCommandContext ctx) {
+        return ctx.getSender() instanceof Player;
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandContext context) {
+    public @Nullable Text getFailureMessage(@NotNull BitsCommandContext ctx) {
         return Text.of(Component.text("This command can only be executed by a player."));
     }
 }

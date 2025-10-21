@@ -169,20 +169,20 @@ public class BrigadierTreeGenerator {
             // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
                 try {
-                    Constructor<?> constructor = commandBuilder.toConstructor();
-                    int constructorParamCount = constructor.getParameterCount();
+                    Constructor<?> commandClass = commandBuilder.toConstructor();
+                    int constructorParamCount = commandClass.getParameterCount();
                     Object instance;
 
                     List<@Nullable Object> methodArguments = new ArrayList<>();
 
                     if (constructorParamCount == 0) {
-                        instance = constructor.newInstance();
+                        instance = commandClass.newInstance();
                         methodArguments = allArguments;
                     } else {
                         int startIndex = methodInfo.requiresContext() ? 1 : 0;
 
                         Object[] constructorArgs = allArguments.subList(startIndex, startIndex + constructorParamCount).toArray();
-                        instance = constructor.newInstance(constructorArgs);
+                        instance = commandClass.newInstance(constructorArgs);
 
                         if (methodInfo.requiresContext()) methodArguments.add(allArguments.getFirst());
 
@@ -217,5 +217,5 @@ public class BrigadierTreeGenerator {
         first.then(buildBackward(new ArrayList<>(rest)));
         return first;
     }
-    
+
 }

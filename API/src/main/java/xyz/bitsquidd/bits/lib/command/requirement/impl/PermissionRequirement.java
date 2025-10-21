@@ -30,12 +30,12 @@ public class PermissionRequirement extends BitsCommandRequirement {
 
 
     @Override
-    public boolean test(@NotNull BitsCommandContext context) {
-        return permissions.stream().allMatch(permission -> context.getSender().hasPermission(permission));
+    public boolean test(@NotNull BitsCommandContext ctx) {
+        return permissions.stream().allMatch(permission -> ctx.getSender().hasPermission(permission));
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandContext context) {
+    public @Nullable Text getFailureMessage(@NotNull BitsCommandContext ctx) {
         return Text.of(Component.text("You are lacking permissions to use this command."));
     }
 }

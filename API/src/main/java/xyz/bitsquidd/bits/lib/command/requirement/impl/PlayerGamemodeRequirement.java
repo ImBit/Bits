@@ -20,7 +20,7 @@ public class PlayerGamemodeRequirement extends PlayerSenderRequirement {
     }
 
     @Override
-    public boolean test(@NotNull BitsCommandContext context) {
-        return super.test(context) && context.requirePlayer().getGameMode().equals(requiredGamemode);
+    public boolean test(@NotNull BitsCommandContext ctx) {
+        return super.test(ctx) && ctx.requirePlayer().getGameMode().equals(requiredGamemode);
     }
 }

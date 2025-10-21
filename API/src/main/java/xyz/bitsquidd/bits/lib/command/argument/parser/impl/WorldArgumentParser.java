@@ -18,12 +18,17 @@ public final class WorldArgumentParser extends AbstractArgumentParserNew<@NotNul
     }
 
     @Override
-    public @NotNull World parse(@NotNull List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public @NotNull World parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         World world = Bukkit.getWorld(inputString);
         if (world == null) throw new CommandParseException("World not found: " + inputString);
         return world;
+    }
+
+    @Override
+    public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
+        return Bukkit.getWorlds().stream().map(World::getName).toList();
     }
 
 }
