@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl.abs;
+package xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;

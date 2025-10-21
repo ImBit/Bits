@@ -1,16 +1,17 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl;
+package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs.AbstractEnumArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
 /**
- * <b>Developer Note:</b> Enum parsers should override {@link xyz.bitsquidd.bits.lib.command.argument.impl.abs.AbstractEnumArgumentParser} for more specific enum operations i.e. tab completion.
+ * <b>Developer Note:</b> Enum parsers should override {@link AbstractEnumArgumentParser} for more specific enum operations i.e. tab completion.
  * <p>
  * This implementation serves as a basic parser that should be fallen back upon when no specific enum parser is available.
  */

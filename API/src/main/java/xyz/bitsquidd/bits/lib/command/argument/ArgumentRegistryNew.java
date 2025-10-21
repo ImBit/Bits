@@ -3,13 +3,13 @@ package xyz.bitsquidd.bits.lib.command.argument;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.impl.GenericEnumParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerCollectionArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerSingleArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.WorldArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.argument.parser.ArgumentTypeRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.GenericEnumParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.PlayerCollectionArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.PlayerSingleArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.WorldArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 

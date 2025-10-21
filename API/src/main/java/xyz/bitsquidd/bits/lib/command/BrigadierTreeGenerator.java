@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
@@ -180,25 +179,23 @@ public class BrigadierTreeGenerator {
             final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx.getSource());
 
             // Create the list of arguments needed to call the method.
-            ArrayList<Object> allArguments = new ArrayList<>();
+            ArrayList<@Nullable Object> allArguments = new ArrayList<>();
             if (methodInfo.requiresContext()) allArguments.addFirst(bitsCtx);
 
             for (BitsCommandParameterInfo parameter : methodInfo.getAllParameters()) {
-                Object value;
-
                 AbstractArgumentParserNew<?> parser = ArgumentRegistryNew.getInstance().getParser(parameter.getTypeSignature());
                 List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
 
+                Object value;
                 try {
-                    List<Object> parsedVariables =
-
-                          value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
+                    List<Object> parsedVariables = value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter.getName(), e);
                     value = null;
                 }
-                allArguments[0].add(value);
+
+                allArguments.add(value);
             }
 
             Runnable commandExecution = () -> {

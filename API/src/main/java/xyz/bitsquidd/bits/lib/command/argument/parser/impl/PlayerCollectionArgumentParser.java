@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl;
+package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,7 +58,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
         if (player == null) throw new CommandParseException("Player not found: " + inputString);
         return List.of(player);
     }
-    
+
     @Override
     public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
         List<String> suggestions = new ArrayList<>();

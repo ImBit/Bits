@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl;
+package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
