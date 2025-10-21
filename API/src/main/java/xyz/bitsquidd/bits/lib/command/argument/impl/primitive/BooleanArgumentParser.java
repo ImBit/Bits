@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BooleanArgumentParser extends PrimitiveArgumentParserNew<@NotNull Boolean> {
     public BooleanArgumentParser() {
-        super(Boolean.class, "boolean");
+        super(Boolean.class, "Boolean");
     }
-    
+
 }

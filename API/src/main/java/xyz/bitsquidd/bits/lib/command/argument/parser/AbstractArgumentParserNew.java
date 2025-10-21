@@ -11,18 +11,16 @@ import java.util.List;
 
 @NullMarked
 public abstract class AbstractArgumentParserNew<O> {
-    private final TypeSignature typeSignature; // The type signature this parser handles
-    private final Class<O> outputClass;        // The class the parser outputs
-    private final String argumentName;         // The name of the argument, used while displaying suggestions
+    private final TypeSignature<?> typeSignature; // The type signature this parser handles
+    private final String argumentName;            // The name of the argument, used while displaying suggestions
 
-    protected AbstractArgumentParserNew(TypeSignature typeSignature, Class<O> outputClass, String argumentName) {
+    protected AbstractArgumentParserNew(TypeSignature<?> typeSignature, String argumentName) {
         this.typeSignature = typeSignature;
-        this.outputClass = outputClass;
         this.argumentName = argumentName;
     }
 
 
-    public abstract @NotNull O parse(List<Object> inputObjects) throws CommandParseException;
+    public abstract @NotNull O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException;
 
     /**
      * Returns a list of required objects the parser expects in.
@@ -36,20 +34,20 @@ public abstract class AbstractArgumentParserNew<O> {
      * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
      * </ul>
      */
-    public abstract List<TypeSignature> getInputTypes();
+    public abstract List<TypeSignature<?>> getInputTypes();
 
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
      */
-    protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedInputClass) {
+    protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) {
         if (inputObjects.size() != 1) throw new CommandParseException("Expected exactly one input object, got " + inputObjects.size());
         Object value = inputObjects.getFirst();
 
-        if (!expectedInputClass.isInstance(value)) {
-            throw new CommandParseException("Expected input object of type " + expectedInputClass.getSimpleName() + ", got " + value.getClass().getSimpleName());
+        if (!expectedType.isInstance(value)) {
+            throw new CommandParseException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName());
         }
 
-        return expectedInputClass.cast(value);
+        return expectedType.cast(value);
     }
 
     /**
@@ -60,12 +58,8 @@ public abstract class AbstractArgumentParserNew<O> {
     }
 
 
-    public TypeSignature getTypeSignature() {
+    public TypeSignature<?> getTypeSignature() {
         return typeSignature;
-    }
-
-    public Class<O> getOutputClass() {
-        return outputClass;
     }
 
     public String getArgumentName() {

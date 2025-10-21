@@ -6,25 +6,27 @@ import org.jspecify.annotations.NullMarked;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
 @NullMarked
 public sealed abstract class PrimitiveArgumentParserNew<O> extends AbstractArgumentParserNew<O>
-      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser {
+      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, GreedyStringArgumentParser {
 
-    PrimitiveArgumentParserNew(TypeSignature typeSignature, Class<O> outputClass, String argumentName) {
-        super(TypeSignature.of(outputClass), outputClass, argumentName);
+    PrimitiveArgumentParserNew(Class<O> outputClass, String argumentName) {
+        super(TypeSignature.of(outputClass), argumentName);
     }
 
     @Override
-    public final @NotNull O parse(List<Object> inputObjects) throws CommandParseException {
-        return singletonInputValidation(inputObjects, getOutputClass());
+    @SuppressWarnings("unchecked")
+    public final @NotNull O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+        return (O)singletonInputValidation(inputObjects, getTypeSignature().toRawType());
     }
 
     @Override
-    public final List<TypeSignature> getInputTypes() {
-        return List.of(TypeSignature.of(getOutputClass()));
+    public final List<TypeSignature<?>> getInputTypes() {
+        return List.of(getTypeSignature());
     }
 
 }

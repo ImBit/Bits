@@ -3,6 +3,8 @@ package xyz.bitsquidd.bits.lib.command.argument.parser;
 import com.mojang.brigadier.arguments.*;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
+
 @NullMarked
 public class ArgumentTypeRegistry {
 
@@ -17,6 +19,8 @@ public class ArgumentTypeRegistry {
             return LongArgumentType.longArg();
         } else if (clazz == Boolean.class || clazz == boolean.class) {
             return BoolArgumentType.bool();
+        } else if (clazz == GreedyString.class) {
+            return StringArgumentType.greedyString();
         } else {
             return StringArgumentType.word();
         }

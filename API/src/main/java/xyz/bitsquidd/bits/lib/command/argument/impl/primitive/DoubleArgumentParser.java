@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class DoubleArgumentParser extends PrimitiveArgumentParserNew<@NotNull Double> {
     public DoubleArgumentParser() {
-        super(Double.class, "double");
+        super(Double.class, "Double");
     }
 
 }

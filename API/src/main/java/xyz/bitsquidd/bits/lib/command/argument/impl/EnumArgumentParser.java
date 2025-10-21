@@ -16,13 +16,13 @@ public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParse
     private final Class<T> enumClass;
 
     public EnumArgumentParser(Class<T> enumClass) {
-        super(TypeSignature.of(enumClass), enumClass, enumClass.getName());
+        super(TypeSignature.of(enumClass), enumClass.getName());
         this.enumClass = enumClass;
         if (!enumClass.isEnum()) throw new IllegalArgumentException("Provided class " + enumClass.getName() + " is not an enum!");
     }
 
     @Override
-    public @NotNull T parse(List<Object> inputObjects) throws CommandParseException {
+    public @NotNull T parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         T enumValue;
@@ -36,7 +36,7 @@ public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParse
     }
 
     @Override
-    public List<TypeSignature> getInputTypes() {
+    public List<TypeSignature<?>> getInputTypes() {
         return List.of(TypeSignature.of(String.class));
     }
 
@@ -44,4 +44,5 @@ public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParse
     public List<String> getSuggestions(BitsCommandContext ctx) {
         return enumClass.isEnum() ? Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList() : List.of();
     }
+
 }

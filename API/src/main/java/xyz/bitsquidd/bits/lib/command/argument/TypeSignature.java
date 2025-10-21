@@ -14,41 +14,41 @@ import java.util.Objects;
  * <li>A {@code Map<String, Float>} would be represented as: {@code TypeSignature.of(Map.class, String.class, Float.class)}
  * </ul>
  */
-public class TypeSignature {
-    private final Class<?> rawType;
+public class TypeSignature<T> {
+    private final Class<T> rawType;
     private final Type[] typeArguments;
 
-    private TypeSignature(Class<?> rawType, Type[] typeArguments) {
+    private TypeSignature(Class<T> rawType, Type[] typeArguments) {
         this.rawType = rawType;
         this.typeArguments = typeArguments != null ? typeArguments.clone() : new Type[0];
     }
 
-    public static TypeSignature of(@NotNull Type type) {
+    public static TypeSignature<?> of(@NotNull Type type) {
         if (type instanceof ParameterizedType parameterizedType) {
             Class<?> rawType = (Class<?>)parameterizedType.getRawType();
             Type[] typeArgs = parameterizedType.getActualTypeArguments();
-            return new TypeSignature(rawType, typeArgs);
+            return new TypeSignature<>(rawType, typeArgs);
         } else if (type instanceof Class<?> clazz) {
-            return new TypeSignature(clazz, null);
+            return new TypeSignature<>(clazz, null);
         } else {
             throw new IllegalArgumentException("Unsupported type: " + type);
         }
     }
 
-    public static TypeSignature of(@NotNull Class<?> clazz) {
-        return new TypeSignature(clazz, null);
+    public static <I> TypeSignature<I> of(@NotNull Class<I> clazz) {
+        return new TypeSignature<>(clazz, null);
     }
 
-    public static TypeSignature of(@NotNull Class<?> rawType, @NotNull Class<?>... typeArguments) {
-        return new TypeSignature(rawType, typeArguments);
+    public static TypeSignature<?> of(@NotNull Class<?> rawType, @NotNull Class<?>... typeArguments) {
+        return new TypeSignature<>(rawType, typeArguments);
     }
 
-    public Class<?> toRawType() {
+    public Class<T> toRawType() {
         return rawType;
     }
 
     public boolean matches(@NotNull Type other) {
-        TypeSignature otherSig = TypeSignature.of(other);
+        TypeSignature<?> otherSig = TypeSignature.of(other);
         if (!rawType.equals(otherSig.rawType)) return false;
         if (typeArguments.length != otherSig.typeArguments.length) return false;
 
@@ -63,7 +63,7 @@ public class TypeSignature {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof TypeSignature other)) return false;
+        if (!(obj instanceof TypeSignature<?> other)) return false;
         return Objects.equals(rawType, other.rawType) && Arrays.equals(typeArguments, other.typeArguments);
     }
 
