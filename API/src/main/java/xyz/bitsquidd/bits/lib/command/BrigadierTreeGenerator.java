@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -11,13 +10,13 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentTypeHolder;
+import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandMethodInfo;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandParameterInfo;
+import xyz.bitsquidd.bits.lib.command.util.CommandMethodInfo;
+import xyz.bitsquidd.bits.lib.command.util.CommandParameterInfo;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
@@ -33,7 +32,9 @@ public class BrigadierTreeGenerator {
     public BrigadierTreeGenerator() {
     }
 
-    public List<LiteralCommandNode<CommandSourceStack>> createNodes(BitsCommandBuilder commandBuilder) {
+    public List<LiteralCommandNode<CommandSourceStack>> createNodes(
+          BitsCommandBuilder commandBuilder
+    ) {
         LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root"); // We create a "dummy_root" to be able to split core aliases.
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
@@ -70,7 +71,7 @@ public class BrigadierTreeGenerator {
     private void processCommandClass(
           final ArgumentBuilder<CommandSourceStack, ?> branch,
           final BitsCommandBuilder commandBuilder,
-          final List<BitsCommandParameterInfo> addedParameters
+          final List<CommandParameterInfo> addedParameters
     ) {
         // Calculate requirements required for this branch
         branch.requires(ctx -> commandBuilder.getRequirements().stream()
@@ -78,9 +79,9 @@ public class BrigadierTreeGenerator {
         );
 
         // Create parameters needed for this class.
-        List<BitsCommandParameterInfo> newParameters = commandBuilder.getParameters().stream().map(BitsCommandParameterInfo::new).toList();
-        List<BitsCommandParameterInfo> nonMutatedParameters = new ArrayList<>(addedParameters);
-        nonMutatedParameters.addAll(newParameters);
+        List<CommandParameterInfo> classParameters = commandBuilder.getParameters().stream().map(CommandParameterInfo::new).toList();
+        List<CommandParameterInfo> nonMutatedParameters = new ArrayList<>(addedParameters);
+        nonMutatedParameters.addAll(classParameters);
 
         // Create next branches with aliases
         List<ArgumentBuilder<CommandSourceStack, ?>> nextBranches = createNextBranches(commandBuilder, branch);
@@ -88,13 +89,9 @@ public class BrigadierTreeGenerator {
         nextBranches.forEach(nextBranch -> {
             List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
 
-            newParameters.forEach(param -> {
-                param.getArgumentTypeContainer().getHeldArguments().forEach(argumentType -> {
-                    addedParamBranches.add(Commands.argument(
-                          argumentType.argumentName(),
-                          argumentType.argumentType()
-                    ));
-                });
+            // Add brigadier branches for all the new parameters
+            classParameters.forEach(param -> {
+                addedParamBranches.addAll(param.createBrigadierArguments());
             });
 
             ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
@@ -105,72 +102,42 @@ public class BrigadierTreeGenerator {
             }
 
             for (Method method : commandBuilder.getCommandMethods()) {
-                processCommandMethod(workingBranch, commandBuilder, method, nonMutatedParameters);
+                processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));
             }
 
             // Populate each child fully, then attach it to the parent
-            if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(argumentContainer.getBranch()));
+            if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(addedParamBranches));
             if (!Objects.equals(nextBranch, branch)) branch.then(buildBackward(List.of(nextBranch)));
         });
     }
 
-    private ArgumentBuilder<CommandSourceStack, ?> buildBackward(List<ArgumentBuilder<CommandSourceStack, ?>> toAdd) {
-        if (toAdd.isEmpty()) throw new CommandParseException("No more branches to add.");
-        if (toAdd.size() == 1) return toAdd.getFirst();
-
-        ArgumentBuilder<CommandSourceStack, ?> first = toAdd.getFirst();
-        List<ArgumentBuilder<CommandSourceStack, ?>> rest = toAdd.subList(1, toAdd.size());
-        first.then(buildBackward(new ArrayList<>(rest)));
-        return first;
-    }
 
     // Builds executions onto the root.
     private void processCommandMethod(
-          final ArgumentBuilder<CommandSourceStack, ?> branch,
+          final ArgumentBuilder<CommandSourceStack, ?> nextBranch,
           final BitsCommandBuilder commandBuilder,
-          final Method method,
-          final List<BitsCommandParameterInfo> addedParameters
+          final CommandMethodInfo methodInfo
     ) {
-        BitsCommandMethodInfo methodInfo = new BitsCommandMethodInfo(method, addedParameters);
+        // Add all extra parameters to the branch.
+        List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
+        methodInfo.getMethodParameters().forEach(param -> {
+            addedParamBranches.addAll(param.createBrigadierArguments());
+        });
 
-        if (methodInfo.getMethodParameters().isEmpty()) {
-            BitsConfig.getPlugin().getLogger().info("Registering command method without parameters: " + method.getName() + "  " + methodInfo.getMethodParameters());
-            branch.executes(createCommandExecution(commandBuilder, methodInfo));
-        } else {
-            BitsConfig.getPlugin().getLogger().info("Registering command method with parameters: " + method.getName() + "  " + methodInfo.getMethodParameters());
-            branch.then(addParameters(commandBuilder, methodInfo, methodInfo.getMethodParameters()));
-        }
-    }
+        ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
+        if (!addedParamBranches.isEmpty()) workingBranch = addedParamBranches.getLast();
 
-    private RequiredArgumentBuilder<CommandSourceStack, ?> addParameters(
-          final BitsCommandBuilder commandBuilder,
-          final BitsCommandMethodInfo methodInfo,
-          final List<BitsCommandParameterInfo> parameters
-    ) {
-        if (parameters.isEmpty()) throw new CommandParseException("No parameters to add to command branch.");
+        // Add command execution
+        workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
-        if (parameters.size() == 1) {
-            BitsCommandParameterInfo last = new ArrayList<>(parameters).removeFirst();
-            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = Commands.argument(last.getName(), ArgumentRegistryNew.getInstance().getArgumentTypeContainer(last.getTypeSignature()));
-
-            AbstractArgumentParserNew<?> parser = ArgumentRegistryNew.getInstance().getParser(last.getTypeSignature());
-
-            return argumentBuilder
-                  .executes(createCommandExecution(commandBuilder, methodInfo, argumentContainer))
-                  .suggests(parser.getSuggestionProvider(argumentBuilder.getSuggestionsProvider())); // Add Brigadier's suggestions to our custom suggestion provider.
-        }
-
-        List<BitsCommandParameterInfo> paramsCopy = new ArrayList<>(parameters);
-        BitsCommandParameterInfo first = paramsCopy.removeFirst();
-
-        RequiredArgumentBuilder<CommandSourceStack, ?> nextBranch = addParameters(commandBuilder, methodInfo, paramsCopy, argumentContainer);
-        return Commands.argument(first.getName(), ArgumentRegistryNew.getInstance().getArgumentTypeContainer(first.getTypeSignature())).then(nextBranch);
+        if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(addedParamBranches));
     }
 
 
-    private <I, O> com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
+    // Creates a command execution when no more parameters need to be added.
+    private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
           final BitsCommandBuilder commandBuilder,
-          final BitsCommandMethodInfo methodInfo
+          final CommandMethodInfo methodInfo
     ) {
         return ctx -> {
             final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx.getSource());
@@ -179,28 +146,27 @@ public class BrigadierTreeGenerator {
             ArrayList<@Nullable Object> allArguments = new ArrayList<>();
             if (methodInfo.requiresContext()) allArguments.addFirst(bitsCtx);
 
-            int argIndex = 0;
-            for (BitsCommandParameterInfo parameter : methodInfo.getAllParameters()) {
-                AbstractArgumentParserNew<?> parser = ArgumentRegistryNew.getInstance().getParser(parameter.getTypeSignature());
+            for (CommandParameterInfo parameter : methodInfo.getMethodParameters()) {
+                AbstractArgumentParserNew<?> parser = parameter.getParser();
 
                 ArrayList<Object> primitiveObjects = new ArrayList<>();
                 for (int i = 0; i < parser.getInputTypes().size(); i++) {
-                    ArgumentTypeHolder holder = argumentContainer.getArgumentAtIndex(argIndex);
-                    primitiveObjects.add(ctx.getArgument(holder.argumentName(), holder.typeClass()));
-                    argIndex++;
+                    BrigadierArgumentMapping holder = parameter.getHeldArguments().get(i);
+                    primitiveObjects.add(ctx.getArgument(holder.argumentName(), holder.typeSignature().toRawType()));
                 }
 
                 Object value;
                 try {
                     value = ArgumentRegistryNew.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx.getSource()));
                 } catch (IllegalArgumentException e) {
-                    if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter.getName(), e);
+                    if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
                     value = null;
                 }
 
                 allArguments.add(value);
             }
 
+            // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
                 try {
                     Constructor<?> constructor = commandBuilder.toConstructor();
@@ -240,5 +206,17 @@ public class BrigadierTreeGenerator {
             return com.mojang.brigadier.Command.SINGLE_SUCCESS;
         };
     }
+
+
+    private ArgumentBuilder<CommandSourceStack, ?> buildBackward(List<ArgumentBuilder<CommandSourceStack, ?>> toAdd) {
+        if (toAdd.isEmpty()) throw new CommandParseException("No more branches to add.");
+        if (toAdd.size() == 1) return toAdd.getFirst();
+
+        ArgumentBuilder<CommandSourceStack, ?> first = toAdd.getFirst();
+        List<ArgumentBuilder<CommandSourceStack, ?>> rest = toAdd.subList(1, toAdd.size());
+        first.then(buildBackward(new ArrayList<>(rest)));
+        return first;
+    }
+
 
 }

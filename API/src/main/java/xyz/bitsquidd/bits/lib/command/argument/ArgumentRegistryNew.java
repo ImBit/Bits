@@ -69,30 +69,33 @@ public class ArgumentRegistryNew {
         return parser;
     }
 
-    public ArgumentTypeContainer getArgumentTypeContainer(TypeSignature<?> typeSignature, String argumentName) {
-        ArgumentTypeContainer argumentTypes = new ArgumentTypeContainer(argumentName);
-
-        AbstractArgumentParserNew<?> parser = getParser(typeSignature);
+    public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParserNew<?> parser) {
+        List<BrigadierArgumentMapping> holders = new ArrayList<>();
 
         // Break down the type signature into its primitives.
         parser.getInputTypes().forEach(nestedTypeSigature -> {
-            AbstractArgumentParserNew<?> nestedParser = parsers.get(nestedTypeSigature.typeSignature());
+
+            // Get the command parser required for this input type
+            AbstractArgumentParserNew<?> nestedParser = getParser(nestedTypeSigature.typeSignature());
+
+            // If its a primitive, we can directly add it
             if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveParser) {
-                argumentTypes.add(new ArgumentTypeHolder(
+                holders.add(new BrigadierArgumentMapping(
                       ArgumentTypeRegistry.getArgumentType(nestedTypeSigature.typeSignature().toRawType()),
                       primitiveParser.getTypeSignature(),
                       primitiveParser.getArgumentName() // TODO get the names of non-primitive parsers here
                 ));
             } else {
-                argumentTypes.addAll(getArgumentTypeContainer(nestedTypeSigature.typeSignature(), argumentName));
+                // Recurse into non-primitive parsers
+                holders.addAll(getArgumentTypeContainer(nestedParser));
             }
         });
 
-        return argumentTypes;
+        return holders;
     }
 
-    // Note the primitive list will be mutated.
-    public Object parseArguments(AbstractArgumentParserNew<?> parser, ArrayList<Object> primitiveList, BitsCommandContext ctx) throws CommandParseException {
+    // Parses primitives into required objects needed by the parser
+    public Object parseArguments(AbstractArgumentParserNew<?> parser, List<Object> primitiveList, BitsCommandContext ctx) throws CommandParseException {
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
         // If the input size is 1, we can directly parse it
@@ -101,16 +104,15 @@ public class ArgumentRegistryNew {
         List<Object> parsedObjects = new ArrayList<>();
 
         for (InputTypeContainer inputType : inputTypes) {
-            AbstractArgumentParserNew<?> nestedParser = parsers.get(inputType.typeSignature());
+            AbstractArgumentParserNew<?> nestedParser = getParser(inputType.typeSignature());
 
             int requiredSize = nestedParser.getInputTypes().size();
-            if (primitiveList.size() < requiredSize) {
-                throw new CommandParseException("Not enough arguments for " + inputType.typeName());
-            }
+            if (primitiveList.size() < requiredSize) throw new CommandParseException("Not enough arguments for " + inputType.typeName());
 
             ArrayList<Object> inputObjects = new ArrayList<>(primitiveList.subList(0, requiredSize));
             primitiveList = new ArrayList<>(primitiveList.subList(requiredSize, primitiveList.size()));
 
+            // Recursively parse the primitives with the appropriate parser
             Object parsedObject = parseArguments(nestedParser, inputObjects, ctx);
             parsedObjects.add(parsedObject);
         }

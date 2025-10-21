@@ -12,7 +12,7 @@ import java.util.List;
 @NullMarked
 public class ArgumentTypeContainer {
     private final String containerName;
-    private final List<ArgumentTypeHolder> heldArguments = new ArrayList<>();
+    private final List<BrigadierArgumentMapping> heldArguments = new ArrayList<>();
     private final List<ArgumentBuilder<CommandSourceStack, ?>> branch = new ArrayList<>();
 
     public ArgumentTypeContainer(String containerName) {
@@ -20,11 +20,11 @@ public class ArgumentTypeContainer {
     }
 
 
-    public void add(ArgumentTypeHolder holder) {
+    public void add(BrigadierArgumentMapping holder) {
         String name = holder.argumentName();
         int nameAmount = getNameAmount(name);
         if (nameAmount > 0) {
-            holder = new ArgumentTypeHolder(
+            holder = new BrigadierArgumentMapping(
                   holder.argumentType(),
                   holder.typeSignature(),
                   containerName + "_" + name + "_" + nameAmount
@@ -40,16 +40,16 @@ public class ArgumentTypeContainer {
     }
 
     public void addAll(ArgumentTypeContainer container) {
-        for (ArgumentTypeHolder argumentTypeHolder : container.getHeldArguments()) {
-            add(argumentTypeHolder);
+        for (BrigadierArgumentMapping brigadierArgumentMapping : container.getHeldArguments()) {
+            add(brigadierArgumentMapping);
         }
     }
 
-    public List<ArgumentTypeHolder> getHeldArguments() {
+    public List<BrigadierArgumentMapping> getHeldArguments() {
         return heldArguments;
     }
 
-    public @Nullable ArgumentTypeHolder getArgumentAtIndex(int index) {
+    public @Nullable BrigadierArgumentMapping getArgumentAtIndex(int index) {
         if (index < 0 || index >= heldArguments.size()) return null;
         return heldArguments.get(index);
     }
@@ -57,7 +57,7 @@ public class ArgumentTypeContainer {
     private int getNameAmount(String name) {
         int amount = 0;
 
-        for (ArgumentTypeHolder heldArgument : heldArguments) {
+        for (BrigadierArgumentMapping heldArgument : heldArguments) {
             String suffixRemovedName = heldArgument.argumentName().replaceAll("(_\\d+)$", "");
             if (suffixRemovedName.equals(name)) amount++;
         }
