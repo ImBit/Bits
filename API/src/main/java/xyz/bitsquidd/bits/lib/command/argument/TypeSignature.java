@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -15,11 +17,35 @@ import java.util.Objects;
  * </ul>
  */
 public class TypeSignature<T> {
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_BOXED;
+
+    static {
+        PRIMITIVE_TO_BOXED = new HashMap<>();
+        PRIMITIVE_TO_BOXED.put(boolean.class, Boolean.class);
+        PRIMITIVE_TO_BOXED.put(byte.class, Byte.class);
+        PRIMITIVE_TO_BOXED.put(char.class, Character.class);
+        PRIMITIVE_TO_BOXED.put(short.class, Short.class);
+        PRIMITIVE_TO_BOXED.put(int.class, Integer.class);
+        PRIMITIVE_TO_BOXED.put(long.class, Long.class);
+        PRIMITIVE_TO_BOXED.put(float.class, Float.class);
+        PRIMITIVE_TO_BOXED.put(double.class, Double.class);
+        PRIMITIVE_TO_BOXED.put(void.class, Void.class);
+    }
+
+    private static <X> Class<X> boxPrimitive(Class<X> clazz) {
+        if (clazz.isPrimitive()) {
+            @SuppressWarnings("unchecked")
+            Class<X> boxed = (Class<X>)PRIMITIVE_TO_BOXED.get(clazz);
+            return boxed;
+        }
+        return clazz;
+    }
+
     private final Class<T> rawType;
     private final Type[] typeArguments;
 
     private TypeSignature(Class<T> rawType, Type[] typeArguments) {
-        this.rawType = rawType;
+        this.rawType = boxPrimitive(rawType);
         this.typeArguments = typeArguments != null ? typeArguments.clone() : new Type[0];
     }
 
@@ -58,6 +84,14 @@ public class TypeSignature<T> {
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TypeSignature{" +
+              "rawType=" + rawType +
+              ", typeArguments=" + Arrays.toString(typeArguments) +
+              '}';
     }
 
     @Override

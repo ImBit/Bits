@@ -11,6 +11,7 @@ import xyz.bitsquidd.bits.lib.command.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 
 /**
@@ -32,7 +33,7 @@ public class TeleportCommand extends BitsCommand {
 
     @Command()
     public void teleportTest(@NotNull BitsCommandContext context) {
-        context.sendMessage("Test teleport command!");
+        context.respond(Text.of("Test teleport command!"));
     }
 
 
@@ -49,20 +50,20 @@ public class TeleportCommand extends BitsCommand {
         }
 
         public void showPlayerHelp(@NotNull BitsCommandContext context) {
-            context.sendMessage("=== Teleport " + targetPlayer.getName() + " ===");
-            context.sendMessage("Usage: /teleport " + targetPlayer.getName() + " <entity|location|spawn>");
+            context.respond(Text.of("=== Teleport " + targetPlayer.getName() + " ==="));
+            context.respond(Text.of("Usage: /teleport " + targetPlayer.getName() + " <entity|location|spawn>"));
         }
 
         // /teleport <player> <entity>
         @Command()
         public void teleportToEntity(@NotNull BitsCommandContext context, @NotNull Player entity) {
             if (targetPlayer.equals(entity)) {
-                context.sendMessage("Cannot teleport " + targetPlayer.getName() + " to themselves!");
+                context.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"));
                 return;
             }
 
             targetPlayer.teleport(entity.getLocation());
-            context.sendMessage("Teleported " + targetPlayer.getName() + " to " + entity.getName());
+            context.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + entity.getName()));
             targetPlayer.sendMessage("You have been teleported to " + entity.getName());
         }
 
@@ -77,7 +78,7 @@ public class TeleportCommand extends BitsCommand {
             Location location = new Location(targetWorld, x, y, z);
 
             targetPlayer.teleport(location);
-            context.sendMessage("Teleported " + targetPlayer.getName() + " to " + x + ", " + y + ", " + z);
+            context.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + x + ", " + y + ", " + z));
             targetPlayer.sendMessage("You have been teleported to " + x + ", " + y + ", " + z);
         }
 
@@ -87,7 +88,7 @@ public class TeleportCommand extends BitsCommand {
             Location spawnLocation = targetPlayer.getWorld().getSpawnLocation();
 
             targetPlayer.teleport(spawnLocation);
-            context.sendMessage("Teleported " + targetPlayer.getName() + " to spawn");
+            context.respond(Text.of("Teleported " + targetPlayer.getName() + " to spawn"));
             targetPlayer.sendMessage("You have been teleported to spawn");
         }
     }
@@ -99,10 +100,10 @@ public class TeleportCommand extends BitsCommand {
     public static class AllPlayersCommands extends BitsCommand {
 
         public void showAllHelp(@NotNull BitsCommandContext context) {
-            context.sendMessage("=== Teleport All Players ===");
-            context.sendMessage("/teleport all <entity> - Teleport all to entity");
-            context.sendMessage("/teleport all location <x> <y> <z> [world] - Teleport all to coordinates");
-            context.sendMessage("/teleport all spawn - Teleport all to spawn");
+            context.respond(Text.of("=== Teleport All Players ==="));
+            context.respond(Text.of("/teleport all <entity> - Teleport all to entity"));
+            context.respond(Text.of("/teleport all location <x> <y> <z> [world] - Teleport all to coordinates"));
+            context.respond(Text.of("/teleport all spawn - Teleport all to spawn"));
         }
 
         // /teleport all <entity>
@@ -119,7 +120,7 @@ public class TeleportCommand extends BitsCommand {
                 }
             }
 
-            context.sendMessage("Teleported " + count + " players to " + entity.getName());
+            context.respond(Text.of("Teleported " + count + " players to " + entity.getName()));
         }
 
         // /teleport all location <x> <y> <z> [world]
@@ -139,7 +140,7 @@ public class TeleportCommand extends BitsCommand {
                 count++;
             }
 
-            context.sendMessage("Teleported " + count + " players to " + x + ", " + y + ", " + z);
+            context.respond(Text.of("Teleported " + count + " players to " + x + ", " + y + ", " + z));
         }
 
         // /teleport all spawn
@@ -154,7 +155,7 @@ public class TeleportCommand extends BitsCommand {
                 count++;
             }
 
-            context.sendMessage("Teleported " + count + " players to spawn");
+            context.respond(Text.of("Teleported " + count + " players to spawn"));
         }
     }
 }

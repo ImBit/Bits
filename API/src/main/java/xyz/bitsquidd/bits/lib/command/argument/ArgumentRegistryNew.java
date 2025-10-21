@@ -5,10 +5,7 @@ import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.argument.parser.ArgumentTypeRegistry;
-import xyz.bitsquidd.bits.lib.command.argument.parser.impl.GenericEnumParser;
-import xyz.bitsquidd.bits.lib.command.argument.parser.impl.PlayerCollectionArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.parser.impl.PlayerSingleArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.parser.impl.WorldArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -54,7 +51,8 @@ public class ArgumentRegistryNew {
               new GenericEnumParser(),
               new PlayerCollectionArgumentParser(),
               new PlayerSingleArgumentParser(),
-              new WorldArgumentParser()
+              new WorldArgumentParser(),
+              new LocationArgumentParser()
         );
     }
 

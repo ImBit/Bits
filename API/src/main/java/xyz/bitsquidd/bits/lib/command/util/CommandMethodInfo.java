@@ -43,23 +43,15 @@ public class CommandMethodInfo {
         Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
         this.requirements = requirementAnnotation != null ? Arrays.asList(requirementAnnotation.value()) : new ArrayList<>();
 
-        // If the first parameter is a BitsCommandContext, skip it, we don't need to parse this.
-
-        this.methodParameters = parseParameters(Arrays.stream(method.getParameters()).map(CommandParameterInfo::new).toList(), this.requiresContext);
-        this.classParameters = parseParameters(classParameters, false);
+        // If the first parameter is a BitsCommandContext, we filter it, technically means we cant "parse" any BitsCommandContext args, this shouldn't be an issue...
+        this.methodParameters = new ArrayList<>(
+              Arrays.stream(method.getParameters())
+                    .filter(param -> !BitsCommandContext.class.isAssignableFrom(param.getType()))
+                    .map(CommandParameterInfo::new)
+                    .toList()
+        );
+        this.classParameters = new ArrayList<>(classParameters);
     }
-
-    private List<CommandParameterInfo> parseParameters(List<CommandParameterInfo> parameters, boolean paramsRequireContext) {
-        List<CommandParameterInfo> params = new ArrayList<>();
-
-        for (int i = (paramsRequireContext ? 1 : 0); i < parameters.size(); i++) {
-            CommandParameterInfo param = parameters.get(i);
-            params.add(param);
-        }
-
-        return params;
-    }
-
 
     public Method getMethod() {
         return method;
