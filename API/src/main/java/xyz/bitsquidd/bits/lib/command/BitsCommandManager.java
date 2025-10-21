@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 import org.spigotmc.SpigotConfig;
 
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
 import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -31,7 +31,7 @@ public abstract class BitsCommandManager {
     protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
-    private final ArgumentRegistry argumentRegistry;
+    private final ArgumentRegistryNew argumentRegistry;
     private final RequirementRegistry requirementRegistry;
     private final BrigadierTreeGenerator brigadierTreeGenerator;
 
@@ -43,7 +43,7 @@ public abstract class BitsCommandManager {
 
         BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
 
-        this.argumentRegistry = new ArgumentRegistry();
+        this.argumentRegistry = new ArgumentRegistryNew();
         this.requirementRegistry = new RequirementRegistry();
         this.brigadierTreeGenerator = new BrigadierTreeGenerator();
     }

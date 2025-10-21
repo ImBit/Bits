@@ -21,6 +21,7 @@ import java.util.Set;
  * Type signature is the expected return type of the command.
  * ArgumentType is the native type of the argument.
  */
+@Deprecated
 @NullMarked
 public class ArgumentRegistry {
     private static @Nullable ArgumentRegistry instance;
