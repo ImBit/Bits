@@ -217,6 +217,5 @@ public class BrigadierTreeGenerator {
         first.then(buildBackward(new ArrayList<>(rest)));
         return first;
     }
-
-
+    
 }

@@ -35,9 +35,7 @@ public abstract class AbstractArgumentParserNew<O> {
      * Returns a list of required objects the parser expects in.
      * In the case of most custom parsers this will be a String.
      * <p>
-     * In the case a {@link <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a>} is passed in, we expect a parser to be present for this.
-     * Therefore, unless a primitive, you should not expect to receive the type defined by O.
-     * <p>
+     * In the case a <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a> is passed in, we expect a parser to be present for this.     * <p>
      * For example: <ul>
      * <li> An Integer parser would expect a single int {@code List.of(Integer.class)} </li>
      * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>

@@ -36,11 +36,6 @@ public class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgum
     }
 
     @Override
-    public List<TypeSignature<?>> getInputTypes() {
-        return List.of(TypeSignature.of(String.class));
-    }
-
-    @Override
     public List<String> getSuggestions(BitsCommandContext ctx) {
         return enumClass.isEnum() ? Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList() : List.of();
     }
