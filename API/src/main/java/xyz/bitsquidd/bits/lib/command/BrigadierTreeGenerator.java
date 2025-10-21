@@ -11,7 +11,10 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
-import xyz.bitsquidd.bits.lib.command.argument.old.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
+import xyz.bitsquidd.bits.lib.command.argument.ArgumentTypeContainer;
+import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -24,7 +27,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @NullMarked
 public class BrigadierTreeGenerator {
@@ -85,12 +87,19 @@ public class BrigadierTreeGenerator {
         // Create next branches with aliases
         List<ArgumentBuilder<CommandSourceStack, ?>> nextBranches = createNextBranches(commandBuilder, branch);
 
-
         nextBranches.forEach(nextBranch -> {
-            List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = newParameters.stream().map(param -> Commands.argument(
-                  param.getName(),
-                  ArgumentRegistry.getInstance().getArgumentType(param.getType())
-            )).collect(Collectors.toList());
+            List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
+
+            newParameters.forEach(param -> {
+                List<ArgumentTypeContainer> argumentTypes = ArgumentRegistryNew.getInstance().getArgumentTypes(param.getTypeSignature());
+
+                argumentTypes.forEach(argumentType -> {
+                    addedParamBranches.add(Commands.argument(
+                          argumentType.argumentName(), //TODO: if the name has already been used, dont repeat it!
+                          argumentType.argumentType()
+                    ));
+                });
+            });
 
             ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
             if (!addedParamBranches.isEmpty()) workingBranch = addedParamBranches.getLast();
@@ -146,9 +155,9 @@ public class BrigadierTreeGenerator {
 
         if (parameters.size() == 1) {
             BitsCommandParameterInfo last = new ArrayList<>(parameters).removeFirst();
-            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = Commands.argument(last.getName(), ArgumentRegistry.getInstance().getArgumentType(last.getType()));
+            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = Commands.argument(last.getName(), ArgumentRegistry.getInstance().getArgumentType(last.getTypeSignature()));
 
-            AbstractArgumentParser<?, ?> parser = ArgumentRegistry.getInstance().getParser(last.getType());
+            AbstractArgumentParserNew<?> parser = ArgumentRegistryNew.getInstance().getParser(last.getTypeSignature());
 
             return argumentBuilder
                   .executes(createCommandExecution(commandBuilder, methodInfo))
@@ -159,7 +168,7 @@ public class BrigadierTreeGenerator {
         BitsCommandParameterInfo first = paramsCopy.removeFirst();
 
         RequiredArgumentBuilder<CommandSourceStack, ?> nextBranch = addParameters(commandBuilder, methodInfo, paramsCopy);
-        return Commands.argument(first.getName(), ArgumentRegistry.getInstance().getArgumentType(first.getType())).then(nextBranch);
+        return Commands.argument(first.getName(), ArgumentRegistryNew.getInstance().getArgumentType(first.getTypeSignature())).then(nextBranch);
     }
 
 
@@ -171,17 +180,20 @@ public class BrigadierTreeGenerator {
             final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx.getSource());
 
             // Create the list of arguments needed to call the method.
-            final List<@Nullable Object>[] allArguments = new List[]{new ArrayList<>()};
-            if (methodInfo.requiresContext()) allArguments[0].add(bitsCtx);
+            ArrayList<Object> allArguments = new ArrayList<>();
+            if (methodInfo.requiresContext()) allArguments.addFirst(bitsCtx);
 
             for (BitsCommandParameterInfo parameter : methodInfo.getAllParameters()) {
                 Object value;
 
-                @SuppressWarnings("unchecked")
-                AbstractArgumentParser<I, O> parser = (AbstractArgumentParser<I, O>)ArgumentRegistry.getInstance().getParser(parameter.getType());
+                AbstractArgumentParserNew<?> parser = ArgumentRegistryNew.getInstance().getParser(parameter.getTypeSignature());
+                List<InputTypeContainer> inputTypes = parser.getInputTypes();
+
 
                 try {
-                    value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
+                    List<Object> parsedVariables =
+
+                          value = parser.parse(ctx.getArgument(parameter.getName(), parser.getInputClass()), bitsCtx);
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter.getName(), e);
                     value = null;

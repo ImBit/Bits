@@ -26,9 +26,4 @@ public final class WorldArgumentParser extends AbstractArgumentParserNew<@NotNul
         return world;
     }
 
-    @Override
-    public @NotNull List<TypeSignature<?>> getInputTypes() {
-        return List.of(TypeSignature.of(String.class));
-    }
-
 }

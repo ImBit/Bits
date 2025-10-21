@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.command.argument.impl.primitive;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -25,8 +26,8 @@ public sealed abstract class PrimitiveArgumentParserNew<O> extends AbstractArgum
     }
 
     @Override
-    public final List<TypeSignature<?>> getInputTypes() {
-        return List.of(getTypeSignature());
+    public final List<InputTypeContainer> getInputTypes() {
+        return List.of(new InputTypeContainer(getTypeSignature(), getArgumentName()));
     }
 
 }

@@ -27,11 +27,6 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<
     }
 
     @Override
-    public @NotNull List<TypeSignature<?>> getInputTypes() {
-        return List.of(TypeSignature.of(String.class));
-    }
-
-    @Override
     public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
         return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }

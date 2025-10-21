@@ -1,13 +1,22 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public abstract class AbstractArgumentParserNew<O> {
@@ -34,12 +43,20 @@ public abstract class AbstractArgumentParserNew<O> {
      * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
      * </ul>
      */
-    public abstract List<TypeSignature<?>> getInputTypes();
+    public List<InputTypeContainer> getInputTypes() {
+        return List.of(new InputTypeContainer(TypeSignature.of(String.class), getArgumentName()));
+    }
 
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
      */
     protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) {
+        List<InputTypeContainer> inputTypes = getInputTypes();
+        if (inputTypes.size() != 1) throw new CommandParseException("Expected exactly one input type, got " + inputTypes.size());
+        if (inputTypes.getFirst().typeSignature().toRawType() != expectedType) {
+            throw new CommandParseException("Expected input type signature to be " + expectedType.getSimpleName() + ", got " + inputTypes.getFirst().typeSignature().toRawType().getSimpleName());
+        }
+
         if (inputObjects.size() != 1) throw new CommandParseException("Expected exactly one input object, got " + inputObjects.size());
         Object value = inputObjects.getFirst();
 
@@ -48,6 +65,60 @@ public abstract class AbstractArgumentParserNew<O> {
         }
 
         return expectedType.cast(value);
+    }
+
+    /**
+     * Helper function to validate multiple arguments for complex argument parsers..
+     */
+    protected List<Object> inputValidation(List<Object> inputObjects) {
+        List<InputTypeContainer> inputTypes = getInputTypes();
+        int inputSize = inputTypes.size();
+
+        if (inputObjects.size() != inputSize) throw new CommandParseException("Expected exactly " + inputSize + " input object" + (inputSize > 1 ? "s" : "") + ", got " + inputObjects.size());
+
+        List<Object> returnList = new ArrayList<>();
+
+        for (int i = 0; i < inputSize; i++) {
+            InputTypeContainer expectedTypeContainer = inputTypes.get(i);
+            Object value = inputObjects.get(i);
+            Class<?> expectedType = expectedTypeContainer.typeSignature().toRawType();
+
+            if (!expectedType.isInstance(value)) {
+                throw new CommandParseException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName());
+            }
+
+            returnList.add(expectedType.cast(value));
+        }
+
+        return returnList;
+    }
+
+
+    public final SuggestionProvider<CommandSourceStack> getSuggestionProvider(@Nullable SuggestionProvider<CommandSourceStack> superProvider) {
+        return (context, builder) -> {
+            BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(context.getSource());
+            List<String> suggestions = getSuggestions(bitsCtx);
+            String remaining = builder.getRemaining().toLowerCase();
+
+            for (String suggestion : suggestions) {
+                if (suggestion.toLowerCase().startsWith(remaining)) {
+                    builder.suggest(suggestion);
+                }
+            }
+
+            CompletableFuture<Suggestions> customProvider = builder.buildFuture();
+            if (superProvider != null) {
+                customProvider = customProvider.thenCompose(unused -> {
+                    try {
+                        return superProvider.getSuggestions(context, builder);
+                    } catch (CommandSyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+
+            return customProvider;
+        };
     }
 
     /**

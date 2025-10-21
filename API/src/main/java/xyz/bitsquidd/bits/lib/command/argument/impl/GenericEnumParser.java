@@ -40,9 +40,4 @@ public final class GenericEnumParser extends AbstractArgumentParserNew<@NotNull 
         throw new CommandParseException("Enum constant not found: " + inputString + " for enum " + enumClass.getName());
     }
 
-    @Override
-    public @NotNull List<TypeSignature<?>> getInputTypes() {
-        return List.of(TypeSignature.of(String.class));
-    }
-
 }
