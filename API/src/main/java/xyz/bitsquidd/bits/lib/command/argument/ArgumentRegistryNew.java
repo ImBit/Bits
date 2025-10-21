@@ -69,21 +69,22 @@ public class ArgumentRegistryNew {
         return parser;
     }
 
-    public List<ArgumentTypeContainer> getArgumentTypes(TypeSignature<?> typeSignature) {
-        List<ArgumentTypeContainer> argumentTypes = new ArrayList<>();
+    public ArgumentTypeContainer getArgumentTypeContainer(TypeSignature<?> typeSignature, String argumentName) {
+        ArgumentTypeContainer argumentTypes = new ArgumentTypeContainer(argumentName);
 
         AbstractArgumentParserNew<?> parser = getParser(typeSignature);
 
         // Break down the type signature into its primitives.
         parser.getInputTypes().forEach(nestedTypeSigature -> {
             AbstractArgumentParserNew<?> nestedParser = parsers.get(nestedTypeSigature.typeSignature());
-            if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveArg) {
-                argumentTypes.add(new ArgumentTypeContainer(
+            if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveParser) {
+                argumentTypes.add(new ArgumentTypeHolder(
                       ArgumentTypeRegistry.getArgumentType(nestedTypeSigature.typeSignature().toRawType()),
-                      primitiveArg.getArgumentName() // TODO get the names of non-primitive parsers here
+                      primitiveParser.getTypeSignature(),
+                      primitiveParser.getArgumentName() // TODO get the names of non-primitive parsers here
                 ));
             } else {
-                argumentTypes.addAll(getArgumentTypes(nestedTypeSigature.typeSignature()));
+                argumentTypes.addAll(getArgumentTypeContainer(nestedTypeSigature.typeSignature(), argumentName));
             }
         });
 
@@ -91,7 +92,7 @@ public class ArgumentRegistryNew {
     }
 
     // Note the primitive list will be mutated.
-    public <T> T parseArguments(AbstractArgumentParserNew<T> parser, ArrayList<Object> primitiveList, BitsCommandContext ctx) throws CommandParseException {
+    public Object parseArguments(AbstractArgumentParserNew<?> parser, ArrayList<Object> primitiveList, BitsCommandContext ctx) throws CommandParseException {
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
         // If the input size is 1, we can directly parse it

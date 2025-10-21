@@ -44,7 +44,7 @@ public class BitsCommandMethodInfo {
 
         // If the first parameter is a BitsCommandContext, skip it, we don't need to parse this.
         this.requiresContext = method.getParameterCount() > 0 && method.getParameters()[0].getType().equals(BitsCommandContext.class);
-
+        
         this.methodParameters = parseParameters(Arrays.stream(method.getParameters()).map(BitsCommandParameterInfo::new).toList(), this.requiresContext);
         this.classParameters = parseParameters(addedParameters, false);
     }
