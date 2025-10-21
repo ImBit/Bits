@@ -11,9 +11,9 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
-public class PlayerSingleArgumentParser extends AbstractArgumentParserNew<@NotNull Player> {
+public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<@NotNull Player> {
 
-    protected PlayerSingleArgumentParser() {
+    public PlayerSingleArgumentParser() {
         super(TypeSignature.of(Player.class), "Player");
     }
 

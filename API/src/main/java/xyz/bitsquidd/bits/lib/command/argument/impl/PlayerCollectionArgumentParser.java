@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-public class PlayerCollectionArgumentParser extends AbstractArgumentParserNew<@NotNull Collection<Player>> {
+public final class PlayerCollectionArgumentParser extends AbstractArgumentParserNew<@NotNull Collection<Player>> {
     private enum SelectorType {
         ALL("@a", ctx -> new ArrayList<>(Bukkit.getOnlinePlayers())),
         SELF("@s", ctx -> List.of(ctx.requirePlayer())),
@@ -43,7 +43,7 @@ public class PlayerCollectionArgumentParser extends AbstractArgumentParserNew<@N
         }
     }
 
-    protected PlayerCollectionArgumentParser() {
+    public PlayerCollectionArgumentParser() {
         super(TypeSignature.of(Collection.class, Player.class), "Players");
     }
 

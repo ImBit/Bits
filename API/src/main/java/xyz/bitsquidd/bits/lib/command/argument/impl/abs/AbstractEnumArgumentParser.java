@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl;
+package xyz.bitsquidd.bits.lib.command.argument.impl.abs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @NullMarked
-public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
+public class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
     private final Class<T> enumClass;
 
-    public EnumArgumentParser(Class<T> enumClass) {
-        super(TypeSignature.of(enumClass), enumClass.getName());
+    public AbstractEnumArgumentParser(Class<T> enumClass) {
+        super(TypeSignature.of(Enum.class), enumClass.getName());
         this.enumClass = enumClass;
         if (!enumClass.isEnum()) throw new IllegalArgumentException("Provided class " + enumClass.getName() + " is not an enum!");
     }

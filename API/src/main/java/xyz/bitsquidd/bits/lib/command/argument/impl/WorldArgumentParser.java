@@ -11,9 +11,9 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
-public class WorldArgumentParser extends AbstractArgumentParserNew<@NotNull World> {
+public final class WorldArgumentParser extends AbstractArgumentParserNew<@NotNull World> {
 
-    protected WorldArgumentParser() {
+    public WorldArgumentParser() {
         super(TypeSignature.of(World.class), "World");
     }
 
