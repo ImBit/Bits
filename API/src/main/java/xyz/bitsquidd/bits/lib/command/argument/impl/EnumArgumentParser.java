@@ -1,51 +1,47 @@
 package xyz.bitsquidd.bits.lib.command.argument.impl;
 
-import com.mojang.brigadier.LiteralMessage;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 @NullMarked
-public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParser<String, T> {
+public class EnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
     private final Class<T> enumClass;
 
-    private final DynamicCommandExceptionType ERROR_NOT_VALID;
-
     public EnumArgumentParser(Class<T> enumClass) {
-        super(TypeSignature.of(enumClass), StringArgumentType.string(), String.class, enumClass, enumClass.getSimpleName());
+        super(TypeSignature.of(enumClass), enumClass, enumClass.getName());
         this.enumClass = enumClass;
-
         if (!enumClass.isEnum()) throw new IllegalArgumentException("Provided class " + enumClass.getName() + " is not an enum!");
-
-        ERROR_NOT_VALID = new DynamicCommandExceptionType(
-              name -> new LiteralMessage("<b>" + name + "</b> is not a valid <b>" + enumClass.getSimpleName() + "</b>.")
-        );
     }
 
     @Override
-    public @NotNull T parse(String input, BitsCommandContext context) throws CommandSyntaxException {
+    public @NotNull T parse(List<Object> inputObjects) throws CommandParseException {
+        String inputString = singletonInputValidation(inputObjects, String.class);
+
         T enumValue;
         try {
-            enumValue = Enum.valueOf(enumClass, input);
+            enumValue = Enum.valueOf(enumClass, inputString);
         } catch (IllegalArgumentException e) {
-            throw ERROR_NOT_VALID.create(input);
+            throw new CommandParseException(inputString + " is not a valid " + enumClass.getSimpleName() + ".");
         }
 
         return enumValue;
     }
 
     @Override
-    protected List<String> getSuggestions(BitsCommandContext context) {
-        return enumClass.isEnum() ? Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList() : List.of();
+    public List<TypeSignature> getInputTypes() {
+        return List.of(TypeSignature.of(String.class));
     }
 
+    @Override
+    public List<String> getSuggestions(BitsCommandContext ctx) {
+        return enumClass.isEnum() ? Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList() : List.of();
+    }
 }

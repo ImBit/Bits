@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser;
+package xyz.bitsquidd.bits.lib.command.argument.old.parser;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

@@ -4,7 +4,7 @@ import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistry;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.parser.AbstractArgumentParser;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;

@@ -7,7 +7,13 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
-
+/**
+ * Represents a type signature, including raw type and type arguments.
+ * For example: <ul>
+ * <li>A {@code List<Integer>} would be represented as: {@code TypeSignature.of(List.class, Integer.class)}
+ * <li>A {@code Map<String, Float>} would be represented as: {@code TypeSignature.of(Map.class, String.class, Float.class)}
+ * </ul>
+ */
 public class TypeSignature {
     private final Class<?> rawType;
     private final Type[] typeArguments;
@@ -43,12 +49,9 @@ public class TypeSignature {
 
     public boolean matches(@NotNull Type other) {
         TypeSignature otherSig = TypeSignature.of(other);
-        if (!rawType.equals(otherSig.rawType)) {
-            return false;
-        }
-        if (typeArguments.length != otherSig.typeArguments.length) {
-            return false;
-        }
+        if (!rawType.equals(otherSig.rawType)) return false;
+        if (typeArguments.length != otherSig.typeArguments.length) return false;
+
         for (int i = 0; i < typeArguments.length; i++) {
             if (!typeArguments[i].equals(otherSig.typeArguments[i])) {
                 return false;
@@ -69,22 +72,4 @@ public class TypeSignature {
         return Objects.hash(rawType, Arrays.hashCode(typeArguments));
     }
 
-    @Override
-    public String toString() {
-        if (typeArguments.length == 0) {
-            return rawType.getSimpleName();
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(rawType.getSimpleName()).append("<");
-        for (int i = 0; i < typeArguments.length; i++) {
-            if (i > 0) sb.append(", ");
-            if (typeArguments[i] instanceof Class<?> clazz) {
-                sb.append(clazz.getSimpleName());
-            } else {
-                sb.append(typeArguments[i].toString());
-            }
-        }
-        sb.append(">");
-        return sb.toString();
-    }
 }

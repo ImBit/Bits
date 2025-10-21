@@ -4,12 +4,12 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.impl.GreedyStringArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.PlayerCollectionArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.WorldArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.impl.vanilla.*;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.impl.GreedyStringArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.impl.PlayerArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.impl.PlayerCollectionArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.impl.WorldArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.impl.vanilla.*;
+import xyz.bitsquidd.bits.lib.command.argument.old.parser.AbstractArgumentParser;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.impl;
+package xyz.bitsquidd.bits.lib.command.argument.old.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.old.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
