@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @NullMarked
-public class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
+public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
     private final Class<T> enumClass;
 
     public AbstractEnumArgumentParser(Class<T> enumClass) {

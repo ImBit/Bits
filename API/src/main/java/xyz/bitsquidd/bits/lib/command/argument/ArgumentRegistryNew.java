@@ -15,13 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO:
-//  Start at the highest level of inheritance, if there is nothing, go down a level to see if its present
 @NullMarked
 public class ArgumentRegistryNew {
     private static @Nullable ArgumentRegistryNew instance;
 
-    private final Map<TypeSignature, AbstractArgumentParserNew<?>> parsers = new HashMap<>();
+    private final Map<TypeSignature<?>, AbstractArgumentParserNew<?>> parsers = new HashMap<>();
 
 
     public ArgumentRegistryNew() {
@@ -61,7 +59,13 @@ public class ArgumentRegistryNew {
         return List.of();
     }
 
+    /**
+     * Retrieves the appropriate parser for the given type signature.
+     */
     public AbstractArgumentParserNew<?> getParser(TypeSignature<?> typeSignature) {
+        // We could consider implementing some form of search for inherited types.
+        // This probably shouldn't be implemented as it'll cause type inconsistencies with functions.
+        // Developers should design their command functions accordingly to use the lowest available type.
         AbstractArgumentParserNew<?> parser = parsers.get(typeSignature);
         if (parser == null) throw new CommandParseException("No parser registered for type: " + typeSignature.toRawType().getSimpleName());
         return parser;
