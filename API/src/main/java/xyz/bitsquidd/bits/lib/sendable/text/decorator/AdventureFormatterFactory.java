@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.sendable.text;
+package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 
 import net.kyori.adventure.text.format.Style;
 import org.jetbrains.annotations.NotNull;
@@ -20,4 +20,5 @@ public class AdventureFormatterFactory {
 
         return formatters;
     }
+
 }

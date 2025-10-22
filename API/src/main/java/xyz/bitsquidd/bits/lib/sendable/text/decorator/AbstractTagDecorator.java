@@ -7,7 +7,6 @@ import net.kyori.adventure.text.format.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.sendable.text.AdventureFormatterFactory;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
 
 import java.util.*;
