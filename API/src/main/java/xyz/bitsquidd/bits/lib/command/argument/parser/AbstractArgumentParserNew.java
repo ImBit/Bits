@@ -93,8 +93,8 @@ public abstract class AbstractArgumentParserNew<O> {
 
 
     public final SuggestionProvider<CommandSourceStack> getSuggestionProvider(@Nullable SuggestionProvider<CommandSourceStack> superProvider) {
-        return (context, builder) -> {
-            BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(context.getSource());
+        return (ctx, builder) -> {
+            BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(ctx);
             List<String> suggestions = getSuggestions(bitsCtx);
             String remaining = builder.getRemaining().toLowerCase();
 
@@ -108,7 +108,7 @@ public abstract class AbstractArgumentParserNew<O> {
             if (superProvider != null) {
                 customProvider = customProvider.thenCompose(unused -> {
                     try {
-                        return superProvider.getSuggestions(context, builder);
+                        return superProvider.getSuggestions(ctx, builder);
                     } catch (CommandSyntaxException e) {
                         throw new RuntimeException(e);
                     }

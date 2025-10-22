@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
@@ -13,6 +14,7 @@ import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
 import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
@@ -99,11 +101,15 @@ public abstract class BitsCommandManager {
     }
 
     /**
-     * Creates a new {@link BitsCommandContext} for the given {@link CommandSourceStack}.
-     * This can be overridden to provide custom context implementations i.e. format a command response.
+     * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
+     * This  can be overridden to provide custom context implementations i.e. format a command response.
      */
-    public BitsCommandContext createContext(CommandSourceStack sourceStack) {
-        return new BitsCommandContext(sourceStack);
+    public BitsCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
+        return new BitsCommandContext(brigadierContext);
+    }
+
+    public BitsCommandSourceContext createSourceContext(CommandSourceStack sourceStack) {
+        return new BitsCommandSourceContext(sourceStack);
     }
 
 

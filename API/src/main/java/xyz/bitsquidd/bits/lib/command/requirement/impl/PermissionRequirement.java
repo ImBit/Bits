@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 import java.util.ArrayList;
@@ -30,12 +30,12 @@ public class PermissionRequirement extends BitsCommandRequirement {
 
 
     @Override
-    public boolean test(@NotNull BitsCommandContext ctx) {
+    public boolean test(@NotNull BitsCommandSourceContext ctx) {
         return permissions.stream().allMatch(permission -> ctx.getSender().hasPermission(permission));
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandContext ctx) {
+    public @Nullable Text getFailureMessage(@NotNull BitsCommandSourceContext ctx) {
         return Text.of(Component.text("You are lacking permissions to use this command."));
     }
 }

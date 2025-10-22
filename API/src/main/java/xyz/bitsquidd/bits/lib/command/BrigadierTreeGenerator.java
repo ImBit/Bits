@@ -75,7 +75,7 @@ public class BrigadierTreeGenerator {
     ) {
         // Calculate requirements required for this branch
         branch.requires(ctx -> commandBuilder.getRequirements().stream()
-              .allMatch(requirement -> requirement.test(bitsCommandManager.createContext(ctx)))
+              .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
         );
 
         // Create parameters needed for this class.
@@ -140,7 +140,7 @@ public class BrigadierTreeGenerator {
           final CommandMethodInfo methodInfo
     ) {
         return ctx -> {
-            final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx.getSource());
+            final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx);
 
             // Create the list of arguments needed to call the method.
             ArrayList<@Nullable Object> allArguments = new ArrayList<>();
@@ -157,7 +157,7 @@ public class BrigadierTreeGenerator {
 
                 Object value;
                 try {
-                    value = ArgumentRegistryNew.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx.getSource()));
+                    value = ArgumentRegistryNew.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx));
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
                     value = null;

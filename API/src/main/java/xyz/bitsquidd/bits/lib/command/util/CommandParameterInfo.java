@@ -1,6 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
@@ -41,9 +41,14 @@ public class CommandParameterInfo {
         this.heldArguments.addAll(ArgumentRegistryNew.getInstance().getArgumentTypeContainer(parser));
     }
 
-    public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
-        List<ArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
-        heldArguments.forEach(arg -> brigadierArguments.add(arg.toBrigadierArgument()));
+    public List<RequiredArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
+        List<RequiredArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
+
+        heldArguments.forEach(arg -> {
+            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = arg.toBrigadierArgument();
+            argumentBuilder.suggests(parser.getSuggestionProvider(argumentBuilder.getSuggestionsProvider()));
+            brigadierArguments.add(argumentBuilder);
+        });
         return brigadierArguments;
     }
 
