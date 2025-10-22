@@ -119,18 +119,30 @@ public class BrigadierTreeGenerator {
           final CommandMethodInfo methodInfo
     ) {
         // Add all extra parameters to the branch.
-        List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
+        // List of list because we need to take into account optionals
+        List<List<ArgumentBuilder<CommandSourceStack, ?>>> addedParamBranchList = new ArrayList<>();
+        addedParamBranchList.add(new ArrayList<>());
+
         methodInfo.getMethodParameters().forEach(param -> {
-            addedParamBranches.addAll(param.createBrigadierArguments());
+            new ArrayList<>(addedParamBranchList).forEach(branch -> {
+                if (param.isOptional()) {
+                    // Create a branch without this optional parameter
+                    List<ArgumentBuilder<CommandSourceStack, ?>> branchCopy = new ArrayList<>(branch);
+                    addedParamBranchList.add(branchCopy);
+                }
+                branch.addAll(param.createBrigadierArguments());
+            });
         });
 
-        ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
-        if (!addedParamBranches.isEmpty()) workingBranch = addedParamBranches.getLast();
+        for (List<ArgumentBuilder<CommandSourceStack, ?>> paramBranch : new ArrayList<>(addedParamBranchList)) {
+            ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
+            if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
 
-        // Add command execution
-        workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
+            // Add command execution
+            workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
-        if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(addedParamBranches));
+            if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(paramBranch));
+        }
     }
 
 
@@ -149,14 +161,25 @@ public class BrigadierTreeGenerator {
             for (CommandParameterInfo parameter : methodInfo.getMethodParameters()) {
                 AbstractArgumentParserNew<?> parser = parameter.getParser();
 
-                ArrayList<Object> primitiveObjects = new ArrayList<>();
+                ArrayList<@Nullable Object> primitiveObjects = new ArrayList<>();
                 for (int i = 0; i < parser.getInputTypes().size(); i++) {
                     BrigadierArgumentMapping holder = parameter.getHeldArguments().get(i);
-                    primitiveObjects.add(ctx.getArgument(holder.argumentName(), holder.typeSignature().toRawType()));
+
+                    Object primitiveValue;
+                    try {
+                        primitiveValue = ctx.getArgument(holder.argumentName(), holder.typeSignature().toRawType());
+                    } catch (IllegalArgumentException e) {
+                        if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
+                        primitiveValue = null;
+                    }
+
+                    primitiveObjects.add(primitiveValue);
                 }
 
                 Object value;
                 try {
+                    if (primitiveObjects.stream().anyMatch(Objects::isNull)) throw new IllegalArgumentException("One or more primitive arguments are null.");
+
                     value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.getCommandManager().createContext(ctx));
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
