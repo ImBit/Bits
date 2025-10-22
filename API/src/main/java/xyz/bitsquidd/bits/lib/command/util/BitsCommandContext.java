@@ -31,6 +31,10 @@ public class BitsCommandContext {
         return source;
     }
 
+    public CommandContext<CommandSourceStack> getBrigadierContext() {
+        return brigadierContext;
+    }
+
 
     public CommandSender getSender() {
         return source.getSender();
@@ -51,7 +55,23 @@ public class BitsCommandContext {
     }
 
     public String getValueAtIndex(int index) {
-        return brigadierContext.getInput().split(" ")[index];
+        try {
+            String[] parts = getFullInput().split(" ");
+            return parts[index];
+        } catch (IndexOutOfBoundsException e) {
+            return "";
+        }
+    }
+
+    public String getLastInput() {
+        String input = getFullInput();
+        String[] parts = input.split(" ");
+        if (parts.length == 0) return "";
+        return parts[parts.length - 1];
+    }
+
+    public String getFullInput() {
+        return brigadierContext.getInput();
     }
 
 }
