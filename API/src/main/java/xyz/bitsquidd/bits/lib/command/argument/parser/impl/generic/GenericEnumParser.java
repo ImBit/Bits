@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
+package xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,30 +9,27 @@ import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
- * <b>Developer Note:</b> Enum parsers should override {@link AbstractEnumArgumentParser} for more specific enum operations i.e. tab completion.
+ * <b>Developer Note:</b> Custom enum parsers should override {@link AbstractEnumArgumentParser} if you want more fine-grained control over enum arguments / tab completion etc.
  * <p>
  * This implementation serves as a basic parser that should be fallen back upon when no specific enum parser is available.
  */
-public final class GenericEnumParser extends AbstractArgumentParserNew<@NotNull Enum<?>> {
+public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParserNew<@NotNull E> {
 
-    public GenericEnumParser() {
-        super(TypeSignature.of(Enum.class), "Enum");
+    private final Class<E> enumClass;
+
+    public GenericEnumParser(Class<E> enumClass) {
+        super(TypeSignature.of(enumClass), enumClass.getName());
+        this.enumClass = enumClass;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public @NotNull Enum<?> parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) {
+    public @NotNull E parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
-        TypeSignature<?> typeSignature = getTypeSignature();
-        Class<?> rawType = typeSignature.toRawType();
-        if (!rawType.isEnum()) throw new CommandParseException("Type " + rawType.getName() + " is not an enum.");
-
-        Class<Enum<?>> enumClass = (Class<Enum<?>>)rawType;
-
-        for (Enum<?> constant : enumClass.getEnumConstants()) {
+        for (E constant : enumClass.getEnumConstants()) {
             if (constant.name().equalsIgnoreCase(inputString)) {
                 return constant;
             }
@@ -41,4 +38,8 @@ public final class GenericEnumParser extends AbstractArgumentParserNew<@NotNull 
         throw new CommandParseException("Enum constant not found: " + inputString + " for enum " + enumClass.getName());
     }
 
+    @Override
+    public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
+        return Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
+    }
 }

@@ -6,6 +6,7 @@ import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -66,7 +67,6 @@ public class BitsArgumentRegistry {
               new StringArgumentParser(),
 
               new GreedyStringArgumentParser(),
-              new GenericEnumParser(),
               new PlayerCollectionArgumentParser(),
               new PlayerSingleArgumentParser(),
               new WorldArgumentParser(),
@@ -83,15 +83,25 @@ public class BitsArgumentRegistry {
     /**
      * Retrieves the appropriate parser for the given type signature.
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public AbstractArgumentParserNew<?> getParser(TypeSignature<?> typeSignature) {
         // We could consider implementing some form of search for inherited types.
         // This probably shouldn't be implemented as it'll cause type inconsistencies with functions.
         // Developers should design their command functions accordingly to use the lowest available type.
         AbstractArgumentParserNew<?> parser = parsers.get(typeSignature);
+
+        // If no parser found, we allow generic enums to be parsed.
         if (parser == null) {
+            Class<?> rawType = typeSignature.toRawType();
+            if (rawType.isEnum()) {
+                Class<? extends Enum> enumClass = (Class<? extends Enum>)rawType;
+                return new GenericEnumParser<>(enumClass);
+            }
+
             BitsConfig.getPlugin().getLogger().severe("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
+
         return parser;
     }
 
