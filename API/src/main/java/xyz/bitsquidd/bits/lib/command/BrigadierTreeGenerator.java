@@ -156,9 +156,8 @@ public class BrigadierTreeGenerator {
 
             // Create the list of arguments needed to call the method.
             ArrayList<@Nullable Object> allArguments = new ArrayList<>();
-            if (methodInfo.requiresContext()) allArguments.addFirst(bitsCtx);
 
-            for (CommandParameterInfo parameter : methodInfo.getMethodParameters()) {
+            for (CommandParameterInfo parameter : methodInfo.getAllParameters()) {
                 AbstractArgumentParserNew<?> parser = parameter.getParser();
 
                 ArrayList<@Nullable Object> primitiveObjects = new ArrayList<>();
@@ -189,6 +188,8 @@ public class BrigadierTreeGenerator {
                 allArguments.add(value);
             }
 
+            BitsConfig.getPlugin().getLogger().info("Current Parsed Arguments: " + allArguments);
+
             // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
                 try {
@@ -202,15 +203,17 @@ public class BrigadierTreeGenerator {
                         instance = commandClass.newInstance();
                         methodArguments = allArguments;
                     } else {
-                        int startIndex = methodInfo.requiresContext() ? 0 : 1;
-
-                        Object[] constructorArgs = allArguments.subList(startIndex, startIndex + constructorParamCount).toArray();
+                        Object[] constructorArgs = allArguments.subList(0, constructorParamCount).toArray();
                         instance = commandClass.newInstance(constructorArgs);
 
-                        if (methodInfo.requiresContext()) methodArguments.add(allArguments.getFirst());
-
-                        methodArguments.addAll(allArguments.subList(startIndex + constructorParamCount, allArguments.size()));
+                        if (constructorParamCount < allArguments.size()) {
+                            methodArguments = new ArrayList<>(allArguments.subList(constructorParamCount, allArguments.size()));
+                        }
                     }
+
+                    if (methodInfo.requiresContext()) methodArguments.addFirst(bitsCtx);
+
+                    BitsConfig.getPlugin().getLogger().info("Executing command method: " + methodInfo.getMethod().getName() + " with arguments: " + methodArguments);
 
                     methodInfo.getMethod().invoke(instance, methodArguments.toArray());
 
@@ -224,8 +227,6 @@ public class BrigadierTreeGenerator {
             } else {
                 Bukkit.getScheduler().runTask(BitsConfig.getPlugin(), commandExecution);
             }
-
-            ctx.getSource().getSender().sendMessage("Command executed: " + methodInfo.getMethod().getName());
             return com.mojang.brigadier.Command.SINGLE_SUCCESS;
         };
     }
