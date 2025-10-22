@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NullMarked
-public class RequirementRegistry {
-    private static @Nullable RequirementRegistry instance;
+public class BitsRequirementRegistry {
+    private static @Nullable BitsRequirementRegistry instance;
 
     private final Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> requirementInstances = new HashMap<>();
 
-    public RequirementRegistry() {
+    public BitsRequirementRegistry() {
         if (instance != null) throw new IllegalStateException("RequirementRegistry has already been initialized.");
         instance = this;
 
@@ -24,7 +24,7 @@ public class RequirementRegistry {
         requirementInstances.putAll(initialRequirements);
     }
 
-    public static RequirementRegistry getInstance() {
+    public static BitsRequirementRegistry getInstance() {
         if (instance == null) throw new IllegalStateException("RequirementRegistry has not been initialized yet.");
         return instance;
     }

@@ -10,8 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 import org.spigotmc.SpigotConfig;
 
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
-import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
+import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
@@ -33,8 +33,8 @@ public abstract class BitsCommandManager {
     protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
-    private final ArgumentRegistryNew argumentRegistry;
-    private final RequirementRegistry requirementRegistry;
+    private final BitsArgumentRegistry argumentRegistry;
+    private final BitsRequirementRegistry requirementRegistry;
     private final BrigadierTreeGenerator brigadierTreeGenerator;
 
 
@@ -45,10 +45,15 @@ public abstract class BitsCommandManager {
 
         BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
 
-        this.argumentRegistry = new ArgumentRegistryNew();
-        this.requirementRegistry = new RequirementRegistry();
+        this.argumentRegistry = getArgumentRegistry();
+        this.requirementRegistry = getRequirementRegistry();
         this.brigadierTreeGenerator = new BrigadierTreeGenerator();
     }
+
+    protected abstract BitsArgumentRegistry getArgumentRegistry();
+
+    protected abstract BitsRequirementRegistry getRequirementRegistry();
+
 
     /**
      * Registers the command listener and enables all commands.

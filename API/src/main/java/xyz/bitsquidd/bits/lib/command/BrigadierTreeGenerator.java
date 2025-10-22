@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
+import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -157,7 +157,7 @@ public class BrigadierTreeGenerator {
 
                 Object value;
                 try {
-                    value = ArgumentRegistryNew.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx));
+                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx));
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
                     value = null;

@@ -1,14 +1,16 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
+import com.mojang.brigadier.arguments.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
-import xyz.bitsquidd.bits.lib.command.argument.parser.ArgumentTypeRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
+import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @NullMarked
-public class ArgumentRegistryNew {
-    private static @Nullable ArgumentRegistryNew instance;
+public class BitsArgumentRegistry {
+    private static @Nullable BitsArgumentRegistry instance;
 
     private final Map<TypeSignature<?>, AbstractArgumentParserNew<?>> parsers = new HashMap<>();
 
 
-    public ArgumentRegistryNew() {
+    public BitsArgumentRegistry() {
         if (instance != null) throw new IllegalStateException("ArgumentRegistry has already been initialized.");
         instance = this;
 
@@ -31,9 +33,27 @@ public class ArgumentRegistryNew {
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
     }
 
-    public static ArgumentRegistryNew getInstance() {
+    public static BitsArgumentRegistry getInstance() {
         if (instance == null) throw new IllegalStateException("ArgumentRegistry has not been initialized yet.");
         return instance;
+    }
+
+    private ArgumentType<?> toPrimitive(Class<?> clazz) {
+        if (clazz == Integer.class || clazz == int.class) {
+            return IntegerArgumentType.integer();
+        } else if (clazz == Double.class || clazz == double.class) {
+            return DoubleArgumentType.doubleArg();
+        } else if (clazz == Float.class || clazz == float.class) {
+            return FloatArgumentType.floatArg();
+        } else if (clazz == Long.class || clazz == long.class) {
+            return LongArgumentType.longArg();
+        } else if (clazz == Boolean.class || clazz == boolean.class) {
+            return BoolArgumentType.bool();
+        } else if (clazz == GreedyString.class) {
+            return StringArgumentType.greedyString();
+        } else {
+            return StringArgumentType.word();
+        }
     }
 
     private List<AbstractArgumentParserNew<?>> initialiseDefaultParsers() {
@@ -67,7 +87,11 @@ public class ArgumentRegistryNew {
         // This probably shouldn't be implemented as it'll cause type inconsistencies with functions.
         // Developers should design their command functions accordingly to use the lowest available type.
         AbstractArgumentParserNew<?> parser = parsers.get(typeSignature);
-        if (parser == null) throw new CommandParseException("No parser registered for type: " + typeSignature.toRawType().getSimpleName());
+        if (parser == null) {
+            BitsConfig.getPlugin().getLogger().severe("No parser registered for type: " + typeSignature);
+            return new VoidParser();
+//            throw new CommandParseException("No parser registered for type: " + typeSignature);
+        }
         return parser;
     }
 
@@ -83,7 +107,7 @@ public class ArgumentRegistryNew {
             // If its a primitive, we can directly add it
             if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveParser) {
                 holders.add(new BrigadierArgumentMapping(
-                      ArgumentTypeRegistry.getArgumentType(nestedTypeSigature.typeSignature().toRawType()),
+                      toPrimitive(nestedTypeSigature.typeSignature().toRawType()),
                       primitiveParser.getTypeSignature(),
                       primitiveParser.getArgumentName() // TODO get the names of non-primitive parsers here
                 ));

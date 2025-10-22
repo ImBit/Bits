@@ -5,7 +5,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.annotation.Optional;
-import xyz.bitsquidd.bits.lib.command.argument.ArgumentRegistryNew;
+import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
@@ -37,8 +37,8 @@ public class CommandParameterInfo {
 
         BitsConfig.getPlugin().getLogger().info("Registering parameter: " + parameter.getName() + " of type " + typeSignature);
 
-        this.parser = ArgumentRegistryNew.getInstance().getParser(typeSignature);
-        this.heldArguments.addAll(ArgumentRegistryNew.getInstance().getArgumentTypeContainer(parser));
+        this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
+        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser));
     }
 
     public List<RequiredArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {

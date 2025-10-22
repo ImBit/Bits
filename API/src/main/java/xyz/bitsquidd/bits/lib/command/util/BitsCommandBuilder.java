@@ -8,7 +8,7 @@ import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.requirement.RequirementRegistry;
+import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
@@ -108,7 +108,7 @@ public class BitsCommandBuilder {
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> RequirementRegistry.getInstance().getRequirement(clazz))
+                  .map(clazz -> BitsRequirementRegistry.getInstance().getRequirement(clazz))
                   .toList());
         }
 
