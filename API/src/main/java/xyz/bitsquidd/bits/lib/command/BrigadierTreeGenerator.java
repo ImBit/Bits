@@ -191,12 +191,6 @@ public class BrigadierTreeGenerator {
 
             // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
-                BitsConfig.getPlugin().getLogger().info(
-                      "Executing command method: " + methodInfo.getMethod().getName()
-                            + " with arguments: " + allArguments
-                            + " requires context:" + methodInfo.requiresContext()
-                );
-
                 try {
                     Constructor<?> commandClass = commandBuilder.toConstructor();
                     int constructorParamCount = commandClass.getParameterCount();

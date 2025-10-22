@@ -9,7 +9,6 @@ import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -34,8 +33,6 @@ public class CommandParameterInfo {
         this.parameter = parameter;
         this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
         this.isOptional = parameter.isAnnotationPresent(Optional.class);
-
-        BitsConfig.getPlugin().getLogger().info("Registering parameter: " + parameter.getName() + " of type " + typeSignature);
 
         this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
         this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser));
