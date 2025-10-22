@@ -47,9 +47,9 @@ import java.util.List;
  * }</pre>
  */
 @NullMarked
-public class Text implements Sendable {
-    protected final Component component;
-    protected final List<ITextDecorator> decorators = new ArrayList<>();
+public final class Text implements Sendable {
+    private final Component component;
+    private final List<ITextDecorator> decorators = new ArrayList<>();
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
@@ -60,16 +60,16 @@ public class Text implements Sendable {
           new BlankDecorator()
     );
 
-    public Text(Component component, List<ITextDecorator> decorators) {
+    private Text(Component component, List<ITextDecorator> decorators) {
         this.component = component;
         this.decorators.addAll(decorators);
     }
 
-    public Text(Component component, ITextDecorator decorator) {
+    private Text(Component component, ITextDecorator decorator) {
         this(component, List.of(decorator));
     }
 
-    public Text(Component component) {
+    private Text(Component component) {
         this(component, List.of());
     }
 
@@ -83,11 +83,11 @@ public class Text implements Sendable {
     }
 
 
-    public final Text decorate(List<ITextDecorator> decorators) {
+    public Text decorate(List<ITextDecorator> decorators) {
         return new Text(component, decorators);
     }
 
-    public final Text decorate(ITextDecorator... decorators) {
+    public Text decorate(ITextDecorator... decorators) {
         return new Text(component, new ArrayList<>(List.of(decorators)));
     }
 
@@ -97,7 +97,7 @@ public class Text implements Sendable {
         target.sendMessage(getComponent(target));
     }
 
-    public final <T extends Audience> Component getComponent(@Nullable T target) {
+    public <T extends Audience> Component getComponent(@Nullable T target) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
@@ -110,4 +110,5 @@ public class Text implements Sendable {
 
         return returnComponent;
     }
+
 }

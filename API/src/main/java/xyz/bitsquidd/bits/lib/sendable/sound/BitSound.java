@@ -11,13 +11,12 @@ import org.jspecify.annotations.NullMarked;
 import xyz.bitsquidd.bits.lib.location.BlockPos;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 
-//TODO make it nullable safe with default values.
 @NullMarked
-public class BitSound implements Sendable {
-    protected final NamespacedKey soundKey;
-    protected final @Nullable PitchAndVolume pitchAndVolume;
-    protected final @Nullable BlockPos blockPos;
-    protected final @Nullable Sound.Source soundSource;
+public final class BitSound implements Sendable {
+    private final NamespacedKey soundKey;
+    private final @Nullable PitchAndVolume pitchAndVolume;
+    private final @Nullable BlockPos blockPos;
+    private final @Nullable Sound.Source soundSource;
 
 
     private static final PitchAndVolume DEFAULT_PITCH_AND_VOLUME = PitchAndVolume.of(1.0f, 1.0f);
@@ -42,4 +41,5 @@ public class BitSound implements Sendable {
               targetPos.x, targetPos.y, targetPos.z
         );
     }
+
 }
