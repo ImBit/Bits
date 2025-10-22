@@ -32,7 +32,7 @@ public class CommandParameterInfo {
 
     public CommandParameterInfo(Parameter parameter) {
         this.parameter = parameter;
-        this.typeSignature = TypeSignature.of(parameter.getType());
+        this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
         this.isOptional = parameter.isAnnotationPresent(Optional.class);
 
         BitsConfig.getPlugin().getLogger().info("Registering parameter: " + parameter.getName() + " of type " + typeSignature);
