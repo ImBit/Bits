@@ -157,7 +157,7 @@ public class BrigadierTreeGenerator {
 
                 Object value;
                 try {
-                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, new BitsCommandContext(ctx));
+                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.getCommandManager().createContext(ctx));
                 } catch (IllegalArgumentException e) {
                     if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
                     value = null;
@@ -168,6 +168,12 @@ public class BrigadierTreeGenerator {
 
             // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
+                BitsConfig.getPlugin().getLogger().info(
+                      "Executing command method: " + methodInfo.getMethod().getName()
+                            + " with arguments: " + allArguments
+                            + " requires context:" + methodInfo.requiresContext()
+                );
+
                 try {
                     Constructor<?> commandClass = commandBuilder.toConstructor();
                     int constructorParamCount = commandClass.getParameterCount();
@@ -179,7 +185,7 @@ public class BrigadierTreeGenerator {
                         instance = commandClass.newInstance();
                         methodArguments = allArguments;
                     } else {
-                        int startIndex = methodInfo.requiresContext() ? 1 : 0;
+                        int startIndex = methodInfo.requiresContext() ? 0 : 1;
 
                         Object[] constructorArgs = allArguments.subList(startIndex, startIndex + constructorParamCount).toArray();
                         instance = commandClass.newInstance(constructorArgs);

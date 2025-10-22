@@ -35,7 +35,7 @@ public class CommandMethodInfo {
         this.commandAnnotation = method.getAnnotation(Command.class);
 
         this.isAsync = method.isAnnotationPresent(Async.class);
-        this.requiresContext = method.getParameterCount() > 0 && method.getParameters()[0].getType().equals(BitsCommandContext.class);
+        this.requiresContext = method.getParameterCount() > 0 && BitsCommandContext.class.isAssignableFrom(method.getParameters()[0].getType());
 
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
         this.permissions = permissionAnnotation != null ? Arrays.asList(permissionAnnotation.value()) : new ArrayList<>();
