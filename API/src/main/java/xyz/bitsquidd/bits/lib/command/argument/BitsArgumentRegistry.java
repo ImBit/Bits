@@ -90,7 +90,6 @@ public class BitsArgumentRegistry {
         if (parser == null) {
             BitsConfig.getPlugin().getLogger().severe("No parser registered for type: " + typeSignature);
             return new VoidParser();
-//            throw new CommandParseException("No parser registered for type: " + typeSignature);
         }
         return parser;
     }
