@@ -6,9 +6,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /**
@@ -34,11 +36,15 @@ public final class Formatter {
         formatters.put(clazz, obj -> formatter.apply(clazz.cast(obj)));
     }
 
-    public static String format(Object obj) {
+    public static String format(@Nullable Object obj) {
         if (obj == null) return "null";
-        Function<Object, String> formatter = formatters.get(obj.getClass());
-        if (formatter != null) return formatter.apply(obj);
-        return obj.toString();
+        AtomicReference<String> formatted = new AtomicReference<>(obj.toString());
+        formatters.keySet().stream()
+              .filter(clazz -> clazz.isAssignableFrom(obj.getClass())).findFirst().ifPresent(formatterClass -> {
+                  formatted.set(formatters.get(formatterClass).apply(obj));
+              });
+
+        return formatted.get();
     }
 
 
