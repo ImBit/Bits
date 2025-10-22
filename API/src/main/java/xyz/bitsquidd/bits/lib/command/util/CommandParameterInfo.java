@@ -61,4 +61,11 @@ public class CommandParameterInfo {
         return heldArguments;
     }
 
+    @Override
+    public String toString() {
+        return "CommandParameterInfo{" +
+              "typeSignature=" + typeSignature +
+              ", parameter=" + parameter +
+              '}';
+    }
 }

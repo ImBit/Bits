@@ -155,11 +155,12 @@ public class BrigadierTreeGenerator {
             final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx);
 
             // Create the list of arguments needed to call the method.
-            ArrayList<@Nullable Object> allArguments = new ArrayList<>();
+            ArrayList<@Nullable Object> parsedArguments = new ArrayList<>();
 
             for (CommandParameterInfo parameter : methodInfo.getAllParameters()) {
                 AbstractArgumentParserNew<?> parser = parameter.getParser();
 
+                // Collect primitive objects for the parameter
                 ArrayList<@Nullable Object> primitiveObjects = new ArrayList<>();
                 for (int i = 0; i < parser.getInputTypes().size(); i++) {
                     BrigadierArgumentMapping holder = parameter.getHeldArguments().get(i);
@@ -185,10 +186,9 @@ public class BrigadierTreeGenerator {
                     value = null;
                 }
 
-                allArguments.add(value);
+                parsedArguments.add(value);
             }
 
-            BitsConfig.getPlugin().getLogger().info("Current Parsed Arguments: " + allArguments);
 
             // Execute the command with the required, parsed arguments
             Runnable commandExecution = () -> {
@@ -201,19 +201,17 @@ public class BrigadierTreeGenerator {
 
                     if (constructorParamCount == 0) {
                         instance = commandClass.newInstance();
-                        methodArguments = allArguments;
+                        methodArguments = parsedArguments;
                     } else {
-                        Object[] constructorArgs = allArguments.subList(0, constructorParamCount).toArray();
+                        Object[] constructorArgs = parsedArguments.subList(0, constructorParamCount).toArray();
                         instance = commandClass.newInstance(constructorArgs);
 
-                        if (constructorParamCount < allArguments.size()) {
-                            methodArguments = new ArrayList<>(allArguments.subList(constructorParamCount, allArguments.size()));
+                        if (constructorParamCount < parsedArguments.size()) {
+                            methodArguments = new ArrayList<>(parsedArguments.subList(constructorParamCount, parsedArguments.size()));
                         }
                     }
 
                     if (methodInfo.requiresContext()) methodArguments.addFirst(bitsCtx);
-
-                    BitsConfig.getPlugin().getLogger().info("Executing command method: " + methodInfo.getMethod().getName() + " with arguments: " + methodArguments);
 
                     methodInfo.getMethod().invoke(instance, methodArguments.toArray());
 

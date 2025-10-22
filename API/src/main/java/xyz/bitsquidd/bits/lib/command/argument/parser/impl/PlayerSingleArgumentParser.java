@@ -18,7 +18,7 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<
     }
 
     @Override
-    public @NotNull Player parse(@NotNull List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public @NotNull Player parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         Player player = Bukkit.getPlayer(inputString);

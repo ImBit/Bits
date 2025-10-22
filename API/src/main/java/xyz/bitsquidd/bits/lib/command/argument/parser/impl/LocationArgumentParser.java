@@ -19,7 +19,7 @@ public final class LocationArgumentParser extends AbstractArgumentParserNew<@Not
     }
 
     @Override
-    public @NotNull Location parse(@NotNull List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public @NotNull Location parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);

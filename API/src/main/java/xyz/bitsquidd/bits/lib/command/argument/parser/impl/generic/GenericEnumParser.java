@@ -21,7 +21,7 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     private final Class<E> enumClass;
 
     public GenericEnumParser(Class<E> enumClass) {
-        super(TypeSignature.of(enumClass), enumClass.getName());
+        super(TypeSignature.of(enumClass), enumClass.getSimpleName());
         this.enumClass = enumClass;
     }
 
@@ -35,7 +35,7 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
             }
         }
 
-        throw new CommandParseException("Enum constant not found: " + inputString + " for enum " + enumClass.getName());
+        throw new CommandParseException("Enum constant not found: " + inputString + " for enum " + enumClass.getSimpleName());
     }
 
     @Override

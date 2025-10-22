@@ -65,6 +65,9 @@ public class CommandMethodInfo {
         return requiresContext;
     }
 
+    public List<CommandParameterInfo> getClassParameters() {
+        return classParameters;
+    }
 
     public List<CommandParameterInfo> getMethodParameters() {
         return methodParameters;

@@ -13,10 +13,7 @@ import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @NullMarked
 public class BitsArgumentRegistry {
@@ -119,7 +116,7 @@ public class BitsArgumentRegistry {
                 holders.add(new BrigadierArgumentMapping(
                       toPrimitive(nestedTypeSigature.typeSignature().toRawType()),
                       primitiveParser.getTypeSignature(),
-                      primitiveParser.getArgumentName() // TODO get the names of non-primitive parsers here
+                      UUID.randomUUID().toString() // TODO get the names of non-primitive parsers here
                 ));
             } else {
                 // Recurse into non-primitive parsers
