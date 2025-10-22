@@ -70,7 +70,8 @@ public class BitsArgumentRegistry {
               new PlayerCollectionArgumentParser(),
               new PlayerSingleArgumentParser(),
               new WorldArgumentParser(),
-              new LocationArgumentParser()
+              new LocationArgumentParser(),
+              new BlockPosArgumentParser()
         );
     }
 
