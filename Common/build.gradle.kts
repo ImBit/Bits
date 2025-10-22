@@ -1,4 +1,10 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 description = "🦑 Utility Plugin for Minecraft development."
+
+plugins {
+    alias(libs.plugins.shadow)
+}
 
 repositories {
 }
@@ -20,6 +26,23 @@ tasks.processResources {
     dependsOn("processPluginYml")
 }
 
-tasks.withType<Jar> {
-    archiveBaseName.set("Bits-Plugin")
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-parameters")
+}
+
+
+tasks {
+    jar { enabled = false }
+
+    named<ShadowJar>("shadowJar") {
+        archiveBaseName.set("Bits-Plugin")
+        configurations = listOf(project.configurations.runtimeClasspath.get())
+        from(sourceSets.main.get().output)
+    }
+
+    named<Jar>("sourcesJar") {
+        dependsOn("processPluginYml")
+    }
+
+    assemble { dependsOn("shadowJar") }
 }
