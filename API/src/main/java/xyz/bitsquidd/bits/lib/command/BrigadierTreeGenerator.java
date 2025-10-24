@@ -119,17 +119,12 @@ public class BrigadierTreeGenerator {
           final CommandMethodInfo methodInfo
     ) {
         // Add all extra parameters to the branch.
-        // List of list because we need to take into account optionals
+        // List of list because we need to take into account Optionals (currently removed for stability)
         List<List<ArgumentBuilder<CommandSourceStack, ?>>> addedParamBranchList = new ArrayList<>();
         addedParamBranchList.add(new ArrayList<>());
 
         methodInfo.getMethodParameters().forEach(param -> {
             new ArrayList<>(addedParamBranchList).forEach(branch -> {
-                if (param.isOptional()) {
-                    // Create a branch without this optional parameter
-                    List<ArgumentBuilder<CommandSourceStack, ?>> branchCopy = new ArrayList<>(branch);
-                    addedParamBranchList.add(branchCopy);
-                }
                 branch.addAll(param.createBrigadierArguments());
             });
         });
@@ -169,8 +164,7 @@ public class BrigadierTreeGenerator {
                     try {
                         primitiveValue = ctx.getArgument(holder.argumentName(), holder.typeSignature().toRawType());
                     } catch (IllegalArgumentException e) {
-                        if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
-                        primitiveValue = null;
+                        throw new RuntimeException("Failed to get argument: " + parameter, e);
                     }
 
                     primitiveObjects.add(primitiveValue);
@@ -182,8 +176,7 @@ public class BrigadierTreeGenerator {
 
                     value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.getCommandManager().createContext(ctx));
                 } catch (IllegalArgumentException e) {
-                    if (!parameter.isOptional()) throw new RuntimeException("Failed to get argument: " + parameter, e);
-                    value = null;
+                    throw new RuntimeException("Failed to get argument: " + parameter, e);
                 }
 
                 parsedArguments.add(value);

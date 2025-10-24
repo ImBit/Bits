@@ -4,7 +4,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.annotation.Optional;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
@@ -22,7 +21,6 @@ public class CommandParameterInfo {
     private final Parameter parameter;
 
     private final TypeSignature<?> typeSignature; // TypeSignature of the parameter
-    private final boolean isOptional; // Whether the parameter is optional
 
     private final AbstractArgumentParserNew<?> parser;
 
@@ -32,7 +30,6 @@ public class CommandParameterInfo {
     public CommandParameterInfo(Parameter parameter) {
         this.parameter = parameter;
         this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
-        this.isOptional = parameter.isAnnotationPresent(Optional.class);
 
         this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
         this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser));
@@ -47,10 +44,6 @@ public class CommandParameterInfo {
             brigadierArguments.add(argumentBuilder);
         });
         return brigadierArguments;
-    }
-
-    public boolean isOptional() {
-        return isOptional;
     }
 
     public AbstractArgumentParserNew<?> getParser() {
