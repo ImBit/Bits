@@ -40,7 +40,7 @@ public class CommandParameterInfo {
 
         heldArguments.forEach(arg -> {
             RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = arg.toBrigadierArgument();
-            argumentBuilder.suggests(parser.getSuggestionProvider(argumentBuilder.getSuggestionsProvider()));
+            argumentBuilder.suggests(parser.getSuggestionProvider());
             brigadierArguments.add(argumentBuilder);
         });
         return brigadierArguments;

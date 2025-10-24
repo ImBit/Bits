@@ -1,11 +1,8 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.suggestion.Suggestions;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
@@ -16,7 +13,6 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public abstract class AbstractArgumentParserNew<O> {
@@ -92,7 +88,7 @@ public abstract class AbstractArgumentParserNew<O> {
     }
 
 
-    public final SuggestionProvider<CommandSourceStack> getSuggestionProvider(@Nullable SuggestionProvider<CommandSourceStack> superProvider) {
+    public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
         return (ctx, builder) -> {
             BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(ctx);
             List<String> suggestions = getSuggestions(bitsCtx);
@@ -101,21 +97,11 @@ public abstract class AbstractArgumentParserNew<O> {
             for (String suggestion : suggestions) {
                 if (suggestion.toLowerCase().startsWith(remaining)) {
                     builder.suggest(suggestion);
+                    BitsConfig.getPlugin().getLogger().info("Suggesting: " + suggestion);
                 }
             }
 
-            CompletableFuture<Suggestions> customProvider = builder.buildFuture();
-            if (superProvider != null) {
-                customProvider = customProvider.thenCompose(unused -> {
-                    try {
-                        return superProvider.getSuggestions(ctx, builder);
-                    } catch (CommandSyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-
-            return customProvider;
+            return builder.buildFuture();
         };
     }
 
