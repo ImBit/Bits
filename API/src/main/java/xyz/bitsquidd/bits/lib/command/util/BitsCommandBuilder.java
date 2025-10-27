@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 public class BitsCommandBuilder {
     private final Class<? extends BitsCommand> commandClass;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Command commandAnnotation;
 
     private final String commandName;

@@ -96,15 +96,13 @@ public abstract class AbstractArgumentParserNew<O> {
 
             Supplier<List<String>> suggestionSupplier = getSuggestions();
             if (suggestionSupplier == null) return builder.buildFuture();
-            
+
             List<String> suggestions = suggestionSupplier.get();
             String remaining = builder.getRemaining().toLowerCase();
 
             for (String suggestion : suggestions) {
                 if (suggestion.toLowerCase().startsWith(remaining)) {
                     builder.suggest(suggestion);
-
-                    BitsConfig.getPlugin().getLogger().info("Suggesting: " + suggestion);
                 }
             }
 

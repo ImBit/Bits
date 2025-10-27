@@ -7,6 +7,8 @@ import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
+import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
+import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,9 +25,6 @@ public class CommandMethodInfo {
     private final boolean isAsync;
     private final boolean requiresContext;
 
-    private final List<String> permissions;
-    private final List<Class<? extends BitsCommandRequirement>> requirements;
-
     private final Command commandAnnotation;
     private final List<CommandParameterInfo> classParameters;
     private final List<CommandParameterInfo> methodParameters;
@@ -36,12 +35,6 @@ public class CommandMethodInfo {
 
         this.isAsync = method.isAnnotationPresent(Async.class);
         this.requiresContext = method.getParameterCount() > 0 && BitsCommandContext.class.isAssignableFrom(method.getParameters()[0].getType());
-
-        Permission permissionAnnotation = method.getAnnotation(Permission.class);
-        this.permissions = permissionAnnotation != null ? Arrays.asList(permissionAnnotation.value()) : new ArrayList<>();
-
-        Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
-        this.requirements = requirementAnnotation != null ? Arrays.asList(requirementAnnotation.value()) : new ArrayList<>();
 
         // If the first parameter is a BitsCommandContext, we filter it, technically means we cant "parse" any BitsCommandContext args, this shouldn't be an issue...
         this.methodParameters = new ArrayList<>(
@@ -82,6 +75,29 @@ public class CommandMethodInfo {
 
     public String literalName() {
         return commandAnnotation.value();
+    }
+
+    //TODO merge with BitsCommandBuilder permission gathering?
+    public List<BitsCommandRequirement> getRequirements() {
+        List<BitsCommandRequirement> requirements = new ArrayList<>();
+
+        // Gather permission strings and convert them to requirements.
+        Permission permissionAnnotation = method.getAnnotation(Permission.class);
+        if (permissionAnnotation != null) {
+            requirements.addAll(Arrays.stream(permissionAnnotation.value())
+                  .map(PermissionRequirement::of)
+                  .toList());
+        }
+
+        // Gather requirement instances
+        Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
+        if (requirementAnnotation != null) {
+            requirements.addAll(Arrays.stream(requirementAnnotation.value())
+                  .map(clazz -> BitsRequirementRegistry.getInstance().getRequirement(clazz))
+                  .toList());
+        }
+
+        return requirements;
     }
 
 }

@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -138,6 +139,10 @@ public class BrigadierTreeGenerator {
         ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
         if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
 
+        // Add method requirements
+        workingBranch.requires(ctx -> methodInfo.getRequirements().stream()
+              .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
+        );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
         if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(paramBranch));
@@ -145,7 +150,8 @@ public class BrigadierTreeGenerator {
 
 
     // Creates a command execution when no more parameters need to be added.
-    private com.mojang.brigadier.Command<CommandSourceStack> createCommandExecution(
+    @SuppressWarnings("NullableProblems")
+    private Command<CommandSourceStack> createCommandExecution(
           final BitsCommandBuilder commandBuilder,
           final CommandMethodInfo methodInfo
     ) {
@@ -221,7 +227,7 @@ public class BrigadierTreeGenerator {
             } else {
                 Bukkit.getScheduler().runTask(BitsConfig.getPlugin(), commandExecution);
             }
-            return com.mojang.brigadier.Command.SINGLE_SUCCESS;
+            return Command.SINGLE_SUCCESS;
         };
     }
 
