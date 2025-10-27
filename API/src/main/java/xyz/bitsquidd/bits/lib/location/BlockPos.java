@@ -22,7 +22,7 @@ public final class BlockPos {
 
     private static final DecimalFormat df = new DecimalFormat("#.00");
 
-    public BlockPos(double x, double y, double z, float pitch, float yaw) {
+    private BlockPos(double x, double y, double z, float pitch, float yaw) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -49,8 +49,25 @@ public final class BlockPos {
 
     @Override
     public String toString() {
-        return "(" + df.format(x) + "," + df.format(y) + "," + df.format(z) + "," + df.format(yaw) + "," + df.format(pitch) + ")";
+        return df.format(x) + "," + df.format(y) + "," + df.format(z) + "," + df.format(yaw) + "," + df.format(pitch);
     }
+
+    public static BlockPos fromString(String str) {
+        String trimmed = str.trim();
+        String[] parts = trimmed.split(",");
+        if (parts.length != 5 && parts.length != 3) throw new IllegalArgumentException("Invalid BlockPos string: " + str);
+        double x = Double.parseDouble(parts[0]);
+        double y = Double.parseDouble(parts[1]);
+        double z = Double.parseDouble(parts[2]);
+        if (parts.length == 5) {
+            float yaw = Float.parseFloat(parts[3]);
+            float pitch = Float.parseFloat(parts[4]);
+            return new BlockPos(x, y, z, yaw, pitch);
+        } else {
+            return new BlockPos(x, y, z, 0, 0);
+        }
+    }
+
 
     @Override
     public boolean equals(Object obj) {
