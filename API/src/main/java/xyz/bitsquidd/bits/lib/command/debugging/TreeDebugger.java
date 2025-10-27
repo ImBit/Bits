@@ -49,8 +49,8 @@ public class TreeDebugger {
     private static String getNodeName(CommandNode<CommandSourceStack> node) {
         if (node instanceof LiteralCommandNode) {
             return ((LiteralCommandNode<CommandSourceStack>)node).getLiteral();
-        } else if (node instanceof com.mojang.brigadier.tree.ArgumentCommandNode) {
-            return "<" + node.getName() + ">";
+        } else if (node instanceof com.mojang.brigadier.tree.ArgumentCommandNode argumentCommandNode) {
+            return "<" + argumentCommandNode.getType().toString() + ">";
         } else {
             return node.getName();
         }

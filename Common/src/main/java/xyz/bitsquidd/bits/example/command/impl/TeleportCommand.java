@@ -47,6 +47,20 @@ public class TeleportCommand extends BitsCommand {
             this.targetPlayer = targetPlayer;
         }
 
+        @Requirement(PlayerSenderRequirement.class)
+        @Command()
+        public void teleportToEntity(@NotNull BitsCommandContext ctx) {
+            Player senderPlayer = ctx.requirePlayer();
+
+            if (targetPlayer.equals(senderPlayer)) {
+                ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"));
+                return;
+            }
+
+            senderPlayer.teleport(targetPlayer.getLocation());
+            ctx.respond(Text.of("Teleported " + senderPlayer.getName() + " to " + targetPlayer.getName()));
+        }
+
         // /teleport <player> <entity>
         @Command()
         public void teleportToEntity(@NotNull BitsCommandContext ctx, @NotNull Player entity) {
@@ -57,25 +71,23 @@ public class TeleportCommand extends BitsCommand {
 
             targetPlayer.teleport(entity.getLocation());
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + entity.getName()));
-            targetPlayer.sendMessage("You have been teleported to " + entity.getName());
         }
 
-        // /teleport <player> location <x> <y> <z> [world]
-        @Command("location")
+        // /teleport <player> <x> <y> <z> [world]
+        @Command()
         public void teleportToLocation(@NotNull BitsCommandContext ctx, Location location) {
             targetPlayer.teleport(location);
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + Formatter.format(location)));
             targetPlayer.sendMessage("You have been teleported to " + Formatter.format(location));
         }
 
-        // /teleport <player> spawn
+        //teleport <player> spawn
         @Command("spawn")
         public void teleportToSpawn(@NotNull BitsCommandContext ctx) {
             Location spawnLocation = targetPlayer.getWorld().getSpawnLocation();
 
             targetPlayer.teleport(spawnLocation);
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to spawn"));
-            targetPlayer.sendMessage("You have been teleported to spawn");
         }
     }
 
@@ -101,8 +113,8 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + count + " players to " + entity.getName()));
         }
 
-        // /teleport all location <x> <y> <z> [world]
-        @Command("location")
+        // /teleport all <x> <y> <z> [world]
+        @Command()
         public void teleportAllToLocation(@NotNull BitsCommandContext ctx, Location location) {
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
@@ -114,7 +126,7 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + count + " players to " + Formatter.format(location)));
         }
 
-        // /teleport all spawn
+        //teleport all spawn
         @Command("spawn")
         public void teleportAllToSpawn(@NotNull BitsCommandContext ctx) {
             Location spawnLocation = ctx.requirePlayer().getWorld().getSpawnLocation();

@@ -39,11 +39,25 @@ public class CommandParameterInfo {
     public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
         List<ArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
 
-        heldArguments.forEach(arg -> {
+        boolean useArgSuggestions = heldArguments.size() > 1; // We use the arg suggestions only if there are multiple held arguments
+
+        for (int i = 0; i < heldArguments.size(); i++) {
+            BrigadierArgumentMapping arg = heldArguments.get(i);
             RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = arg.toBrigadierArgument();
-            argumentBuilder.suggests(parser.getSuggestionProvider());
+
+            if (useArgSuggestions) {
+                TypeSignature<?> inputType = parser.getInputTypes().get(i).typeSignature();
+                AbstractArgumentParserNew<?> inputParser = BitsArgumentRegistry.getInstance().getParser(inputType);
+                
+                // Use the input-specific parser's suggestions
+                argumentBuilder.suggests(inputParser.getSuggestionProvider());
+            } else {
+                // Use the main parser's suggestions
+                argumentBuilder.suggests(parser.getSuggestionProvider());
+            }
+
             brigadierArguments.add(argumentBuilder);
-        });
+        }
         return brigadierArguments;
     }
 
