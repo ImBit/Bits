@@ -13,7 +13,10 @@ import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @NullMarked
 public class BitsArgumentRegistry {
@@ -102,27 +105,32 @@ public class BitsArgumentRegistry {
         return parser;
     }
 
-    public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParserNew<?> parser) {
+    public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParserNew<?> parser, String baseName) {
         List<BrigadierArgumentMapping> holders = new ArrayList<>();
+        List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
         // Break down the type signature into its primitives.
-        parser.getInputTypes().forEach(nestedTypeSigature -> {
-
+        for (int i = 0; i < inputTypes.size(); i++) {
+            InputTypeContainer nestedTypeSigature = inputTypes.get(i);
             // Get the command parser required for this input type
             AbstractArgumentParserNew<?> nestedParser = getParser(nestedTypeSigature.typeSignature());
 
             // If its a primitive, we can directly add it
             if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveParser) {
+                String argumentName = inputTypes.size() > 1
+                                      ? baseName + "_" + nestedTypeSigature.typeName()
+                                      : baseName;
+
                 holders.add(new BrigadierArgumentMapping(
                       toPrimitive(nestedTypeSigature.typeSignature().toRawType()),
                       primitiveParser.getTypeSignature(),
-                      UUID.randomUUID().toString() // TODO get the names of non-primitive parsers here
+                      argumentName //UUID.randomUUID().toString() // TODO get the names of non-primitive parsers here
                 ));
             } else {
                 // Recurse into non-primitive parsers
-                holders.addAll(getArgumentTypeContainer(nestedParser));
+                holders.addAll(getArgumentTypeContainer(nestedParser, baseName + "_" + nestedTypeSigature.typeName()));
             }
-        });
+        }
 
         return holders;
     }

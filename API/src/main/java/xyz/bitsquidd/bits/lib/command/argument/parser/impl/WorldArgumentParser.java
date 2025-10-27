@@ -27,7 +27,7 @@ public final class WorldArgumentParser extends AbstractArgumentParserNew<@NotNul
     }
 
     @Override
-    public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
+    public @NotNull List<String> getSuggestions() {
         return Bukkit.getWorlds().stream().map(World::getName).toList();
     }
 

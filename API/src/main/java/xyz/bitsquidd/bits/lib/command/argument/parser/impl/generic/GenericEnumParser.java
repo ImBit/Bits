@@ -39,7 +39,7 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     }
 
     @Override
-    public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
+    public @NotNull List<String> getSuggestions() {
         return Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
     }
 }

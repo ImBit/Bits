@@ -9,6 +9,7 @@ import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,12 +45,15 @@ public class CommandMethodInfo {
         this.requirements = requirementAnnotation != null ? Arrays.asList(requirementAnnotation.value()) : new ArrayList<>();
 
         // If the first parameter is a BitsCommandContext, we filter it, technically means we cant "parse" any BitsCommandContext args, this shouldn't be an issue...
-        this.methodParameters = new ArrayList<>(
-              Arrays.stream(method.getParameters())
-                    .filter(param -> !BitsCommandContext.class.isAssignableFrom(param.getType()))
-                    .map(CommandParameterInfo::new)
-                    .toList()
-        );
+        Parameter[] methodParams = Arrays.stream(method.getParameters())
+              .filter(param -> !BitsCommandContext.class.isAssignableFrom(param.getType()))
+              .toArray(Parameter[]::new);
+
+        this.methodParameters = new ArrayList<>();
+        for (int i = 0; i < methodParams.length; i++) {
+            this.methodParameters.add(new CommandParameterInfo(methodParams[i], i));
+        }
+
         this.classParameters = new ArrayList<>(classParameters);
     }
 

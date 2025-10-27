@@ -36,7 +36,7 @@ public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends Abst
     }
 
     @Override
-    public List<String> getSuggestions(BitsCommandContext ctx) {
+    public List<String> getSuggestions() {
         return enumClass.isEnum() ? Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList() : List.of();
     }
 

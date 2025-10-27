@@ -22,6 +22,7 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,7 +84,13 @@ public class BrigadierTreeGenerator {
         );
 
         // Create parameters needed for this class.
-        List<CommandParameterInfo> classParameters = commandBuilder.getParameters().stream().map(CommandParameterInfo::new).toList();
+        Parameter[] classParams = commandBuilder.getParameters().toArray(new Parameter[0]);
+        List<CommandParameterInfo> classParameters = new ArrayList<>();
+
+        for (int i = 0; i < classParams.length; i++) {
+            classParameters.add(new CommandParameterInfo(classParams[i], i));
+        }
+
         List<CommandParameterInfo> nonMutatedParameters = new ArrayList<>(addedParameters);
         nonMutatedParameters.addAll(classParameters);
 

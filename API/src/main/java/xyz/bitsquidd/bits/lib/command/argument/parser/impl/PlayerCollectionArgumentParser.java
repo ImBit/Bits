@@ -60,14 +60,10 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public @NotNull List<String> getSuggestions(@NotNull BitsCommandContext ctx) {
+    public @NotNull List<String> getSuggestions() {
         List<String> suggestions = new ArrayList<>();
         suggestions.add(SelectorType.ALL.selector);
-
-        try {
-            ctx.requirePlayer();
-            suggestions.add(SelectorType.SELF.selector);
-        } catch (IllegalStateException ignored) {}
+        suggestions.add(SelectorType.SELF.selector);
 
         suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         return suggestions;

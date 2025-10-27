@@ -91,12 +91,13 @@ public abstract class AbstractArgumentParserNew<O> {
     public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
         return (ctx, builder) -> {
             BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(ctx);
-            List<String> suggestions = getSuggestions(bitsCtx);
+            List<String> suggestions = getSuggestions();
             String remaining = builder.getRemaining().toLowerCase();
 
             for (String suggestion : suggestions) {
                 if (suggestion.toLowerCase().startsWith(remaining)) {
                     builder.suggest(suggestion);
+
                     BitsConfig.getPlugin().getLogger().info("Suggesting: " + suggestion);
                 }
             }
@@ -108,8 +109,8 @@ public abstract class AbstractArgumentParserNew<O> {
     /**
      * Returns a list of suggestions for the argument at a given context state.
      */
-    public List<String> getSuggestions(BitsCommandContext ctx) {
-        return List.of();
+    public List<String> getSuggestions() {
+        return List.of("NOSUGGEST");
     }
 
 

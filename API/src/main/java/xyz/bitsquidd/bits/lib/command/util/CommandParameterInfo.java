@@ -28,12 +28,14 @@ public class CommandParameterInfo {
     private final List<BrigadierArgumentMapping> heldArguments = new ArrayList<>(); // Direct mapping from the custom args to brigadier ArgumentTypes
 
 
-    public CommandParameterInfo(Parameter parameter) {
+    public CommandParameterInfo(Parameter parameter, int parameterIndex) {
         this.parameter = parameter;
         this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
 
+        String baseName = typeSignature.toRawType().getSimpleName().toLowerCase() + parameterIndex;
+
         this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
-        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser));
+        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser, baseName));
     }
 
     public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
@@ -48,17 +50,25 @@ public class CommandParameterInfo {
             if (useArgSuggestions) {
                 TypeSignature<?> inputType = parser.getInputTypes().get(i).typeSignature();
                 AbstractArgumentParserNew<?> inputParser = BitsArgumentRegistry.getInstance().getParser(inputType);
-                
+
                 // Use the input-specific parser's suggestions
-                argumentBuilder.suggests(inputParser.getSuggestionProvider());
+                if (hasSuggestions(inputParser)) argumentBuilder.suggests(inputParser.getSuggestionProvider());
             } else {
                 // Use the main parser's suggestions
-                argumentBuilder.suggests(parser.getSuggestionProvider());
+                if (hasSuggestions(parser)) argumentBuilder.suggests(parser.getSuggestionProvider());
             }
 
             brigadierArguments.add(argumentBuilder);
         }
         return brigadierArguments;
+    }
+
+    private boolean hasSuggestions(AbstractArgumentParserNew<?> parser) {
+        if (!parser.getSuggestions().isEmpty()) {
+            return !parser.getSuggestions().getFirst().equals("NOSUGGEST");
+        } else {
+            return true;
+        }
     }
 
     public AbstractArgumentParserNew<?> getParser() {
