@@ -87,7 +87,7 @@ public final class BlockPos {
     }
 
     @Override
-    public Object clone() {
+    public BlockPos clone() {
         return new BlockPos(x, y, z, yaw, pitch);
     }
 
