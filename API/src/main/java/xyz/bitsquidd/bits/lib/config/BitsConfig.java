@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class BitsConfig {
     private static boolean initialized = false;
+    private static boolean developmentMode = false;
     private static @Nullable JavaPlugin plugin;
 
     public static @NotNull String COMMAND_BASE_STRING = "bits.command"; // The base prefix for all commands, can be overridden.
@@ -23,6 +24,16 @@ public class BitsConfig {
 
         initialized = true;
     }
+
+
+    public static void enableDeveloperMode() {
+        developmentMode = true;
+    }
+
+    public static boolean isDevelopmentMode() {
+        return developmentMode;
+    }
+
 
     private static void checkInitialized() {
         if (!initialized) throw new IllegalStateException("BitsConfig hasn't been initialised!");

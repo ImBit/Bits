@@ -28,11 +28,11 @@ public class CommandParameterInfo {
     private final List<BrigadierArgumentMapping> heldArguments = new ArrayList<>(); // Direct mapping from the custom args to brigadier ArgumentTypes
 
 
-    public CommandParameterInfo(Parameter parameter, int parameterIndex) {
+    public CommandParameterInfo(Parameter parameter) {
         this.parameter = parameter;
         this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
 
-        String baseName = typeSignature.toRawType().getSimpleName().toLowerCase() + parameterIndex;
+        String baseName = typeSignature.toRawType().getSimpleName().toLowerCase();
 
         this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
         this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser, baseName));
@@ -65,7 +65,9 @@ public class CommandParameterInfo {
 
     private boolean hasSuggestions(AbstractArgumentParserNew<?> parser) {
         if (!parser.getSuggestions().isEmpty()) {
-            return !parser.getSuggestions().getFirst().equals("NOSUGGEST");
+            return !parser.getSuggestions()
+                  .getFirst()
+                  .equals("NOSUGGEST"); // Note: for some reason, Brigadier doesn't send suggestion info when any of the args have an empty suggestor. This fixes that.
         } else {
             return true;
         }
