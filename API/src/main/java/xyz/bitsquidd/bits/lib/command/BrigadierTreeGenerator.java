@@ -12,6 +12,7 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -38,10 +39,13 @@ public class BrigadierTreeGenerator {
         LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root"); // We create a "dummy_root" to be able to split core aliases.
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
-        return dummyRoot.getArguments().stream()
+        List<LiteralCommandNode<CommandSourceStack>> nodes = dummyRoot.getArguments().stream()
               .filter(node -> node instanceof LiteralCommandNode)
               .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
               .toList();
+
+        BitsConfig.getPlugin().getLogger().info(TreeDebugger.visualizeCommandTree(nodes));
+        return nodes;
     }
 
     // Returns a non-empty list of branches that will be built upon. This includes command aliases.
@@ -119,25 +123,24 @@ public class BrigadierTreeGenerator {
           final CommandMethodInfo methodInfo
     ) {
         // Add all extra parameters to the branch.
-        // List of list because we need to take into account Optionals (currently removed for stability)
-        List<List<ArgumentBuilder<CommandSourceStack, ?>>> addedParamBranchList = new ArrayList<>();
-        addedParamBranchList.add(new ArrayList<>());
+        List<ArgumentBuilder<CommandSourceStack, ?>> paramBranch = new ArrayList<>();
+
+        // Add literal name if it exists.
+        // Note we currently don't support aliases for method literals.
+        if (!methodInfo.literalName().isEmpty()) {
+            paramBranch.add(Commands.literal(methodInfo.literalName()));
+        }
 
         methodInfo.getMethodParameters().forEach(param -> {
-            new ArrayList<>(addedParamBranchList).forEach(branch -> {
-                branch.addAll(param.createBrigadierArguments());
-            });
+            paramBranch.addAll(param.createBrigadierArguments());
         });
 
-        for (List<ArgumentBuilder<CommandSourceStack, ?>> paramBranch : new ArrayList<>(addedParamBranchList)) {
-            ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
-            if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
+        ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
+        if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
 
-            // Add command execution
-            workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
+        workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
-            if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(paramBranch));
-        }
+        if (!Objects.equals(workingBranch, nextBranch)) nextBranch.then(buildBackward(paramBranch));
     }
 
 

@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
@@ -35,8 +36,8 @@ public class CommandParameterInfo {
         this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser));
     }
 
-    public List<RequiredArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
-        List<RequiredArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
+    public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
+        List<ArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
 
         heldArguments.forEach(arg -> {
             RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = arg.toBrigadierArgument();
@@ -52,6 +53,10 @@ public class CommandParameterInfo {
 
     public List<BrigadierArgumentMapping> getHeldArguments() {
         return heldArguments;
+    }
+
+    public TypeSignature<?> getTypeSignature() {
+        return typeSignature;
     }
 
     @Override

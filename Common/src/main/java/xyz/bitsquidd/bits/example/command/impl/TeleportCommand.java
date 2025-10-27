@@ -38,7 +38,6 @@ public class TeleportCommand extends BitsCommand {
 
     /**
      * Player-specific teleport commands.
-     * Captures the target player and provides various teleport destinations.
      */
     @Command()
     public static class PlayerCommands extends BitsCommand {
@@ -46,11 +45,6 @@ public class TeleportCommand extends BitsCommand {
 
         public PlayerCommands(Player targetPlayer) {
             this.targetPlayer = targetPlayer;
-        }
-
-        public void showPlayerHelp(@NotNull BitsCommandContext ctx) {
-            ctx.respond(Text.of("=== Teleport " + targetPlayer.getName() + " ==="));
-            ctx.respond(Text.of("Usage: /teleport " + targetPlayer.getName() + " <entity|location|spawn>"));
         }
 
         // /teleport <player> <entity>
@@ -68,10 +62,7 @@ public class TeleportCommand extends BitsCommand {
 
         // /teleport <player> location <x> <y> <z> [world]
         @Command("location")
-        public void teleportToLocation(
-              @NotNull BitsCommandContext ctx,
-              Location location
-        ) {
+        public void teleportToLocation(@NotNull BitsCommandContext ctx, Location location) {
             targetPlayer.teleport(location);
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + Formatter.format(location)));
             targetPlayer.sendMessage("You have been teleported to " + Formatter.format(location));
@@ -93,14 +84,6 @@ public class TeleportCommand extends BitsCommand {
      */
     @Command("all")
     public static class AllPlayersCommands extends BitsCommand {
-
-        public void showAllHelp(@NotNull BitsCommandContext ctx) {
-            ctx.respond(Text.of("=== Teleport All Players ==="));
-            ctx.respond(Text.of("/teleport all <entity> - Teleport all to entity"));
-            ctx.respond(Text.of("/teleport all location <x> <y> <z> [world] - Teleport all to coordinates"));
-            ctx.respond(Text.of("/teleport all spawn - Teleport all to spawn"));
-        }
-
         // /teleport all <entity>
         @Command()
         public void teleportAllToEntity(@NotNull BitsCommandContext ctx, @NotNull Player entity) {
@@ -120,10 +103,7 @@ public class TeleportCommand extends BitsCommand {
 
         // /teleport all location <x> <y> <z> [world]
         @Command("location")
-        public void teleportAllToLocation(
-              @NotNull BitsCommandContext ctx,
-              Location location
-        ) {
+        public void teleportAllToLocation(@NotNull BitsCommandContext ctx, Location location) {
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                 player.teleport(location);
@@ -149,4 +129,5 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + count + " players to spawn"));
         }
     }
+
 }

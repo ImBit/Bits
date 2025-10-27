@@ -129,7 +129,9 @@ public abstract class BitsCommandManager {
                   bitsCommands
                         .forEach(bitsCommand -> {
                             brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand.getClass()))
-                                  .forEach(node -> commands.registrar().register(node));
+                                  .forEach(node -> {
+                                      commands.registrar().register(node);
+                                  });
                         });
               }
         );

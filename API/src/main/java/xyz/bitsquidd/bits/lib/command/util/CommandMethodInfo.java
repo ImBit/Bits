@@ -79,4 +79,8 @@ public class CommandMethodInfo {
         return allParams;
     }
 
+    public String literalName() {
+        return commandAnnotation.value();
+    }
+
 }
