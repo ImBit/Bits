@@ -22,7 +22,7 @@ public final class BlockPos {
 
     private static final DecimalFormat df = new DecimalFormat("#.00");
 
-    private BlockPos(double x, double y, double z, float pitch, float yaw) {
+    private BlockPos(double x, double y, double z, float yaw, float pitch) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -119,8 +119,32 @@ public final class BlockPos {
         return new BlockPos(this.x + other.x, this.y + other.y, this.z + other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos add(double x, double y, double z) {
+        return new BlockPos(this.x + x, this.y + y, this.z + z, this.yaw, this.pitch);
+    }
+
     public BlockPos subtract(BlockPos other) {
         return new BlockPos(this.x - other.x, this.y - other.y, this.z - other.z, this.yaw, this.pitch);
+    }
+
+    public BlockPos subtract(double x, double y, double z) {
+        return new BlockPos(this.x - x, this.y - y, this.z - z, this.yaw, this.pitch);
+    }
+
+    public BlockPos multiply(BlockPos other) {
+        return new BlockPos(this.x * other.x, this.y * other.y, this.z * other.z, this.yaw, this.pitch);
+    }
+
+    public BlockPos multiply(double scalar) {
+        return new BlockPos(this.x * scalar, this.y * scalar, this.z * scalar, this.yaw, this.pitch);
+    }
+
+    public BlockPos divide(BlockPos other) {
+        return new BlockPos(this.x / other.x, this.y / other.y, this.z / other.z, this.yaw, this.pitch);
+    }
+
+    public BlockPos divide(double scalar) {
+        return new BlockPos(this.x / scalar, this.y / scalar, this.z / scalar, this.yaw, this.pitch);
     }
 
 }
