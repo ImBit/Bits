@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public final class PlayerCollectionArgumentParser extends AbstractArgumentParserNew<@NotNull Collection<Player>> {
     private enum SelectorType {
@@ -60,13 +61,13 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public @NotNull List<String> getSuggestions() {
+    public @Nullable Supplier<List<String>> getSuggestions() {
         List<String> suggestions = new ArrayList<>();
         suggestions.add(SelectorType.ALL.selector);
         suggestions.add(SelectorType.SELF.selector);
 
         suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-        return suggestions;
+        return () -> suggestions;
     }
 
 }

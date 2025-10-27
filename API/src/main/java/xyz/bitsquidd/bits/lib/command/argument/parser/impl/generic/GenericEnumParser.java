@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
@@ -9,6 +10,7 @@ import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -39,7 +41,7 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     }
 
     @Override
-    public @NotNull List<String> getSuggestions() {
-        return Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
+    public @Nullable Supplier<List<String>> getSuggestions() {
+        return () -> Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
     }
 }

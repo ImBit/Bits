@@ -64,13 +64,7 @@ public class CommandParameterInfo {
     }
 
     private boolean hasSuggestions(AbstractArgumentParserNew<?> parser) {
-        if (!parser.getSuggestions().isEmpty()) {
-            return !parser.getSuggestions()
-                  .getFirst()
-                  .equals("NOSUGGEST"); // Note: for some reason, Brigadier doesn't send suggestion info when any of the args have an empty suggestor. This fixes that.
-        } else {
-            return true;
-        }
+        return parser.getSuggestions() != null;
     }
 
     public AbstractArgumentParserNew<?> getParser() {

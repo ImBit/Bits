@@ -4,6 +4,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
@@ -13,6 +14,7 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @NullMarked
 public abstract class AbstractArgumentParserNew<O> {
@@ -91,7 +93,11 @@ public abstract class AbstractArgumentParserNew<O> {
     public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
         return (ctx, builder) -> {
             BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(ctx);
-            List<String> suggestions = getSuggestions();
+
+            Supplier<List<String>> suggestionSupplier = getSuggestions();
+            if (suggestionSupplier == null) return builder.buildFuture();
+            
+            List<String> suggestions = suggestionSupplier.get();
             String remaining = builder.getRemaining().toLowerCase();
 
             for (String suggestion : suggestions) {
@@ -109,8 +115,8 @@ public abstract class AbstractArgumentParserNew<O> {
     /**
      * Returns a list of suggestions for the argument at a given context state.
      */
-    public List<String> getSuggestions() {
-        return List.of("NOSUGGEST");
+    public @Nullable Supplier<List<String>> getSuggestions() {
+        return null;
     }
 
 
