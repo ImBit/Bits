@@ -22,7 +22,7 @@ public final class BlockPos {
 
     private static final DecimalFormat df = new DecimalFormat("#.00");
 
-    public BlockPos(double x, double y, double z, float pitch, float yaw) {
+    private BlockPos(double x, double y, double z, float pitch, float yaw) {
         this.x = x;
         this.y = y;
         this.z = z;

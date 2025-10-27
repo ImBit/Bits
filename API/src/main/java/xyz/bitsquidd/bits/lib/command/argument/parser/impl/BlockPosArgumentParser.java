@@ -23,7 +23,7 @@ public final class BlockPosArgumentParser extends AbstractArgumentParserNew<@Not
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);
         double z = (double)inputs.get(2);
-        return new BlockPos(x, y, z);
+        return BlockPos.of(x, y, z);
     }
 
     @Override
