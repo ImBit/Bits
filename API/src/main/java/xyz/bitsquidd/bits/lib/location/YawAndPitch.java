@@ -4,22 +4,22 @@ import org.bukkit.Location;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public final class PitchAndYaw {
-    public final float pitch;
+public final class YawAndPitch {
     public final float yaw;
+    public final float pitch;
 
-    private PitchAndYaw(float pitch, float yaw) {
-        this.pitch = pitch;
+    private YawAndPitch(float yaw, float pitch) {
         this.yaw = yaw;
+        this.pitch = pitch;
     }
 
-    public static PitchAndYaw of(float pitch, float yaw) {
-        return new PitchAndYaw(pitch, yaw);
+    public static YawAndPitch of(float yaw, float pitch) {
+        return new YawAndPitch(pitch, yaw);
     }
 
     public void applyToLocation(Location location) {
         location.setPitch(pitch);
         location.setYaw(yaw);
     }
-    
+
 }

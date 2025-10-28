@@ -173,8 +173,8 @@ public final class BlockPos {
     }
 
 
-    public BlockPos withYawPitch(PitchAndYaw pitchAndYaw) {
-        return new BlockPos(this.x, this.y, this.z, pitchAndYaw.yaw, pitchAndYaw.pitch);
+    public BlockPos withYawPitch(YawAndPitch yawAndPitch) {
+        return new BlockPos(this.x, this.y, this.z, yawAndPitch.yaw, yawAndPitch.pitch);
     }
 
     public BlockPos withYaw(float yaw) {
@@ -185,9 +185,9 @@ public final class BlockPos {
         return new BlockPos(this.x, this.y, this.z, this.yaw, pitch);
     }
 
-    public BlockPos rotate(PitchAndYaw pitchAndYaw) {
-        float newYaw = this.yaw + pitchAndYaw.yaw;
-        float newPitch = this.pitch + pitchAndYaw.pitch;
+    public BlockPos rotate(YawAndPitch yawAndPitch) {
+        float newYaw = this.yaw + yawAndPitch.yaw;
+        float newPitch = this.pitch + yawAndPitch.pitch;
         return new BlockPos(this.x, this.y, this.z, newYaw, newPitch);
     }
 
