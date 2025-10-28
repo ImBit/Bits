@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.location;
 
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
@@ -29,8 +30,8 @@ public final class BlockPos {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.yaw = yaw;
-        this.pitch = pitch;
+        this.yaw = (yaw + 180) % 360 - 180;   // Normalizes yaw to   [-180, 180)
+        this.pitch = (pitch + 90) % 180 - 90; // Normalizes pitch to [-90, 90]
     }
 
     public static BlockPos of(double x, double y, double z) {
@@ -170,5 +171,50 @@ public final class BlockPos {
     public BlockPos divide(double scalar) {
         return new BlockPos(this.x / scalar, this.y / scalar, this.z / scalar, this.yaw, this.pitch);
     }
+
+
+    public BlockPos withYawPitch(PitchAndYaw pitchAndYaw) {
+        return new BlockPos(this.x, this.y, this.z, pitchAndYaw.yaw, pitchAndYaw.pitch);
+    }
+
+    public BlockPos withYaw(float yaw) {
+        return new BlockPos(this.x, this.y, this.z, yaw, this.pitch);
+    }
+
+    public BlockPos withPitch(float pitch) {
+        return new BlockPos(this.x, this.y, this.z, this.yaw, pitch);
+    }
+
+    public BlockPos rotate(PitchAndYaw pitchAndYaw) {
+        float newYaw = this.yaw + pitchAndYaw.yaw;
+        float newPitch = this.pitch + pitchAndYaw.pitch;
+        return new BlockPos(this.x, this.y, this.z, newYaw, newPitch);
+    }
+
+    public BlockPos rotateYaw(float degrees) {
+        float newYaw = this.yaw + degrees;
+        return new BlockPos(this.x, this.y, this.z, newYaw, this.pitch);
+    }
+
+    public BlockPos rotatePitch(float degrees) {
+        float newPitch = this.pitch + degrees;
+        return new BlockPos(this.x, this.y, this.z, this.yaw, newPitch);
+    }
+
+    public BlockPos rotate(Rotation rotation) {
+        float newYaw = switch (rotation) {
+            case CLOCKWISE_45 -> this.yaw + 45;
+            case CLOCKWISE -> this.yaw + 90;
+            case CLOCKWISE_135 -> this.yaw + 135;
+            case FLIPPED -> this.yaw + 180;
+            case FLIPPED_45 -> this.yaw + 270;
+            case COUNTER_CLOCKWISE -> this.yaw - 90;
+            case COUNTER_CLOCKWISE_45 -> this.yaw - 45;
+            default -> this.yaw;
+        };
+
+        return new BlockPos(this.x, this.y, this.z, newYaw, this.pitch);
+    }
+
 
 }
