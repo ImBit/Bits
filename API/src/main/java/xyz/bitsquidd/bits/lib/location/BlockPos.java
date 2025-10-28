@@ -9,6 +9,9 @@ import org.jspecify.annotations.NullMarked;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
+/**
+ * Immutable class representing a position in the world with x, y, z coordinates and yaw, pitch rotation.
+ */
 @NullMarked
 public final class BlockPos {
     public final double x;
@@ -86,6 +89,7 @@ public final class BlockPos {
         return Objects.hash(x, y, z, yaw, pitch);
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public BlockPos clone() {
         return new BlockPos(x, y, z, yaw, pitch);
@@ -98,6 +102,10 @@ public final class BlockPos {
 
     public Vector asVector() {
         return new Vector(x, y, z);
+    }
+
+    public int[] asIntArray() {
+        return new int[]{(int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z)};
     }
 
 
@@ -119,12 +127,20 @@ public final class BlockPos {
         return new BlockPos(this.x + other.x, this.y + other.y, this.z + other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos add(Vector vec) {
+        return new BlockPos(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos add(double x, double y, double z) {
         return new BlockPos(this.x + x, this.y + y, this.z + z, this.yaw, this.pitch);
     }
 
     public BlockPos subtract(BlockPos other) {
         return new BlockPos(this.x - other.x, this.y - other.y, this.z - other.z, this.yaw, this.pitch);
+    }
+
+    public BlockPos subtract(Vector vec) {
+        return new BlockPos(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ(), this.yaw, this.pitch);
     }
 
     public BlockPos subtract(double x, double y, double z) {
@@ -135,12 +151,20 @@ public final class BlockPos {
         return new BlockPos(this.x * other.x, this.y * other.y, this.z * other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos multiply(Vector vec) {
+        return new BlockPos(this.x * vec.getX(), this.y * vec.getY(), this.z * vec.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos multiply(double scalar) {
         return new BlockPos(this.x * scalar, this.y * scalar, this.z * scalar, this.yaw, this.pitch);
     }
 
     public BlockPos divide(BlockPos other) {
         return new BlockPos(this.x / other.x, this.y / other.y, this.z / other.z, this.yaw, this.pitch);
+    }
+
+    public BlockPos divide(Vector vec) {
+        return new BlockPos(this.x / vec.getX(), this.y / vec.getY(), this.z / vec.getZ(), this.yaw, this.pitch);
     }
 
     public BlockPos divide(double scalar) {
