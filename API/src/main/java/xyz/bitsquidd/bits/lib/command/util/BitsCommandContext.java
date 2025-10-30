@@ -5,7 +5,6 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
@@ -49,8 +48,7 @@ public class BitsCommandContext {
         return source.getLocation();
     }
 
-    @ApiStatus.Experimental
-    public void respond(Text message) {
+    public final void respond(Text message) {
         message.send(getSender());
     }
 
