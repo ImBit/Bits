@@ -9,14 +9,14 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<@NotNull Player> {
+public final class PlayerSingleArgumentParser extends AbstractArgumentParser<@NotNull Player> {
 
     public PlayerSingleArgumentParser() {
         super(TypeSignature.of(Player.class), "Player");

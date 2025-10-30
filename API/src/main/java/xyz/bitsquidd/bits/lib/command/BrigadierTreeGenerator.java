@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
@@ -162,7 +162,7 @@ public class BrigadierTreeGenerator {
             ArrayList<@Nullable Object> parsedArguments = new ArrayList<>();
 
             for (CommandParameterInfo parameter : methodInfo.getAllParameters()) {
-                AbstractArgumentParserNew<?> parser = parameter.getParser();
+                AbstractArgumentParser<?> parser = parameter.getParser();
 
                 // Collect primitive objects for the parameter
                 ArrayList<@Nullable Object> primitiveObjects = new ArrayList<>();

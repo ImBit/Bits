@@ -6,7 +6,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class BooleanArgumentParser extends PrimitiveArgumentParserNew<@NotNull Boolean> {
+public final class BooleanArgumentParser extends PrimitiveArgumentParser<@NotNull Boolean> {
     public BooleanArgumentParser() {
         super(Boolean.class, "Boolean");
     }

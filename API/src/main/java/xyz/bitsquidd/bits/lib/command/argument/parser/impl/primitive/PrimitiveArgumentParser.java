@@ -5,17 +5,17 @@ import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
 @NullMarked
-public sealed abstract class PrimitiveArgumentParserNew<O> extends AbstractArgumentParserNew<O>
+public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O>
       permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, GreedyStringArgumentParser, EntitySelectorArgumentParser {
 
-    PrimitiveArgumentParserNew(Class<O> outputClass, String argumentName) {
+    PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
         super(TypeSignature.of(outputClass), argumentName);
     }
 

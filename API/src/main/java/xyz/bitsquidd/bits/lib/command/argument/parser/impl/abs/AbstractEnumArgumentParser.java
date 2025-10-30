@@ -5,7 +5,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @NullMarked
-public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParserNew<T> {
+public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParser<T> {
     private final Class<T> enumClass;
 
     public AbstractEnumArgumentParser(Class<T> enumClass) {

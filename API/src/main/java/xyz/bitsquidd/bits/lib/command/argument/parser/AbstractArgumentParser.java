@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @NullMarked
-public abstract class AbstractArgumentParserNew<O> {
+public abstract class AbstractArgumentParser<O> {
     private final TypeSignature<?> typeSignature; // The type signature this parser handles
     private final String argumentName;            // The name of the argument, used while displaying suggestions
 
-    protected AbstractArgumentParserNew(TypeSignature<?> typeSignature, String argumentName) {
+    protected AbstractArgumentParser(TypeSignature<?> typeSignature, String argumentName) {
         this.typeSignature = typeSignature;
         this.argumentName = argumentName;
     }

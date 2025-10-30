@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs.AbstractEnumArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * <p>
  * This implementation serves as a basic parser that should be fallen back upon when no specific enum parser is available.
  */
-public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParserNew<@NotNull E> {
+public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParser<@NotNull E> {
 
     private final Class<E> enumClass;
 

@@ -6,13 +6,13 @@ import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 
 import java.util.List;
 
-public final class LocationArgumentParser extends AbstractArgumentParserNew<@NotNull Location> {
+public final class LocationArgumentParser extends AbstractArgumentParser<@NotNull Location> {
 
     public LocationArgumentParser() {
         super(TypeSignature.of(Location.class), "Location");

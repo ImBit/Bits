@@ -8,7 +8,7 @@ import org.jspecify.annotations.NullMarked;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
-import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
+import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class CommandParameterInfo {
 
     private final TypeSignature<?> typeSignature; // TypeSignature of the parameter
 
-    private final AbstractArgumentParserNew<?> parser;
+    private final AbstractArgumentParser<?> parser;
 
     private final List<BrigadierArgumentMapping> heldArguments = new ArrayList<>(); // Direct mapping from the custom args to brigadier ArgumentTypes
 
@@ -49,7 +49,7 @@ public class CommandParameterInfo {
 
             if (useArgSuggestions) {
                 TypeSignature<?> inputType = parser.getInputTypes().get(i).typeSignature();
-                AbstractArgumentParserNew<?> inputParser = BitsArgumentRegistry.getInstance().getParser(inputType);
+                AbstractArgumentParser<?> inputParser = BitsArgumentRegistry.getInstance().getParser(inputType);
 
                 // Use the input-specific parser's suggestions
                 if (hasSuggestions(inputParser)) argumentBuilder.suggests(inputParser.getSuggestionProvider());
@@ -63,11 +63,11 @@ public class CommandParameterInfo {
         return brigadierArguments;
     }
 
-    private boolean hasSuggestions(AbstractArgumentParserNew<?> parser) {
+    private boolean hasSuggestions(AbstractArgumentParser<?> parser) {
         return parser.getSuggestions() != null;
     }
 
-    public AbstractArgumentParserNew<?> getParser() {
+    public AbstractArgumentParser<?> getParser() {
         return parser;
     }
 

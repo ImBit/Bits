@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 
-public final class GreedyStringArgumentParser extends PrimitiveArgumentParserNew<@NotNull GreedyString> {
+public final class GreedyStringArgumentParser extends PrimitiveArgumentParser<@NotNull GreedyString> {
     public GreedyStringArgumentParser() {
         super(GreedyString.class, "String...");
     }
