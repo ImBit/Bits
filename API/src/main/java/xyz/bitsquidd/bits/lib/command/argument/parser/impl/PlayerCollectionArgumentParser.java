@@ -1,10 +1,12 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
+import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -61,6 +63,11 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
+    public @NotNull List<InputTypeContainer> getInputTypes() {
+        return List.of(new InputTypeContainer(TypeSignature.of(EntitySelector.class), getArgumentName()));
+    }
+
+    @Override
     public @Nullable Supplier<List<String>> getSuggestions() {
         List<String> suggestions = new ArrayList<>();
         suggestions.add(SelectorType.ALL.selector);
@@ -69,5 +76,5 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
         suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         return () -> suggestions;
     }
-    
+
 }

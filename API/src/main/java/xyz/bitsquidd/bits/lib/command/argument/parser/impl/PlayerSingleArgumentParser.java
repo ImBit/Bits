@@ -1,10 +1,13 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -21,11 +24,21 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<
 
     @Override
     public @NotNull Player parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
-        String inputString = singletonInputValidation(inputObjects, String.class);
+        EntitySelector inputString = singletonInputValidation(inputObjects, EntitySelector.class);
 
-        Player player = Bukkit.getPlayer(inputString);
-        if (player == null) throw new CommandParseException("Player not found: " + inputString);
-        return player;
+        try {
+            return inputString.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource()).getFirst().getBukkitEntity().getPlayer();
+        } catch (Exception e) {
+            throw new CommandParseException("Player not found: " + inputString);
+        }
+//        Player player = Bukkit.getPlayer(inputString);
+//        if (player == null) throw new CommandParseException("Player not found: " + inputString);
+//        return player;
+    }
+
+    @Override
+    public @NotNull List<InputTypeContainer> getInputTypes() {
+        return List.of(new InputTypeContainer(TypeSignature.of(EntitySelector.class), getArgumentName()));
     }
 
     @Override

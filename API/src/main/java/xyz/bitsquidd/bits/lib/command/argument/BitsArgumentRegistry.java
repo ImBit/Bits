@@ -1,6 +1,8 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
 import com.mojang.brigadier.arguments.*;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -39,8 +41,8 @@ public class BitsArgumentRegistry {
         return instance;
     }
 
-    private ArgumentType<?> toArgumentType(TypeSignature<?> typeSignature) {
-        Class<?> clazz = typeSignature.toRawType();
+    private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
+        Class<?> clazz = inputType.toRawType();
         if (clazz == Integer.class || clazz == int.class) {
             return IntegerArgumentType.integer();
         } else if (clazz == Double.class || clazz == double.class) {
@@ -53,19 +55,15 @@ public class BitsArgumentRegistry {
             return BoolArgumentType.bool();
         } else if (clazz == GreedyString.class) {
             return StringArgumentType.greedyString();
+        } else if (clazz == String.class) {
+            return StringArgumentType.string();
+        } else if (clazz == EntitySelector.class) {
+            // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
+            // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
+            return EntityArgument.entities();
         }
 
-//        if (typeSignature.matches(TypeSignature.of(Player.class))) {
-//            return EntityArgument.player();
-//        } else if (typeSignature.matches(TypeSignature.of(Collection.class, Player.class))) {
-//            return EntityArgument.players();
-//        } else if (typeSignature.matches(TypeSignature.of(Collection.class, Entity.class))) {
-//            return EntityArgument.entities();
-//        } else if (typeSignature.matches(TypeSignature.of(Entity.class))) {
-//            return EntityArgument.entity();
-//        }
-
-        return new CustomStringArgumentType();
+        return null;
     }
 
     private List<AbstractArgumentParserNew<?>> initialiseDefaultParsers() {
@@ -76,6 +74,7 @@ public class BitsArgumentRegistry {
               new IntegerArgumentParser(),
               new LongArgumentParser(),
               new StringArgumentParser(),
+              new EntitySelectorArgumentParser(),
 
               new GreedyStringArgumentParser(),
               new PlayerCollectionArgumentParser(),
@@ -126,18 +125,27 @@ public class BitsArgumentRegistry {
             // Get the command parser required for this input type
             AbstractArgumentParserNew<?> nestedParser = getParser(nestedTypeSigature.typeSignature());
 
+            boolean handled = false;
             // If its a primitive, we can directly add it
-            if (nestedParser instanceof PrimitiveArgumentParserNew<?> primitiveParser) {
-                String argumentName = inputTypes.size() > 1
-                                      ? baseName + "_" + nestedTypeSigature.typeName()
-                                      : baseName;
+            if (nestedParser.getInputTypes().size() == 1) {
+                InputTypeContainer inputType = nestedParser.getInputTypes().getFirst();
+                ArgumentType<?> brigadierType = toArgumentType(inputType.typeSignature());
 
-                holders.add(new BrigadierArgumentMapping(
-                      toArgumentType(nestedTypeSigature.typeSignature()),
-                      primitiveParser.getTypeSignature(),
-                      argumentName //UUID.randomUUID().toString() // TODO get the names of non-primitive parsers here
-                ));
-            } else {
+                if (brigadierType != null) {
+                    String argumentName = inputTypes.size() > 1
+                                          ? baseName + "_" + nestedTypeSigature.typeName()
+                                          : baseName;
+
+                    holders.add(new BrigadierArgumentMapping(
+                          brigadierType,
+                          nestedParser.getTypeSignature(),
+                          argumentName
+                    ));
+                    handled = true;
+                }
+            }
+
+            if (!handled) {
                 // Recurse into non-primitive parsers
                 holders.addAll(getArgumentTypeContainer(nestedParser, baseName + "_" + nestedTypeSigature.typeName()));
             }
