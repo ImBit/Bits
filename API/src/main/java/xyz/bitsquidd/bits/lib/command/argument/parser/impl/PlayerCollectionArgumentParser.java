@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParserNew;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -70,10 +69,5 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
         suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         return () -> suggestions;
     }
-
-    @Override
-    public List<InputTypeContainer> getInputTypes() {
-        return List.of(new InputTypeContainer(TypeSignature.of(Collection.class, Player.class), getArgumentName()));
-    }
-
+    
 }
