@@ -39,7 +39,8 @@ public class BitsArgumentRegistry {
         return instance;
     }
 
-    private ArgumentType<?> toPrimitive(Class<?> clazz) {
+    private ArgumentType<?> toArgumentType(TypeSignature<?> typeSignature) {
+        Class<?> clazz = typeSignature.toRawType();
         if (clazz == Integer.class || clazz == int.class) {
             return IntegerArgumentType.integer();
         } else if (clazz == Double.class || clazz == double.class) {
@@ -52,9 +53,19 @@ public class BitsArgumentRegistry {
             return BoolArgumentType.bool();
         } else if (clazz == GreedyString.class) {
             return StringArgumentType.greedyString();
-        } else {
-            return StringArgumentType.word();
         }
+
+//        if (typeSignature.matches(TypeSignature.of(Player.class))) {
+//            return EntityArgument.player();
+//        } else if (typeSignature.matches(TypeSignature.of(Collection.class, Player.class))) {
+//            return EntityArgument.players();
+//        } else if (typeSignature.matches(TypeSignature.of(Collection.class, Entity.class))) {
+//            return EntityArgument.entities();
+//        } else if (typeSignature.matches(TypeSignature.of(Entity.class))) {
+//            return EntityArgument.entity();
+//        }
+
+        return new CustomStringArgumentType();
     }
 
     private List<AbstractArgumentParserNew<?>> initialiseDefaultParsers() {
@@ -122,7 +133,7 @@ public class BitsArgumentRegistry {
                                       : baseName;
 
                 holders.add(new BrigadierArgumentMapping(
-                      toPrimitive(nestedTypeSigature.typeSignature().toRawType()),
+                      toArgumentType(nestedTypeSigature.typeSignature()),
                       primitiveParser.getTypeSignature(),
                       argumentName //UUID.randomUUID().toString() // TODO get the names of non-primitive parsers here
                 ));

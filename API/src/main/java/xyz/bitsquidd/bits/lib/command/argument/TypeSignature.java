@@ -73,13 +73,12 @@ public class TypeSignature<T> {
         return rawType;
     }
 
-    public boolean matches(@NotNull Type other) {
-        TypeSignature<?> otherSig = TypeSignature.of(other);
-        if (!rawType.equals(otherSig.rawType)) return false;
-        if (typeArguments.length != otherSig.typeArguments.length) return false;
+    public boolean matches(@NotNull TypeSignature<?> other) {
+        if (!rawType.equals(other.rawType)) return false;
+        if (typeArguments.length != other.typeArguments.length) return false;
 
         for (int i = 0; i < typeArguments.length; i++) {
-            if (!typeArguments[i].equals(otherSig.typeArguments[i])) {
+            if (!typeArguments[i].equals(other.typeArguments[i])) {
                 return false;
             }
         }
