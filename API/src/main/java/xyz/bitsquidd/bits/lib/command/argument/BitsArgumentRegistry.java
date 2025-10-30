@@ -60,7 +60,7 @@ public class BitsArgumentRegistry {
         } else if (clazz == EntitySelector.class) {
             // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
             // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
-            return EntityArgument.entities();
+            return EntityArgument.entities(); // TODO, in the future, we could consider refining this to be single/multiple/entity/player selectors. For now the parser should filter this.
         }
 
         return null;

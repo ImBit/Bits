@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +20,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class PlayerCollectionArgumentParser extends AbstractArgumentParserNew<@NotNull Collection<Player>> {
+
+    // TODO just pull from vanilla EntitySelector. Also pull the completion.
     private enum SelectorType {
         ALL("@a", ctx -> new ArrayList<>(Bukkit.getOnlinePlayers())),
         SELF("@s", ctx -> List.of(ctx.requirePlayer())),
@@ -52,14 +55,16 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
 
     @Override
     public @NotNull Collection<Player> parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
-        String inputString = singletonInputValidation(inputObjects, String.class);
+        EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
-        SelectorType selectorType = SelectorType.fromSelector(inputString);
-        if (selectorType != null) return selectorType.get(ctx);
-
-        Player player = Bukkit.getPlayer(inputString);
-        if (player == null) throw new CommandParseException("Player not found: " + inputString);
-        return List.of(player);
+        try {
+            return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
+                  .stream()
+                  .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
+                  .toList();
+        } catch (Exception e) {
+            throw new CommandParseException("Players not found");
+        }
     }
 
     @Override

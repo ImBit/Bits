@@ -24,12 +24,16 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParserNew<
 
     @Override
     public @NotNull Player parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
-        EntitySelector inputString = singletonInputValidation(inputObjects, EntitySelector.class);
+        EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
         try {
-            return inputString.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource()).getFirst().getBukkitEntity().getPlayer();
+            return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
+                  .stream()
+                  .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
+                  .findFirst()
+                  .get();
         } catch (Exception e) {
-            throw new CommandParseException("Player not found: " + inputString);
+            throw new CommandParseException("Player not found!");
         }
 //        Player player = Bukkit.getPlayer(inputString);
 //        if (player == null) throw new CommandParseException("Player not found: " + inputString);
