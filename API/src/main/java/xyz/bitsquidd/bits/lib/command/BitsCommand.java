@@ -16,10 +16,7 @@ public abstract class BitsCommand {
 
     protected void onRegister() {
         // Default implementation does nothing
-    }
-
-    protected void onUnregister() {
-        // Default implementation does nothing
+        // Use this method to set up necessary states or permissions for roles dynamically.
     }
 
     @Command("usage")

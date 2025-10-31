@@ -124,6 +124,7 @@ public abstract class BitsCommandManager {
                                   .forEach(node -> {
                                       commands.registrar().register(node);
                                   });
+                            bitsCommand.onRegister();
                         });
               }
         );
