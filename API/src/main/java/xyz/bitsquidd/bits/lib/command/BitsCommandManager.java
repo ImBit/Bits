@@ -3,12 +3,10 @@ package xyz.bitsquidd.bits.lib.command;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
-import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
@@ -16,7 +14,6 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.CommandReturnDecorator;
 
 import java.util.Collection;
 
@@ -98,12 +95,7 @@ public abstract class BitsCommandManager {
      * We hook into this to provide custom formatting for unknown/error commands.
      * The default implementation returns a new instance of {@link BitsCommandListener}.
      */
-    protected BitsCommandListener getListenerInternal() {
-        return new BitsCommandListener(
-              CommandReturnDecorator.of(CommandReturnType.ERROR),
-              Component.text(SpigotConfig.unknownCommandMessage)
-        );
-    }
+    protected abstract BitsCommandListener getListenerInternal();
 
     /**
      * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
@@ -128,7 +120,7 @@ public abstract class BitsCommandManager {
               LifecycleEvents.COMMANDS, commands -> {
                   bitsCommands
                         .forEach(bitsCommand -> {
-                            brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand.getClass()))
+                            brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
                                   .forEach(node -> {
                                       commands.registrar().register(node);
                                   });
