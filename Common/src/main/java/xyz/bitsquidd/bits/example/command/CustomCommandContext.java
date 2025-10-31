@@ -4,7 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.example.text.decorator.CommandDecorator;
+import xyz.bitsquidd.bits.example.text.decorator.impl.CommandDecorator;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;

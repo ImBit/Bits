@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
@@ -15,15 +16,13 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NullMarked
 public class BitsCommandBuilder {
+    private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -34,6 +33,13 @@ public class BitsCommandBuilder {
     private final String commandDescription;
 
     private final String permissionString;
+
+    // Allow us to build from an instance or a class.
+    // Instances are used only for gathering extra requirements.
+    public BitsCommandBuilder(@Nullable BitsCommand commandInstance) {
+        this(Objects.requireNonNull(commandInstance).getClass());
+        this.commandInstance = commandInstance;
+    }
 
     public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
         this.commandClass = commandClass;
@@ -93,8 +99,8 @@ public class BitsCommandBuilder {
     }
 
 
-    public List<BitsCommandRequirement> getRequirements() {
-        List<BitsCommandRequirement> requirements = new ArrayList<>();
+    public Set<BitsCommandRequirement> getRequirements() {
+        Set<BitsCommandRequirement> requirements = new HashSet<>();
         if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionString));
 
         // Gather permission strings and convert them to requirements.
@@ -113,6 +119,7 @@ public class BitsCommandBuilder {
                   .toList());
         }
 
+        if (commandInstance != null) requirements.addAll(commandInstance.getAddedRequirements());
         return requirements;
     }
 
