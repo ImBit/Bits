@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.item;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -21,25 +22,24 @@ public final class SkullBuilder {
     private static final Material SKULL_MATERIAL = Material.PLAYER_HEAD;
 
     private final ItemStack item;
-    private SkullMeta meta;
+    private final SkullMeta meta;
 
     public SkullBuilder() {
         this.item = new ItemStack(SKULL_MATERIAL);
         this.meta = (SkullMeta)item.getItemMeta();
-        if (this.meta == null) {
-            throw new IllegalStateException("Failed to retrieve SkullMeta from ItemStack");
-        }
+        validate();
     }
 
     public SkullBuilder(ItemStack base) {
-        if (base.getType() != SKULL_MATERIAL) {
-            throw new IllegalArgumentException("Base ItemStack must be a " + SKULL_MATERIAL.toString());
-        }
+        if (base.getType() != SKULL_MATERIAL) throw new IllegalArgumentException("Base ItemStack must be a " + SKULL_MATERIAL);
         this.item = base.clone();
         this.meta = (SkullMeta)item.getItemMeta();
-        if (this.meta == null) {
-            throw new IllegalStateException("Failed to retrieve SkullMeta from base ItemStack");
-        }
+        validate();
+    }
+
+    private void validate() {
+        if (this.item == null) throw new IllegalStateException("Failed to create ItemStack");
+        if (this.meta == null) throw new IllegalStateException("Failed to retrieve SkullMeta from ItemStack");
     }
 
     public ItemStack build() {
@@ -54,6 +54,11 @@ public final class SkullBuilder {
 
     public SkullBuilder owner(UUID uuid) {
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        return this;
+    }
+
+    public SkullBuilder noteBlockSound(NamespacedKey noteBlockSound) {
+        meta.setNoteBlockSound(noteBlockSound);
         return this;
     }
 
