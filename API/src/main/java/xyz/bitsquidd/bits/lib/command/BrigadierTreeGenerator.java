@@ -140,7 +140,7 @@ public class BrigadierTreeGenerator {
         if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
 
         // Add method requirements
-        workingBranch.requires(ctx -> methodInfo.getRequirements().stream()
+        workingBranch.requires(ctx -> methodInfo.getRequirements(commandBuilder.getPermissionString()).stream()
               .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NullMarked
-public class BitsCommandBuilder {
+public final class BitsCommandBuilder {
     private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;
 
@@ -107,7 +107,7 @@ public class BitsCommandBuilder {
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(PermissionRequirement::of)
+                  .map(appended -> PermissionRequirement.of(permissionString + "." + appended))
                   .toList());
         }
 
@@ -121,6 +121,10 @@ public class BitsCommandBuilder {
 
         if (commandInstance != null) requirements.addAll(commandInstance.getAddedRequirements());
         return requirements;
+    }
+
+    public String getPermissionString() {
+        return permissionString;
     }
 
 }
