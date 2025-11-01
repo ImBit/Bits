@@ -1,7 +1,7 @@
 [versions]
-paper-api = "1.21.8-R0.1-SNAPSHOT"
+paper-api = "1.21.10-R0.1-SNAPSHOT"
 shadow = "9.0.1"
-paperweight-userdev = "2.0.0-beta.18"
+paperweight-userdev = "2.0.0-beta.19"
 dotenv = "4.0.0"
 
 [plugins]
