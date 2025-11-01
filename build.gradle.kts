@@ -1,3 +1,5 @@
+import jdk.tools.jlink.resources.plugins
+
 plugins {
     `java-library`
     `maven-publish`
@@ -7,7 +9,7 @@ plugins {
 }
 
 group = "xyz.bitsquidd"
-version = "0.0.5"
+version = "0.0.6"
 
 allprojects {
     group = rootProject.group
