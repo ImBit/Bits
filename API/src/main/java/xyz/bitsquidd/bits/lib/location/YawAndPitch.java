@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.lib.location;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -51,9 +52,10 @@ public final class YawAndPitch {
         };
     }
 
-    public void applyTo(Location location) {
-        location.setPitch(pitch);
-        location.setYaw(yaw);
+    public static YawAndPitch from(Quaternionf quaternion) {
+        Vector3f euler = new Vector3f();
+        quaternion.getEulerAnglesYXZ(euler);
+        return new YawAndPitch((float)Math.toDegrees(-euler.y + Math.PI), (float)Math.toDegrees(euler.x));
     }
 
     public Quaternionf toQuaternion() {
@@ -63,10 +65,44 @@ public final class YawAndPitch {
         return quaternion;
     }
 
+    public BlockFace toBlockFace() {
+        float normalizedYaw = ((yaw % 360) + 360) % 360;
+
+        if (pitch > 45) {
+            return BlockFace.DOWN;
+        } else if (pitch < -45) {
+            return BlockFace.UP;
+        } else if (normalizedYaw >= 337.5 || normalizedYaw < 22.5) {
+            return BlockFace.NORTH;
+        } else if (normalizedYaw >= 22.5 && normalizedYaw < 67.5) {
+            return BlockFace.NORTH_EAST;
+        } else if (normalizedYaw >= 67.5 && normalizedYaw < 112.5) {
+            return BlockFace.EAST;
+        } else if (normalizedYaw >= 112.5 && normalizedYaw < 157.5) {
+            return BlockFace.SOUTH_EAST;
+        } else if (normalizedYaw >= 157.5 && normalizedYaw < 202.5) {
+            return BlockFace.SOUTH;
+        } else if (normalizedYaw >= 202.5 && normalizedYaw < 247.5) {
+            return BlockFace.SOUTH_WEST;
+        } else if (normalizedYaw >= 247.5 && normalizedYaw < 292.5) {
+            return BlockFace.WEST;
+        } else if (normalizedYaw >= 292.5 && normalizedYaw < 337.5) {
+            return BlockFace.NORTH_WEST;
+        }
+
+        return BlockFace.SELF; // Fallback, should not reach here
+    }
+
     public Quaternionf addToQuaternion(Quaternionf quaternion) {
         quaternion.rotateY((float)Math.toRadians(yaw));
         quaternion.rotateX((float)Math.toRadians(pitch));
         return quaternion;
+    }
+
+    public Location applyTo(Location location) {
+        location.setPitch(pitch);
+        location.setYaw(yaw);
+        return location;
     }
 
 }
