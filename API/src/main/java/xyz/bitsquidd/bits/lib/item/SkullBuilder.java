@@ -17,6 +17,9 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * A builder for player skulls with custom player head textures.
+ */
 @NullMarked
 public final class SkullBuilder {
     private static final Material SKULL_MATERIAL = Material.PLAYER_HEAD;
@@ -30,9 +33,12 @@ public final class SkullBuilder {
         validate();
     }
 
+    /**
+     * Passes in an existing skull ItemStack to modify. Note: the item will be mutated directly.
+     */
     public SkullBuilder(ItemStack base) {
         if (base.getType() != SKULL_MATERIAL) throw new IllegalArgumentException("Base ItemStack must be a " + SKULL_MATERIAL);
-        this.item = base.clone();
+        this.item = base;
         this.meta = (SkullMeta)item.getItemMeta();
         validate();
     }
@@ -44,7 +50,7 @@ public final class SkullBuilder {
 
     public ItemStack build() {
         item.setItemMeta(meta);
-        return item.clone();
+        return item;
     }
 
     public SkullBuilder owner(OfflinePlayer player) {
