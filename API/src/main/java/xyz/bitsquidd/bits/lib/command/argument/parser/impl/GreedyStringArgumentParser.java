@@ -18,12 +18,12 @@ public final class GreedyStringArgumentParser extends AbstractArgumentParser<@No
 
     @Override
     public @NotNull GreedyString parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
-        return GreedyString.of(singletonInputValidation(inputObjects, String.class));
+        return GreedyString.of((String)inputObjects.getFirst()); // Note: can't use singletonInputValidation as GreedyString is special...
     }
 
     @Override
     public @NotNull List<InputTypeContainer> getInputTypes() {
-        return List.of(new InputTypeContainer(TypeSignature.of(String.class), getArgumentName()));
+        return List.of(new InputTypeContainer(TypeSignature.of(GreedyString.class), getArgumentName()));
     }
 
 }

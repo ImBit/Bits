@@ -13,6 +13,7 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
@@ -171,7 +172,10 @@ public class BrigadierTreeGenerator {
 
                     Object primitiveValue;
                     try {
-                        primitiveValue = ctx.getArgument(holder.argumentName(), holder.typeSignature().toRawType());
+                        Class<?> checkType = holder.typeSignature().toRawType();
+                        if (checkType == GreedyString.class) checkType = String.class; // Special case for greedy strings as they require a GreedyString input, but parse into String
+
+                        primitiveValue = ctx.getArgument(holder.argumentName(), checkType);
                     } catch (IllegalArgumentException e) {
                         throw new RuntimeException("Failed to get argument: " + parameter, e);
                     }
