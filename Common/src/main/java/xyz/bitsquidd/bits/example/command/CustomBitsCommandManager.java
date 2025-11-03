@@ -11,7 +11,6 @@ import org.spigotmc.SpigotConfig;
 import xyz.bitsquidd.bits.example.command.impl.TeleportCommand;
 import xyz.bitsquidd.bits.example.text.decorator.impl.CommandDecorator;
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
-import xyz.bitsquidd.bits.lib.command.BitsCommandListener;
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
@@ -22,6 +21,11 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import java.util.List;
 
 public class CustomBitsCommandManager extends BitsCommandManager {
+
+    private final CustomBitsCommandListener listener = new CustomBitsCommandListener(
+          CommandDecorator.of(CommandReturnType.ERROR),
+          Component.text(SpigotConfig.unknownCommandMessage)
+    );
 
     @Override
     public void startup() {
@@ -48,14 +52,6 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     @Override
     public @NotNull BitsCommandContext createContext(@NotNull CommandContext<CommandSourceStack> brigadierContext) {
         return new CustomCommandContext(brigadierContext);
-    }
-
-    @Override
-    protected @NotNull BitsCommandListener getListenerInternal() {
-        return new BitsCommandListener(
-              CommandDecorator.of(CommandReturnType.ERROR),
-              Component.text(SpigotConfig.unknownCommandMessage)
-        );
     }
 
     @Override

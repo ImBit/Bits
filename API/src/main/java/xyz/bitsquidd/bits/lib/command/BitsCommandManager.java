@@ -25,8 +25,6 @@ import java.util.Collection;
  */
 @NullMarked
 public abstract class BitsCommandManager {
-    protected final BitsCommandListener listener;
-
     protected final BitsArgumentRegistry argumentRegistry;
     protected final BitsRequirementRegistry requirementRegistry;
     protected final BrigadierTreeGenerator brigadierTreeGenerator;
@@ -34,8 +32,6 @@ public abstract class BitsCommandManager {
 
     protected BitsCommandManager() {
         BitsConfig.setCommandManager(this);
-
-        this.listener = getListenerInternal();
 
         BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
 
@@ -55,8 +51,6 @@ public abstract class BitsCommandManager {
      * Ensure this method is run on onEnable() oe.
      */
     public void startup() {
-        // A Bukkit plugin would require the following.
-        //   Bukkit.getPluginManager().registerEvents(listener, plugin);
         enableAllCommands();
     }
 
@@ -66,8 +60,7 @@ public abstract class BitsCommandManager {
      * Ensure this method is run on onDisable() oe.
      */
     public void shutdown() {
-        // A Bukkit plugin would require the following.
-        //   HandlerList.unregisterAll(listener);
+
     }
 
 
@@ -87,14 +80,6 @@ public abstract class BitsCommandManager {
      * @return The base permission string for all commands.
      */
     protected abstract String commandBasePermission();
-
-
-    /**
-     * Returns the default command listener.
-     * We hook into this to provide custom formatting for unknown/error commands.
-     * The default implementation returns a new instance of {@link BitsCommandListener}.
-     */
-    protected abstract BitsCommandListener getListenerInternal();
 
 
     /**
