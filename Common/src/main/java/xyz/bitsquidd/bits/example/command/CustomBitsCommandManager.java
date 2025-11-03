@@ -59,6 +59,15 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     }
 
     @Override
+    protected void executeCommand(boolean isAsync, @NotNull Runnable commandExecution) {
+        if (isAsync) {
+            Bukkit.getScheduler().runTaskAsynchronously(BitsConfig.getPlugin(), commandExecution);
+        } else {
+            Bukkit.getScheduler().runTask(BitsConfig.getPlugin(), commandExecution);
+        }
+    }
+
+    @Override
     protected @NotNull List<BitsCommand> getAllCommands() {
         return List.of(new TeleportCommand());
     }

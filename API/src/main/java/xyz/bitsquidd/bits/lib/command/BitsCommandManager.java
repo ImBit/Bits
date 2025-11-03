@@ -96,6 +96,16 @@ public abstract class BitsCommandManager {
      */
     protected abstract BitsCommandListener getListenerInternal();
 
+
+    /**
+     * Main command executor handler. This must be implemented for commands to be executed.
+     *
+     * @param isAsync          Whether the command is to be executed asynchronously.
+     * @param commandExecution The command execution runnable.
+     */
+    protected abstract void executeCommand(boolean isAsync, Runnable commandExecution);
+
+
     /**
      * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
      * This  can be overridden to provide custom context implementations i.e. format a command response.

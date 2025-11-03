@@ -6,7 +6,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.bukkit.Bukkit;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -231,11 +230,8 @@ public class BrigadierTreeGenerator {
                 }
             };
 
-            if (methodInfo.isAsync()) {
-                Bukkit.getScheduler().runTaskAsynchronously(BitsConfig.getPlugin(), commandExecution);
-            } else {
-                Bukkit.getScheduler().runTask(BitsConfig.getPlugin(), commandExecution);
-            }
+            bitsCommandManager.executeCommand(methodInfo.isAsync(), commandExecution);
+
             return Command.SINGLE_SUCCESS;
         };
     }
