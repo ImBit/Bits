@@ -3,6 +3,8 @@ package xyz.bitsquidd.bits.example.command;
 import com.mojang.brigadier.context.CommandContext;
 import net.kyori.adventure.text.Component;
 import net.minecraft.commands.CommandSourceStack;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
 
@@ -15,10 +17,23 @@ import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.List;
 
 public class CustomBitsCommandManager extends BitsCommandManager {
+
+    @Override
+    public void startup() {
+        super.startup();
+        Bukkit.getPluginManager().registerEvents(listener, BitsConfig.getPlugin());
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        HandlerList.unregisterAll(listener);
+    }
 
     @Override
     public @NotNull BitsArgumentRegistry getArgumentRegistry() {

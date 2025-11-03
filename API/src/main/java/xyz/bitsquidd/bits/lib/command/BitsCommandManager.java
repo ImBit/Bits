@@ -4,9 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
@@ -28,7 +25,6 @@ import java.util.Collection;
  */
 @NullMarked
 public abstract class BitsCommandManager {
-    protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
     protected final BitsArgumentRegistry argumentRegistry;
@@ -56,20 +52,22 @@ public abstract class BitsCommandManager {
     /**
      * Registers the command listener and enables all commands.
      * <p>
-     * Ensure this method is run on {@link JavaPlugin#onEnable()} oe.
+     * Ensure this method is run on onEnable() oe.
      */
     public void startup() {
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
+        // A Bukkit plugin would require the following.
+        //   Bukkit.getPluginManager().registerEvents(listener, plugin);
         enableAllCommands();
     }
 
     /**
      * Unregisters the command listener.
      * <p>
-     * Ensure this method is run on {@link JavaPlugin#onDisable()} oe.
+     * Ensure this method is run on onDisable() oe.
      */
     public void shutdown() {
-        HandlerList.unregisterAll(listener);
+        // A Bukkit plugin would require the following.
+        //   HandlerList.unregisterAll(listener);
     }
 
 
@@ -114,7 +112,7 @@ public abstract class BitsCommandManager {
     /**
      * Registers all {@link BitsCommand}s.
      */
-    private void enableAllCommands() {
+    protected final void enableAllCommands() {
         CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
 
         getAllCommands()
