@@ -24,6 +24,7 @@ import xyz.bitsquidd.bits.lib.type.GreedyString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -108,6 +109,10 @@ public class BrigadierTreeGenerator {
             }
 
             for (Method method : commandBuilder.getCommandMethods()) {
+                if (!Modifier.isPublic(method.getModifiers())) {
+                    BitsConfig.getPlugin().getLogger().warning("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
+                    continue;
+                }
                 processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));
             }
 
