@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.command.debugging;
 
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.ArrayList;
 import java.util.Collection;

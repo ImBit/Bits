@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.command.util;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;

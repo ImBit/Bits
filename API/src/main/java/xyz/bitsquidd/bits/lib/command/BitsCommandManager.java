@@ -1,8 +1,9 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,9 +31,9 @@ public abstract class BitsCommandManager {
     protected final JavaPlugin plugin = BitsConfig.getPlugin();
     protected final BitsCommandListener listener;
 
-    private final BitsArgumentRegistry argumentRegistry;
-    private final BitsRequirementRegistry requirementRegistry;
-    private final BrigadierTreeGenerator brigadierTreeGenerator;
+    protected final BitsArgumentRegistry argumentRegistry;
+    protected final BitsRequirementRegistry requirementRegistry;
+    protected final BrigadierTreeGenerator brigadierTreeGenerator;
 
 
     protected BitsCommandManager() {
@@ -114,20 +115,18 @@ public abstract class BitsCommandManager {
      * Registers all {@link BitsCommand}s.
      */
     private void enableAllCommands() {
-        Collection<BitsCommand> bitsCommands = getAllCommands();
+        CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
 
-        plugin.getLifecycleManager().registerEventHandler(
-              LifecycleEvents.COMMANDS, commands -> {
-                  bitsCommands
-                        .forEach(bitsCommand -> {
-                            brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
-                                  .forEach(node -> {
-                                      commands.registrar().register(node);
-                                  });
-                            bitsCommand.onRegister();
-                        });
-              }
-        );
+        getAllCommands()
+              .forEach(bitsCommand -> {
+                  BitsConfig.getPlugin().getLogger().info("Registering command: " + bitsCommand);
+
+                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand)).forEach(node -> {
+                      BitsConfig.getPlugin().getLogger().info("Registered Dispatcher: " + node.getName());
+                      dispatcher.getRoot().addChild(node);
+                  });
+                  bitsCommand.onRegister();
+              });
     }
 
 }

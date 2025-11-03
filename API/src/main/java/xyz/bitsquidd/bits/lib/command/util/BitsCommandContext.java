@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

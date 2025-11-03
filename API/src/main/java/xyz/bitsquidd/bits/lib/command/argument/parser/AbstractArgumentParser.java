@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;

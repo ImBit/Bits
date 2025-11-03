@@ -14,7 +14,7 @@ import java.util.Set;
 @NullMarked
 public abstract class BitsCommand {
 
-    protected void onRegister() {
+    public void onRegister() {
         // Default implementation does nothing
         // Use this method to set up necessary states or permissions for roles dynamically.
     }

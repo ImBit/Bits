@@ -1,8 +1,8 @@
 package xyz.bitsquidd.bits.example.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
 
@@ -21,12 +21,12 @@ import java.util.List;
 public class CustomBitsCommandManager extends BitsCommandManager {
 
     @Override
-    public BitsArgumentRegistry getArgumentRegistry() {
+    public @NotNull BitsArgumentRegistry getArgumentRegistry() {
         return new BitsArgumentRegistry();
     }
 
     @Override
-    protected BitsRequirementRegistry getRequirementRegistry() {
+    protected @NotNull BitsRequirementRegistry getRequirementRegistry() {
         return new BitsRequirementRegistry();
     }
 
@@ -36,7 +36,7 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     }
 
     @Override
-    protected BitsCommandListener getListenerInternal() {
+    protected @NotNull BitsCommandListener getListenerInternal() {
         return new BitsCommandListener(
               CommandDecorator.of(CommandReturnType.ERROR),
               Component.text(SpigotConfig.unknownCommandMessage)

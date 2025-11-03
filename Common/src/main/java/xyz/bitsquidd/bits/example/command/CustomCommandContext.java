@@ -1,7 +1,7 @@
 package xyz.bitsquidd.bits.example.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.example.text.decorator.impl.CommandDecorator;
