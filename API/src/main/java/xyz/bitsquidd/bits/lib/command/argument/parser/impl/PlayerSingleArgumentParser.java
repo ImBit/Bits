@@ -5,7 +5,6 @@ import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
@@ -46,7 +45,7 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParser<@No
     }
 
     @Override
-    public @Nullable Supplier<List<String>> getSuggestions() {
+    public @NotNull Supplier<List<String>> getSuggestions() {
         return () -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 

@@ -16,7 +16,7 @@ import java.util.Objects;
  * <li>A {@code Map<String, Float>} would be represented as: {@code TypeSignature.of(Map.class, String.class, Float.class)}
  * </ul>
  */
-public class TypeSignature<T> {
+public final class TypeSignature<T> {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_BOXED;
 
     static {

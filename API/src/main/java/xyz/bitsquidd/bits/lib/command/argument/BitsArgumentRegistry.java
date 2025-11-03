@@ -10,7 +10,6 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
-import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
@@ -41,9 +40,16 @@ public class BitsArgumentRegistry {
         return instance;
     }
 
-    private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
+    private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType, AbstractArgumentParser<?> parser) {
         Class<?> clazz = inputType.toRawType();
-        if (clazz == Integer.class || clazz == int.class) {
+
+        if (clazz == String.class) {
+            if (parser instanceof GreedyStringArgumentParser) {
+                return StringArgumentType.greedyString(); // Special case for greedy strings as they require a GreedyString input, but parse into String
+            } else {
+                return StringArgumentType.string();
+            }
+        } else if (clazz == Integer.class || clazz == int.class) {
             return IntegerArgumentType.integer();
         } else if (clazz == Double.class || clazz == double.class) {
             return DoubleArgumentType.doubleArg();
@@ -53,10 +59,6 @@ public class BitsArgumentRegistry {
             return LongArgumentType.longArg();
         } else if (clazz == Boolean.class || clazz == boolean.class) {
             return BoolArgumentType.bool();
-        } else if (clazz == GreedyString.class) {
-            return StringArgumentType.greedyString();
-        } else if (clazz == String.class) {
-            return StringArgumentType.string();
         } else if (clazz == EntitySelector.class) {
             // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
             // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
@@ -129,7 +131,7 @@ public class BitsArgumentRegistry {
             // If its a primitive, we can directly add it
             if (nestedParser.getInputTypes().size() == 1) {
                 InputTypeContainer inputType = nestedParser.getInputTypes().getFirst();
-                ArgumentType<?> brigadierType = toArgumentType(inputType.typeSignature());
+                ArgumentType<?> brigadierType = toArgumentType(inputType.typeSignature(), nestedParser);
 
                 if (brigadierType != null) {
                     String argumentName = inputTypes.size() > 1

@@ -13,7 +13,7 @@ import java.util.List;
 
 @NullMarked
 public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O>
-      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, GreedyStringArgumentParser, EntitySelectorArgumentParser {
+      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, EntitySelectorArgumentParser {
 
     PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
         super(TypeSignature.of(outputClass), argumentName);

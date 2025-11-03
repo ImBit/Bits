@@ -73,7 +73,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public @Nullable Supplier<List<String>> getSuggestions() {
+    public @NotNull Supplier<List<String>> getSuggestions() {
         List<String> suggestions = new ArrayList<>();
         suggestions.add(SelectorType.ALL.selector);
         suggestions.add(SelectorType.SELF.selector);

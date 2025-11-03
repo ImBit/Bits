@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
@@ -29,7 +28,7 @@ public final class WorldArgumentParser extends AbstractArgumentParser<@NotNull W
     }
 
     @Override
-    public @Nullable Supplier<List<String>> getSuggestions() {
+    public @NotNull Supplier<List<String>> getSuggestions() {
         return () -> Bukkit.getWorlds().stream().map(World::getName).toList();
     }
 

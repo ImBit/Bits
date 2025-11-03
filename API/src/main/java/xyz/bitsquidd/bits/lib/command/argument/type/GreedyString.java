@@ -1,15 +1,16 @@
 package xyz.bitsquidd.bits.lib.command.argument.type;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-public class GreedyString {
-    public final @NotNull String value;
+@NullMarked
+public final class GreedyString {
+    public final String value;
 
-    public GreedyString(@NotNull String value) {
+    public GreedyString(String value) {
         this.value = value;
     }
 
-    public static @NotNull GreedyString of(@NotNull String value) {
+    public static GreedyString of(String value) {
         return new GreedyString(value);
     }
 
