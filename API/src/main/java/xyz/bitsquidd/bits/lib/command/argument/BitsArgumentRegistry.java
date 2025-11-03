@@ -32,7 +32,7 @@ public class BitsArgumentRegistry {
         if (instance != null) throw new IllegalStateException("ArgumentRegistry has already been initialized.");
         instance = this;
 
-        List<AbstractArgumentParser<?>> initialParsers = new ArrayList<>(initialiseDefaultParsers());
+        List<AbstractArgumentParser<?>> initialParsers = new ArrayList<>(initialisePrimitiveParsers());
         initialParsers.addAll(initialiseParsers());
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
     }
@@ -67,7 +67,7 @@ public class BitsArgumentRegistry {
         return null;
     }
 
-    private List<AbstractArgumentParser<?>> initialiseDefaultParsers() {
+    private List<AbstractArgumentParser<?>> initialisePrimitiveParsers() {
         return List.of(
               new BooleanArgumentParser(),
               new DoubleArgumentParser(),
@@ -75,20 +75,20 @@ public class BitsArgumentRegistry {
               new IntegerArgumentParser(),
               new LongArgumentParser(),
               new StringArgumentParser(),
-              new EntitySelectorArgumentParser(),
+              new EntitySelectorArgumentParser()
+        );
+    }
 
+    protected List<AbstractArgumentParser<?>> initialiseParsers() {
+        // Override to add custom parsers
+        return new ArrayList<>(List.of(
               new GreedyStringArgumentParser(),
               new PlayerCollectionArgumentParser(),
               new PlayerSingleArgumentParser(),
               new WorldArgumentParser(),
               new LocationArgumentParser(),
               new BlockPosArgumentParser()
-        );
-    }
-
-    protected List<AbstractArgumentParser<?>> initialiseParsers() {
-        // Override to add custom parsers
-        return List.of();
+        ));
     }
 
     /**
