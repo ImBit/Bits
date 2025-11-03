@@ -119,12 +119,8 @@ public abstract class BitsCommandManager {
 
         getAllCommands()
               .forEach(bitsCommand -> {
-                  BitsConfig.getPlugin().getLogger().info("Registering command: " + bitsCommand);
-
-                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand)).forEach(node -> {
-                      BitsConfig.getPlugin().getLogger().info("Registered Dispatcher: " + node.getName());
-                      dispatcher.getRoot().addChild(node);
-                  });
+                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
+                        .forEach(node -> dispatcher.getRoot().addChild(node));
                   bitsCommand.onRegister();
               });
     }
