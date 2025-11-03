@@ -19,7 +19,7 @@ public final class YawAndPitch {
     }
 
     public static YawAndPitch of(float yaw, float pitch) {
-        return new YawAndPitch(pitch, yaw);
+        return new YawAndPitch(yaw, pitch);
     }
 
 
@@ -100,8 +100,7 @@ public final class YawAndPitch {
     }
 
     public Location applyTo(Location location) {
-        location.setPitch(pitch);
-        location.setYaw(yaw);
+        location.setRotation(yaw, pitch);
         return location;
     }
 
