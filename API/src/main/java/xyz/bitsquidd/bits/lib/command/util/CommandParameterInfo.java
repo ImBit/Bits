@@ -7,8 +7,8 @@ import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
-import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;

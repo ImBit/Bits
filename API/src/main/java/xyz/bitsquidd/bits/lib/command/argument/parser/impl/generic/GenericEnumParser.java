@@ -3,11 +3,11 @@ package xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs.AbstractEnumArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 import java.util.function.Supplier;

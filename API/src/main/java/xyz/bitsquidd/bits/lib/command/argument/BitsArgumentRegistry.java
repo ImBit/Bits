@@ -10,10 +10,11 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
-import xyz.bitsquidd.bits.lib.command.argument.type.GreedyString;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.lib.type.GreedyString;
+import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.ArrayList;
 import java.util.HashMap;

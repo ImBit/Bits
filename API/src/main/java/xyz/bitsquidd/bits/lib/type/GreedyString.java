@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument.type;
+package xyz.bitsquidd.bits.lib.type;
 
 import org.jspecify.annotations.NullMarked;
 

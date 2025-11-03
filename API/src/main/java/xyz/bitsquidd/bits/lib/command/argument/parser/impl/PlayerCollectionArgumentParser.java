@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
-import xyz.bitsquidd.bits.lib.command.argument.TypeSignature;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
+import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.ArrayList;
 import java.util.Collection;

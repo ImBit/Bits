@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.argument;
+package xyz.bitsquidd.bits.lib.wrappers;
 
 import org.jetbrains.annotations.NotNull;
 
