@@ -46,7 +46,7 @@ public class BrigadierTreeGenerator {
               .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
               .toList();
 
-        if (BitsConfig.isDevelopmentMode()) BitsConfig.getPlugin().getLogger().info(TreeDebugger.visualizeCommandTree(nodes));
+        if (BitsConfig.isDevelopmentMode()) BitsConfig.getLogger().info(TreeDebugger.visualizeCommandTree(nodes));
         return nodes;
     }
 
@@ -109,7 +109,7 @@ public class BrigadierTreeGenerator {
 
             for (Method method : commandBuilder.getCommandMethods()) {
                 if (!Modifier.isPublic(method.getModifiers())) {
-                    BitsConfig.getPlugin().getLogger().warning("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
+                    BitsConfig.getLogger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
                     continue;
                 }
                 processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));

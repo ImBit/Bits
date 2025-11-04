@@ -109,7 +109,7 @@ public class BitsArgumentRegistry {
                 return new GenericEnumParser<>(enumClass);
             }
 
-            BitsConfig.getPlugin().getLogger().severe("No parser registered for type: " + typeSignature);
+            BitsConfig.getLogger().error("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
 

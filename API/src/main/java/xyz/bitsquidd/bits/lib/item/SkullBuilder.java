@@ -73,7 +73,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(extractUrlFromBase64(base64));
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.getPlugin().getLogger().warning("Failed to set skull texture from base64: " + e.getMessage());
+            BitsConfig.getLogger().warn("Failed to set skull texture from base64: " + e.getMessage());
         }
         return this;
     }
@@ -83,7 +83,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(url);
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.getPlugin().getLogger().warning("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
+            BitsConfig.getLogger().warn("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
         }
         return this;
     }
