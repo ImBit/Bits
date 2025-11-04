@@ -42,7 +42,7 @@ public class BitsArgumentRegistry {
         return instance;
     }
 
-    private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
+    protected @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
         Class<?> clazz = inputType.toRawType();
         if (clazz == Integer.class || clazz == int.class) {
             return IntegerArgumentType.integer();
@@ -67,7 +67,7 @@ public class BitsArgumentRegistry {
         return null;
     }
 
-    private List<AbstractArgumentParser<?>> initialisePrimitiveParsers() {
+    protected List<AbstractArgumentParser<?>> initialisePrimitiveParsers() {
         return List.of(
               new BooleanArgumentParser(),
               new DoubleArgumentParser(),
@@ -109,7 +109,7 @@ public class BitsArgumentRegistry {
                 return new GenericEnumParser<>(enumClass);
             }
 
-            BitsConfig.getPlugin().getLogger().severe("No parser registered for type: " + typeSignature);
+            BitsConfig.getLogger().error("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
 

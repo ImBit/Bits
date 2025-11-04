@@ -107,7 +107,7 @@ public abstract class BitsCommandManager {
     /**
      * Registers all {@link BitsCommand}s.
      */
-    protected final void enableAllCommands() {
+    protected void enableAllCommands() {
         CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
 
         getAllCommands()

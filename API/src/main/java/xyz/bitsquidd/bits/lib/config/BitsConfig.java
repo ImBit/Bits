@@ -4,6 +4,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.slf4j.Logger;
+
+import org.slf4j.LoggerFactory;
+
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 
 import java.util.Objects;
@@ -43,6 +47,10 @@ public class BitsConfig {
     public static @NotNull JavaPlugin getPlugin() {
         checkInitialized();
         return Objects.requireNonNull(plugin);
+    }
+
+    public static @NotNull Logger getLogger() {
+        return LoggerFactory.getLogger("BitsLogging");
     }
 
 
