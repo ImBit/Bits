@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -14,6 +13,7 @@ import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.nms.Commands;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.CommandMethodInfo;
