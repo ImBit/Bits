@@ -58,6 +58,14 @@ public final class YawAndPitch {
         return new YawAndPitch((float)Math.toDegrees(-euler.y + Math.PI), (float)Math.toDegrees(euler.x));
     }
 
+    public YawAndPitch add(YawAndPitch yawAndPitch) {
+        return new YawAndPitch(this.yaw + yawAndPitch.yaw, this.pitch + yawAndPitch.pitch);
+    }
+
+    public YawAndPitch subtract(YawAndPitch yawAndPitch) {
+        return new YawAndPitch(this.yaw - yawAndPitch.yaw, this.pitch - yawAndPitch.pitch);
+    }
+
     public Quaternionf toQuaternion() {
         Quaternionf quaternion = new Quaternionf();
         quaternion.rotateY((float)Math.toRadians(yaw));
@@ -104,4 +112,11 @@ public final class YawAndPitch {
         return location;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof YawAndPitch that)) return false;
+        return Float.compare(that.yaw, yaw) == 0 && Float.compare(that.pitch, pitch) == 0;
+    }
 }
