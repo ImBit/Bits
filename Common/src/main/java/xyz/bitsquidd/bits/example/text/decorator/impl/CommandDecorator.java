@@ -1,9 +1,8 @@
 package xyz.bitsquidd.bits.example.text.decorator.impl;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.BasicColorFormatter;
@@ -24,7 +23,7 @@ public class CommandDecorator extends StyleDecorator {
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component component, @Nullable Audience target) {
+    public @NotNull Component format(@NotNull Component component, @NotNull Player target) {
         return Component.empty()
               .append(Component.text(toMessageIcon(commandReturnType)))
               .append(super.format(component, target));

@@ -2,9 +2,11 @@ package xyz.bitsquidd.bits.lib.sendable.text;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.helper.AudienceHelper;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
@@ -93,19 +95,24 @@ public final class Text implements Sendable {
 
 
     @Override
-    public <T extends Audience> void send(T target) {
-        target.sendMessage(getComponent(target));
+    public <A extends Audience> void send(A audience) {
+        AudienceHelper.getPlayers(audience).forEach(player -> {
+            player.sendMessage(getComponent(player));
+        });
     }
 
-    public <T extends Audience> Component getComponent(@Nullable T target) {
+    public <A extends Audience> Component getComponent(@Nullable A audience) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
         componentDecorators.addAll(decorators);
         componentDecorators.addAll(POST_DEFAULT_DECORATORS);
 
-        for (ITextDecorator decorator : componentDecorators) {
-            returnComponent = decorator.format(returnComponent, target);
+        // We can only format for players, so skip if not a player
+        if (audience instanceof Player playerTarget) {
+            for (ITextDecorator decorator : componentDecorators) {
+                returnComponent = decorator.format(returnComponent, playerTarget);
+            }
         }
 
         return returnComponent;
