@@ -46,12 +46,16 @@ import java.util.List;
  *
  * // Text with formatting tags
  * Text.of("This <b>text is bold<b> and this is <i>italic<i>, <b,i>this is both</b,/i>", new FancyTagDecorator()).send(player);
+ *
+ * // Text with appended Text objects
+ * Text.of("Hello ").append(Text.of("World!")).send(player);
  * }</pre>
  */
 @NullMarked
 public final class Text implements Sendable {
     private final Component component;
     private final List<ITextDecorator> decorators = new ArrayList<>();
+    private final List<Text> appendedText = new ArrayList<>();
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
@@ -94,6 +98,12 @@ public final class Text implements Sendable {
     }
 
 
+    public Text append(Text text) {
+        this.appendedText.add(text);
+        return this;
+    }
+
+
     @Override
     public <A extends Audience> void send(A audience) {
         AudienceHelper.getPlayers(audience).forEach(player -> {
@@ -113,6 +123,10 @@ public final class Text implements Sendable {
             for (ITextDecorator decorator : componentDecorators) {
                 returnComponent = decorator.format(returnComponent, playerTarget);
             }
+        }
+
+        for (Text appendedText : appendedText) {
+            returnComponent = returnComponent.append(appendedText.getComponent(audience));
         }
 
         return returnComponent;
