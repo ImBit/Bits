@@ -38,7 +38,8 @@ public class BrigadierTreeGenerator {
     public List<LiteralCommandNode<CommandSourceStack>> createNodes(
           BitsCommandBuilder commandBuilder
     ) {
-        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root"); // We create a "dummy_root" to be able to split core aliases.
+        // We create a "dummy_root" to be able to split core aliases.
+        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root");
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
         List<LiteralCommandNode<CommandSourceStack>> nodes = dummyRoot.getArguments().stream()
@@ -67,7 +68,14 @@ public class BrigadierTreeGenerator {
             if (root == null) throw new CommandParseException("Root command class must have a name.");
             commandBranches.add(root);
         } else {
-            List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream().map(Commands::literal).toList();
+            List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream()
+                  .map(Commands::literal)
+                  .toList();
+
+            nextBranches.forEach(argumentBuilder -> {
+                argumentBuilder.requires(sender -> sender.getSender().hasPermission(commandBuilder.getPermissionString()));
+            });
+
             commandBranches.addAll(nextBranches);
         }
 
@@ -141,8 +149,12 @@ public class BrigadierTreeGenerator {
             paramBranch.addAll(param.createBrigadierArguments());
         });
 
-        ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
-        if (!paramBranch.isEmpty()) workingBranch = paramBranch.getLast();
+        ArgumentBuilder<CommandSourceStack, ?> workingBranch;
+        if (!paramBranch.isEmpty()) {
+            workingBranch = paramBranch.getLast();
+        } else {
+            workingBranch = nextBranch;
+        }
 
         // Add method requirements
         workingBranch.requires(ctx -> methodInfo.getRequirements(commandBuilder.getPermissionString()).stream()
