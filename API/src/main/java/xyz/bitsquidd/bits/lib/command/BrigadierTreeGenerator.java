@@ -73,7 +73,7 @@ public class BrigadierTreeGenerator {
                   .toList();
 
             nextBranches.forEach(argumentBuilder -> {
-                argumentBuilder.requires(sender -> sender.getSender().hasPermission(commandBuilder.getPermissionString()));
+                argumentBuilder.requires(sender -> commandBuilder.getPermissionStrings().stream().anyMatch(permissionString -> sender.getSender().hasPermission(permissionString)));
             });
 
             commandBranches.addAll(nextBranches);
@@ -157,7 +157,7 @@ public class BrigadierTreeGenerator {
         }
 
         // Add method requirements
-        workingBranch.requires(ctx -> methodInfo.getRequirements(commandBuilder.getPermissionString()).stream()
+        workingBranch.requires(ctx -> methodInfo.getRequirements(commandBuilder.getCorePermissionString()).stream()
               .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));

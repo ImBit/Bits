@@ -32,13 +32,15 @@ public final class BitsCommandBuilder {
     private final List<String> commandAliases;
     private final String commandDescription;
 
-    private final String permissionString;
+    private final String corePermissionString;
+    private final List<String> permissionStrings = new ArrayList<>();
 
     // Allow us to build from an instance or a class.
     // Instances are used only for gathering extra requirements.
     public BitsCommandBuilder(@Nullable BitsCommand commandInstance) {
         this(Objects.requireNonNull(commandInstance).getClass());
         this.commandInstance = commandInstance;
+        this.permissionStrings.addAll(commandInstance.getAlternatePermissionStrings());
     }
 
     public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
@@ -50,7 +52,8 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.permissionString = BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
+        this.corePermissionString = BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
+        this.permissionStrings.add(corePermissionString);
     }
 
 
@@ -101,13 +104,13 @@ public final class BitsCommandBuilder {
 
     public Set<BitsCommandRequirement> getRequirements() {
         Set<BitsCommandRequirement> requirements = new HashSet<>();
-        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionString));
+        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionStrings));
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(permissionString + "." + appended))
+                  .map(appended -> PermissionRequirement.of(corePermissionString + "." + appended))
                   .toList());
         }
 
@@ -123,8 +126,12 @@ public final class BitsCommandBuilder {
         return requirements;
     }
 
-    public String getPermissionString() {
-        return permissionString;
+    public String getCorePermissionString() {
+        return corePermissionString;
+    }
+
+    public List<String> getPermissionStrings() {
+        return Collections.unmodifiableList(permissionStrings);
     }
 
 }

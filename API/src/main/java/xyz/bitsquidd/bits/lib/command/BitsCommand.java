@@ -8,8 +8,8 @@ import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @NullMarked
 public abstract class BitsCommand {
@@ -24,8 +24,19 @@ public abstract class BitsCommand {
         ctx.respond(Text.of(Component.text("Test from " + getClass().getSimpleName() + "!")));
     }
 
-    public Set<BitsCommandRequirement> getAddedRequirements() {
-        return Collections.emptySet();
+    /**
+     * Override to provide additional requirement instances needed to execute this command.
+     */
+    public Collection<BitsCommandRequirement> getAddedRequirements() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Override to provide alternate permission strings for this command.
+     * Note: These will NOT be prefixed with the core permission string.
+     */
+    public Collection<String> getAlternatePermissionStrings() {
+        return new ArrayList<>();
     }
 
 }

@@ -14,6 +14,8 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 // TODO:
 //  - Add ability for Restrictions.
@@ -29,6 +31,7 @@ public abstract class BitsCommandManager {
     protected final BitsRequirementRegistry requirementRegistry;
     protected final BrigadierTreeGenerator brigadierTreeGenerator;
 
+    private final Set<BitsCommand> registeredCommands = new HashSet<>();
 
     protected BitsCommandManager() {
         BitsConfig.setCommandManager(this);
@@ -43,6 +46,13 @@ public abstract class BitsCommandManager {
     protected abstract BitsArgumentRegistry getArgumentRegistry();
 
     protected abstract BitsRequirementRegistry getRequirementRegistry();
+
+    /**
+     * Gets all currently registered commands.
+     */
+    public final Set<BitsCommand> getRegisteredCommands() {
+        return registeredCommands;
+    }
 
 
     /**
@@ -110,7 +120,9 @@ public abstract class BitsCommandManager {
     protected final void enableAllCommands() {
         CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
 
-        getAllCommands()
+        registeredCommands.addAll(getAllCommands());
+
+        registeredCommands
               .forEach(bitsCommand -> {
                   brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
                         .forEach(node -> {
