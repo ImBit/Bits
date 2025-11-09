@@ -62,9 +62,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
             components.add(createStyledComponent(remainingText, textComponent.style(), context.activeTags));
         }
 
-        if (components.isEmpty() && context.activeTags.isEmpty()) {
-            return List.of(textComponent);
-        }
+        if (components.isEmpty() && context.activeTags.isEmpty()) return List.of();
 
         if (components.isEmpty()) {
             return List.of(createStyledComponent(content, textComponent.style(), context.activeTags));
