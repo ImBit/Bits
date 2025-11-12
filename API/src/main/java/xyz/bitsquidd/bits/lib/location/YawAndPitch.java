@@ -6,6 +6,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.Objects;
+
 @NullMarked
 public final class YawAndPitch {
     public final float yaw;
@@ -14,7 +16,7 @@ public final class YawAndPitch {
     public static final YawAndPitch ZERO = new YawAndPitch(0f, 0f);
 
     private YawAndPitch(float yaw, float pitch) {
-        this.yaw = yaw;
+        this.yaw = (yaw + 360) % 360;
         this.pitch = pitch;
     }
 
@@ -119,4 +121,15 @@ public final class YawAndPitch {
         if (!(obj instanceof YawAndPitch that)) return false;
         return Float.compare(that.yaw, yaw) == 0 && Float.compare(that.pitch, pitch) == 0;
     }
+
+    @Override
+    public String toString() {
+        return "YawAndPitch:" + yaw + "," + pitch;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(yaw, pitch);
+    }
+
 }
