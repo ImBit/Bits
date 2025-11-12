@@ -12,11 +12,16 @@ public final class AudienceHelper {
     public static @NotNull List<Player> getPlayers(@NotNull Audience audience) {
         List<Player> players = new ArrayList<>();
 
-        audience.forEachAudience(containedAudience -> {
-            if (containedAudience instanceof Player player) {
-                players.add(player);
-            }
-        });
+        if (audience instanceof Player player) {
+            players.add(player);
+            return players;
+        } else {
+            audience.forEachAudience(containedAudience -> {
+                if (containedAudience instanceof Player player) {
+                    players.add(player);
+                }
+            });
+        }
 
         return players;
     }
