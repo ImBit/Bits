@@ -27,6 +27,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 @NullMarked
 public class BrigadierTreeGenerator {
@@ -63,17 +64,34 @@ public class BrigadierTreeGenerator {
         List<String> commandAliases = new ArrayList<>(commandBuilder.getCommandAliases());
         commandAliases.add(commandName);
 
+        BitsConfig.getLogger().info("Creating nodes for command: " + commandName);
+        BitsConfig.getLogger().info("  Aliases: " + commandAliases);
+        BitsConfig.getLogger().info("  Permissions: " + commandBuilder.getPermissionStrings());
+
         // Note: Aliases are not created for commands without names.
         if (commandName.isEmpty()) {
+            BitsConfig.getLogger().info("here1");
+
             if (root == null) throw new CommandParseException("Root command class must have a name.");
             commandBranches.add(root);
         } else {
+            BitsConfig.getLogger().info("here2");
             List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream()
                   .map(Commands::literal)
                   .toList();
 
+            BitsConfig.getLogger().info(nextBranches + "");
+            BitsConfig.getLogger().info(commandBuilder.getPermissionStrings() + "");
+            BitsConfig.getLogger().info("---");
+
             nextBranches.forEach(argumentBuilder -> {
-                argumentBuilder.requires(sender -> commandBuilder.getPermissionStrings().stream().anyMatch(permissionString -> sender.getSender().hasPermission(permissionString)));
+                mergeRequirement(
+                      argumentBuilder, sender ->
+                            commandBuilder.getPermissionStrings().stream().anyMatch(permissionString -> {
+                                BitsConfig.getLogger().info(sender.getSender().hasPermission(permissionString) + " < " + permissionString);
+                                return sender.getSender().hasPermission(permissionString);
+                            })
+                );
             });
 
             commandBranches.addAll(nextBranches);
@@ -88,8 +106,10 @@ public class BrigadierTreeGenerator {
           final List<CommandParameterInfo> addedParameters
     ) {
         // Calculate requirements required for this branch
-        branch.requires(ctx -> commandBuilder.getRequirements().stream()
-              .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
+        mergeRequirement(
+              branch,
+              ctx -> commandBuilder.getRequirements().stream()
+                    .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
         );
 
         // Create parameters needed for this class.
@@ -157,8 +177,10 @@ public class BrigadierTreeGenerator {
         }
 
         // Add method requirements
-        workingBranch.requires(ctx -> methodInfo.getRequirements(commandBuilder.getCorePermissionString()).stream()
-              .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
+        mergeRequirement(
+              workingBranch, ctx ->
+                    methodInfo.getRequirements(commandBuilder.getCorePermissionString()).stream()
+                          .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
@@ -257,6 +279,11 @@ public class BrigadierTreeGenerator {
         List<ArgumentBuilder<CommandSourceStack, ?>> rest = toAdd.subList(1, toAdd.size());
         first.then(buildBackward(new ArrayList<>(rest)));
         return first;
+    }
+
+    private <S> void mergeRequirement(ArgumentBuilder<S, ?> builder, Predicate<S> newRequirement) {
+        Predicate<S> previousRequirement = builder.getRequirement();
+        builder.requires(ctx -> previousRequirement.test(ctx) && newRequirement.test(ctx));
     }
 
 }

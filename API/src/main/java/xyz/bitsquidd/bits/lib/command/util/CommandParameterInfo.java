@@ -32,10 +32,17 @@ public class CommandParameterInfo {
         this.parameter = parameter;
         this.typeSignature = TypeSignature.of(parameter.getParameterizedType());
 
-        String baseName = typeSignature.toRawType().getSimpleName().toLowerCase();
+        xyz.bitsquidd.bits.lib.command.annotation.Parameter parameterAnnotation = parameter.getAnnotation(xyz.bitsquidd.bits.lib.command.annotation.Parameter.class);
+        String name;
+        if (parameterAnnotation != null && !parameterAnnotation.value().isEmpty()) {
+            name = parameterAnnotation.value();
+        } else {
+            String parameterName = parameter.getName();
+            name = parameterName.contains("arg") ? typeSignature.toRawType().getSimpleName().toLowerCase() : parameterName;
+        }
 
         this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
-        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser, baseName));
+        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser, name));
     }
 
     public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
