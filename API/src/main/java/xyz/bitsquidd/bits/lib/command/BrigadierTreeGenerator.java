@@ -64,33 +64,21 @@ public class BrigadierTreeGenerator {
         List<String> commandAliases = new ArrayList<>(commandBuilder.getCommandAliases());
         commandAliases.add(commandName);
 
-        BitsConfig.getLogger().info("Creating nodes for command: " + commandName);
-        BitsConfig.getLogger().info("  Aliases: " + commandAliases);
-        BitsConfig.getLogger().info("  Permissions: " + commandBuilder.getPermissionStrings());
-
         // Note: Aliases are not created for commands without names.
         if (commandName.isEmpty()) {
-            BitsConfig.getLogger().info("here1");
-
             if (root == null) throw new CommandParseException("Root command class must have a name.");
             commandBranches.add(root);
         } else {
-            BitsConfig.getLogger().info("here2");
             List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream()
                   .map(Commands::literal)
                   .toList();
 
-            BitsConfig.getLogger().info(nextBranches + "");
-            BitsConfig.getLogger().info(commandBuilder.getPermissionStrings() + "");
-            BitsConfig.getLogger().info("---");
-
             nextBranches.forEach(argumentBuilder -> {
                 mergeRequirement(
                       argumentBuilder, sender ->
-                            commandBuilder.getPermissionStrings().stream().anyMatch(permissionString -> {
-                                BitsConfig.getLogger().info(sender.getSender().hasPermission(permissionString) + " < " + permissionString);
-                                return sender.getSender().hasPermission(permissionString);
-                            })
+                            commandBuilder.getPermissionStrings().stream().anyMatch(permissionString ->
+                                  sender.getSender().hasPermission(permissionString)
+                            )
                 );
             });
 
