@@ -5,14 +5,12 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 /**
  * Utility class to encapsulate the CommandSourceStack
  */
-@NullMarked
 public class BitsCommandSourceContext {
     private final CommandSourceStack source;
 

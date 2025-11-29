@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
@@ -25,7 +24,6 @@ import java.util.Set;
 /**
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
-@NullMarked
 public abstract class BitsCommandManager {
     protected final BitsArgumentRegistry argumentRegistry;
     protected final BitsRequirementRegistry requirementRegistry;

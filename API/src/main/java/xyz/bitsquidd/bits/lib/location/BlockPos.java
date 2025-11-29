@@ -5,7 +5,6 @@ import org.bukkit.Rotation;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-import org.jspecify.annotations.NullMarked;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
@@ -13,7 +12,6 @@ import java.util.Objects;
 /**
  * Immutable class representing a position in the world with x, y, z coordinates and yaw, pitch rotation.
  */
-@NullMarked
 public final class BlockPos {
     public final double x;
     public final double y;

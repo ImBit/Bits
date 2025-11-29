@@ -1,11 +1,8 @@
 package xyz.bitsquidd.bits.lib.type;
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * A wrapper class for holding a string. Usually used for command parsing of strings with spaces.
  */
-@NullMarked
 public final class GreedyString {
     public final String value;
 

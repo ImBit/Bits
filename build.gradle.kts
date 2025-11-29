@@ -47,3 +47,63 @@ java {
     withSourcesJar()
     withJavadocJar()
 }
+
+
+// Scripts
+subprojects {
+    tasks.register("createPackageInfo") {
+        doLast {
+            val noReplaceString = "//NOREPLACE"
+
+            val templateFile = rootProject.file("template/package-info.template")
+            if (!templateFile.exists()) {
+                throw GradleException("Template file 'package-info.template' not found!")
+            }
+            val template = templateFile.readText()
+
+            val srcDir = file("src/main/java")
+            if (!srcDir.exists()) {
+                println("No src/main/java directory found in ${project.name}")
+                return@doLast
+            }
+
+            srcDir.walk().forEach { file ->
+                if (file.isDirectory && file != srcDir) {
+                    val packageInfoFile = File(file, "package-info.java")
+
+                    val hasJavaFiles = file.listFiles()?.any {
+                        it.isFile && it.name.endsWith(".java") && it.name != "package-info.java"
+                    } ?: false
+
+                    if (hasJavaFiles) {
+                        val relativePath = file.relativeTo(srcDir).path
+                        val packagePath = relativePath.replace(File.separator, ".")
+
+                        if (packageInfoFile.exists()) {
+                            val currentContent = packageInfoFile.readText()
+                            if (currentContent.startsWith(noReplaceString)) {
+                                println("Skipping ${packagePath} (NOREPLACE found)")
+                                return@forEach
+                            }
+                        }
+
+                        val packageContent = template.replace("\${PACKAGE_NAME}", packagePath)
+                        packageInfoFile.writeText(packageContent)
+                        println("Created/Updated package-info.java for ${packagePath}")
+                    } else {
+                        if (packageInfoFile.exists()) {
+                            packageInfoFile.delete()
+                            println("Deleted package-info.java from empty directory: ${file.relativeTo(srcDir).path}")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.register("createAllPackageInfo") {
+    group = "build"
+    description = "Creates package-info.java files in all subprojects"
+    dependsOn(subprojects.map { it.tasks.named("createPackageInfo") })
+}

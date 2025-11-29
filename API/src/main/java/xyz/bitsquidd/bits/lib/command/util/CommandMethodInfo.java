@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import org.jspecify.annotations.NullMarked;
-
 import xyz.bitsquidd.bits.lib.command.annotation.Async;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
@@ -18,7 +16,6 @@ import java.util.List;
 /**
  * Stores information about a method in a command
  */
-@NullMarked
 public class CommandMethodInfo {
     private final Method method;
 

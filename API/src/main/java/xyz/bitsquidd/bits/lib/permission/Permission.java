@@ -1,11 +1,9 @@
 package xyz.bitsquidd.bits.lib.permission;
 
 import net.kyori.adventure.audience.Audience;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
-@NullMarked
 public final class Permission {
     private final String value;
     private final String description;

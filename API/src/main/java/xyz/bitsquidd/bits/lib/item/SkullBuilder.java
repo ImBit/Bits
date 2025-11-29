@@ -8,7 +8,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerTextures;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
@@ -20,7 +19,6 @@ import java.util.UUID;
 /**
  * A builder for player skulls with custom player head textures.
  */
-@NullMarked
 public final class SkullBuilder {
     private static final Material SKULL_MATERIAL = Material.PLAYER_HEAD;
 

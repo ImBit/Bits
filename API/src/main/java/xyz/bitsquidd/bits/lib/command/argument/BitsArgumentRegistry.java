@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.command.argument;
 
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.selector.EntitySelector;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
@@ -20,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NullMarked
 public class BitsArgumentRegistry {
     private static @Nullable BitsArgumentRegistry instance;
 

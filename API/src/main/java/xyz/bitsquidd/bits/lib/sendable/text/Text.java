@@ -4,7 +4,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.helper.AudienceHelper;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
@@ -51,7 +50,6 @@ import java.util.List;
  * Text.of("Hello ").append(Text.of("World!")).send(player);
  * }</pre>
  */
-@NullMarked
 public final class Text implements Sendable {
     private final Component component;
     private final List<ITextDecorator> decorators = new ArrayList<>();

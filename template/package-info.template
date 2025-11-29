@@ -1,0 +1,4 @@
+@NullMarked
+package ${PACKAGE_NAME};
+
+import org.jspecify.annotations.NullMarked;

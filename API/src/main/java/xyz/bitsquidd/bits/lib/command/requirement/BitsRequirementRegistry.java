@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.requirement;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.requirement.impl.ConsoleSenderRequirement;
@@ -9,7 +8,6 @@ import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
 import java.util.HashMap;
 import java.util.Map;
 
-@NullMarked
 public class BitsRequirementRegistry {
     private static @Nullable BitsRequirementRegistry instance;
 

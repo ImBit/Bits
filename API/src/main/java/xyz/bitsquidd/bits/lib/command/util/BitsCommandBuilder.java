@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
@@ -20,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@NullMarked
 public final class BitsCommandBuilder {
     private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;

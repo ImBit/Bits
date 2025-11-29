@@ -4,11 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
-@NullMarked
 public final class YawAndPitch {
     public final float yaw;
     public final float pitch;

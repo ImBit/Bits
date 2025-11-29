@@ -5,14 +5,12 @@ import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 /**
  * Utility class to encapsulate command context
  */
-@NullMarked
 public class BitsCommandContext {
     private final CommandContext<CommandSourceStack> brigadierContext;
     private final BitsCommandSourceContext source;

@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@NullMarked
 public class BrigadierTreeGenerator {
     private final BitsCommandManager bitsCommandManager = BitsConfig.getCommandManager();
 

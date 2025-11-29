@@ -1,7 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive;
 
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
@@ -11,7 +10,6 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-@NullMarked
 public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O>
       permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, EntitySelectorArgumentParser {
 

@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.config;
 
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
@@ -10,7 +9,6 @@ import xyz.bitsquidd.bits.lib.permission.Permission;
 
 import java.util.Objects;
 
-@NullMarked
 public abstract class BitsConfig {
     private static @Nullable BitsConfig instance;
 

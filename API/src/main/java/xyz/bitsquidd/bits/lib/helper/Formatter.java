@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
@@ -16,7 +15,6 @@ import java.util.function.Function;
 /**
  * Utility class for formatting various objects into readable strings.
  */
-@NullMarked
 public final class Formatter {
     private static final Map<Class<?>, Function<Object, String>> formatters = new HashMap<>();
 

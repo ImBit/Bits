@@ -2,14 +2,12 @@ package xyz.bitsquidd.bits.lib.sendable;
 
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.permission.Permission;
 
 import java.util.Collection;
 import java.util.function.Predicate;
 
-@NullMarked
 public interface Sendable {
 
     <T extends Audience> void send(T target);

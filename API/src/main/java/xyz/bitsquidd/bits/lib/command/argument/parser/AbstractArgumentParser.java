@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.command.argument.parser;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-@NullMarked
 public abstract class AbstractArgumentParser<O> {
     private final TypeSignature<?> typeSignature; // The type signature this parser handles
     private final String argumentName;            // The name of the argument, used while displaying suggestions

@@ -1,7 +1,6 @@
 package xyz.bitsquidd.bits.lib.command;
 
 import net.kyori.adventure.text.Component;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
@@ -11,7 +10,6 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@NullMarked
 public abstract class BitsCommand {
 
     public void onRegister() {
