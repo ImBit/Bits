@@ -7,6 +7,8 @@ jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0" }
 adventure = { group = "net.kyori", name = "adventure-api", version = "4.25.0" }
 logger = { group = "org.slf4j", name = "slf4j-api", version = "2.0.17" }
 
+velocity-api = { group = "com.velocitypowered", name = "velocity-api", version = "3.4.0-SNAPSHOT" }
+
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.1" }
 paperweight-userdev = { id = "io.papermc.paperweight.userdev", version = "2.0.0-beta.19" }

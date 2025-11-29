@@ -1,10 +1,11 @@
 package xyz.bitsquidd.bits.paper;
 
+import net.kyori.adventure.audience.Audience;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
-
-import java.util.Objects;
+import xyz.bitsquidd.bits.lib.permission.Permission;
 
 public class PaperBitsConfig extends BitsConfig {
     private final JavaPlugin plugin;
@@ -17,7 +18,17 @@ public class PaperBitsConfig extends BitsConfig {
 
     public JavaPlugin getPlugin() {
         checkInitialized();
-        return Objects.requireNonNull(plugin);
+        return plugin;
+    }
+
+    @Override
+    public boolean hasPermission(Audience audience, Permission permission) {
+        checkInitialized();
+        if (audience instanceof CommandSender commandSender) {
+            return commandSender.hasPermission(permission.toString());
+        } else {
+            return false;
+        }
     }
 
 }

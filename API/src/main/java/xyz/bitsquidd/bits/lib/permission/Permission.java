@@ -1,19 +1,40 @@
 package xyz.bitsquidd.bits.lib.permission;
 
-import org.bukkit.command.CommandSender;
+import net.kyori.adventure.audience.Audience;
 import org.jspecify.annotations.NullMarked;
+
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 @NullMarked
 public final class Permission {
-    private final String name;
+    private final String value;
     private final String description;
 
 
-    public Permission(String name, String description) {
-        this.name = name;
+    private Permission(String value, String description) {
+        this.value = value;
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Permission that = (Permission)obj;
+
+        return value.equals(that.value);
+    }
+
+
+    public static Permission all() {
+        return new Permission("", "Grants all permissions");
+    }
 
     public static Permission of(String name) {
         return new Permission(name, "");
@@ -24,7 +45,8 @@ public final class Permission {
     }
 
 
-    public boolean hasPermission(CommandSender commandSender) {
-        return name.isEmpty() || commandSender.hasPermission(name);
+    public boolean hasPermission(Audience audience) {
+        return value.isEmpty() || BitsConfig.get().hasPermission(audience, this);
     }
+
 }
