@@ -7,9 +7,9 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 public abstract class BitsCommandRequirement {
-    public abstract boolean test(@NotNull BitsCommandSourceContext ctx);
+    public abstract boolean test(BitsCommandSourceContext ctx);
 
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandSourceContext ctx) {
+    public @Nullable Text getFailureMessage(BitsCommandSourceContext ctx) {
         return null;
     }
 }

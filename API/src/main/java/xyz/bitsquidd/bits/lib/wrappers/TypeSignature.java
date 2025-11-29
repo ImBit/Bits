@@ -49,7 +49,7 @@ public final class TypeSignature<T> {
         this.typeArguments = typeArguments != null ? typeArguments.clone() : new Type[0];
     }
 
-    public static TypeSignature<?> of(@NotNull Type type) {
+    public static TypeSignature<?> of(Type type) {
         if (type instanceof ParameterizedType parameterizedType) {
             Class<?> rawType = (Class<?>)parameterizedType.getRawType();
             Type[] typeArgs = parameterizedType.getActualTypeArguments();
@@ -61,11 +61,11 @@ public final class TypeSignature<T> {
         }
     }
 
-    public static <I> TypeSignature<I> of(@NotNull Class<I> clazz) {
+    public static <I> TypeSignature<I> of(Class<I> clazz) {
         return new TypeSignature<>(clazz, null);
     }
 
-    public static TypeSignature<?> of(@NotNull Class<?> rawType, @NotNull Class<?>... typeArguments) {
+    public static TypeSignature<?> of(Class<?> rawType, Class<?>... typeArguments) {
         return new TypeSignature<>(rawType, typeArguments);
     }
 
@@ -73,7 +73,7 @@ public final class TypeSignature<T> {
         return rawType;
     }
 
-    public boolean matches(@NotNull TypeSignature<?> other) {
+    public boolean matches(TypeSignature<?> other) {
         if (!rawType.equals(other.rawType)) return false;
         if (typeArguments.length != other.typeArguments.length) return false;
 

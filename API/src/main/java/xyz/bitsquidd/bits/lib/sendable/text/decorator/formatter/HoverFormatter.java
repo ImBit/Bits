@@ -6,14 +6,14 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class HoverFormatter extends AbstractFormatter {
-    private final @NotNull HoverEvent<?> hoverEvent;
+    private final HoverEvent<?> hoverEvent;
 
-    public HoverFormatter(@NotNull HoverEvent<?> hoverEvent) {
+    public HoverFormatter(HoverEvent<?> hoverEvent) {
         this.hoverEvent = hoverEvent;
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input.hoverEvent(hoverEvent);
     }
 }

@@ -12,14 +12,14 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-public final class LocationArgumentParser extends AbstractArgumentParser<@NotNull Location> {
+public final class LocationArgumentParser extends AbstractArgumentParser<Location> {
 
     public LocationArgumentParser() {
         super(TypeSignature.of(Location.class), "Location");
     }
 
     @Override
-    public @NotNull Location parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
+    public Location parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);
@@ -30,7 +30,7 @@ public final class LocationArgumentParser extends AbstractArgumentParser<@NotNul
     }
 
     @Override
-    public @NotNull List<InputTypeContainer> getInputTypes() {
+    public List<InputTypeContainer> getInputTypes() {
         return List.of(
               new InputTypeContainer(TypeSignature.of(Double.class), "x"),
               new InputTypeContainer(TypeSignature.of(Double.class), "y"),

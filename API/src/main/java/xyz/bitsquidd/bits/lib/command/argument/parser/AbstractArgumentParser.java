@@ -25,7 +25,7 @@ public abstract class AbstractArgumentParser<O> {
     }
 
 
-    public abstract @NotNull O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException;
+    public abstract O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException;
 
     /**
      * Returns a list of required objects the parser expects in.

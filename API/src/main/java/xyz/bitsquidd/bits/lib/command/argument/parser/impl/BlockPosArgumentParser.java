@@ -11,14 +11,14 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-public final class BlockPosArgumentParser extends AbstractArgumentParser<@NotNull BlockPos> {
+public final class BlockPosArgumentParser extends AbstractArgumentParser<BlockPos> {
 
     public BlockPosArgumentParser() {
         super(TypeSignature.of(BlockPos.class), "BlockPos");
     }
 
     @Override
-    public @NotNull BlockPos parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
+    public BlockPos parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);
@@ -27,7 +27,7 @@ public final class BlockPosArgumentParser extends AbstractArgumentParser<@NotNul
     }
 
     @Override
-    public @NotNull List<InputTypeContainer> getInputTypes() {
+    public List<InputTypeContainer> getInputTypes() {
         return List.of(
               new InputTypeContainer(TypeSignature.of(Double.class), "x"),
               new InputTypeContainer(TypeSignature.of(Double.class), "y"),

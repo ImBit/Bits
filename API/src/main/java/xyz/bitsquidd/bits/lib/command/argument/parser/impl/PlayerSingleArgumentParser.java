@@ -15,14 +15,14 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class PlayerSingleArgumentParser extends AbstractArgumentParser<@NotNull Player> {
+public final class PlayerSingleArgumentParser extends AbstractArgumentParser<Player> {
 
     public PlayerSingleArgumentParser() {
         super(TypeSignature.of(Player.class), "Player");
     }
 
     @Override
-    public @NotNull Player parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
+    public Player parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
         try {
@@ -40,12 +40,12 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParser<@No
     }
 
     @Override
-    public @NotNull List<InputTypeContainer> getInputTypes() {
+    public List<InputTypeContainer> getInputTypes() {
         return List.of(new InputTypeContainer(TypeSignature.of(EntitySelector.class), getArgumentName()));
     }
 
     @Override
-    public @NotNull Supplier<List<String>> getSuggestions() {
+    public Supplier<List<String>> getSuggestions() {
         return () -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 

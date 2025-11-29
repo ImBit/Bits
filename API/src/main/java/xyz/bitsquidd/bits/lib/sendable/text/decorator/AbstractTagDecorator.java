@@ -18,7 +18,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     private static final Pattern TAG_PATTERN = Pattern.compile("<([^>]+)>");
 
     @Override
-    public @NotNull Component format(@NotNull Component component, @NotNull Locale locale) {
+    public Component format(Component component, Locale locale) {
         List<TextComponent> flattenedComponents = ComponentHelper.flatten(component, locale);
 
         TagContext context = new TagContext();
@@ -31,9 +31,9 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return Component.empty().children(processedComponents);
     }
 
-    private @NotNull List<Component> processComponentWithTags(
-          @NotNull TextComponent textComponent,
-          @NotNull TagContext context
+    private List<Component> processComponentWithTags(
+          TextComponent textComponent,
+          TagContext context
     ) {
 
         String content = textComponent.content();
@@ -70,10 +70,10 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return components;
     }
 
-    private @NotNull Component createStyledComponent(
-          @NotNull String text,
-          @NotNull net.kyori.adventure.text.format.Style baseStyle,
-          @NotNull Map<String, String> activeTags
+    private Component createStyledComponent(
+          String text,
+          net.kyori.adventure.text.format.Style baseStyle,
+          Map<String, String> activeTags
     ) {
 
         Component component = Component.text(text, baseStyle);
@@ -93,7 +93,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return component;
     }
 
-    private void processTagOperations(@NotNull String tagContent, @NotNull Map<String, String> activeTags) {
+    private void processTagOperations(String tagContent, Map<String, String> activeTags) {
         boolean hasLeadingSlash = tagContent.startsWith("/");
         if (hasLeadingSlash) {
             tagContent = tagContent.substring(1);
@@ -124,11 +124,11 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         }
     }
 
-    private @NotNull String extractTagKey(@NotNull String tagName) {
+    private String extractTagKey(String tagName) {
         return tagName.split(":", 2)[0];
     }
 
-    protected boolean isKnownTag(@NotNull String tagKey) {
+    protected boolean isKnownTag(String tagKey) {
         return formatters.containsKey(tagKey);
     }
 

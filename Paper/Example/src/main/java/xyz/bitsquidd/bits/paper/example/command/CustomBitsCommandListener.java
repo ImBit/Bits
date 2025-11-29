@@ -11,10 +11,10 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 
 public class CustomBitsCommandListener implements Listener {
-    private final @NotNull ITextDecorator errorDecorator;
-    private final @NotNull Component unknownCommandMessage;
+    private final ITextDecorator errorDecorator;
+    private final Component unknownCommandMessage;
 
-    public CustomBitsCommandListener(@NotNull ITextDecorator errorDecorator, @NotNull Component unknownCommandMessage) {
+    public CustomBitsCommandListener(ITextDecorator errorDecorator, Component unknownCommandMessage) {
         this.errorDecorator = errorDecorator;
         this.unknownCommandMessage = unknownCommandMessage;
     }

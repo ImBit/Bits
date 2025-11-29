@@ -4,9 +4,9 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractFormatter {
-    public abstract @NotNull Component format(@NotNull Component input);
+    public abstract Component format(Component input);
 
-    public @NotNull AbstractFormatter createFromData(@NotNull String data) {
+    public AbstractFormatter createFromData(String data) {
         return this;
     }
 }

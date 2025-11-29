@@ -7,12 +7,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class DynamicColorFormatter extends AbstractFormatter {
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input;
     }
 
     @Override
-    public @NotNull AbstractFormatter createFromData(@NotNull String data) {
+    public AbstractFormatter createFromData(String data) {
         TextColor color = null;
 
         try {

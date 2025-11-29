@@ -19,7 +19,7 @@ public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgument
 
     @Override
     @SuppressWarnings("unchecked")
-    public final @NotNull O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public final O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         return (O)singletonInputValidation(inputObjects, getTypeSignature().toRawType());
     }
 

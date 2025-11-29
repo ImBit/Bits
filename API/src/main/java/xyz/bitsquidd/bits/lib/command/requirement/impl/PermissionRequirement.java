@@ -14,28 +14,28 @@ import java.util.List;
 
 // Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
 public class PermissionRequirement extends BitsCommandRequirement {
-    public final @NotNull List<String> permissions = new ArrayList<>();
+    public final List<String> permissions = new ArrayList<>();
 
-    protected PermissionRequirement(@NotNull Collection<String> permissions) {
+    protected PermissionRequirement(Collection<String> permissions) {
         this.permissions.addAll(permissions);
     }
 
-    public static @NotNull PermissionRequirement of(@NotNull Collection<String> permissions) {
+    public static PermissionRequirement of(Collection<String> permissions) {
         return new PermissionRequirement(permissions);
     }
 
-    public static @NotNull PermissionRequirement of(@NotNull String... permissions) {
+    public static PermissionRequirement of(String... permissions) {
         return new PermissionRequirement(List.of(permissions));
     }
 
 
     @Override
-    public boolean test(@NotNull BitsCommandSourceContext ctx) {
+    public boolean test(BitsCommandSourceContext ctx) {
         return permissions.stream().allMatch(permission -> ctx.getSender().hasPermission(permission));
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandSourceContext ctx) {
+    public @Nullable Text getFailureMessage(BitsCommandSourceContext ctx) {
         return Text.of(Component.text("You are lacking permissions to use this command."));
     }
 }

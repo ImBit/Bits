@@ -40,22 +40,22 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     }
 
     @Override
-    public @NotNull BitsArgumentRegistry getArgumentRegistry() {
+    public BitsArgumentRegistry getArgumentRegistry() {
         return new BitsArgumentRegistry();
     }
 
     @Override
-    protected @NotNull BitsRequirementRegistry getRequirementRegistry() {
+    protected BitsRequirementRegistry getRequirementRegistry() {
         return new BitsRequirementRegistry();
     }
 
     @Override
-    public @NotNull BitsCommandContext createContext(@NotNull CommandContext<CommandSourceStack> brigadierContext) {
+    public BitsCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
         return new CustomCommandContext(brigadierContext);
     }
 
     @Override
-    protected void executeCommand(boolean isAsync, @NotNull Runnable commandExecution) {
+    protected void executeCommand(boolean isAsync, Runnable commandExecution) {
         if (isAsync) {
             Bukkit.getScheduler().runTaskAsynchronously(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
         } else {
@@ -64,12 +64,12 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     }
 
     @Override
-    protected @NotNull List<BitsCommand> getAllCommands() {
+    protected List<BitsCommand> getAllCommands() {
         return List.of(new TeleportCommand());
     }
 
     @Override
-    protected @NotNull String commandBasePermission() {
+    protected String commandBasePermission() {
         return "bits.command";
     }
 

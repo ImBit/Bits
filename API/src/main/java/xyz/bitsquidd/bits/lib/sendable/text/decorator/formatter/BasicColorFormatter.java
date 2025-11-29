@@ -11,21 +11,21 @@ public class BasicColorFormatter extends AbstractFormatter {
         this.color = color;
     }
 
-    public BasicColorFormatter(@NotNull TextColor color) {
+    public BasicColorFormatter(TextColor color) {
         this(color.value());
     }
 
-    public BasicColorFormatter(@NotNull org.bukkit.Color color) {
+    public BasicColorFormatter(org.bukkit.Color color) {
         this(color.asRGB());
     }
 
-    public BasicColorFormatter(@NotNull java.awt.Color color) {
+    public BasicColorFormatter(java.awt.Color color) {
         this(color.getRGB());
     }
 
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input.color(TextColor.color(color));
     }
 }

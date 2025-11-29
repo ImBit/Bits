@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * <p>
  * This implementation serves as a basic parser that should be fallen back upon when no specific enum parser is available.
  */
-public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParser<@NotNull E> {
+public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParser<E> {
 
     private final Class<E> enumClass;
 
@@ -28,7 +28,7 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     }
 
     @Override
-    public @NotNull E parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) {
+    public E parse(List<Object> inputObjects, BitsCommandContext ctx) {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         for (E constant : enumClass.getEnumConstants()) {

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AdventureFormatterFactory {
 
-    public static @NotNull List<AbstractFormatter> fromStyle(@NotNull Style style) {
+    public static List<AbstractFormatter> fromStyle(Style style) {
         List<AbstractFormatter> formatters = new ArrayList<>();
 
         if (!style.isEmpty()) {

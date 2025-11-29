@@ -12,14 +12,14 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class WorldArgumentParser extends AbstractArgumentParser<@NotNull World> {
+public final class WorldArgumentParser extends AbstractArgumentParser<World> {
 
     public WorldArgumentParser() {
         super(TypeSignature.of(World.class), "World");
     }
 
     @Override
-    public @NotNull World parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
+    public World parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         World world = Bukkit.getWorld(inputString);
@@ -28,7 +28,7 @@ public final class WorldArgumentParser extends AbstractArgumentParser<@NotNull W
     }
 
     @Override
-    public @NotNull Supplier<List<String>> getSuggestions() {
+    public Supplier<List<String>> getSuggestions() {
         return () -> Bukkit.getWorlds().stream().map(World::getName).toList();
     }
 

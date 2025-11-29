@@ -15,12 +15,12 @@ public class ConsoleSenderRequirement extends BitsCommandRequirement {
     protected ConsoleSenderRequirement() {}
 
     @Override
-    public boolean test(@NotNull BitsCommandSourceContext ctx) {
+    public boolean test(BitsCommandSourceContext ctx) {
         return ctx.getSender() instanceof ConsoleCommandSender;
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandSourceContext ctx) {
+    public @Nullable Text getFailureMessage(BitsCommandSourceContext ctx) {
         return Text.of(Component.text("This command can only be executed by the console."));
     }
 }

@@ -10,20 +10,20 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.ColorLightenerFormatt
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.StyleDecorator;
 
 public class CommandDecorator extends StyleDecorator {
-    public final @NotNull CommandReturnType commandReturnType;
+    public final CommandReturnType commandReturnType;
 
-    public CommandDecorator(@NotNull CommandReturnType commandReturnType) {
+    public CommandDecorator(CommandReturnType commandReturnType) {
         this.commandReturnType = commandReturnType;
         this.globalFormatters.add(new BasicColorFormatter(toMessageColor(commandReturnType)));
         this.formatters.put("b", new ColorLightenerFormatter(0.4f));
     }
 
-    public static CommandDecorator of(@NotNull CommandReturnType commandReturnType) {
+    public static CommandDecorator of(CommandReturnType commandReturnType) {
         return new CommandDecorator(commandReturnType);
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component component, @NotNull Player target) {
+    public Component format(Component component, Player target) {
         return Component.empty()
               .append(Component.text(toMessageIcon(commandReturnType)))
               .append(super.format(component, target));

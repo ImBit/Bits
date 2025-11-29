@@ -9,7 +9,7 @@ import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
 
 public class BlankDecorator extends StyleDecorator {
     @Override
-    public @NotNull Component format(@NotNull Component component, @NotNull Player target) {
+    public Component format(Component component, Player target) {
         return ComponentHelper.styleAll(component, Style.empty());
     }
 }

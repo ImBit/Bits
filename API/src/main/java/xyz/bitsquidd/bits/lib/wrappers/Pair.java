@@ -16,7 +16,7 @@ public final class Pair<A, B> {
     /**
      * Static factory method to create a new Pair instance.
      */
-    public static <A, B> @NotNull Pair<A, B> of(A first, B second) {
+    public static <A, B> Pair<A, B> of(A first, B second) {
         return new Pair<>(first, second);
     }
 

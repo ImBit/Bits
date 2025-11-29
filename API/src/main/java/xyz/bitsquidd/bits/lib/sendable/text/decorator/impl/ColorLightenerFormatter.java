@@ -18,7 +18,7 @@ public class ColorLightenerFormatter extends AbstractFormatter {
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         TextColor inputColor = input.color();
 
         return ComponentHelper.styleAll(input, input.style().color(TextColor.color(ColorHelper.lightenColour(inputColor != null ? inputColor.value() : FALLBACK_COLOR, lightness))));

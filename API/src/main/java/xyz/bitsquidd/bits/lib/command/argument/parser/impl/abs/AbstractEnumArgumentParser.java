@@ -24,7 +24,7 @@ public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends Abst
     }
 
     @Override
-    public @NotNull T parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public T parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         T enumValue;

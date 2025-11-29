@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class PlayerCollectionArgumentParser extends AbstractArgumentParser<@NotNull Collection<Player>> {
+public final class PlayerCollectionArgumentParser extends AbstractArgumentParser<Collection<Player>> {
 
     // TODO just pull from vanilla EntitySelector. Also pull the completion.
     private enum SelectorType {
@@ -27,15 +27,15 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
         SELF("@s", ctx -> List.of(ctx.requirePlayer())),
         ;
 
-        public final @NotNull String selector;
-        public final @NotNull Function<BitsCommandContext, Collection<Player>> playerFunction;
+        public final String selector;
+        public final Function<BitsCommandContext, Collection<Player>> playerFunction;
 
-        SelectorType(@NotNull String selector, @NotNull Function<BitsCommandContext, Collection<Player>> playerFunction) {
+        SelectorType(String selector, Function<BitsCommandContext, Collection<Player>> playerFunction) {
             this.selector = selector;
             this.playerFunction = playerFunction;
         }
 
-        public static @Nullable SelectorType fromSelector(@NotNull String selector) {
+        public static @Nullable SelectorType fromSelector(String selector) {
             for (SelectorType type : values()) {
                 if (type.selector.equals(selector)) {
                     return type;
@@ -44,7 +44,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
             return null;
         }
 
-        public @NotNull Collection<Player> get(@NotNull BitsCommandContext ctx) {
+        public Collection<Player> get(BitsCommandContext ctx) {
             return playerFunction.apply(ctx);
         }
     }
@@ -54,7 +54,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public @NotNull Collection<Player> parse(@NotNull List<Object> inputObjects, @NotNull BitsCommandContext ctx) throws CommandParseException {
+    public Collection<Player> parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
         EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
         try {
@@ -68,12 +68,12 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public @NotNull List<InputTypeContainer> getInputTypes() {
+    public List<InputTypeContainer> getInputTypes() {
         return List.of(new InputTypeContainer(TypeSignature.of(EntitySelector.class), getArgumentName()));
     }
 
     @Override
-    public @NotNull Supplier<List<String>> getSuggestions() {
+    public Supplier<List<String>> getSuggestions() {
         List<String> suggestions = new ArrayList<>();
         suggestions.add(SelectorType.ALL.selector);
         suggestions.add(SelectorType.SELF.selector);

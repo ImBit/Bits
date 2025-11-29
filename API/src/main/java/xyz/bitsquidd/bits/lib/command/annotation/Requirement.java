@@ -17,5 +17,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Requirement {
-    @NotNull Class<? extends BitsCommandRequirement>[] value();
+    Class<? extends BitsCommandRequirement>[] value();
 }
