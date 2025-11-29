@@ -1,28 +1,31 @@
 package xyz.bitsquidd.bits.paper.example;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.CustomBitsCommandManager;
 
 // TODO:
 //  BitsConfig.DEBUGMODE
-public class Bits extends JavaPlugin {
-    private static Bits instance;
+public class ExampleBitsPlugin extends JavaPlugin {
+    private static @Nullable ExampleBitsPlugin instance;
 
     private static CustomBitsCommandManager exampleCommandManager;
 
-    public Bits() {
+    public ExampleBitsPlugin() {
+        if (instance != null) throw new IllegalStateException("ExampleBitsPlugin instance already exists!");
         instance = this;
     }
 
-    public static Bits getInstance() {
+    public static ExampleBitsPlugin getInstance() {
+        if (instance == null) throw new IllegalStateException("ExampleBitsPlugin instance is not initialized yet!");
         return instance;
     }
 
     @Override
     public void onEnable() {
-        BitsConfig.init(this); // We must initialise the BitsConfig with our plugin for Bits to work!
+        new PaperBitsConfig(this); // We must initialise the BitsConfig with our plugin for Bits to work!
 
         exampleCommandManager = new CustomBitsCommandManager();
         exampleCommandManager.startup();

@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
-import com.mojang.brigadier.arguments.*;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.jspecify.annotations.NullMarked;
@@ -109,7 +108,7 @@ public class BitsArgumentRegistry {
                 return new GenericEnumParser<>(enumClass);
             }
 
-            BitsConfig.getLogger().error("No parser registered for type: " + typeSignature);
+            BitsConfig.logger().error("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
 

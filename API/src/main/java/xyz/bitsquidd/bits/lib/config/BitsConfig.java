@@ -1,65 +1,58 @@
 package xyz.bitsquidd.bits.lib.config;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 
 import java.util.Objects;
 
 @NullMarked
-public final class BitsConfig {
-    private static boolean initialized = false;
-    private static boolean developmentMode = false;
-    private static @Nullable JavaPlugin plugin;
-    private static final Logger logger = LoggerFactory.getLogger("BitsLogging");
+public abstract class BitsConfig {
+    private static @Nullable BitsConfig instance;
 
-    public static String COMMAND_BASE_STRING = "bits.command"; // The base prefix for all commands, can be overridden.
+    protected final boolean developmentMode = false;
+    protected final Logger logger;
 
-    private static @Nullable BitsCommandManager commandManager;
+    protected @Nullable BitsCommandManager commandManager;
 
 
-    public static void init(JavaPlugin pluginInstance) {
-        if (initialized) throw new IllegalStateException("BitsConfig has already been initialised!");
-        plugin = pluginInstance;
+    public static final String COMMAND_BASE_STRING = "bits.command"; // The base prefix for all commands, can be overridden.
 
-        initialized = true;
+
+    protected BitsConfig(Logger logger) {
+        if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
+        instance = this;
+
+        this.logger = logger;
     }
 
-    public static Logger getLogger() {
+    public static BitsConfig get() {
+        if (instance == null) throw new IllegalStateException("BitsConfig instance has not been created yet!");
+        return instance;
+    }
+
+    protected void checkInitialized() {
+        if (instance == null) throw new IllegalStateException("BitsConfig hasn't been initialised!");
+    }
+
+
+    public Logger logger() {
         return logger;
     }
 
-
-    public static void enableDeveloperMode() {
-        developmentMode = true;
-    }
-
-    public static boolean isDevelopmentMode() {
+    public boolean isDevelopment() {
         return developmentMode;
     }
 
 
-    private static void checkInitialized() {
-        if (!initialized) throw new IllegalStateException("BitsConfig hasn't been initialised!");
-    }
-
-
-    public static JavaPlugin getPlugin() {
-        checkInitialized();
-        return Objects.requireNonNull(plugin);
-    }
-
-
-    public static void setCommandManager(BitsCommandManager manager) {
+    public void setCommandManager(BitsCommandManager manager) {
         checkInitialized();
         commandManager = manager;
     }
 
-    public static BitsCommandManager getCommandManager() {
+    public BitsCommandManager getCommandManager() {
         return Objects.requireNonNull(commandManager, "BitsCommandManager has not been set!");
     }
 

@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * Specifies extra command requirements to be checked before executing the command.
+ * <p>
  * Note: Classes are used to define a requirement, instances of said class should be registered.
  */
 @Target({ElementType.TYPE, ElementType.METHOD})

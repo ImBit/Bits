@@ -4,8 +4,11 @@ plugins {
     alias(libs.plugins.paperweight.userdev)
 }
 
-plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
+allprojects {
+    plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
 
-dependencies {
-    paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
+    dependencies {
+        paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
+        implementation(project(":Paper"))
+    }
 }

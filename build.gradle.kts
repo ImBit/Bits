@@ -19,6 +19,9 @@ allprojects {
     dependencies {
         if (project.path != ":API") implementation(project(":API"))
         implementation(rootProject.libs.jb.annotations)
+        implementation(rootProject.libs.jspecify)
+        implementation(rootProject.libs.adventure)
+        implementation(rootProject.libs.logger)
     }
 
     repositories {

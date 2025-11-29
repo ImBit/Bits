@@ -14,7 +14,7 @@ import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.impl.TeleportCommand;
 import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;
 
@@ -30,7 +30,7 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     @Override
     public void startup() {
         super.startup();
-        Bukkit.getPluginManager().registerEvents(listener, BitsConfig.getPlugin());
+        Bukkit.getPluginManager().registerEvents(listener, ((PaperBitsConfig)PaperBitsConfig.get()).getPlugin());
     }
 
     @Override
@@ -57,9 +57,9 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     @Override
     protected void executeCommand(boolean isAsync, @NotNull Runnable commandExecution) {
         if (isAsync) {
-            Bukkit.getScheduler().runTaskAsynchronously(BitsConfig.getPlugin(), commandExecution);
+            Bukkit.getScheduler().runTaskAsynchronously(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
         } else {
-            Bukkit.getScheduler().runTask(BitsConfig.getPlugin(), commandExecution);
+            Bukkit.getScheduler().runTask(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
         }
     }
 
