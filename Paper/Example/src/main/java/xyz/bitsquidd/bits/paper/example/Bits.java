@@ -1,9 +1,9 @@
-package xyz.bitsquidd.bits;
+package xyz.bitsquidd.bits.paper.example;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import xyz.bitsquidd.bits.example.command.CustomBitsCommandManager;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.paper.example.command.CustomBitsCommandManager;
 
 // TODO:
 //  BitsConfig.DEBUGMODE

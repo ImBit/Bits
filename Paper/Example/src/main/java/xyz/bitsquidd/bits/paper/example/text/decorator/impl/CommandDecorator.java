@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.example.text.decorator.impl;
+package xyz.bitsquidd.bits.paper.example.text.decorator.impl;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;

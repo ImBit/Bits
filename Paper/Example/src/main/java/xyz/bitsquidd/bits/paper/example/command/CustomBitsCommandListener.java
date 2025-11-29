@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.example.command;
+package xyz.bitsquidd.bits.paper.example.command;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;

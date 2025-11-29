@@ -1,6 +1,0 @@
-name: Bits
-main: xyz.bitsquidd.bits.Bits
-version: ${version}
-api-version: 1.21.10
-author: BitSquidd
-description: Bits Plugin!

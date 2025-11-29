@@ -2,30 +2,30 @@ plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.shadow)
-    alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.dotenv)
 }
 
-group = "xyz.bitsquidd"
+group = "xyz.bitsquidd.bits"
 version = "0.0.6"
 
 allprojects {
     group = rootProject.group
     version = rootProject.version
 
-    plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
     plugins.apply("java-library")
     plugins.apply("maven-publish")
+    plugins.apply(rootProject.libs.plugins.shadow.get().pluginId)
+
+    dependencies {
+        if (project.path != ":API") implementation(project(":API"))
+        implementation(rootProject.libs.jb.annotations)
+    }
 
     repositories {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
         maven("https://repo.papermc.io/repository/maven-public/")
-    }
-
-    dependencies {
-        paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
     }
 
     tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
@@ -44,5 +44,3 @@ java {
     withSourcesJar()
     withJavadocJar()
 }
-
-

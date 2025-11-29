@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.example.command.impl;
+package xyz.bitsquidd.bits.paper.example.command.impl;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
