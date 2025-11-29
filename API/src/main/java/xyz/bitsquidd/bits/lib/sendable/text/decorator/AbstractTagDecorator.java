@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
@@ -19,8 +18,8 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     private static final Pattern TAG_PATTERN = Pattern.compile("<([^>]+)>");
 
     @Override
-    public @NotNull Component format(@NotNull Component component, @NotNull Player target) {
-        List<TextComponent> flattenedComponents = ComponentHelper.flatten(component, target.locale());
+    public @NotNull Component format(@NotNull Component component, @NotNull Locale locale) {
+        List<TextComponent> flattenedComponents = ComponentHelper.flatten(component, locale);
 
         TagContext context = new TagContext();
         List<Component> processedComponents = new ArrayList<>();

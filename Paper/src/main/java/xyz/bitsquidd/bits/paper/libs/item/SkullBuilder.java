@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.item;
+package xyz.bitsquidd.bits.paper.libs.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
@@ -71,7 +71,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(extractUrlFromBase64(base64));
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.logger().warn("Failed to set skull texture from base64: " + e.getMessage());
+            BitsConfig.get().logger().warn("Failed to set skull texture from base64: " + e.getMessage());
         }
         return this;
     }
@@ -81,7 +81,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(url);
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.logger().warn("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
+            BitsConfig.get().logger().warn("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
         }
         return this;
     }

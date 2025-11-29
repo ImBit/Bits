@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.lib.helper.math;
 
 import org.jetbrains.annotations.Range;
 
-public final class EasingHelper {
+public final class Easing {
     private static final float EASING_MAGIC = 1.70158f;
 
     private static final double PI = Math.PI;
@@ -36,7 +36,7 @@ public final class EasingHelper {
     public static float easeIn(@Range(from = 0, to = 1) float t, float index) {
         return (float)(Math.pow(t, index));
     }
-    
+
     /**
      * Ease out with a custom power
      */

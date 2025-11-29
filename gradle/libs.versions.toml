@@ -1,11 +1,15 @@
 [versions]
 paper-api = "1.21.10-R0.1-SNAPSHOT"
+adventure = "4.25.0"
 
 [libraries]
 jb-annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
 jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0" }
-adventure = { group = "net.kyori", name = "adventure-api", version = "4.25.0" }
 logger = { group = "org.slf4j", name = "slf4j-api", version = "2.0.17" }
+
+adventure = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-text-serializer-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
+
 
 velocity-api = { group = "com.velocitypowered", name = "velocity-api", version = "3.4.0-SNAPSHOT" }
 

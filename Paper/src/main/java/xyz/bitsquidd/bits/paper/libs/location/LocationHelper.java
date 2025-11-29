@@ -1,10 +1,8 @@
-package xyz.bitsquidd.bits.lib.helper.location;
+package xyz.bitsquidd.bits.paper.libs.location;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public class LocationHelper {
 
     /**
@@ -50,5 +48,5 @@ public class LocationHelper {
 
         return new Location(world1, midX, midY, midZ);
     }
-    
+
 }

@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.helper.AudienceHelper;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;

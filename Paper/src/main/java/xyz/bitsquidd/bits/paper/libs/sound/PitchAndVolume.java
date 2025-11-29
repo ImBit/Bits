@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.sendable.sound;
+package xyz.bitsquidd.bits.paper.libs.sound;
 
 public final class PitchAndVolume {
     public final float pitch;

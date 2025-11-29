@@ -1,4 +1,4 @@
 @NullMarked
-package xyz.bitsquidd.bits.lib.sendable.sound;
+package xyz.bitsquidd.bits.paper.libs.location;
 
 import org.jspecify.annotations.NullMarked;

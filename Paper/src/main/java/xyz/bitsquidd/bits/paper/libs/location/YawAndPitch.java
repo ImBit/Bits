@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.location;
+package xyz.bitsquidd.bits.paper.libs.location;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;

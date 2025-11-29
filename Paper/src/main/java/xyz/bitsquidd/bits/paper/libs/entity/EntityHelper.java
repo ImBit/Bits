@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.helper.entity;
+package xyz.bitsquidd.bits.paper.libs.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -15,9 +15,7 @@ public class EntityHelper {
     }
 
     public static <T extends Entity> @Nullable T getNearestEntity(Location location, Class<T> entityClass, Predicate<T> filter) {
-        if (location == null || location.getWorld() == null) {
-            return null;
-        }
+        if (location == null || location.getWorld() == null) return null;
 
         Collection<T> entities = location.getWorld().getEntitiesByClass(entityClass);
 
