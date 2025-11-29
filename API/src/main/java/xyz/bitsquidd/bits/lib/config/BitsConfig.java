@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.permission.Permission;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public abstract class BitsConfig {
@@ -58,5 +59,7 @@ public abstract class BitsConfig {
 
 
     public abstract boolean hasPermission(Audience audience, Permission permission);
+
+    public abstract Locale getLocale(Audience audience);
 
 }

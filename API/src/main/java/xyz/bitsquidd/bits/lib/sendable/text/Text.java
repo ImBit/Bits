@@ -2,9 +2,8 @@ package xyz.bitsquidd.bits.lib.sendable.text;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
@@ -12,6 +11,7 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A sendable message, supporting complex formatting.
@@ -103,23 +103,19 @@ public final class Text implements Sendable {
 
     @Override
     public <A extends Audience> void send(A audience) {
-        AudienceHelper.getPlayers(audience).forEach(player -> {
-            player.sendMessage(getComponent(player));
-        });
+        audience.forEachAudience(a -> a.sendMessage(component));
     }
 
-    public <A extends Audience> Component getComponent(@Nullable A audience) {
+    public <A extends Audience> Component getComponent(A audience) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
         componentDecorators.addAll(decorators);
         componentDecorators.addAll(POST_DEFAULT_DECORATORS);
 
-        // We can only format for players, so skip if not a player
-        if (audience instanceof Player playerTarget) {
-            for (ITextDecorator decorator : componentDecorators) {
-                returnComponent = decorator.format(returnComponent, playerTarget);
-            }
+        Locale locale = BitsConfig.get().getLocale(audience);
+        for (ITextDecorator decorator : componentDecorators) {
+            returnComponent = decorator.format(returnComponent, locale);
         }
 
         for (Text appendedText : appendedText) {

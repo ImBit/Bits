@@ -1,13 +1,13 @@
 package xyz.bitsquidd.bits.paper.example.text.decorator.impl;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.BasicColorFormatter;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.ColorLightenerFormatter;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.StyleDecorator;
+
+import java.util.Locale;
 
 public class CommandDecorator extends StyleDecorator {
     public final CommandReturnType commandReturnType;
@@ -23,10 +23,10 @@ public class CommandDecorator extends StyleDecorator {
     }
 
     @Override
-    public Component format(Component component, Player target) {
+    public Component format(Component component, Locale locale) {
         return Component.empty()
               .append(Component.text(toMessageIcon(commandReturnType)))
-              .append(super.format(component, target));
+              .append(super.format(component, locale));
     }
 
     private static int toMessageColor(CommandReturnType commandReturnType) {
