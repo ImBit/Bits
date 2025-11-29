@@ -62,4 +62,6 @@ public abstract class BitsConfig {
 
     public abstract Locale getLocale(Audience audience);
 
+    public abstract Audience getAll();
+
 }

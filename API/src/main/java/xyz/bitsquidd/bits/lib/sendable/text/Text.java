@@ -102,11 +102,11 @@ public final class Text implements Sendable {
 
 
     @Override
-    public <A extends Audience> void send(A audience) {
+    public void send(Audience audience) {
         audience.forEachAudience(a -> a.sendMessage(component));
     }
 
-    public <A extends Audience> Component getComponent(A audience) {
+    public Component getComponent(Audience audience) {
         Component returnComponent = component;
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);

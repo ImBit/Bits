@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.paper;
 
 import net.kyori.adventure.audience.Audience;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,6 +42,11 @@ public class PaperBitsConfig extends BitsConfig {
             return player.locale();
         }
         return Locale.getDefault();
+    }
+
+    @Override
+    public Audience getAll() {
+        return Audience.audience(Bukkit.getOnlinePlayers());
     }
 
 }

@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.jetbrains.annotations.NotNull;
 
 public class BasicColorFormatter extends AbstractFormatter {
     public final int color;
@@ -13,10 +12,6 @@ public class BasicColorFormatter extends AbstractFormatter {
 
     public BasicColorFormatter(TextColor color) {
         this(color.value());
-    }
-
-    public BasicColorFormatter(org.bukkit.Color color) {
-        this(color.asRGB());
     }
 
     public BasicColorFormatter(java.awt.Color color) {

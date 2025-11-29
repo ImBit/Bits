@@ -1,8 +1,8 @@
 package xyz.bitsquidd.bits.lib.sendable;
 
 import net.kyori.adventure.audience.Audience;
-import org.bukkit.Bukkit;
 
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.permission.Permission;
 
 import java.util.Collection;
@@ -10,20 +10,19 @@ import java.util.function.Predicate;
 
 public interface Sendable {
 
-    <T extends Audience> void send(T target);
+    void send(Audience target);
 
-    @SuppressWarnings("unchecked")
-    default <T extends Audience> void sendAll(Predicate<T> predicate) {
-        Bukkit.getOnlinePlayers().stream()
-              .filter(t -> predicate.test((T)(t)))
-              .forEach(this::send);
+    default void sendAll(Predicate<Audience> predicate) {
+        BitsConfig.get().getAll().forEachAudience(audience -> {
+            if (predicate.test(audience)) send(audience);
+        });
     }
 
-    default <T extends Audience> void sendAll(Permission permission) {
+    default void sendAll(Permission permission) {
         sendAll(permission::hasPermission);
     }
 
-    default <T extends Audience> void sendAll(Collection<T> targets) {
+    default void sendAll(Collection<Audience> targets) {
         targets.forEach(this::send);
     }
 }

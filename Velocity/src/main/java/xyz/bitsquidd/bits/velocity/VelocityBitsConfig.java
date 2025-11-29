@@ -45,4 +45,8 @@ public class VelocityBitsConfig extends BitsConfig {
         return Locale.getDefault();
     }
 
+    @Override
+    public Audience getAll() {
+        return Audience.audience(getServer().getAllPlayers());
+    }
 }
