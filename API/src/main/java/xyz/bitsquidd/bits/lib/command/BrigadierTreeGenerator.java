@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class BrigadierTreeGenerator {
-    private final BitsCommandManager bitsCommandManager = BitsConfig.getCommandManager();
+    private final BitsCommandManager bitsCommandManager = BitsConfig.get().getCommandManager();
 
     public BrigadierTreeGenerator() {
     }
@@ -46,7 +46,7 @@ public class BrigadierTreeGenerator {
               .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
               .toList();
 
-        if (BitsConfig.isDevelopment()) BitsConfig.logger().info(TreeDebugger.visualizeCommandTree(nodes));
+        if (BitsConfig.get().isDevelopment()) BitsConfig.get().logger().info(TreeDebugger.visualizeCommandTree(nodes));
         return nodes;
     }
 
@@ -123,7 +123,7 @@ public class BrigadierTreeGenerator {
 
             for (Method method : commandBuilder.getCommandMethods()) {
                 if (!Modifier.isPublic(method.getModifiers())) {
-                    BitsConfig.logger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
+                    BitsConfig.get().logger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
                     continue;
                 }
                 processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));
@@ -211,7 +211,7 @@ public class BrigadierTreeGenerator {
                 try {
                     if (primitiveObjects.stream().anyMatch(Objects::isNull)) throw new IllegalArgumentException("One or more primitive arguments are null.");
 
-                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.getCommandManager().createContext(ctx));
+                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.get().getCommandManager().createContext(ctx));
                 } catch (IllegalArgumentException e) {
                     throw new RuntimeException("Failed to get argument: " + parameter, e);
                 }

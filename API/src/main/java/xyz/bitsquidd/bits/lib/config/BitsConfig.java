@@ -19,9 +19,6 @@ public abstract class BitsConfig {
     protected @Nullable BitsCommandManager commandManager;
 
 
-    public static final String COMMAND_BASE_STRING = "bits.command"; // The base prefix for all commands, can be overridden.
-
-
     protected BitsConfig(Logger logger) {
         if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
         instance = this;

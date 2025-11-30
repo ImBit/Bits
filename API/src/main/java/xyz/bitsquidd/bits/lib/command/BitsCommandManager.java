@@ -30,11 +30,10 @@ public abstract class BitsCommandManager {
     protected final BrigadierTreeGenerator brigadierTreeGenerator;
 
     private final Set<BitsCommand> registeredCommands = new HashSet<>();
+    private final String commandBasePermission = commandBasePermission();
 
     protected BitsCommandManager() {
-        BitsConfig.setCommandManager(this);
-
-        BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
+        BitsConfig.get().setCommandManager(this);
 
         this.argumentRegistry = getArgumentRegistry();
         this.requirementRegistry = getRequirementRegistry();
@@ -87,7 +86,9 @@ public abstract class BitsCommandManager {
      *
      * @return The base permission string for all commands.
      */
-    protected abstract String commandBasePermission();
+    protected String commandBasePermission() {
+        return "bits.command"; // The base prefix for all commands, can be overridden.
+    }
 
 
     /**

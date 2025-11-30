@@ -21,6 +21,7 @@ allprojects {
         implementation(rootProject.libs.jb.annotations)
         implementation(rootProject.libs.jspecify)
         implementation(rootProject.libs.logger)
+        implementation(rootProject.libs.brigadier)
 
         implementation(rootProject.libs.adventure)
         implementation(rootProject.libs.adventure.text.serializer.plain)

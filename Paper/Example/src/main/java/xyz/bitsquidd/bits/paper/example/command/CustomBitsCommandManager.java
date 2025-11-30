@@ -5,11 +5,9 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
-import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
@@ -20,7 +18,7 @@ import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;
 
 import java.util.List;
 
-public class CustomBitsCommandManager extends BitsCommandManager {
+public class CustomBitsCommandManager extends PaperBitsCommandManager {
 
     private final CustomBitsCommandListener listener = new CustomBitsCommandListener(
           CommandDecorator.of(CommandReturnType.ERROR),
@@ -55,22 +53,8 @@ public class CustomBitsCommandManager extends BitsCommandManager {
     }
 
     @Override
-    protected void executeCommand(boolean isAsync, Runnable commandExecution) {
-        if (isAsync) {
-            Bukkit.getScheduler().runTaskAsynchronously(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
-        } else {
-            Bukkit.getScheduler().runTask(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
-        }
-    }
-
-    @Override
     protected List<BitsCommand> getAllCommands() {
         return List.of(new TeleportCommand());
-    }
-
-    @Override
-    protected String commandBasePermission() {
-        return "bits.command";
     }
 
 }

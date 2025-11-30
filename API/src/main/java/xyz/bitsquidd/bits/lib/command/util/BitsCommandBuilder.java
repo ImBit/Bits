@@ -50,7 +50,7 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.corePermissionString = BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
+        this.corePermissionString = BitsConfig.commandBaseString + "." + commandName.replaceAll(" ", "_").toLowerCase();
         this.permissionStrings.add(corePermissionString);
     }
 
