@@ -1,14 +1,11 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.commands.CommandSourceStack;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ public abstract class AbstractArgumentParser<O> {
     }
 
 
-    public abstract O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException;
+    public abstract O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException;
 
     /**
      * Returns a list of required objects the parser expects in.
@@ -88,10 +85,8 @@ public abstract class AbstractArgumentParser<O> {
     }
 
 
-    public final SuggestionProvider<CommandSourceStack> getSuggestionProvider() {
+    public final SuggestionProvider<?> getSuggestionProvider() {
         return (ctx, builder) -> {
-            BitsCommandContext bitsCtx = BitsConfig.getCommandManager().createContext(ctx);
-
             Supplier<List<String>> suggestionSupplier = getSuggestions();
             if (suggestionSupplier == null) return builder.buildFuture();
 

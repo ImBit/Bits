@@ -1,5 +1,8 @@
 package xyz.bitsquidd.bits.lib.command;
 
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
@@ -21,24 +24,32 @@ import java.util.Set;
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
 public abstract class BitsCommandManager<T> {
-    protected final BitsArgumentRegistry argumentRegistry;
-    protected final BitsRequirementRegistry requirementRegistry;
+    protected final BitsArgumentRegistry<T> argumentRegistry;
+    protected final BitsRequirementRegistry<T> requirementRegistry;
     protected final BrigadierTreeGenerator<T> brigadierTreeGenerator;
 
     private final Set<BitsCommand> registeredCommands = new HashSet<>();
-    private final String commandBasePermission = commandBasePermission();
+    private final String commandBasePermission = initialiseBasePermission();
 
     protected BitsCommandManager() {
         BitsConfig.get().setCommandManager(this);
 
-        this.argumentRegistry = getArgumentRegistry();
-        this.requirementRegistry = getRequirementRegistry();
-        this.brigadierTreeGenerator = new BrigadierTreeGenerator<>();
+        this.argumentRegistry = initialiseArgumentRegistry();
+        this.requirementRegistry = initialiseRequirementRegistry();
+        this.brigadierTreeGenerator = new BrigadierTreeGenerator<>(this);
     }
 
-    protected abstract BitsArgumentRegistry getArgumentRegistry();
+    protected abstract BitsArgumentRegistry<T> initialiseArgumentRegistry();
 
-    protected abstract BitsRequirementRegistry getRequirementRegistry();
+    public final BitsArgumentRegistry<T> getArgumentRegistry() {
+        return argumentRegistry;
+    }
+
+    protected abstract BitsRequirementRegistry<T> initialiseRequirementRegistry();
+
+    public final BitsRequirementRegistry<T> getRequirementRegistry() {
+        return requirementRegistry;
+    }
 
     /**
      * Gets all currently registered commands.
@@ -86,8 +97,12 @@ public abstract class BitsCommandManager<T> {
      *
      * @return The base permission string for all commands.
      */
-    protected String commandBasePermission() {
+    protected String initialiseBasePermission() {
         return "bits.command"; // The base prefix for all commands, can be overridden.
+    }
+
+    public final String getCommandBasePermission() {
+        return commandBasePermission;
     }
 
 
@@ -107,6 +122,14 @@ public abstract class BitsCommandManager<T> {
     public abstract BitsCommandContext<T> createContext(CommandContext<T> brigadierContext);
 
     public abstract BitsCommandSourceContext<T> createSourceContext(T sourceStack);
+
+    public LiteralArgumentBuilder<T> createLiteral(String name) {
+        return LiteralArgumentBuilder.literal(name);
+    }
+
+    public <W> RequiredArgumentBuilder<T, W> createArgument(String name, ArgumentType<W> type) {
+        return RequiredArgumentBuilder.argument(name, type);
+    }
 
 
     /**

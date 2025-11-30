@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Stores information about a method in a command
  */
-public class CommandMethodInfo {
+public class CommandMethodInfo<T> {
     private final Method method;
 
     private final boolean isAsync;

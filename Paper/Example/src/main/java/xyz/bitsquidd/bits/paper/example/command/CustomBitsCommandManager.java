@@ -39,12 +39,12 @@ public class CustomBitsCommandManager extends PaperBitsCommandManager {
     }
 
     @Override
-    public BitsArgumentRegistry getArgumentRegistry() {
+    public BitsArgumentRegistry initialiseArgumentRegistry() {
         return new BitsArgumentRegistry();
     }
 
     @Override
-    protected BitsRequirementRegistry getRequirementRegistry() {
+    protected BitsRequirementRegistry initialiseRequirementRegistry() {
         return new BitsRequirementRegistry();
     }
 

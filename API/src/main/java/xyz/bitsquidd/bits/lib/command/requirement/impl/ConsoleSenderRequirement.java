@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.command.requirement.impl;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.ConsoleCommandSender;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
@@ -15,12 +14,12 @@ public class ConsoleSenderRequirement extends BitsCommandRequirement {
     protected ConsoleSenderRequirement() {}
 
     @Override
-    public boolean test(BitsCommandSourceContext ctx) {
+    public boolean test(BitsCommandSourceContext<?> ctx) {
         return ctx.getSender() instanceof ConsoleCommandSender;
     }
 
     @Override
-    public @Nullable Text getFailureMessage(BitsCommandSourceContext ctx) {
+    public @Nullable Text getFailureMessage(BitsCommandSourceContext<?> ctx) {
         return Text.of(Component.text("This command can only be executed by the console."));
     }
 }

@@ -24,7 +24,7 @@ public abstract class BitsCommandContext<T> {
     /**
      * Returns the Brigadier {@link T}.
      */
-    public BitsCommandSourceContext getSource() {
+    public BitsCommandSourceContext<T> getSource() {
         return source;
     }
 

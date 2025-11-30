@@ -16,7 +16,7 @@ public abstract class BitsConfig {
     protected final boolean developmentMode = false;
     protected final Logger logger;
 
-    protected @Nullable BitsCommandManager commandManager;
+    protected @Nullable BitsCommandManager<?> commandManager;
 
 
     protected BitsConfig(Logger logger) {
@@ -45,12 +45,12 @@ public abstract class BitsConfig {
     }
 
 
-    public void setCommandManager(BitsCommandManager manager) {
+    public void setCommandManager(BitsCommandManager<?> manager) {
         checkInitialized();
         commandManager = manager;
     }
 
-    public BitsCommandManager getCommandManager() {
+    public BitsCommandManager<?> getCommandManager() {
         return Objects.requireNonNull(commandManager, "BitsCommandManager has not been set!");
     }
 

@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive;
 
-import org.jetbrains.annotations.NotNull;
-
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -19,7 +17,7 @@ public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgument
 
     @Override
     @SuppressWarnings("unchecked")
-    public final O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public final O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         return (O)singletonInputValidation(inputObjects, getTypeSignature().toRawType());
     }
 

@@ -1,7 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.requirement.impl;
 
 import org.bukkit.GameMode;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 
@@ -20,7 +19,7 @@ public class PlayerGamemodeRequirement extends PlayerSenderRequirement {
     }
 
     @Override
-    public boolean test(BitsCommandSourceContext ctx) {
+    public boolean test(BitsCommandSourceContext<?> ctx) {
         return super.test(ctx) && ctx.requirePlayer().getGameMode().equals(requiredGamemode);
     }
 }

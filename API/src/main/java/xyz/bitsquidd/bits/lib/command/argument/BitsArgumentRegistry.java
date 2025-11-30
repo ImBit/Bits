@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
+import com.mojang.brigadier.arguments.*;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.jspecify.annotations.Nullable;
@@ -19,24 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BitsArgumentRegistry {
-    private static @Nullable BitsArgumentRegistry instance;
-
+public class BitsArgumentRegistry<T> {
     private final Map<TypeSignature<?>, AbstractArgumentParser<?>> parsers = new HashMap<>();
 
 
     public BitsArgumentRegistry() {
-        if (instance != null) throw new IllegalStateException("ArgumentRegistry has already been initialized.");
-        instance = this;
-
         List<AbstractArgumentParser<?>> initialParsers = new ArrayList<>(initialisePrimitiveParsers());
         initialParsers.addAll(initialiseParsers());
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
-    }
-
-    public static BitsArgumentRegistry getInstance() {
-        if (instance == null) throw new IllegalStateException("ArgumentRegistry has not been initialized yet.");
-        return instance;
     }
 
     private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
@@ -106,7 +97,7 @@ public class BitsArgumentRegistry {
                 return new GenericEnumParser<>(enumClass);
             }
 
-            BitsConfig.logger().error("No parser registered for type: " + typeSignature);
+            BitsConfig.get().logger().error("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
 

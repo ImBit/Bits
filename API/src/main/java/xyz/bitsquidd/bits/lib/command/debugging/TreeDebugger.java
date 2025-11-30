@@ -2,18 +2,17 @@ package xyz.bitsquidd.bits.lib.command.debugging;
 
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandSourceStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TreeDebugger {
-    public static String visualizeCommandTree(List<LiteralCommandNode<CommandSourceStack>> nodes) {
+public class TreeDebugger<T> {
+    public String visualizeCommandTree(List<LiteralCommandNode<T>> nodes) {
         StringBuilder sb = new StringBuilder();
         sb.append("Command Tree:\n");
 
-        for (LiteralCommandNode<CommandSourceStack> node : nodes) {
+        for (LiteralCommandNode<T> node : nodes) {
             sb.append("root\n");
             visualizeNode(node, "", true, sb);
         }
@@ -21,7 +20,7 @@ public class TreeDebugger {
         return sb.toString();
     }
 
-    private static void visualizeNode(CommandNode<CommandSourceStack> node, String prefix, boolean isLast, StringBuilder sb) {
+    private void visualizeNode(CommandNode<T> node, String prefix, boolean isLast, StringBuilder sb) {
         String nodeName = getNodeName(node);
         String connector = isLast ? "└── " : "├── ";
         sb.append(prefix).append(connector).append(nodeName);
@@ -32,27 +31,29 @@ public class TreeDebugger {
 
         sb.append("\n");
 
-        Collection<CommandNode<CommandSourceStack>> children = node.getChildren();
+        Collection<CommandNode<T>> children = node.getChildren();
         if (children.isEmpty()) {
             return;
         }
 
         String childPrefix = prefix + (isLast ? "    " : "│   ");
 
-        List<CommandNode<CommandSourceStack>> childList = new ArrayList<>(children);
+        List<CommandNode<T>> childList = new ArrayList<>(children);
         for (int i = 0; i < childList.size(); i++) {
             boolean isLastChild = (i == childList.size() - 1);
             visualizeNode(childList.get(i), childPrefix, isLastChild, sb);
         }
     }
 
-    private static String getNodeName(CommandNode<CommandSourceStack> node) {
+    @SuppressWarnings("rawtypes")
+    private String getNodeName(CommandNode<T> node) {
         if (node instanceof LiteralCommandNode) {
-            return ((LiteralCommandNode<CommandSourceStack>)node).getLiteral();
+            return ((LiteralCommandNode<T>)node).getLiteral();
         } else if (node instanceof com.mojang.brigadier.tree.ArgumentCommandNode argumentCommandNode) {
             return "<" + argumentCommandNode.getType().toString() + ">";
         } else {
             return node.getName();
         }
     }
+
 }
