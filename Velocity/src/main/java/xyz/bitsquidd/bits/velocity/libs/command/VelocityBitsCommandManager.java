@@ -6,6 +6,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
+import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
@@ -13,6 +14,11 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
 
 public abstract class VelocityBitsCommandManager extends BitsCommandManager<CommandSource> {
+
+    @Override
+    protected BitsArgumentRegistry<CommandSource> initialiseArgumentRegistry() {
+        return new VelocityBitsArgumentRegistry();
+    }
 
     @Override
     protected void executeCommand(boolean isAsync, Runnable commandExecution) {
@@ -54,5 +60,5 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
     public BitsCommandSourceContext<CommandSource> createSourceContext(CommandSource sourceStack) {
         return new VelocityBitsCommandSourceContext(sourceStack);
     }
-    
+
 }

@@ -85,7 +85,7 @@ public abstract class AbstractArgumentParser<O> {
     }
 
 
-    public final SuggestionProvider<?> getSuggestionProvider() {
+    public final <T> SuggestionProvider<T> getSuggestionProvider() {
         return (ctx, builder) -> {
             Supplier<List<String>> suggestionSupplier = getSuggestions();
             if (suggestionSupplier == null) return builder.buildFuture();

@@ -101,13 +101,13 @@ public final class BitsCommandBuilder {
 
     public Set<BitsCommandRequirement> getRequirements() {
         Set<BitsCommandRequirement> requirements = new HashSet<>();
-        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionStrings));
+        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionStrings.stream().map(xyz.bitsquidd.bits.lib.permission.Permission::of).toList()));
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(corePermissionString + "." + appended))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermissionString + "." + appended)))
                   .toList());
         }
 

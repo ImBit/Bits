@@ -1,8 +1,7 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
+package xyz.bitsquidd.bits.paper.libs.command.argument.parser.impl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -19,7 +18,7 @@ public final class WorldArgumentParser extends AbstractArgumentParser<World> {
     }
 
     @Override
-    public World parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public World parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         World world = Bukkit.getWorld(inputString);

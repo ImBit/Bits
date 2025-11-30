@@ -1,12 +1,11 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
 import com.mojang.brigadier.arguments.*;
-import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.argument.parser.impl.*;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.GreedyStringArgumentParser;
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.VoidParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -20,9 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BitsArgumentRegistry<T> {
+public abstract class BitsArgumentRegistry<T> {
     private final Map<TypeSignature<?>, AbstractArgumentParser<?>> parsers = new HashMap<>();
-
 
     public BitsArgumentRegistry() {
         List<AbstractArgumentParser<?>> initialParsers = new ArrayList<>(initialisePrimitiveParsers());
@@ -30,7 +28,7 @@ public class BitsArgumentRegistry<T> {
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
     }
 
-    private @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
+    protected @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
         Class<?> clazz = inputType.toRawType();
         if (clazz == Integer.class || clazz == int.class) {
             return IntegerArgumentType.integer();
@@ -46,37 +44,25 @@ public class BitsArgumentRegistry<T> {
             return StringArgumentType.greedyString();
         } else if (clazz == String.class) {
             return StringArgumentType.string();
-        } else if (clazz == EntitySelector.class) {
-            // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
-            // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
-            return EntityArgument.entities(); // TODO, in the future, we could consider refining this to be single/multiple/entity/player selectors. For now the parser should filter this.
         }
 
         return null;
     }
 
-    private List<AbstractArgumentParser<?>> initialisePrimitiveParsers() {
+    protected List<PrimitiveArgumentParser<?>> initialisePrimitiveParsers() {
         return List.of(
               new BooleanArgumentParser(),
               new DoubleArgumentParser(),
               new FloatArgumentParser(),
               new IntegerArgumentParser(),
               new LongArgumentParser(),
-              new StringArgumentParser(),
-              new EntitySelectorArgumentParser()
+              new StringArgumentParser()
         );
     }
 
     protected List<AbstractArgumentParser<?>> initialiseParsers() {
         // Override to add custom parsers
-        return new ArrayList<>(List.of(
-              new GreedyStringArgumentParser(),
-              new PlayerCollectionArgumentParser(),
-              new PlayerSingleArgumentParser(),
-              new WorldArgumentParser(),
-              new LocationArgumentParser(),
-              new BlockPosArgumentParser()
-        ));
+        return List.of(new GreedyStringArgumentParser());
     }
 
     /**

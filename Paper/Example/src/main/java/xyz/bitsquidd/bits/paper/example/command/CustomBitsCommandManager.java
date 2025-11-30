@@ -9,7 +9,6 @@ import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
-import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
@@ -36,11 +35,6 @@ public class CustomBitsCommandManager extends PaperBitsCommandManager {
     public void shutdown() {
         super.shutdown();
         HandlerList.unregisterAll(listener);
-    }
-
-    @Override
-    public BitsArgumentRegistry initialiseArgumentRegistry() {
-        return new BitsArgumentRegistry();
     }
 
     @Override

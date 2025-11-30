@@ -2,15 +2,14 @@ package xyz.bitsquidd.bits.paper.example.command.impl;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.command.requirement.impl.PlayerSenderRequirement;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.helper.Formatter;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.paper.libs.command.requirement.PlayerSenderRequirement;
 
 
 /**

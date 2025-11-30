@@ -7,12 +7,24 @@ import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
+import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 
 public abstract class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
+
+    @Override
+    public BitsArgumentRegistry<CommandSourceStack> initialiseArgumentRegistry() {
+        return new PaperBitsArgumentRegistry();
+    }
+
+    @Override
+    protected BitsRequirementRegistry<CommandSourceStack> initialiseRequirementRegistry() {
+        return new PaperBitsRequirementRegistry();
+    }
 
     @Override
     protected void executeCommand(boolean isAsync, Runnable commandExecution) {

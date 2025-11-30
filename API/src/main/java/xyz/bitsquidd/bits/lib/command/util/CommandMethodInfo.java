@@ -5,8 +5,8 @@ import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class CommandMethodInfo<T> {
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(corePermissionString + "." + appended))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermissionString + "." + appended)))
                   .toList());
         }
 
@@ -90,7 +90,7 @@ public class CommandMethodInfo<T> {
         Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> BitsRequirementRegistry.getInstance().getRequirement(clazz))
+                  .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
                   .toList());
         }
 

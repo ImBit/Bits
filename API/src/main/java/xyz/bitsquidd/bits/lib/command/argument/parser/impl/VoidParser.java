@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 
-import org.jetbrains.annotations.NotNull;
-
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -16,7 +14,7 @@ public final class VoidParser extends AbstractArgumentParser<Void> {
     }
 
     @Override
-    public Void parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public Void parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         return null;
     }
 

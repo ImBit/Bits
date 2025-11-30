@@ -1,7 +1,8 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive;
+package xyz.bitsquidd.bits.paper.libs.command.argument.parser.impl.primitive;
 
 import net.minecraft.commands.arguments.selector.EntitySelector;
-import org.jetbrains.annotations.NotNull;
+
+import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.PrimitiveArgumentParser;
 
 public final class EntitySelectorArgumentParser extends PrimitiveArgumentParser<EntitySelector> {
     public EntitySelectorArgumentParser() {

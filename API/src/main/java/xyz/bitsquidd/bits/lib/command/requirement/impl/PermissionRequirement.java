@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
+import xyz.bitsquidd.bits.lib.permission.Permission;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 import java.util.ArrayList;
@@ -13,24 +14,24 @@ import java.util.List;
 
 // Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
 public class PermissionRequirement extends BitsCommandRequirement {
-    public final List<String> permissions = new ArrayList<>();
+    public final List<Permission> permissions = new ArrayList<>();
 
-    protected PermissionRequirement(Collection<String> permissions) {
+    protected PermissionRequirement(Collection<Permission> permissions) {
         this.permissions.addAll(permissions);
     }
 
-    public static PermissionRequirement of(Collection<String> permissions) {
+    public static PermissionRequirement of(Collection<Permission> permissions) {
         return new PermissionRequirement(permissions);
     }
 
-    public static PermissionRequirement of(String... permissions) {
+    public static PermissionRequirement of(Permission... permissions) {
         return new PermissionRequirement(List.of(permissions));
     }
 
 
     @Override
     public boolean test(BitsCommandSourceContext<?> ctx) {
-        return permissions.stream().allMatch(permission -> ctx.getSender().hasPermission(permission));
+        return permissions.stream().allMatch(permission -> permission.hasPermission(ctx.getSender()));
     }
 
     @Override

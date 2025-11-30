@@ -1,29 +1,31 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
+package xyz.bitsquidd.bits.paper.libs.command.argument.parser.impl;
 
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.location.BlockPos;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-public final class BlockPosArgumentParser extends AbstractArgumentParser<BlockPos> {
+public final class LocationArgumentParser extends AbstractArgumentParser<Location> {
 
-    public BlockPosArgumentParser() {
-        super(TypeSignature.of(BlockPos.class), "BlockPos");
+    public LocationArgumentParser() {
+        super(TypeSignature.of(Location.class), "Location");
     }
 
     @Override
-    public BlockPos parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public Location parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);
         double z = (double)inputs.get(2);
-        return BlockPos.of(x, y, z);
+        World world = (World)inputs.get(3);
+
+        return new Location(world, x, y, z);
     }
 
     @Override
@@ -31,7 +33,8 @@ public final class BlockPosArgumentParser extends AbstractArgumentParser<BlockPo
         return List.of(
               new InputTypeContainer(TypeSignature.of(Double.class), "x"),
               new InputTypeContainer(TypeSignature.of(Double.class), "y"),
-              new InputTypeContainer(TypeSignature.of(Double.class), "z")
+              new InputTypeContainer(TypeSignature.of(Double.class), "z"),
+              new InputTypeContainer(TypeSignature.of(World.class), "world")
         );
     }
 

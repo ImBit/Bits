@@ -1,10 +1,9 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
+package xyz.bitsquidd.bits.paper.libs.command.argument.parser.impl;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
@@ -22,7 +21,7 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParser<Pla
     }
 
     @Override
-    public Player parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public Player parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
         try {
@@ -34,9 +33,6 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParser<Pla
         } catch (Exception e) {
             throw new CommandParseException("Player not found!");
         }
-//        Player player = Bukkit.getPlayer(inputString);
-//        if (player == null) throw new CommandParseException("Player not found: " + inputString);
-//        return player;
     }
 
     @Override

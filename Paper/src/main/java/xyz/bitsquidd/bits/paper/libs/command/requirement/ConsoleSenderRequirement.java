@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.command.requirement.impl;
+package xyz.bitsquidd.bits.paper.libs.command.requirement;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.ConsoleCommandSender;

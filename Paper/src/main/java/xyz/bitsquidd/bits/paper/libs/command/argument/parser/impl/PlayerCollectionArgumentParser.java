@@ -1,10 +1,9 @@
-package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
+package xyz.bitsquidd.bits.paper.libs.command.argument.parser.impl;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
@@ -12,6 +11,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
+import xyz.bitsquidd.bits.paper.libs.command.PaperBitsCommandContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,13 +24,13 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     // TODO just pull from vanilla EntitySelector. Also pull the completion.
     private enum SelectorType {
         ALL("@a", ctx -> new ArrayList<>(Bukkit.getOnlinePlayers())),
-        SELF("@s", ctx -> List.of(ctx.requirePlayer())),
+        SELF("@s", ctx -> List.of(((PaperBitsCommandContext)ctx).requirePlayer())),
         ;
 
         public final String selector;
-        public final Function<BitsCommandContext, Collection<Player>> playerFunction;
+        public final Function<BitsCommandContext<?>, Collection<Player>> playerFunction;
 
-        SelectorType(String selector, Function<BitsCommandContext, Collection<Player>> playerFunction) {
+        SelectorType(String selector, Function<BitsCommandContext<?>, Collection<Player>> playerFunction) {
             this.selector = selector;
             this.playerFunction = playerFunction;
         }
@@ -54,7 +54,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public Collection<Player> parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public Collection<Player> parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
         try {

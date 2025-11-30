@@ -8,10 +8,9 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O>
-      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, EntitySelectorArgumentParser {
+public abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O> {
 
-    PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
+    protected PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
         super(TypeSignature.of(outputClass), argumentName);
     }
 
