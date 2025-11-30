@@ -29,15 +29,15 @@ public final class BitsCommandBuilder {
     private final List<String> commandAliases;
     private final String commandDescription;
 
-    private final String corePermissionString;
-    private final List<String> permissionStrings = new ArrayList<>();
+    private final xyz.bitsquidd.bits.lib.permission.Permission corePermission;
+    private final List<xyz.bitsquidd.bits.lib.permission.Permission> permissions = new ArrayList<>();
 
     // Allow us to build from an instance or a class.
     // Instances are used only for gathering extra requirements.
     public BitsCommandBuilder(@Nullable BitsCommand commandInstance) {
         this(Objects.requireNonNull(commandInstance).getClass());
         this.commandInstance = commandInstance;
-        this.permissionStrings.addAll(commandInstance.getAlternatePermissionStrings());
+        this.permissions.addAll(commandInstance.getAlternatePermissionStrings().stream().map(xyz.bitsquidd.bits.lib.permission.Permission::of).toList());
     }
 
     public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
@@ -49,8 +49,8 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.corePermissionString = BitsConfig.get().getCommandManager().getCommandBasePermission() + "." + commandName.replaceAll(" ", "_").toLowerCase();
-        this.permissionStrings.add(corePermissionString);
+        this.corePermission = xyz.bitsquidd.bits.lib.permission.Permission.of(BitsConfig.get().getCommandManager().getCommandBasePermission() + "." + commandName.replaceAll(" ", "_").toLowerCase());
+        this.permissions.add(corePermission);
     }
 
 
@@ -101,13 +101,13 @@ public final class BitsCommandBuilder {
 
     public Set<BitsCommandRequirement> getRequirements() {
         Set<BitsCommandRequirement> requirements = new HashSet<>();
-        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionStrings.stream().map(xyz.bitsquidd.bits.lib.permission.Permission::of).toList()));
+        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissions));
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermissionString + "." + appended)))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
                   .toList());
         }
 
@@ -123,12 +123,12 @@ public final class BitsCommandBuilder {
         return requirements;
     }
 
-    public String getCorePermissionString() {
-        return corePermissionString;
+    public xyz.bitsquidd.bits.lib.permission.Permission getCorePermission() {
+        return corePermission;
     }
 
-    public List<String> getPermissionStrings() {
-        return Collections.unmodifiableList(permissionStrings);
+    public List<xyz.bitsquidd.bits.lib.permission.Permission> getPermissions() {
+        return Collections.unmodifiableList(permissions);
     }
 
 }

@@ -72,9 +72,9 @@ public class BrigadierTreeGenerator<T> {
 
             nextBranches.forEach(argumentBuilder -> {
                 mergeRequirement(
-                      argumentBuilder, sender ->
-                            commandBuilder.getPermissionStrings().stream().anyMatch(permissionString ->
-                                  sender.getSender().hasPermission(permissionString)
+                      argumentBuilder, ctx ->
+                            commandBuilder.getPermissions().stream().anyMatch(permission ->
+                                  permission.hasPermission(commandManager.createSourceContext(ctx).getSender())
                             )
                 );
             });
@@ -85,6 +85,7 @@ public class BrigadierTreeGenerator<T> {
         return commandBranches;
     }
 
+    @SuppressWarnings("unchecked")
     private void processCommandClass(
           final ArgumentBuilder<T, ?> branch,
           final BitsCommandBuilder commandBuilder,
@@ -98,7 +99,7 @@ public class BrigadierTreeGenerator<T> {
         );
 
         // Create parameters needed for this class.
-        List<CommandParameterInfo> classParameters = commandBuilder.getParameters().stream().map(param -> new CommandParameterInfo(commandManager, param)).toList();
+        List<CommandParameterInfo> classParameters = commandBuilder.getParameters().stream().map(CommandParameterInfo::new).toList();
         List<CommandParameterInfo> nonMutatedParameters = new ArrayList<>(addedParameters);
         nonMutatedParameters.addAll(classParameters);
 
@@ -164,7 +165,7 @@ public class BrigadierTreeGenerator<T> {
         // Add method requirements
         mergeRequirement(
               workingBranch, ctx ->
-                    methodInfo.getRequirements(commandBuilder.getCorePermissionString()).stream()
+                    methodInfo.getRequirements(commandBuilder.getCorePermission()).stream()
                           .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));

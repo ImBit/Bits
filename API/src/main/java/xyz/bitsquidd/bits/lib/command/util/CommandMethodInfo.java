@@ -75,14 +75,14 @@ public class CommandMethodInfo<T> {
     }
 
     //TODO merge with BitsCommandBuilder permission gathering?
-    public List<BitsCommandRequirement> getRequirements(String corePermissionString) {
+    public List<BitsCommandRequirement> getRequirements(xyz.bitsquidd.bits.lib.permission.Permission corePermission) {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermissionString + "." + appended)))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
                   .toList());
         }
 
