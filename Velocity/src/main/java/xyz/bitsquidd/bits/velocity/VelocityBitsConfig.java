@@ -12,13 +12,20 @@ import xyz.bitsquidd.bits.lib.permission.Permission;
 import java.util.Locale;
 
 public class VelocityBitsConfig extends BitsConfig {
+    private final Object plugin;
     private final ProxyServer server;
 
-    public VelocityBitsConfig(ProxyServer server, Logger logger) {
+    public VelocityBitsConfig(ProxyServer server, Logger logger, Object plugin) {
         super(logger);
         this.server = server;
+        this.plugin = plugin;
     }
 
+
+    public Object getPlugin() {
+        checkInitialized();
+        return plugin;
+    }
 
     public ProxyServer getServer() {
         checkInitialized();

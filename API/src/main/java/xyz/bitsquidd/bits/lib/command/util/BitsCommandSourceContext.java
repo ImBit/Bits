@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,10 +10,10 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 /**
  * Utility class to encapsulate the CommandSourceStack
  */
-public class BitsCommandSourceContext {
-    private final CommandSourceStack source;
+public abstract class BitsCommandSourceContext<T> {
+    private final T source;
 
-    public BitsCommandSourceContext(CommandSourceStack source) {
+    public BitsCommandSourceContext(T source) {
         this.source = source;
     }
 

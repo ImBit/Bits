@@ -28,22 +28,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class BrigadierTreeGenerator {
+public class BrigadierTreeGenerator<T> {
     private final BitsCommandManager bitsCommandManager = BitsConfig.get().getCommandManager();
 
     public BrigadierTreeGenerator() {
     }
 
-    public List<LiteralCommandNode<CommandSourceStack>> createNodes(
+    public List<LiteralCommandNode<T>> createNodes(
           BitsCommandBuilder commandBuilder
     ) {
         // We create a "dummy_root" to be able to split core aliases.
-        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root");
+        LiteralArgumentBuilder<T> dummyRoot = Commands.literal("dummy_root");
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
-        List<LiteralCommandNode<CommandSourceStack>> nodes = dummyRoot.getArguments().stream()
+        List<LiteralCommandNode<T>> nodes = dummyRoot.getArguments().stream()
               .filter(node -> node instanceof LiteralCommandNode)
-              .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
+              .map(node -> (LiteralCommandNode<T>)node)
               .toList();
 
         if (BitsConfig.get().isDevelopment()) BitsConfig.get().logger().info(TreeDebugger.visualizeCommandTree(nodes));
@@ -87,7 +87,7 @@ public class BrigadierTreeGenerator {
     }
 
     private void processCommandClass(
-          final ArgumentBuilder<CommandSourceStack, ?> branch,
+          final ArgumentBuilder<T, ?> branch,
           final BitsCommandBuilder commandBuilder,
           final List<CommandParameterInfo> addedParameters
     ) {
@@ -104,17 +104,17 @@ public class BrigadierTreeGenerator {
         nonMutatedParameters.addAll(classParameters);
 
         // Create next branches with aliases
-        List<ArgumentBuilder<CommandSourceStack, ?>> nextBranches = createNextBranches(commandBuilder, branch);
+        List<ArgumentBuilder<T, ?>> nextBranches = createNextBranches(commandBuilder, branch);
 
         nextBranches.forEach(nextBranch -> {
-            List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
+            List<ArgumentBuilder<T, ?>> addedParamBranches = new ArrayList<>();
 
             // Add brigadier branches for all the new parameters
             classParameters.forEach(param -> {
                 addedParamBranches.addAll(param.createBrigadierArguments());
             });
 
-            ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
+            ArgumentBuilder<T, ?> workingBranch = nextBranch;
             if (!addedParamBranches.isEmpty()) workingBranch = addedParamBranches.getLast();
 
             for (Class<? extends BitsCommand> nestedClass : commandBuilder.getSubcommandClasses()) {
@@ -138,12 +138,12 @@ public class BrigadierTreeGenerator {
 
     // Builds executions onto the root.
     private void processCommandMethod(
-          final ArgumentBuilder<CommandSourceStack, ?> nextBranch,
+          final ArgumentBuilder<T, ?> nextBranch,
           final BitsCommandBuilder commandBuilder,
           final CommandMethodInfo methodInfo
     ) {
         // Add all extra parameters to the branch.
-        List<ArgumentBuilder<CommandSourceStack, ?>> paramBranch = new ArrayList<>();
+        List<ArgumentBuilder<T, ?>> paramBranch = new ArrayList<>();
 
         // Add literal name if it exists.
         // Note we currently don't support aliases for method literals.
@@ -155,7 +155,7 @@ public class BrigadierTreeGenerator {
             paramBranch.addAll(param.createBrigadierArguments());
         });
 
-        ArgumentBuilder<CommandSourceStack, ?> workingBranch;
+        ArgumentBuilder<T, ?> workingBranch;
         if (!paramBranch.isEmpty()) {
             workingBranch = paramBranch.getLast();
         } else {
@@ -176,7 +176,7 @@ public class BrigadierTreeGenerator {
 
     // Creates a command execution when no more parameters need to be added.
     @SuppressWarnings("NullableProblems")
-    private Command<CommandSourceStack> createCommandExecution(
+    private Command<T> createCommandExecution(
           final BitsCommandBuilder commandBuilder,
           final CommandMethodInfo methodInfo
     ) {
@@ -257,12 +257,12 @@ public class BrigadierTreeGenerator {
     }
 
 
-    private ArgumentBuilder<CommandSourceStack, ?> buildBackward(List<ArgumentBuilder<CommandSourceStack, ?>> toAdd) {
+    private ArgumentBuilder<T, ?> buildBackward(List<ArgumentBuilder<T, ?>> toAdd) {
         if (toAdd.isEmpty()) throw new CommandParseException("No more branches to add.");
         if (toAdd.size() == 1) return toAdd.getFirst();
 
-        ArgumentBuilder<CommandSourceStack, ?> first = toAdd.getFirst();
-        List<ArgumentBuilder<CommandSourceStack, ?>> rest = toAdd.subList(1, toAdd.size());
+        ArgumentBuilder<T, ?> first = toAdd.getFirst();
+        List<ArgumentBuilder<T, ?>> rest = toAdd.subList(1, toAdd.size());
         first.then(buildBackward(new ArrayList<>(rest)));
         return first;
     }
