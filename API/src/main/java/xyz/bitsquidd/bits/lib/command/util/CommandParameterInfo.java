@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
@@ -44,18 +45,19 @@ public class CommandParameterInfo {
         this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 
-    public <T> List<ArgumentBuilder<?, ?>> createBrigadierArguments() {
-        List<ArgumentBuilder<?, ?>> brigadierArguments = new ArrayList<>();
+    public <T> List<ArgumentBuilder<T, ?>> createBrigadierArguments() {
+        BitsCommandManager<T> commandManager = (BitsCommandManager<T>)BitsConfig.get().getCommandManager();
+        List<ArgumentBuilder<T, ?>> brigadierArguments = new ArrayList<>();
 
         boolean useArgSuggestions = heldArguments.size() > 1; // We use the arg suggestions only if there are multiple held arguments
 
         for (int i = 0; i < heldArguments.size(); i++) {
             BrigadierArgumentMapping arg = heldArguments.get(i);
-            RequiredArgumentBuilder<?, ?> argumentBuilder = arg.toBrigadierArgument(BitsConfig.get().getCommandManager());
+            RequiredArgumentBuilder<T, ?> argumentBuilder = arg.toBrigadierArgument(commandManager);
 
             if (useArgSuggestions) {
                 TypeSignature<?> inputType = parser.getInputTypes().get(i).typeSignature();
-                AbstractArgumentParser<T> inputParser = (AbstractArgumentParser<T>)BitsConfig.get().getCommandManager().getArgumentRegistry().getParser(inputType);
+                AbstractArgumentParser<?> inputParser = commandManager.getArgumentRegistry().getParser(inputType);
 
                 // Use the input-specific parser's suggestions
                 if (hasSuggestions(inputParser)) argumentBuilder.suggests(inputParser.getSuggestionProvider());

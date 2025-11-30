@@ -11,7 +11,7 @@ public record BrigadierArgumentMapping(
       TypeSignature<?> typeSignature,
       String argumentName
 ) {
-    public RequiredArgumentBuilder<?, ?> toBrigadierArgument(BitsCommandManager<?> manager) {
+    public <T> RequiredArgumentBuilder<T, ?> toBrigadierArgument(BitsCommandManager<T> manager) {
         return manager.createArgument(
               argumentName,
               argumentType

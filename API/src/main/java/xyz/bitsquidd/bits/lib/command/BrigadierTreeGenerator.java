@@ -21,7 +21,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -111,7 +110,7 @@ public class BrigadierTreeGenerator<T> {
 
             // Add brigadier branches for all the new parameters
             classParameters.forEach(param -> {
-                addedParamBranches.addAll((Collection<? extends ArgumentBuilder<T, ?>>)param.createBrigadierArguments());
+                addedParamBranches.addAll(param.createBrigadierArguments());
             });
 
             ArgumentBuilder<T, ?> workingBranch = nextBranch;
@@ -152,7 +151,7 @@ public class BrigadierTreeGenerator<T> {
         }
 
         methodInfo.getMethodParameters().forEach(param -> {
-            paramBranch.addAll((Collection<? extends ArgumentBuilder<T, ?>>)param.createBrigadierArguments());
+            paramBranch.addAll(param.createBrigadierArguments());
         });
 
         ArgumentBuilder<T, ?> workingBranch;
