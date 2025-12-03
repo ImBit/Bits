@@ -115,7 +115,7 @@ public abstract class BitsArgumentRegistry<T> {
 
                     holders.add(new BrigadierArgumentMapping(
                           brigadierType,
-                          nestedParser.getTypeSignature(),
+                          inputType.typeSignature(),
                           argumentName
                     ));
                     handled = true;
