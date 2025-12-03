@@ -13,6 +13,7 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 public final class BitsCommandBuilder {
     private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;
+    private final boolean isStaticClass;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final Command commandAnnotation;
@@ -42,6 +44,7 @@ public final class BitsCommandBuilder {
 
     public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
         this.commandClass = commandClass;
+        this.isStaticClass = Modifier.isStatic(commandClass.getModifiers());
 
         commandAnnotation = commandClass.getAnnotation(Command.class);
         if (commandAnnotation == null) throw new CommandParseException("Class " + commandClass + " must be annotated with @Command");
@@ -75,7 +78,9 @@ public final class BitsCommandBuilder {
         Constructor<?>[] constructors = commandClass.getConstructors();
         if (constructors.length > 0) {
             Constructor<?> constructor = constructors[0];
-            return List.of(constructor.getParameters());
+            return Arrays.stream(constructor.getParameters())
+                  .filter(param -> !param.isSynthetic() && !BitsCommand.class.isAssignableFrom(param.getType()))
+                  .toList();
         }
         return Collections.emptyList();
     }
@@ -129,6 +134,10 @@ public final class BitsCommandBuilder {
 
     public List<xyz.bitsquidd.bits.lib.permission.Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
+    }
+
+    public boolean requiresOuterInstance() {
+        return !isStaticClass && commandClass.isMemberClass();
     }
 
 }

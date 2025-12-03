@@ -18,7 +18,7 @@ public abstract class BitsCommand {
     }
 
     @Command("usage")
-    public void sendUsage(final BitsCommandContext ctx) {
+    public void sendUsage(final BitsCommandContext<?> ctx) {
         ctx.respond(Text.of(Component.text("Test from " + getClass().getSimpleName() + "!")));
     }
 

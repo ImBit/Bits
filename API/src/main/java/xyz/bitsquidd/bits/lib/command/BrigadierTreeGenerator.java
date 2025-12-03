@@ -223,22 +223,25 @@ public final class BrigadierTreeGenerator<T> {
             Runnable commandExecution = () -> {
                 try {
                     Constructor<?> commandClass = commandBuilder.toConstructor();
-                    int constructorParamCount = commandClass.getParameterCount();
-                    Object instance;
+                    int constructorParamCount = commandBuilder.getParameters().size();
 
-                    List<@Nullable Object> methodArguments = new ArrayList<>();
+                    Object[] constructorArgs = parsedArguments.subList(0, constructorParamCount).toArray();
 
-                    if (constructorParamCount == 0) {
-                        instance = commandClass.newInstance();
-                        methodArguments = parsedArguments;
-                    } else {
-                        Object[] constructorArgs = parsedArguments.subList(0, constructorParamCount).toArray();
-                        instance = commandClass.newInstance(constructorArgs);
+                    if (commandBuilder.requiresOuterInstance()) {
+                        Class<?> outerClass = commandBuilder.getCommandClass().getDeclaringClass();
+                        Object outerInstance = outerClass.getDeclaredConstructor().newInstance();
 
-                        if (constructorParamCount < parsedArguments.size()) {
-                            methodArguments = new ArrayList<>(parsedArguments.subList(constructorParamCount, parsedArguments.size()));
-                        }
+                        Object[] argsWithOuter = new Object[constructorArgs.length + 1];
+                        argsWithOuter[0] = outerInstance;
+                        System.arraycopy(constructorArgs, 0, argsWithOuter, 1, constructorArgs.length);
+                        constructorArgs = argsWithOuter;
                     }
+
+                    Object instance = commandClass.newInstance(constructorArgs);
+
+                    List<@Nullable Object> methodArguments = constructorParamCount < parsedArguments.size()
+                                                             ? new ArrayList<>(parsedArguments.subList(constructorParamCount, parsedArguments.size()))
+                                                             : new ArrayList<>();
 
                     if (methodInfo.requiresContext()) methodArguments.addFirst(bitsCtx);
 
