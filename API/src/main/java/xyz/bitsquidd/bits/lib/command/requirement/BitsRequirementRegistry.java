@@ -8,21 +8,18 @@ public class BitsRequirementRegistry<T> {
     private final Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> requirementInstances = new HashMap<>();
 
     public BitsRequirementRegistry() {
-        Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialRequirements = new HashMap<>();
-        initialRequirements.putAll(initialiseParsers());
+        Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialRequirements = new HashMap<>(initialiseParsers());
         requirementInstances.putAll(initialRequirements);
     }
 
     protected Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialiseParsers() {
-        return Map.of();
+        return new HashMap<>();
     }
-
-
+    
     public BitsCommandRequirement getRequirement(Class<? extends BitsCommandRequirement> requirementClass) {
         BitsCommandRequirement requirement = requirementInstances.get(requirementClass);
         if (requirement == null) throw new IllegalArgumentException("No requirement registered for class: " + requirementClass.getName());
         return requirement;
     }
-
 
 }

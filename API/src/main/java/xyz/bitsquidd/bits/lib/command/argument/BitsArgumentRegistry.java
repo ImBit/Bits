@@ -91,6 +91,8 @@ public abstract class BitsArgumentRegistry<T> {
     }
 
     public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParser<?> parser, String baseName) {
+        BitsConfig.get().logger().info("getting parser for: " + parser + "  ");
+
         List<BrigadierArgumentMapping> holders = new ArrayList<>();
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
@@ -130,7 +132,7 @@ public abstract class BitsArgumentRegistry<T> {
     }
 
     // Parses primitives into required objects needed by the parser
-    public Object parseArguments(AbstractArgumentParser<?> parser, List<Object> primitiveList, BitsCommandContext ctx) throws CommandParseException {
+    public Object parseArguments(AbstractArgumentParser<?> parser, List<Object> primitiveList, BitsCommandContext<?> ctx) throws CommandParseException {
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
         // If the input size is 1, we can directly parse it
@@ -155,6 +157,5 @@ public abstract class BitsArgumentRegistry<T> {
         // Now that we have all our parsed objects, we can pass them to the main parser
         return parser.parse(parsedObjects, ctx);
     }
-
 
 }

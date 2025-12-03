@@ -21,14 +21,13 @@ public class PaperBitsArgumentRegistry extends BitsArgumentRegistry<CommandSourc
     @Override
     protected @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
         ArgumentType<?> superArgumentType = super.toArgumentType(inputType);
-        Class<?> clazz = inputType.toRawType();
+        if (superArgumentType != null) return superArgumentType;
 
-        if (superArgumentType == null) {
-            if (clazz == EntitySelector.class) {
-                // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
-                // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
-                return EntityArgument.entities(); // TODO, in the future, we could consider refining this to be single/multiple/entity/player selectors. For now the parser should filter this.
-            }
+        Class<?> clazz = inputType.toRawType();
+        if (clazz == EntitySelector.class) {
+            // Note net.minecraft.world.entity.EntitySelector and net.minecraft.commands.arguments.selector.EntitySelector are different things.
+            // Our parsers expect a result in net.minecraft.commands.arguments.selector.EntitySelector.
+            return EntityArgument.entities(); // TODO, in the future, we could consider refining this to be single/multiple/entity/player selectors. For now the parser should filter this.
         }
 
         return null;

@@ -29,6 +29,10 @@ public final class Permission {
         return value.equals(that.value);
     }
 
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 
     public static Permission all() {
         return new Permission("", "Grants all permissions");
