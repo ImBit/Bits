@@ -7,23 +7,29 @@ import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
-import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 
 public abstract class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
 
     @Override
-    public BitsArgumentRegistry<CommandSourceStack> initialiseArgumentRegistry() {
+    public PaperBitsArgumentRegistry initialiseArgumentRegistry() {
         return new PaperBitsArgumentRegistry();
     }
 
     @Override
-    protected BitsRequirementRegistry<CommandSourceStack> initialiseRequirementRegistry() {
+    protected PaperBitsRequirementRegistry initialiseRequirementRegistry() {
         return new PaperBitsRequirementRegistry();
+    }
+
+    @Override
+    public PaperBitsCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
+        return new PaperBitsCommandContext(brigadierContext);
+    }
+
+    @Override
+    public PaperBitsCommandSourceContext createSourceContext(CommandSourceStack sourceStack) {
+        return new PaperBitsCommandSourceContext(sourceStack);
     }
 
     @Override
@@ -49,16 +55,6 @@ public abstract class PaperBitsCommandManager extends BitsCommandManager<Command
                         });
                   bitsCommand.onRegister();
               });
-    }
-
-    @Override
-    public BitsCommandContext<CommandSourceStack> createContext(CommandContext<CommandSourceStack> brigadierContext) {
-        return new PaperBitsCommandContext(brigadierContext);
-    }
-
-    @Override
-    public BitsCommandSourceContext<CommandSourceStack> createSourceContext(CommandSourceStack sourceStack) {
-        return new PaperBitsCommandSourceContext(sourceStack);
     }
 
 }

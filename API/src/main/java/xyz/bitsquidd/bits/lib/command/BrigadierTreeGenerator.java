@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class BrigadierTreeGenerator<T> {
+public final class BrigadierTreeGenerator<T> {
     private final BitsCommandManager<T> commandManager;
 
     public BrigadierTreeGenerator(BitsCommandManager<T> commandManager) {

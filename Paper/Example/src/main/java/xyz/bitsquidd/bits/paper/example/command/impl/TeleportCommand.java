@@ -4,34 +4,35 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
+import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.helper.Formatter;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.paper.example.command.CustomCommandContext;
 import xyz.bitsquidd.bits.paper.libs.command.requirement.PlayerSenderRequirement;
 
 
 /**
- * Teleport command demonstrating new annotation structure.
- * <p>
- * Commands created:
+ * Example of a custom teleport command.
  * <ul>
- * <li>/teleport [player] [entity]                - Direct teleport to entity </li>
- * <li>/teleport [player] location [x] [y] [z] [world] - Teleport to coordinates</li>
- * <li>/teleport [player] spawn                   - Teleport to spawn</li>
- * <li>/teleport all [entity]                     - Teleport all to entity</li>
- * <li>/teleport all location [x] [y] [z] [world] - Teleport all to coordinates</li>
- * <li>/teleport all spawn                        - Teleport all to spawn</li>
+ * <li>/teleport                                  - Sends confirmation that the teleport command is registered. </li>
+ * <li>/teleport [player]                         - Teleports the sender to the target player. </li>
+ * <li>/teleport [player] [entity]                - Teleports the target player to the target entity. </li>
+ * <li>/teleport [player] [location]              - Teleports the target player to the target location. </li>
+ * <li>/teleport [player] spawn                   - Teleports the target player to the world spawn location. </li>
+ * <li>/teleport all [entity]                     - Teleports all players to the target entity. </li>
+ * <li>/teleport all [location]                   - Teleports all players to the target location. </li>
+ * <li>/teleport all spawn                        - Teleports all players to the world spawn location.</li>
  * </ul>
  */
-@Command(value = "test-teleport", aliases = {"test-teleport-alias"}, description = "Teleport commands")
+@Command(value = "test-teleport", aliases = {"test-teleport-alias-1", "test-teleport-alias-2"}, description = "A test teleport command")
 @Requirement(value = {PlayerSenderRequirement.class})
 public class TeleportCommand extends BitsCommand {
 
     @Command()
-    public void teleportTest(BitsCommandContext ctx) {
-        ctx.respond(Text.of("Test teleport command!"));
+    public void teleportTest(CustomCommandContext ctx) {
+        ctx.respond(Text.of("This command works, well done!"), CommandReturnType.SUCCESS);
     }
 
 
@@ -48,7 +49,7 @@ public class TeleportCommand extends BitsCommand {
 
         @Requirement(PlayerSenderRequirement.class)
         @Command()
-        public void teleportToEntity(BitsCommandContext ctx) {
+        public void teleportToEntity(CustomCommandContext ctx) {
             Player senderPlayer = ctx.requirePlayer();
 
             if (targetPlayer.equals(senderPlayer)) {
@@ -57,87 +58,79 @@ public class TeleportCommand extends BitsCommand {
             }
 
             senderPlayer.teleport(targetPlayer.getLocation());
-            ctx.respond(Text.of("Teleported " + senderPlayer.getName() + " to " + targetPlayer.getName()));
+            ctx.respond(Text.of("Teleported " + senderPlayer.getName() + " to " + targetPlayer.getName()), CommandReturnType.SUCCESS);
         }
 
-        // /teleport <player> <entity>
         @Command()
-        public void teleportToEntity(BitsCommandContext ctx, Player entity) {
+        public void teleportToEntity(CustomCommandContext ctx, Player entity) {
             if (targetPlayer.equals(entity)) {
-                ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"));
+                ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"), CommandReturnType.ERROR);
                 return;
             }
 
             targetPlayer.teleport(entity.getLocation());
-            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + entity.getName()));
+            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + entity.getName()), CommandReturnType.SUCCESS);
         }
 
-        // /teleport <player> <x> <y> <z> [world]
         @Command()
-        public void teleportToLocation(BitsCommandContext ctx, Location location) {
+        public void teleportToLocation(CustomCommandContext ctx, Location location) {
             targetPlayer.teleport(location);
-            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + Formatter.format(location)));
-            targetPlayer.sendMessage("You have been teleported to " + Formatter.format(location));
+            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + Formatter.format(location)), CommandReturnType.SUCCESS);
         }
 
-        //teleport <player> spawn
         @Command("spawn")
-        public void teleportToSpawn(BitsCommandContext ctx) {
+        public void teleportToSpawn(CustomCommandContext ctx) {
             Location spawnLocation = targetPlayer.getWorld().getSpawnLocation();
 
             targetPlayer.teleport(spawnLocation);
-            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to spawn"));
+            ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to spawn"), CommandReturnType.SUCCESS);
         }
     }
+
 
     /**
      * All-players teleport commands.
      */
     @Command("all")
     public static class AllPlayersCommands extends BitsCommand {
-        // /teleport all <entity>
+
         @Command()
-        public void teleportAllToEntity(BitsCommandContext ctx, Player entity) {
+        public void teleportAllToEntity(CustomCommandContext ctx, Player entity) {
             Location targetLocation = entity.getLocation();
 
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                 if (!player.equals(entity)) {
                     player.teleport(targetLocation);
-                    player.sendMessage("You have been teleported to " + entity.getName());
                     count++;
                 }
             }
 
-            ctx.respond(Text.of("Teleported " + count + " players to " + entity.getName()));
+            ctx.respond(Text.of("Teleported " + count + " players to " + entity.getName()), CommandReturnType.SUCCESS);
         }
 
-        // /teleport all <x> <y> <z> [world]
         @Command()
-        public void teleportAllToLocation(BitsCommandContext ctx, Location location) {
+        public void teleportAllToLocation(CustomCommandContext ctx, Location location) {
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                 player.teleport(location);
-                player.sendMessage("You have been teleported to " + Formatter.format(location));
                 count++;
             }
 
-            ctx.respond(Text.of("Teleported " + count + " players to " + Formatter.format(location)));
+            ctx.respond(Text.of("Teleported " + count + " players to " + Formatter.format(location)), CommandReturnType.SUCCESS);
         }
 
-        //teleport all spawn
         @Command("spawn")
-        public void teleportAllToSpawn(BitsCommandContext ctx) {
+        public void teleportAllToSpawn(CustomCommandContext ctx) {
             Location spawnLocation = ctx.requirePlayer().getWorld().getSpawnLocation();
 
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                 player.teleport(spawnLocation);
-                player.sendMessage("You have been teleported to spawn");
                 count++;
             }
 
-            ctx.respond(Text.of("Teleported " + count + " players to spawn"));
+            ctx.respond(Text.of("Teleported " + count + " players to spawn"), CommandReturnType.SUCCESS);
         }
     }
 

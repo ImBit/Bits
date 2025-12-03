@@ -8,8 +8,12 @@ allprojects {
     plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
 
     dependencies {
-        implementation(project(":Paper"))
-
         paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
+    }
+}
+
+subprojects {
+    dependencies {
+        implementation(project(":Paper"))
     }
 }

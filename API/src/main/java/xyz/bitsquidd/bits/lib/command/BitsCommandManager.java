@@ -52,6 +52,14 @@ public abstract class BitsCommandManager<T> {
     }
 
     /**
+     * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
+     * This  can be overridden to provide custom context implementations i.e. format a command response.
+     */
+    public abstract BitsCommandContext<T> createContext(CommandContext<T> brigadierContext);
+
+    public abstract BitsCommandSourceContext<T> createSourceContext(T sourceStack);
+
+    /**
      * Gets all currently registered commands.
      */
     public final Set<BitsCommand> getRegisteredCommands() {
@@ -114,14 +122,6 @@ public abstract class BitsCommandManager<T> {
      */
     protected abstract void executeCommand(boolean isAsync, Runnable commandExecution);
 
-
-    /**
-     * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
-     * This  can be overridden to provide custom context implementations i.e. format a command response.
-     */
-    public abstract BitsCommandContext<T> createContext(CommandContext<T> brigadierContext);
-
-    public abstract BitsCommandSourceContext<T> createSourceContext(T sourceStack);
 
     public LiteralArgumentBuilder<T> createLiteral(String name) {
         return LiteralArgumentBuilder.literal(name);

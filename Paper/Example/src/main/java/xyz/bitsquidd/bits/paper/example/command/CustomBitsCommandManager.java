@@ -9,8 +9,6 @@ import org.spigotmc.SpigotConfig;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.impl.TeleportCommand;
 import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;
@@ -38,12 +36,7 @@ public class CustomBitsCommandManager extends PaperBitsCommandManager {
     }
 
     @Override
-    protected BitsRequirementRegistry initialiseRequirementRegistry() {
-        return new BitsRequirementRegistry();
-    }
-
-    @Override
-    public BitsCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
+    public CustomCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
         return new CustomCommandContext(brigadierContext);
     }
 

@@ -6,18 +6,25 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
-import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
 
 public abstract class VelocityBitsCommandManager extends BitsCommandManager<CommandSource> {
 
     @Override
-    protected BitsArgumentRegistry<CommandSource> initialiseArgumentRegistry() {
+    protected VelocityBitsArgumentRegistry initialiseArgumentRegistry() {
         return new VelocityBitsArgumentRegistry();
+    }
+
+    @Override
+    public VelocityBitsCommandContext createContext(CommandContext<CommandSource> brigadierContext) {
+        return new VelocityBitsCommandContext(brigadierContext);
+    }
+
+    @Override
+    public VelocityBitsCommandSourceContext createSourceContext(CommandSource sourceStack) {
+        return new VelocityBitsCommandSourceContext(sourceStack);
     }
 
     @Override
@@ -49,16 +56,6 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
                         });
                   bitsCommand.onRegister();
               });
-    }
-
-    @Override
-    public BitsCommandContext<CommandSource> createContext(CommandContext<CommandSource> brigadierContext) {
-        return new VelocityBitsCommandContext(brigadierContext);
-    }
-
-    @Override
-    public BitsCommandSourceContext<CommandSource> createSourceContext(CommandSource sourceStack) {
-        return new VelocityBitsCommandSourceContext(sourceStack);
     }
 
 }
