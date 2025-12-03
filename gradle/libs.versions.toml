@@ -11,10 +11,12 @@ brigadier = { group = "com.mojang", name = "brigadier", version = "1.0.18" }
 adventure = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
 adventure-text-serializer-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
 
-
 velocity-api = { group = "com.velocitypowered", name = "velocity-api", version = "3.4.0-SNAPSHOT" }
+
+errorprone = { group = "com.google.errorprone", name = "error_prone_core", version = "2.45.0" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.1" }
 paperweight-userdev = { id = "io.papermc.paperweight.userdev", version = "2.0.0-beta.19" }
 dotenv = { id = "co.uzzu.dotenv.gradle", version = "4.0.0" }
+errorprone = { id = "net.ltgt.errorprone", version = "4.3.0" }

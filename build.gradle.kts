@@ -1,8 +1,11 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.shadow)
     alias(libs.plugins.dotenv)
+    alias(libs.plugins.errorprone)
 }
 
 group = "xyz.bitsquidd.bits"
@@ -15,6 +18,7 @@ allprojects {
     plugins.apply("java-library")
     plugins.apply("maven-publish")
     plugins.apply(rootProject.libs.plugins.shadow.get().pluginId)
+    plugins.apply(rootProject.libs.plugins.errorprone.get().pluginId)
 
     dependencies {
         if (project.path != ":API") implementation(project(":API"))
@@ -25,6 +29,8 @@ allprojects {
 
         implementation(rootProject.libs.adventure)
         implementation(rootProject.libs.adventure.text.serializer.plain)
+
+        errorprone(rootProject.libs.errorprone)
     }
 
     repositories {
@@ -34,7 +40,27 @@ allprojects {
         maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.errorprone.isEnabled.set(true)
+        options.errorprone.disableWarningsInGeneratedCode.set(true)
+        options.errorprone.disableAllWarnings.set(true)
+        options.errorprone.errorproneArgs.addAll(
+            listOf(
+                "-Xep:CollectionIncompatibleType:ERROR",
+                "-Xep:EqualsIncompatibleType:ERROR",
+
+                "-Xep:MissingOverride:ERROR",
+                "-Xep:SelfAssignment:ERROR",
+                "-Xep:StreamResourceLeak:ERROR",
+
+                "-Xep:CanonicalDuration:OFF",
+                "-Xep:InlineMeSuggester:OFF",
+                "-Xep:ImmutableEnumChecker:OFF"
+            )
+        )
+    }
+
     tasks.javadoc { options.encoding = "UTF-8" }
 }
 
