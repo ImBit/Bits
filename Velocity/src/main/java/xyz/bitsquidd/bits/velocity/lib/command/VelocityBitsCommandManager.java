@@ -6,6 +6,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
+import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
@@ -15,6 +16,11 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
     @Override
     protected VelocityBitsArgumentRegistry initialiseArgumentRegistry() {
         return new VelocityBitsArgumentRegistry();
+    }
+
+    @Override
+    protected BitsRequirementRegistry<CommandSource> initialiseRequirementRegistry() {
+        return new VelocityBitsRequirementRegistry();
     }
 
     @Override
