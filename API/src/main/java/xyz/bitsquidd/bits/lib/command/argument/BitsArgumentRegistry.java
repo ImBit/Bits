@@ -91,8 +91,6 @@ public abstract class BitsArgumentRegistry<T> {
     }
 
     public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParser<?> parser, String baseName) {
-        BitsConfig.get().logger().info("getting parser for: " + parser + "  ");
-
         List<BrigadierArgumentMapping> holders = new ArrayList<>();
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
