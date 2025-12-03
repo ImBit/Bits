@@ -22,7 +22,7 @@ public interface Sendable {
         sendAll(permission::hasPermission);
     }
 
-    default void sendAll(Collection<Audience> targets) {
+    default void sendAll(Collection<? extends Audience> targets) {
         targets.forEach(this::send);
     }
 }

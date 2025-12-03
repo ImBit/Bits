@@ -10,6 +10,7 @@ import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.lib.permission.Permission;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ public abstract class BitsCommandManager<T> {
     protected final BrigadierTreeGenerator<T> brigadierTreeGenerator;
 
     private final Set<BitsCommand> registeredCommands = new HashSet<>();
-    private final String commandBasePermission = initialiseBasePermission();
+    private final Permission commandBasePermission = initialiseBasePermission();
 
     protected BitsCommandManager() {
         BitsConfig.get().setCommandManager(this);
@@ -105,11 +106,11 @@ public abstract class BitsCommandManager<T> {
      *
      * @return The base permission string for all commands.
      */
-    protected String initialiseBasePermission() {
-        return "bits.command"; // The base prefix for all commands, can be overridden.
+    protected Permission initialiseBasePermission() {
+        return Permission.of("bits.command"); // The base prefix for all commands, can be overridden.
     }
 
-    public final String getCommandBasePermission() {
+    public final Permission getCommandBasePermission() {
         return commandBasePermission;
     }
 

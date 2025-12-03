@@ -22,7 +22,7 @@ public abstract class BitsCommandSourceContext<T> {
     /**
      * Returns the command sender.
      */
-    public abstract Audience getSender();
+    public abstract <S extends Audience> S getSender();
 
     /**
      * Sends a message to the command sender.

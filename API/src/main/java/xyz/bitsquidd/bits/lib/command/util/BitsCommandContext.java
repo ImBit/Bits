@@ -31,9 +31,7 @@ public abstract class BitsCommandContext<T> {
         return brigadierContext;
     }
 
-    public final Audience getSender() {
-        return source.getSender();
-    }
+    public abstract <S extends Audience> S getSender();
 
     public final void respond(Text message) {
         message.send(getSender());

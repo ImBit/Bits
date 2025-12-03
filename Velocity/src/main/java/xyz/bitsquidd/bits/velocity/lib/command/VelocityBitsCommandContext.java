@@ -17,5 +17,11 @@ public class VelocityBitsCommandContext extends BitsCommandContext<CommandSource
         return ((VelocityBitsCommandManager)BitsConfig.get().getCommandManager()).createSourceContext(brigadierContext.getSource());
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public CommandSource getSender() {
+        return source.getSender();
+    }
+
 
 }

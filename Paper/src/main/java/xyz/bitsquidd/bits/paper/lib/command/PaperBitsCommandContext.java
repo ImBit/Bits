@@ -3,6 +3,7 @@ package xyz.bitsquidd.bits.paper.lib.command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
@@ -17,6 +18,12 @@ public class PaperBitsCommandContext extends BitsCommandContext<CommandSourceSta
     @Override
     protected BitsCommandSourceContext<CommandSourceStack> createSourceContext(CommandContext<CommandSourceStack> brigadierContext) {
         return ((PaperBitsCommandManager)BitsConfig.get().getCommandManager()).createSourceContext(brigadierContext.getSource());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CommandSender getSender() {
+        return source.getSender();
     }
 
     public Player requirePlayer() {

@@ -13,7 +13,7 @@ import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 public abstract class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
 
     @Override
-    public PaperBitsArgumentRegistry initialiseArgumentRegistry() {
+    protected PaperBitsArgumentRegistry initialiseArgumentRegistry() {
         return new PaperBitsArgumentRegistry();
     }
 

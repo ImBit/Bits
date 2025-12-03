@@ -1,8 +1,8 @@
 package xyz.bitsquidd.bits.paper.lib.command;
 
-import net.kyori.adventure.audience.Audience;
 import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
@@ -13,7 +13,8 @@ public class PaperBitsCommandSourceContext extends BitsCommandSourceContext<Comm
     }
 
     @Override
-    public Audience getSender() {
+    @SuppressWarnings("unchecked")
+    public CommandSender getSender() {
         return source.getSender();
     }
 

@@ -49,7 +49,7 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.corePermission = xyz.bitsquidd.bits.lib.permission.Permission.of(BitsConfig.get().getCommandManager().getCommandBasePermission() + "." + commandName.replaceAll(" ", "_").toLowerCase());
+        this.corePermission = BitsConfig.get().getCommandManager().getCommandBasePermission().append("." + commandName.replaceAll(" ", "_").toLowerCase());
         this.permissions.add(corePermission);
     }
 

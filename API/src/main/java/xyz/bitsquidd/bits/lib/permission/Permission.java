@@ -34,6 +34,10 @@ public final class Permission {
         return value.hashCode();
     }
 
+    public Permission append(String suffix) {
+        return Permission.of(value + suffix);
+    }
+
     public static Permission all() {
         return new Permission("", "Grants all permissions");
     }
