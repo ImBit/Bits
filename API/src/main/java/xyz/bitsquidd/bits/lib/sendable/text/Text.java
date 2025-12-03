@@ -103,7 +103,7 @@ public final class Text implements Sendable {
 
     @Override
     public void send(Audience audience) {
-        audience.forEachAudience(a -> a.sendMessage(component));
+        audience.forEachAudience(a -> a.sendMessage(getComponent(a)));
     }
 
     public Component getComponent(Audience audience) {
