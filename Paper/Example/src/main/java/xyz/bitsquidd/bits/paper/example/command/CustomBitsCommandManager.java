@@ -12,7 +12,7 @@ import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.impl.TeleportCommand;
 import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;
-import xyz.bitsquidd.bits.paper.libs.command.PaperBitsCommandManager;
+import xyz.bitsquidd.bits.paper.lib.command.PaperBitsCommandManager;
 
 import java.util.List;
 

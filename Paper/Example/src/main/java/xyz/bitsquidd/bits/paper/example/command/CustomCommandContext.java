@@ -6,7 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;
-import xyz.bitsquidd.bits.paper.libs.command.PaperBitsCommandContext;
+import xyz.bitsquidd.bits.paper.lib.command.PaperBitsCommandContext;
 
 public class CustomCommandContext extends PaperBitsCommandContext {
     public CustomCommandContext(CommandContext<CommandSourceStack> brigadierContext) {
