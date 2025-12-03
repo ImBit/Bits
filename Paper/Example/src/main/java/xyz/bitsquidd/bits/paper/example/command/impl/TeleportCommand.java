@@ -28,9 +28,9 @@ import xyz.bitsquidd.bits.paper.lib.command.requirement.PlayerSenderRequirement;
  */
 @Command(value = "test-teleport", aliases = {"test-teleport-alias-1", "test-teleport-alias-2"}, description = "A test teleport command")
 @Requirement(value = {PlayerSenderRequirement.class})
-public class TeleportCommand extends BitsCommand {
+public final class TeleportCommand extends BitsCommand {
 
-    @Command()
+    @Command
     public void teleportTest(CustomCommandContext ctx) {
         ctx.respond(Text.of("This command works, well done!"), CommandReturnType.SUCCESS);
     }
@@ -39,8 +39,8 @@ public class TeleportCommand extends BitsCommand {
     /**
      * Player-specific teleport commands.
      */
-    @Command()
-    public static class PlayerCommands extends BitsCommand {
+    @Command
+    public final static class PlayerCommands extends BitsCommand {
         private final Player targetPlayer;
 
         public PlayerCommands(Player targetPlayer) {
@@ -48,12 +48,12 @@ public class TeleportCommand extends BitsCommand {
         }
 
         @Requirement(PlayerSenderRequirement.class)
-        @Command()
+        @Command
         public void teleportToEntity(CustomCommandContext ctx) {
             Player senderPlayer = ctx.requirePlayer();
 
             if (targetPlayer.equals(senderPlayer)) {
-                ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"));
+                ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"), CommandReturnType.ERROR);
                 return;
             }
 
@@ -61,7 +61,7 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + senderPlayer.getName() + " to " + targetPlayer.getName()), CommandReturnType.SUCCESS);
         }
 
-        @Command()
+        @Command
         public void teleportToEntity(CustomCommandContext ctx, Player entity) {
             if (targetPlayer.equals(entity)) {
                 ctx.respond(Text.of("Cannot teleport " + targetPlayer.getName() + " to themselves!"), CommandReturnType.ERROR);
@@ -72,7 +72,7 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + entity.getName()), CommandReturnType.SUCCESS);
         }
 
-        @Command()
+        @Command
         public void teleportToLocation(CustomCommandContext ctx, Location location) {
             targetPlayer.teleport(location);
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to " + Formatter.format(location)), CommandReturnType.SUCCESS);
@@ -92,9 +92,9 @@ public class TeleportCommand extends BitsCommand {
      * All-players teleport commands.
      */
     @Command("all")
-    public static class AllPlayersCommands extends BitsCommand {
+    public final static class AllPlayersCommands extends BitsCommand {
 
-        @Command()
+        @Command
         public void teleportAllToEntity(CustomCommandContext ctx, Player entity) {
             Location targetLocation = entity.getLocation();
 
@@ -109,7 +109,7 @@ public class TeleportCommand extends BitsCommand {
             ctx.respond(Text.of("Teleported " + count + " players to " + entity.getName()), CommandReturnType.SUCCESS);
         }
 
-        @Command()
+        @Command
         public void teleportAllToLocation(CustomCommandContext ctx, Location location) {
             int count = 0;
             for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
