@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -61,8 +59,8 @@ public final class TypeSignature<T> {
         }
     }
 
-    public static <I> TypeSignature<I> of(Class<I> clazz) {
-        return new TypeSignature<>(clazz, null);
+    public static TypeSignature<?> from(Object obj) {
+        return of(obj.getClass());
     }
 
     public static TypeSignature<?> of(Class<?> rawType, Class<?>... typeArguments) {
