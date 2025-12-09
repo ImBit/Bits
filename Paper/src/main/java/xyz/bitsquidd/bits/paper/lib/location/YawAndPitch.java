@@ -112,6 +112,10 @@ public final class YawAndPitch {
         return location;
     }
 
+    public BlockPos applyTo(BlockPos blockPos) {
+        return BlockPos.of(blockPos.x, blockPos.y, blockPos.z, yaw, pitch);
+    }
+
 
     @Override
     public boolean equals(Object obj) {
