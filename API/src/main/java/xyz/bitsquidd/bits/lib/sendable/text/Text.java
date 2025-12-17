@@ -27,7 +27,6 @@ import java.util.Locale;
  *
  * <p>Default decorators include:
  * <ul>
- *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator} - Applied first to render {@link net.kyori.adventure.text.TranslatableComponent}s</li>
  *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator} - Applied last as a final processing to remove regular tags</li>
  * </ul>
  *
@@ -56,7 +55,6 @@ public final class Text implements Sendable {
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
-          new TranslationDecorator()
     );
     private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
           // These will always be applied last.
