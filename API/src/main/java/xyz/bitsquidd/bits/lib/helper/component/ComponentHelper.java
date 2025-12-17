@@ -8,9 +8,10 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.*;
 
@@ -80,7 +81,7 @@ public class ComponentHelper {
         } else if (component instanceof TranslatableComponent translatableComponent) {
             return Component.text(getTranslatedString(locale != null ? locale : Locale.getDefault(), translatableComponent));
         } else {
-            Bukkit.getLogger().warning("Unsupported component type: " + component);
+            BitsConfig.getLogger().warn("Unsupported component type: {}", component);
             return UNSUPPORTED;
         }
     }

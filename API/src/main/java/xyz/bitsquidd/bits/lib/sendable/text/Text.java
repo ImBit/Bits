@@ -6,14 +6,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.helper.AudienceHelper;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A sendable message, supporting complex formatting.
@@ -29,7 +28,6 @@ import java.util.List;
  *
  * <p>Default decorators include:
  * <ul>
- *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator} - Applied first to render {@link net.kyori.adventure.text.TranslatableComponent}s</li>
  *   <li>{@link xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator} - Applied last as a final processing to remove regular tags</li>
  * </ul>
  *
@@ -59,7 +57,6 @@ public final class Text implements Sendable {
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
           // These will always be applied first.
-          new TranslationDecorator()
     );
     private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
           // These will always be applied last.
@@ -106,23 +103,23 @@ public final class Text implements Sendable {
 
     @Override
     public <A extends Audience> void send(A audience) {
-        AudienceHelper.getPlayers(audience).forEach(player -> {
-            player.sendMessage(getComponent(player));
-        });
+        audience.forEachAudience(subAudience -> subAudience.sendMessage(getComponent(subAudience)));
     }
 
     public <A extends Audience> Component getComponent(@Nullable A audience) {
         Component returnComponent = component;
 
+        Locale locale = Locale.getDefault();
+        if (audience instanceof Player playerTarget) {
+            locale = playerTarget.locale();
+        }
+
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
         componentDecorators.addAll(decorators);
         componentDecorators.addAll(POST_DEFAULT_DECORATORS);
 
-        // We can only format for players, so skip if not a player
-        if (audience instanceof Player playerTarget) {
-            for (ITextDecorator decorator : componentDecorators) {
-                returnComponent = decorator.format(returnComponent, playerTarget);
-            }
+        for (ITextDecorator decorator : componentDecorators) {
+            returnComponent = decorator.format(returnComponent, locale);
         }
 
         for (Text appendedText : appendedText) {
