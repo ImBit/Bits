@@ -4,16 +4,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandSourceStack;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
-import xyz.bitsquidd.bits.lib.command.nms.Commands;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.CommandMethodInfo;
@@ -29,36 +25,36 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@NullMarked
-public class BrigadierTreeGenerator {
-    private final BitsCommandManager bitsCommandManager = BitsConfig.getCommandManager();
+public final class BrigadierTreeGenerator<T> {
+    private final BitsCommandManager<T> commandManager;
 
-    public BrigadierTreeGenerator() {
+    public BrigadierTreeGenerator(BitsCommandManager<T> commandManager) {
+        this.commandManager = commandManager;
     }
 
-    public List<LiteralCommandNode<CommandSourceStack>> createNodes(
+    public List<LiteralCommandNode<T>> createNodes(
           BitsCommandBuilder commandBuilder
     ) {
         // We create a "dummy_root" to be able to split core aliases.
-        LiteralArgumentBuilder<CommandSourceStack> dummyRoot = Commands.literal("dummy_root");
+        LiteralArgumentBuilder<T> dummyRoot = commandManager.createLiteral("dummy_root");
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
-        List<LiteralCommandNode<CommandSourceStack>> nodes = dummyRoot.getArguments().stream()
+        List<LiteralCommandNode<T>> nodes = dummyRoot.getArguments().stream()
               .filter(node -> node instanceof LiteralCommandNode)
-              .map(node -> (LiteralCommandNode<CommandSourceStack>)node)
+              .map(node -> (LiteralCommandNode<T>)node)
               .toList();
 
-        if (BitsConfig.isDevelopmentMode()) BitsConfig.getLogger().info(TreeDebugger.visualizeCommandTree(nodes));
+        if (BitsConfig.get().isDevelopment()) BitsConfig.get().logger().info(new TreeDebugger().visualizeCommandTree(nodes));
         return nodes;
     }
 
     // Returns a non-empty list of branches that will be built upon. This includes command aliases.
     // TODO look into PaperBrigadier copyLiteral
-    private List<ArgumentBuilder<CommandSourceStack, ?>> createNextBranches(
+    private List<ArgumentBuilder<T, ?>> createNextBranches(
           final BitsCommandBuilder commandBuilder,
-          final @Nullable ArgumentBuilder<CommandSourceStack, ?> root
+          final @Nullable ArgumentBuilder<T, ?> root
     ) {
-        List<ArgumentBuilder<CommandSourceStack, ?>> commandBranches = new ArrayList<>();
+        List<ArgumentBuilder<T, ?>> commandBranches = new ArrayList<>();
 
         String commandName = commandBuilder.getCommandName();
         List<String> commandAliases = new ArrayList<>(commandBuilder.getCommandAliases());
@@ -69,15 +65,15 @@ public class BrigadierTreeGenerator {
             if (root == null) throw new CommandParseException("Root command class must have a name.");
             commandBranches.add(root);
         } else {
-            List<LiteralArgumentBuilder<CommandSourceStack>> nextBranches = commandAliases.stream()
-                  .map(Commands::literal)
+            List<LiteralArgumentBuilder<T>> nextBranches = commandAliases.stream()
+                  .map(commandManager::createLiteral)
                   .toList();
 
             nextBranches.forEach(argumentBuilder -> {
                 mergeRequirement(
-                      argumentBuilder, sender ->
-                            commandBuilder.getPermissionStrings().stream().anyMatch(permissionString ->
-                                  sender.getSender().hasPermission(permissionString)
+                      argumentBuilder, ctx ->
+                            commandBuilder.getPermissions().stream().anyMatch(permission ->
+                                  permission.hasPermission(commandManager.createSourceContext(ctx).getSender())
                             )
                 );
             });
@@ -88,8 +84,9 @@ public class BrigadierTreeGenerator {
         return commandBranches;
     }
 
+    @SuppressWarnings("unchecked")
     private void processCommandClass(
-          final ArgumentBuilder<CommandSourceStack, ?> branch,
+          final ArgumentBuilder<T, ?> branch,
           final BitsCommandBuilder commandBuilder,
           final List<CommandParameterInfo> addedParameters
     ) {
@@ -97,7 +94,7 @@ public class BrigadierTreeGenerator {
         mergeRequirement(
               branch,
               ctx -> commandBuilder.getRequirements().stream()
-                    .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
+                    .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
         );
 
         // Create parameters needed for this class.
@@ -106,17 +103,17 @@ public class BrigadierTreeGenerator {
         nonMutatedParameters.addAll(classParameters);
 
         // Create next branches with aliases
-        List<ArgumentBuilder<CommandSourceStack, ?>> nextBranches = createNextBranches(commandBuilder, branch);
+        List<ArgumentBuilder<T, ?>> nextBranches = createNextBranches(commandBuilder, branch);
 
         nextBranches.forEach(nextBranch -> {
-            List<ArgumentBuilder<CommandSourceStack, ?>> addedParamBranches = new ArrayList<>();
+            List<ArgumentBuilder<T, ?>> addedParamBranches = new ArrayList<>();
 
             // Add brigadier branches for all the new parameters
             classParameters.forEach(param -> {
                 addedParamBranches.addAll(param.createBrigadierArguments());
             });
 
-            ArgumentBuilder<CommandSourceStack, ?> workingBranch = nextBranch;
+            ArgumentBuilder<T, ?> workingBranch = nextBranch;
             if (!addedParamBranches.isEmpty()) workingBranch = addedParamBranches.getLast();
 
             for (Class<? extends BitsCommand> nestedClass : commandBuilder.getSubcommandClasses()) {
@@ -125,7 +122,7 @@ public class BrigadierTreeGenerator {
 
             for (Method method : commandBuilder.getCommandMethods()) {
                 if (!Modifier.isPublic(method.getModifiers())) {
-                    BitsConfig.getLogger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
+                    BitsConfig.get().logger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
                     continue;
                 }
                 processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));
@@ -140,24 +137,24 @@ public class BrigadierTreeGenerator {
 
     // Builds executions onto the root.
     private void processCommandMethod(
-          final ArgumentBuilder<CommandSourceStack, ?> nextBranch,
+          final ArgumentBuilder<T, ?> nextBranch,
           final BitsCommandBuilder commandBuilder,
-          final CommandMethodInfo methodInfo
+          final CommandMethodInfo<T> methodInfo
     ) {
         // Add all extra parameters to the branch.
-        List<ArgumentBuilder<CommandSourceStack, ?>> paramBranch = new ArrayList<>();
+        List<ArgumentBuilder<T, ?>> paramBranch = new ArrayList<>();
 
         // Add literal name if it exists.
         // Note we currently don't support aliases for method literals.
         if (!methodInfo.literalName().isEmpty()) {
-            paramBranch.add(Commands.literal(methodInfo.literalName()));
+            paramBranch.add(commandManager.createLiteral(methodInfo.literalName()));
         }
 
         methodInfo.getMethodParameters().forEach(param -> {
             paramBranch.addAll(param.createBrigadierArguments());
         });
 
-        ArgumentBuilder<CommandSourceStack, ?> workingBranch;
+        ArgumentBuilder<T, ?> workingBranch;
         if (!paramBranch.isEmpty()) {
             workingBranch = paramBranch.getLast();
         } else {
@@ -167,8 +164,8 @@ public class BrigadierTreeGenerator {
         // Add method requirements
         mergeRequirement(
               workingBranch, ctx ->
-                    methodInfo.getRequirements(commandBuilder.getCorePermissionString()).stream()
-                          .allMatch(requirement -> requirement.test(bitsCommandManager.createSourceContext(ctx)))
+                    methodInfo.getRequirements(commandBuilder.getCorePermission()).stream()
+                          .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
@@ -178,12 +175,12 @@ public class BrigadierTreeGenerator {
 
     // Creates a command execution when no more parameters need to be added.
     @SuppressWarnings("NullableProblems")
-    private Command<CommandSourceStack> createCommandExecution(
+    private Command<T> createCommandExecution(
           final BitsCommandBuilder commandBuilder,
-          final CommandMethodInfo methodInfo
+          final CommandMethodInfo<T> methodInfo
     ) {
         return ctx -> {
-            final BitsCommandContext bitsCtx = bitsCommandManager.createContext(ctx);
+            final BitsCommandContext<T> bitsCtx = commandManager.createContext(ctx);
 
             // Create the list of arguments needed to call the method.
             ArrayList<@Nullable Object> parsedArguments = new ArrayList<>();
@@ -213,7 +210,7 @@ public class BrigadierTreeGenerator {
                 try {
                     if (primitiveObjects.stream().anyMatch(Objects::isNull)) throw new IllegalArgumentException("One or more primitive arguments are null.");
 
-                    value = BitsArgumentRegistry.getInstance().parseArguments(parser, primitiveObjects, BitsConfig.getCommandManager().createContext(ctx));
+                    value = commandManager.getArgumentRegistry().parseArguments(parser, primitiveObjects, commandManager.createContext(ctx));
                 } catch (IllegalArgumentException e) {
                     throw new RuntimeException("Failed to get argument: " + parameter, e);
                 }
@@ -226,22 +223,25 @@ public class BrigadierTreeGenerator {
             Runnable commandExecution = () -> {
                 try {
                     Constructor<?> commandClass = commandBuilder.toConstructor();
-                    int constructorParamCount = commandClass.getParameterCount();
-                    Object instance;
+                    int constructorParamCount = commandBuilder.getParameters().size();
 
-                    List<@Nullable Object> methodArguments = new ArrayList<>();
+                    Object[] constructorArgs = parsedArguments.subList(0, constructorParamCount).toArray();
 
-                    if (constructorParamCount == 0) {
-                        instance = commandClass.newInstance();
-                        methodArguments = parsedArguments;
-                    } else {
-                        Object[] constructorArgs = parsedArguments.subList(0, constructorParamCount).toArray();
-                        instance = commandClass.newInstance(constructorArgs);
+                    if (commandBuilder.requiresOuterInstance()) {
+                        Class<?> outerClass = commandBuilder.getCommandClass().getDeclaringClass();
+                        Object outerInstance = outerClass.getDeclaredConstructor().newInstance();
 
-                        if (constructorParamCount < parsedArguments.size()) {
-                            methodArguments = new ArrayList<>(parsedArguments.subList(constructorParamCount, parsedArguments.size()));
-                        }
+                        Object[] argsWithOuter = new Object[constructorArgs.length + 1];
+                        argsWithOuter[0] = outerInstance;
+                        System.arraycopy(constructorArgs, 0, argsWithOuter, 1, constructorArgs.length);
+                        constructorArgs = argsWithOuter;
                     }
+
+                    Object instance = commandClass.newInstance(constructorArgs);
+
+                    List<@Nullable Object> methodArguments = constructorParamCount < parsedArguments.size()
+                                                             ? new ArrayList<>(parsedArguments.subList(constructorParamCount, parsedArguments.size()))
+                                                             : new ArrayList<>();
 
                     if (methodInfo.requiresContext()) methodArguments.addFirst(bitsCtx);
 
@@ -252,19 +252,19 @@ public class BrigadierTreeGenerator {
                 }
             };
 
-            bitsCommandManager.executeCommand(methodInfo.isAsync(), commandExecution);
+            commandManager.executeCommand(methodInfo.isAsync(), commandExecution);
 
             return Command.SINGLE_SUCCESS;
         };
     }
 
 
-    private ArgumentBuilder<CommandSourceStack, ?> buildBackward(List<ArgumentBuilder<CommandSourceStack, ?>> toAdd) {
+    private ArgumentBuilder<T, ?> buildBackward(List<ArgumentBuilder<T, ?>> toAdd) {
         if (toAdd.isEmpty()) throw new CommandParseException("No more branches to add.");
         if (toAdd.size() == 1) return toAdd.getFirst();
 
-        ArgumentBuilder<CommandSourceStack, ?> first = toAdd.getFirst();
-        List<ArgumentBuilder<CommandSourceStack, ?>> rest = toAdd.subList(1, toAdd.size());
+        ArgumentBuilder<T, ?> first = toAdd.getFirst();
+        List<ArgumentBuilder<T, ?>> rest = toAdd.subList(1, toAdd.size());
         first.then(buildBackward(new ArrayList<>(rest)));
         return first;
     }

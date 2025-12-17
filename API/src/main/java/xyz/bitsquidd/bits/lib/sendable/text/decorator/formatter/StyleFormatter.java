@@ -6,14 +6,14 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 
 public class StyleFormatter extends AbstractFormatter {
-    private final @NotNull Style style;
+    private final Style style;
 
-    public StyleFormatter(@NotNull Style style) {
+    public StyleFormatter(Style style) {
         this.style = style;
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input.style(input.style().merge(style));
     }
 

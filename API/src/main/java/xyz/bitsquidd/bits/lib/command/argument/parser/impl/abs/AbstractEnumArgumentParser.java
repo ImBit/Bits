@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs;
 
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -24,7 +23,7 @@ public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends Abst
     }
 
     @Override
-    public @NotNull T parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public T parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         T enumValue;

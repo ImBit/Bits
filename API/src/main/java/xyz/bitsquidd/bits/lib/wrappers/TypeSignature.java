@@ -1,6 +1,6 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -42,14 +42,14 @@ public final class TypeSignature<T> {
     }
 
     private final Class<T> rawType;
-    private final Type[] typeArguments;
+    private final @Nullable Type @Nullable [] typeArguments;
 
-    private TypeSignature(Class<T> rawType, Type[] typeArguments) {
+    private TypeSignature(Class<T> rawType, @Nullable Type @Nullable [] typeArguments) {
         this.rawType = boxPrimitive(rawType);
         this.typeArguments = typeArguments != null ? typeArguments.clone() : new Type[0];
     }
 
-    public static TypeSignature<?> of(@NotNull Type type) {
+    public static TypeSignature<?> of(Type type) {
         if (type instanceof ParameterizedType parameterizedType) {
             Class<?> rawType = (Class<?>)parameterizedType.getRawType();
             Type[] typeArgs = parameterizedType.getActualTypeArguments();
@@ -61,11 +61,12 @@ public final class TypeSignature<T> {
         }
     }
 
-    public static <I> TypeSignature<I> of(@NotNull Class<I> clazz) {
-        return new TypeSignature<>(clazz, null);
+    @SuppressWarnings("unchecked")
+    public static <T> TypeSignature<T> from(T obj) {
+        return (TypeSignature<T>)of(obj.getClass());
     }
 
-    public static TypeSignature<?> of(@NotNull Class<?> rawType, @NotNull Class<?>... typeArguments) {
+    public static TypeSignature<?> of(Class<?> rawType, Class<?>... typeArguments) {
         return new TypeSignature<>(rawType, typeArguments);
     }
 
@@ -73,8 +74,16 @@ public final class TypeSignature<T> {
         return rawType;
     }
 
-    public boolean matches(@NotNull TypeSignature<?> other) {
+    public T cast(Object obj) {
+        return rawType.cast(obj);
+    }
+
+    public boolean matches(TypeSignature<?> other) {
         if (!rawType.equals(other.rawType)) return false;
+
+        if (typeArguments == null && other.typeArguments == null) return true;
+        if (typeArguments == null || other.typeArguments == null) return false;
+
         if (typeArguments.length != other.typeArguments.length) return false;
 
         for (int i = 0; i < typeArguments.length; i++) {

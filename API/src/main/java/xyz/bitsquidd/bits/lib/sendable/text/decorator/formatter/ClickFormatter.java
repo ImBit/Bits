@@ -5,14 +5,14 @@ import net.kyori.adventure.text.event.ClickEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class ClickFormatter extends AbstractFormatter {
-    public final @NotNull ClickEvent fontKey;
+    public final ClickEvent fontKey;
 
-    public ClickFormatter(@NotNull ClickEvent clickEvent) {
+    public ClickFormatter(ClickEvent clickEvent) {
         this.fontKey = clickEvent;
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input.clickEvent(fontKey);
     }
 }

@@ -1,11 +1,11 @@
 package xyz.bitsquidd.bits.lib.command.requirement.impl;
 
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
+import xyz.bitsquidd.bits.lib.permission.Permission;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 import java.util.ArrayList;
@@ -14,28 +14,28 @@ import java.util.List;
 
 // Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
 public class PermissionRequirement extends BitsCommandRequirement {
-    public final @NotNull List<String> permissions = new ArrayList<>();
+    public final List<Permission> permissions = new ArrayList<>();
 
-    protected PermissionRequirement(@NotNull Collection<String> permissions) {
+    protected PermissionRequirement(Collection<Permission> permissions) {
         this.permissions.addAll(permissions);
     }
 
-    public static @NotNull PermissionRequirement of(@NotNull Collection<String> permissions) {
+    public static PermissionRequirement of(Collection<Permission> permissions) {
         return new PermissionRequirement(permissions);
     }
 
-    public static @NotNull PermissionRequirement of(@NotNull String... permissions) {
+    public static PermissionRequirement of(Permission... permissions) {
         return new PermissionRequirement(List.of(permissions));
     }
 
 
     @Override
-    public boolean test(@NotNull BitsCommandSourceContext ctx) {
-        return permissions.stream().allMatch(permission -> ctx.getSender().hasPermission(permission));
+    public boolean test(BitsCommandSourceContext<?> ctx) {
+        return permissions.stream().allMatch(permission -> permission.hasPermission(ctx.getSender()));
     }
 
     @Override
-    public @Nullable Text getFailureMessage(@NotNull BitsCommandSourceContext ctx) {
+    public @Nullable Text getFailureMessage(BitsCommandSourceContext<?> ctx) {
         return Text.of(Component.text("You are lacking permissions to use this command."));
     }
 }

@@ -1,52 +1,37 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.commands.CommandSourceStack;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jspecify.annotations.NullMarked;
+import net.kyori.adventure.audience.Audience;
 
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 /**
  * Utility class to encapsulate command context
  */
-@NullMarked
-public class BitsCommandContext {
-    private final CommandContext<CommandSourceStack> brigadierContext;
-    private final BitsCommandSourceContext source;
+public abstract class BitsCommandContext<T> {
+    protected final CommandContext<T> brigadierContext;
+    protected final BitsCommandSourceContext<T> source;
 
-    public BitsCommandContext(CommandContext<CommandSourceStack> brigadierContext) {
+    public BitsCommandContext(CommandContext<T> brigadierContext) {
         this.brigadierContext = brigadierContext;
-        this.source = new BitsCommandSourceContext(brigadierContext.getSource());
+        this.source = createSourceContext(brigadierContext);
     }
+
+    protected abstract BitsCommandSourceContext<T> createSourceContext(CommandContext<T> brigadierContext);
 
 
     /**
-     * Returns the Brigadier {@link CommandSourceStack}.
+     * Returns the Brigadier {@link T}.
      */
-    public BitsCommandSourceContext getSource() {
+    public BitsCommandSourceContext<T> getSource() {
         return source;
     }
 
-    public CommandContext<CommandSourceStack> getBrigadierContext() {
+    public CommandContext<T> getBrigadierContext() {
         return brigadierContext;
     }
 
-
-    public CommandSender getSender() {
-        return source.getSender();
-    }
-
-    public Player requirePlayer() {
-        if (!(getSender() instanceof Player player)) throw new IllegalStateException("Command sender must be a player");
-        return player;
-    }
-
-    public Location getLocation() {
-        return source.getLocation();
-    }
+    public abstract <S extends Audience> S getSender();
 
     public final void respond(Text message) {
         message.send(getSender());

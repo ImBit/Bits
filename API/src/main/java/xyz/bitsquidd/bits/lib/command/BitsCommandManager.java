@@ -1,17 +1,16 @@
 package xyz.bitsquidd.bits.lib.command;
 
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.MinecraftServer;
-import org.jspecify.annotations.NullMarked;
 
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
+import xyz.bitsquidd.bits.lib.permission.Permission;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,33 +24,51 @@ import java.util.Set;
 /**
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
-@NullMarked
-public abstract class BitsCommandManager {
-    protected final BitsArgumentRegistry argumentRegistry;
-    protected final BitsRequirementRegistry requirementRegistry;
-    protected final BrigadierTreeGenerator brigadierTreeGenerator;
+public abstract class BitsCommandManager<T> {
+    protected final BitsArgumentRegistry<T> argumentRegistry;
+    protected final BitsRequirementRegistry<T> requirementRegistry;
+    protected final BrigadierTreeGenerator<T> brigadierTreeGenerator;
 
     private final Set<BitsCommand> registeredCommands = new HashSet<>();
+    private final Permission commandBasePermission = initialiseBasePermission();
 
     protected BitsCommandManager() {
-        BitsConfig.setCommandManager(this);
+        BitsConfig.get().setCommandManager(this);
 
-        BitsConfig.COMMAND_BASE_STRING = commandBasePermission();
-
-        this.argumentRegistry = getArgumentRegistry();
-        this.requirementRegistry = getRequirementRegistry();
-        this.brigadierTreeGenerator = new BrigadierTreeGenerator();
+        this.argumentRegistry = initialiseArgumentRegistry();
+        this.requirementRegistry = initialiseRequirementRegistry();
+        this.brigadierTreeGenerator = new BrigadierTreeGenerator<>(this);
     }
 
-    protected abstract BitsArgumentRegistry getArgumentRegistry();
+    protected abstract BitsArgumentRegistry<T> initialiseArgumentRegistry();
 
-    protected abstract BitsRequirementRegistry getRequirementRegistry();
+    public final BitsArgumentRegistry<T> getArgumentRegistry() {
+        return argumentRegistry;
+    }
+
+    protected abstract BitsRequirementRegistry<T> initialiseRequirementRegistry();
+
+    public final BitsRequirementRegistry<T> getRequirementRegistry() {
+        return requirementRegistry;
+    }
+
+    /**
+     * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
+     * This  can be overridden to provide custom context implementations i.e. format a command response.
+     */
+    public abstract BitsCommandContext<T> createContext(CommandContext<T> brigadierContext);
+
+    public abstract BitsCommandSourceContext<T> createSourceContext(T sourceStack);
 
     /**
      * Gets all currently registered commands.
      */
     public final Set<BitsCommand> getRegisteredCommands() {
         return registeredCommands;
+    }
+
+    protected final void registerCommand(BitsCommand command) {
+        registeredCommands.add(command);
     }
 
 
@@ -89,7 +106,13 @@ public abstract class BitsCommandManager {
      *
      * @return The base permission string for all commands.
      */
-    protected abstract String commandBasePermission();
+    protected Permission initialiseBasePermission() {
+        return Permission.of("bits.command"); // The base prefix for all commands, can be overridden.
+    }
+
+    public final Permission getCommandBasePermission() {
+        return commandBasePermission;
+    }
 
 
     /**
@@ -101,36 +124,18 @@ public abstract class BitsCommandManager {
     protected abstract void executeCommand(boolean isAsync, Runnable commandExecution);
 
 
-    /**
-     * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
-     * This  can be overridden to provide custom context implementations i.e. format a command response.
-     */
-    public BitsCommandContext createContext(CommandContext<CommandSourceStack> brigadierContext) {
-        return new BitsCommandContext(brigadierContext);
+    public LiteralArgumentBuilder<T> createLiteral(String name) {
+        return LiteralArgumentBuilder.literal(name);
     }
 
-    public BitsCommandSourceContext createSourceContext(CommandSourceStack sourceStack) {
-        return new BitsCommandSourceContext(sourceStack);
+    public <W> RequiredArgumentBuilder<T, W> createArgument(String name, ArgumentType<W> type) {
+        return RequiredArgumentBuilder.argument(name, type);
     }
 
 
     /**
      * Registers all {@link BitsCommand}s.
      */
-    protected final void enableAllCommands() {
-        CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
-
-        registeredCommands.addAll(getAllCommands());
-
-        registeredCommands
-              .forEach(bitsCommand -> {
-                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
-                        .forEach(node -> {
-                            dispatcher.getRoot().removeCommand(node.getName());
-                            dispatcher.getRoot().addChild(node);
-                        });
-                  bitsCommand.onRegister();
-              });
-    }
+    protected abstract void enableAllCommands();
 
 }

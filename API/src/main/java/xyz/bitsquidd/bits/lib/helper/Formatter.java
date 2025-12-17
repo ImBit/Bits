@@ -1,11 +1,5 @@
 package xyz.bitsquidd.bits.lib.helper;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
@@ -16,18 +10,12 @@ import java.util.function.Function;
 /**
  * Utility class for formatting various objects into readable strings.
  */
-@NullMarked
 public final class Formatter {
     private static final Map<Class<?>, Function<Object, String>> formatters = new HashMap<>();
 
     static {
-        registerFormatter(Location.class, Formatter::location);
-        registerFormatter(Player.class, Formatter::player);
         registerFormatter(Collection.class, Formatter::collection);
         registerFormatter(Map.class, Formatter::map);
-        registerFormatter(Block.class, Formatter::block);
-        registerFormatter(World.class, Formatter::world);
-        registerFormatter(ItemStack.class, Formatter::itemStack);
         registerFormatter(Date.class, Formatter::date);
         registerFormatter(UUID.class, Formatter::uuid);
     }
@@ -45,42 +33,6 @@ public final class Formatter {
               });
 
         return formatted.get();
-    }
-
-
-    public static String location(Location location) {
-        return location(location, true);
-    }
-
-    public static String location(Location location, boolean includeWorld) {
-        StringBuilder sb = new StringBuilder();
-
-        if (includeWorld) sb.append(location.getWorld().getName()).append(": ");
-
-        sb.append(String.format("%.1f", location.getX())).append(", ");
-        sb.append(String.format("%.1f", location.getY())).append(", ");
-        sb.append(String.format("%.1f", location.getZ()));
-        return sb.toString();
-    }
-
-
-    public static String player(Player player) {
-        return player.getName();
-    }
-
-
-    public static String block(Block block) {
-        return block.getType() + "@" + location(block.getLocation(), true);
-    }
-
-
-    public static String world(World world) {
-        return world.getName();
-    }
-
-
-    public static String itemStack(ItemStack itemStack) {
-        return itemStack.getAmount() + "x " + itemStack.getType();
     }
 
 
@@ -119,4 +71,5 @@ public final class Formatter {
         sb.append("]");
         return sb.toString();
     }
+
 }

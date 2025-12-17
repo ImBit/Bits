@@ -2,12 +2,12 @@ package xyz.bitsquidd.bits.lib.command.util;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import net.minecraft.commands.CommandSourceStack;
 import org.jspecify.annotations.NullMarked;
 
-import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
+import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.lang.reflect.Parameter;
@@ -41,22 +41,23 @@ public class CommandParameterInfo {
             name = parameterName.contains("arg") ? typeSignature.toRawType().getSimpleName().toLowerCase() : parameterName;
         }
 
-        this.parser = BitsArgumentRegistry.getInstance().getParser(typeSignature);
-        this.heldArguments.addAll(BitsArgumentRegistry.getInstance().getArgumentTypeContainer(parser, name));
+        this.parser = BitsConfig.get().getCommandManager().getArgumentRegistry().getParser(typeSignature);
+        this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 
-    public List<ArgumentBuilder<CommandSourceStack, ?>> createBrigadierArguments() {
-        List<ArgumentBuilder<CommandSourceStack, ?>> brigadierArguments = new ArrayList<>();
+    public <T> List<ArgumentBuilder<T, ?>> createBrigadierArguments() {
+        BitsCommandManager<T> commandManager = (BitsCommandManager<T>)BitsConfig.get().getCommandManager();
+        List<ArgumentBuilder<T, ?>> brigadierArguments = new ArrayList<>();
 
         boolean useArgSuggestions = heldArguments.size() > 1; // We use the arg suggestions only if there are multiple held arguments
 
         for (int i = 0; i < heldArguments.size(); i++) {
             BrigadierArgumentMapping arg = heldArguments.get(i);
-            RequiredArgumentBuilder<CommandSourceStack, ?> argumentBuilder = arg.toBrigadierArgument();
+            RequiredArgumentBuilder<T, ?> argumentBuilder = arg.toBrigadierArgument(commandManager);
 
             if (useArgSuggestions) {
                 TypeSignature<?> inputType = parser.getInputTypes().get(i).typeSignature();
-                AbstractArgumentParser<?> inputParser = BitsArgumentRegistry.getInstance().getParser(inputType);
+                AbstractArgumentParser<?> inputParser = commandManager.getArgumentRegistry().getParser(inputType);
 
                 // Use the input-specific parser's suggestions
                 if (hasSuggestions(inputParser)) argumentBuilder.suggests(inputParser.getSuggestionProvider());

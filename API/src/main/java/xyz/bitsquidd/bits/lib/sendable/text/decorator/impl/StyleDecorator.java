@@ -5,6 +5,7 @@ import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.DynamicColorForm
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.StyleFormatter;
 
 public class StyleDecorator extends AbstractTagDecorator {
+
     public StyleDecorator() {
         super();
         formatters.put("b", StyleFormatter.bold());
@@ -14,4 +15,5 @@ public class StyleDecorator extends AbstractTagDecorator {
         formatters.put("o", StyleFormatter.obfuscated());
         formatters.put("c", new DynamicColorFormatter());
     }
+
 }

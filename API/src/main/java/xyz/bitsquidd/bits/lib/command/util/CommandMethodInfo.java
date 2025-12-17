@@ -1,14 +1,12 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import org.jspecify.annotations.NullMarked;
-
 import xyz.bitsquidd.bits.lib.command.annotation.Async;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,8 +16,7 @@ import java.util.List;
 /**
  * Stores information about a method in a command
  */
-@NullMarked
-public class CommandMethodInfo {
+public class CommandMethodInfo<T> {
     private final Method method;
 
     private final boolean isAsync;
@@ -78,14 +75,14 @@ public class CommandMethodInfo {
     }
 
     //TODO merge with BitsCommandBuilder permission gathering?
-    public List<BitsCommandRequirement> getRequirements(String corePermissionString) {
+    public List<BitsCommandRequirement> getRequirements(xyz.bitsquidd.bits.lib.permission.Permission corePermission) {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(corePermissionString + "." + appended))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
                   .toList());
         }
 
@@ -93,7 +90,7 @@ public class CommandMethodInfo {
         Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> BitsRequirementRegistry.getInstance().getRequirement(clazz))
+                  .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
                   .toList());
         }
 

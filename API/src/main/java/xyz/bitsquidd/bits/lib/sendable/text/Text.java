@@ -2,13 +2,12 @@ package xyz.bitsquidd.bits.lib.sendable.text;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
+import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,6 @@ import java.util.Locale;
  * Text.of("Hello ").append(Text.of("World!")).send(player);
  * }</pre>
  */
-@NullMarked
 public final class Text implements Sendable {
     private final Component component;
     private final List<ITextDecorator> decorators = new ArrayList<>();
@@ -102,22 +100,18 @@ public final class Text implements Sendable {
 
 
     @Override
-    public <A extends Audience> void send(A audience) {
-        audience.forEachAudience(subAudience -> subAudience.sendMessage(getComponent(subAudience)));
+    public void send(Audience audience) {
+        audience.forEachAudience(a -> a.sendMessage(getComponent(a)));
     }
 
-    public <A extends Audience> Component getComponent(@Nullable A audience) {
+    public Component getComponent(Audience audience) {
         Component returnComponent = component;
-
-        Locale locale = Locale.getDefault();
-        if (audience instanceof Player playerTarget) {
-            locale = playerTarget.locale();
-        }
 
         List<ITextDecorator> componentDecorators = new ArrayList<>(PRE_DEFAULT_DECORATORS);
         componentDecorators.addAll(decorators);
         componentDecorators.addAll(POST_DEFAULT_DECORATORS);
 
+        Locale locale = BitsConfig.get().getLocale(audience);
         for (ITextDecorator decorator : componentDecorators) {
             returnComponent = decorator.format(returnComponent, locale);
         }

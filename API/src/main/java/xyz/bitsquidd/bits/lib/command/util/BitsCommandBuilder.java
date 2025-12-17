@@ -1,6 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.util;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.BitsCommand;
@@ -9,21 +8,21 @@ import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@NullMarked
 public final class BitsCommandBuilder {
     private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;
+    private final boolean isStaticClass;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final Command commandAnnotation;
@@ -32,19 +31,20 @@ public final class BitsCommandBuilder {
     private final List<String> commandAliases;
     private final String commandDescription;
 
-    private final String corePermissionString;
-    private final List<String> permissionStrings = new ArrayList<>();
+    private final xyz.bitsquidd.bits.lib.permission.Permission corePermission;
+    private final List<xyz.bitsquidd.bits.lib.permission.Permission> permissions = new ArrayList<>();
 
     // Allow us to build from an instance or a class.
     // Instances are used only for gathering extra requirements.
     public BitsCommandBuilder(@Nullable BitsCommand commandInstance) {
         this(Objects.requireNonNull(commandInstance).getClass());
         this.commandInstance = commandInstance;
-        this.permissionStrings.addAll(commandInstance.getAlternatePermissionStrings());
+        this.permissions.addAll(commandInstance.getAlternatePermissionStrings().stream().map(xyz.bitsquidd.bits.lib.permission.Permission::of).toList());
     }
 
     public BitsCommandBuilder(Class<? extends BitsCommand> commandClass) {
         this.commandClass = commandClass;
+        this.isStaticClass = Modifier.isStatic(commandClass.getModifiers());
 
         commandAnnotation = commandClass.getAnnotation(Command.class);
         if (commandAnnotation == null) throw new CommandParseException("Class " + commandClass + " must be annotated with @Command");
@@ -52,8 +52,8 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.corePermissionString = BitsConfig.COMMAND_BASE_STRING + "." + commandName.replaceAll(" ", "_").toLowerCase();
-        this.permissionStrings.add(corePermissionString);
+        this.corePermission = BitsConfig.get().getCommandManager().getCommandBasePermission().append("." + commandName.replaceAll(" ", "_").toLowerCase());
+        this.permissions.add(corePermission);
     }
 
 
@@ -78,7 +78,9 @@ public final class BitsCommandBuilder {
         Constructor<?>[] constructors = commandClass.getConstructors();
         if (constructors.length > 0) {
             Constructor<?> constructor = constructors[0];
-            return List.of(constructor.getParameters());
+            return Arrays.stream(constructor.getParameters())
+                  .filter(param -> !param.isSynthetic() && !BitsCommand.class.isAssignableFrom(param.getType()))
+                  .toList();
         }
         return Collections.emptyList();
     }
@@ -104,13 +106,13 @@ public final class BitsCommandBuilder {
 
     public Set<BitsCommandRequirement> getRequirements() {
         Set<BitsCommandRequirement> requirements = new HashSet<>();
-        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissionStrings));
+        if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissions));
 
         // Gather permission strings and convert them to requirements.
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(corePermissionString + "." + appended))
+                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
                   .toList());
         }
 
@@ -118,7 +120,7 @@ public final class BitsCommandBuilder {
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> BitsRequirementRegistry.getInstance().getRequirement(clazz))
+                  .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
                   .toList());
         }
 
@@ -126,12 +128,16 @@ public final class BitsCommandBuilder {
         return requirements;
     }
 
-    public String getCorePermissionString() {
-        return corePermissionString;
+    public xyz.bitsquidd.bits.lib.permission.Permission getCorePermission() {
+        return corePermission;
     }
 
-    public List<String> getPermissionStrings() {
-        return Collections.unmodifiableList(permissionStrings);
+    public List<xyz.bitsquidd.bits.lib.permission.Permission> getPermissions() {
+        return Collections.unmodifiableList(permissions);
+    }
+
+    public boolean requiresOuterInstance() {
+        return !isStaticClass && commandClass.isMemberClass();
     }
 
 }

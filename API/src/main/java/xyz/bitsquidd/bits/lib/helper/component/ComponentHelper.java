@@ -8,7 +8,6 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
@@ -16,7 +15,7 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import java.util.*;
 
 public class ComponentHelper {
-    public static @NotNull Component BLANK() {
+    public static Component BLANK() {
         return Component.empty()
               .color(NamedTextColor.WHITE)
               .decoration(TextDecoration.OBFUSCATED, false)
@@ -42,12 +41,12 @@ public class ComponentHelper {
         }
     }
 
-    public static List<TextComponent> flatten(final @NotNull Component component) {
+    public static List<TextComponent> flatten(final Component component) {
         return flatten(component, null);
     }
 
     // Adapted version of https://gist.github.com/Minikloon/e6a7679d171b90dc4e0731db46d77c84
-    public static List<TextComponent> flatten(final @NotNull Component component, final @Nullable Locale locale) {
+    public static List<TextComponent> flatten(final Component component, final @Nullable Locale locale) {
         final List<TextComponent> flattened = new ArrayList<>();
         final Style style = component.style();
         final Style enforcedState = enforceStyleStates(style);
@@ -75,18 +74,18 @@ public class ComponentHelper {
         return flattened;
     }
 
-    private static @NotNull TextComponent convertToTextComponent(final @NotNull Component component, final @Nullable Locale locale) {
+    private static TextComponent convertToTextComponent(final Component component, final @Nullable Locale locale) {
         if (component instanceof TextComponent textComponent) {
             return textComponent;
         } else if (component instanceof TranslatableComponent translatableComponent) {
             return Component.text(getTranslatedString(locale != null ? locale : Locale.getDefault(), translatableComponent));
         } else {
-            BitsConfig.getLogger().warn("Unsupported component type: {}", component);
+            BitsConfig.get().logger().warn("Unsupported component type: " + component);
             return UNSUPPORTED;
         }
     }
 
-    private static @NotNull Style enforceStyleStates(final @NotNull Style style) {
+    private static Style enforceStyleStates(final Style style) {
         final Style.Builder builder = style.toBuilder();
         final Map<TextDecoration, TextDecoration.State> map = style.decorations();
         map.forEach((decoration, state) -> {
@@ -97,9 +96,10 @@ public class ComponentHelper {
         return builder.build();
     }
 
-    public static @NotNull String getTranslatedString(final @NotNull Locale locale, final @NotNull Component component) {
+    public static String getTranslatedString(final Locale locale, final Component component) {
         Component rendered = GlobalTranslator.render(component, locale);
 
         return PlainTextComponentSerializer.plainText().serialize(rendered);
     }
+
 }

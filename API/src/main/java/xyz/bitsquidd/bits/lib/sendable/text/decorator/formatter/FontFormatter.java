@@ -5,14 +5,14 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class FontFormatter extends AbstractFormatter {
-    public final @NotNull Key fontKey;
+    public final Key fontKey;
 
-    public FontFormatter(@NotNull Key fontKey) {
+    public FontFormatter(Key fontKey) {
         this.fontKey = fontKey;
     }
 
     @Override
-    public @NotNull Component format(@NotNull Component input) {
+    public Component format(Component input) {
         return input.font(fontKey);
     }
 }

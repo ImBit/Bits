@@ -1,8 +1,5 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive;
 
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NullMarked;
-
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
@@ -11,17 +8,15 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
-@NullMarked
-public sealed abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O>
-      permits BooleanArgumentParser, DoubleArgumentParser, FloatArgumentParser, IntegerArgumentParser, LongArgumentParser, StringArgumentParser, EntitySelectorArgumentParser {
+public abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O> {
 
-    PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
+    protected PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {
         super(TypeSignature.of(outputClass), argumentName);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public final @NotNull O parse(List<Object> inputObjects, BitsCommandContext ctx) throws CommandParseException {
+    public final O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
         return (O)singletonInputValidation(inputObjects, getTypeSignature().toRawType());
     }
 
