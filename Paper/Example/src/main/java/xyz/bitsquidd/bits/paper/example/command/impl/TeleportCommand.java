@@ -7,7 +7,7 @@ import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.CommandReturnType;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.helper.Formatter;
+import xyz.bitsquidd.bits.lib.format.Formatter;
 import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import xyz.bitsquidd.bits.paper.example.command.CustomCommandContext;
 import xyz.bitsquidd.bits.paper.lib.command.requirement.PlayerSenderRequirement;

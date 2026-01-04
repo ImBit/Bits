@@ -1,6 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-description = "🦑 Utility Paper Plugin for Minecraft development."
+description = "🦑 Utility Velocity Plugin for Minecraft development."
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-parameters")
@@ -10,7 +10,7 @@ tasks {
     jar { enabled = false }
 
     named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("Bits-Paper-Plugin")
+        archiveBaseName.set("Bits-Velocity-Plugin")
         configurations = listOf(project.configurations.runtimeClasspath.get())
         from(sourceSets.main.get().output)
     }
