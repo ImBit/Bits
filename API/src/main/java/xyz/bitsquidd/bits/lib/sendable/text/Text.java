@@ -7,7 +7,6 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.sendable.Sendable;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.BlankDecorator;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.impl.TranslationDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
