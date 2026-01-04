@@ -7,6 +7,9 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
+/**
+ * Argument parser for Void variables.
+ */
 public final class VoidParser extends AbstractArgumentParser<Void> {
 
     public VoidParser() {

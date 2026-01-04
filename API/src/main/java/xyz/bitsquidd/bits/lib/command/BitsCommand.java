@@ -10,6 +10,9 @@ import xyz.bitsquidd.bits.lib.sendable.text.Text;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Base class for all Bits commands.
+ */
 public abstract class BitsCommand {
 
     public void onRegister() {

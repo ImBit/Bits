@@ -9,6 +9,10 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
+/**
+ * Argument parser for GreedyString values.
+ * A {@link GreedyString} is special as it captures all remaining input as a single string.
+ */
 public final class GreedyStringArgumentParser extends AbstractArgumentParser<GreedyString> {
     public GreedyStringArgumentParser() {
         super(TypeSignature.of(GreedyString.class), "String...");

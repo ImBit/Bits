@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Stores information about a method in a command
+ * Stores information about a method in a command.
  */
 public class CommandMethodInfo<T> {
     private final Method method;
@@ -74,7 +74,7 @@ public class CommandMethodInfo<T> {
         return commandAnnotation.value();
     }
 
-    //TODO merge with BitsCommandBuilder permission gathering?
+    //TODO: Merge with BitsCommandBuilder permission gathering?
     public List<BitsCommandRequirement> getRequirements(xyz.bitsquidd.bits.lib.permission.Permission corePermission) {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
 

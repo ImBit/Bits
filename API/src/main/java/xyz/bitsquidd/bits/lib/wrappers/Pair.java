@@ -2,6 +2,12 @@ package xyz.bitsquidd.bits.lib.wrappers;
 
 import java.util.Objects;
 
+/**
+ * A generic Pair collection to hold two objects.
+ *
+ * @param <A> the type of the first object
+ * @param <B> the type of the second object
+ */
 public final class Pair<A, B> {
     private A first;
     private B second;

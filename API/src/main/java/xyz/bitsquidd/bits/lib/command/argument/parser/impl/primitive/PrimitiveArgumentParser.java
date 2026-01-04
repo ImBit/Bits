@@ -8,6 +8,10 @@ import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
 import java.util.List;
 
+/**
+ * A parser for primitive argument types.
+ * A primitive type directly corresponds to a Brigadier primitive type.
+ */
 public abstract class PrimitiveArgumentParser<O> extends AbstractArgumentParser<O> {
 
     protected PrimitiveArgumentParser(Class<O> outputClass, String argumentName) {

@@ -87,7 +87,7 @@ public final class TypeSignature<T> {
         if (typeArguments.length != other.typeArguments.length) return false;
 
         for (int i = 0; i < typeArguments.length; i++) {
-            if (!typeArguments[i].equals(other.typeArguments[i])) {
+            if (!Objects.equals(typeArguments[i], other.typeArguments[i])) {
                 return false;
             }
         }

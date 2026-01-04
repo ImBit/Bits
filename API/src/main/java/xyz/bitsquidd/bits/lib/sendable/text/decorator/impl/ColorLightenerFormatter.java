@@ -3,8 +3,8 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.impl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
-import xyz.bitsquidd.bits.lib.helper.color.ColorHelper;
-import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
+import xyz.bitsquidd.bits.lib.helper.color.Colors;
+import xyz.bitsquidd.bits.lib.helper.component.Components;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
 
 public class ColorLightenerFormatter extends AbstractFormatter {
@@ -20,7 +20,7 @@ public class ColorLightenerFormatter extends AbstractFormatter {
     public Component format(Component input) {
         TextColor inputColor = input.color();
 
-        return ComponentHelper.styleAll(input, input.style().color(TextColor.color(ColorHelper.lightenColour(inputColor != null ? inputColor.value() : FALLBACK_COLOR, lightness))));
+        return Components.styleAll(input, input.style().color(TextColor.color(Colors.lightenColour(inputColor != null ? inputColor.value() : FALLBACK_COLOR, lightness))));
     }
 
 }

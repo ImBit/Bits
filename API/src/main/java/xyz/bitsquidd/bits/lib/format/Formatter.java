@@ -63,8 +63,8 @@ public final class Formatter {
     };
 
     static {
-        registerFormatter(Collection.class, COLLECTION_FORMATTER);
-        registerFormatter(Map.class, MAP_FORMATTER);
+//        registerFormatter(Collection.class, COLLECTION_FORMATTER);
+//        registerFormatter(Map.class, MAP_FORMATTER);
         registerFormatter(Date.class, DATE_FORMATTER);
         registerFormatter(UUID.class, UUID_FORMATTER);
     }

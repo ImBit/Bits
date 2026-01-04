@@ -10,6 +10,10 @@ import xyz.bitsquidd.bits.lib.permission.Permission;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * The main configuration class for the Bits library.
+ * This must be created for correct Bits functionality.
+ */
 public abstract class BitsConfig {
     private static @Nullable BitsConfig instance;
 

@@ -3,7 +3,7 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
-import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
+import xyz.bitsquidd.bits.lib.helper.component.Components;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
 
 import java.util.*;
@@ -18,7 +18,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
 
     @Override
     public Component format(Component component, Locale locale) {
-        List<TextComponent> flattenedComponents = ComponentHelper.flatten(component, locale);
+        List<TextComponent> flattenedComponents = Components.flatten(component, locale);
 
         TagContext context = new TagContext();
         List<Component> processedComponents = new ArrayList<>();

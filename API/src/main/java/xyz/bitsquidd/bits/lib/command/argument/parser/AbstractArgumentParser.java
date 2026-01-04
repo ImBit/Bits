@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * A parser which can be defined to convert a list of input command arguments into a specific object type.
+ */
 public abstract class AbstractArgumentParser<O> {
     private final TypeSignature<?> typeSignature; // The type signature this parser handles
     private final String argumentName;            // The name of the argument, used while displaying suggestions

@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-// Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
+/**
+ * A command requirement that checks if the command sender has the specified permissions.
+ * Note: Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
+ */
 public class PermissionRequirement extends BitsCommandRequirement {
     public final List<Permission> permissions = new ArrayList<>();
 

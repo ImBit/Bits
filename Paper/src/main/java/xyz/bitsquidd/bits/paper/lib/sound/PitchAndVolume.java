@@ -1,5 +1,8 @@
 package xyz.bitsquidd.bits.paper.lib.sound;
 
+/**
+ * Immutable class representing pitch and volume values for sounds.
+ */
 public final class PitchAndVolume {
     public final float pitch;
     public final float volume;

@@ -3,7 +3,11 @@ package xyz.bitsquidd.bits.paper.lib.location;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class LocationHelper {
+/**
+ * Suite of location-related utility methods.
+ */
+public final class Locations {
+    private Locations() {}
 
     /**
      * Safe distance check between two locations.

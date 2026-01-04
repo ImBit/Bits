@@ -45,6 +45,7 @@ public class CommandParameterInfo {
         this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 
+    @SuppressWarnings("unchecked")
     public <T> List<ArgumentBuilder<T, ?>> createBrigadierArguments() {
         BitsCommandManager<T> commandManager = (BitsCommandManager<T>)BitsConfig.get().getCommandManager();
         List<ArgumentBuilder<T, ?>> brigadierArguments = new ArrayList<>();

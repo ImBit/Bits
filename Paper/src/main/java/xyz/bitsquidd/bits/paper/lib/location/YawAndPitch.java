@@ -7,6 +7,9 @@ import org.joml.Vector3f;
 
 import java.util.Objects;
 
+/**
+ * Immutable class representing yaw and pitch angles.
+ */
 public final class YawAndPitch {
     public final float yaw;
     public final float pitch;

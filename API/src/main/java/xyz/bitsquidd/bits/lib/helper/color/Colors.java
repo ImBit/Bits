@@ -2,7 +2,11 @@ package xyz.bitsquidd.bits.lib.helper.color;
 
 import org.jetbrains.annotations.Range;
 
-public class ColorHelper {
+/**
+ * Suite of color manipulation utilities.
+ */
+public final class Colors {
+    private Colors() {}
 
     public static int lightenColour(int color, @Range(from = 0, to = 1) double lightness) {
         lightness = Math.clamp(lightness, -1, 1);

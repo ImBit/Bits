@@ -4,6 +4,9 @@ import net.kyori.adventure.audience.Audience;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
+/**
+ * Object representation of a permission.
+ */
 public final class Permission {
     private final String value;
     private final String description;

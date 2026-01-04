@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * Argument parser for enum types.
+ */
 @NullMarked
 public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParser<T> {
     private final Class<T> enumClass;

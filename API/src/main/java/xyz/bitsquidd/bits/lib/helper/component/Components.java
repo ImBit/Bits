@@ -14,31 +14,28 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 
 import java.util.*;
 
-public class ComponentHelper {
-    public static Component BLANK() {
-        return Component.empty()
-          .color(NamedTextColor.WHITE)
-          .decoration(TextDecoration.OBFUSCATED, false)
-          .decoration(TextDecoration.BOLD, false)
-          .decoration(TextDecoration.STRIKETHROUGH, false)
-          .decoration(TextDecoration.UNDERLINED, false)
-          .decoration(TextDecoration.ITALIC, false);
-    }
+/**
+ * Suite of helper methods for working with Adventure Components.
+ */
+public final class Components {
+    private Components() {}
+
+    public static final Component BLANK = Component.empty()
+      .applyFallbackStyle(Style.empty()
+        .color(NamedTextColor.WHITE)
+        .decoration(TextDecoration.OBFUSCATED, false)
+        .decoration(TextDecoration.BOLD, false)
+        .decoration(TextDecoration.STRIKETHROUGH, false)
+        .decoration(TextDecoration.UNDERLINED, false)
+        .decoration(TextDecoration.ITALIC, false)
+      );
 
     private static final TextComponent UNSUPPORTED = Component.text("ERROR PARSING", NamedTextColor.RED);
 
     public static Component styleAll(Component component, Style style) {
         List<Component> children = component.children();
-
-        if (children.isEmpty()) {
-            return component.style(style);
-        } else {
-            for (Component child : children) {
-                styleAll(child, style);
-            }
-
-            return component.style(style);
-        }
+        if (!children.isEmpty()) children.forEach(child -> styleAll(child, style));
+        return component.style(style);
     }
 
     public static List<TextComponent> flatten(final Component component) {
@@ -80,7 +77,7 @@ public class ComponentHelper {
         } else if (component instanceof TranslatableComponent translatableComponent) {
             return Component.text(getTranslatedString(locale != null ? locale : Locale.getDefault(), translatableComponent));
         } else {
-            BitsConfig.get().logger().warn("Unsupported component type: " + component);
+            BitsConfig.get().logger().warn("Unsupported component type: {}", component);
             return UNSUPPORTED;
         }
     }

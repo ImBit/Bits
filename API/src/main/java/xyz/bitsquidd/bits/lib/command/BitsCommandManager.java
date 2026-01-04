@@ -17,9 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 // TODO:
-//  - Add ability for Restrictions.
 //  - Allow for @Range annotations for Numbers.
-//  - Allow for multi arg arguments - i.e. Location which defines the amount of variables it creates.
 
 /**
  * Manages the registration and lifecycle of all {@link BitsCommand}s.

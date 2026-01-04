@@ -2,7 +2,13 @@ package xyz.bitsquidd.bits.lib.helper;
 
 import org.jetbrains.annotations.Nullable;
 
-public class EnumHelper {
+import java.util.Locale;
+
+/**
+ * Suite of helper methods for working with Enums.
+ */
+public final class Enums {
+    private Enums() {}
 
     public static <T extends Enum<T>> @Nullable T valueOf(Class<T> enumClass, @Nullable String name) {
         return valueOfOrDefault(enumClass, name, null);
@@ -12,7 +18,7 @@ public class EnumHelper {
         if (name == null) return defaultValue;
 
         try {
-            return Enum.valueOf(enumClass, name.toUpperCase());
+            return Enum.valueOf(enumClass, name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException | NullPointerException e) {
             return defaultValue;
         }
