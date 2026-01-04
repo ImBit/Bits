@@ -17,12 +17,12 @@ import java.util.*;
 public class ComponentHelper {
     public static Component BLANK() {
         return Component.empty()
-              .color(NamedTextColor.WHITE)
-              .decoration(TextDecoration.OBFUSCATED, false)
-              .decoration(TextDecoration.BOLD, false)
-              .decoration(TextDecoration.STRIKETHROUGH, false)
-              .decoration(TextDecoration.UNDERLINED, false)
-              .decoration(TextDecoration.ITALIC, false);
+          .color(NamedTextColor.WHITE)
+          .decoration(TextDecoration.OBFUSCATED, false)
+          .decoration(TextDecoration.BOLD, false)
+          .decoration(TextDecoration.STRIKETHROUGH, false)
+          .decoration(TextDecoration.UNDERLINED, false)
+          .decoration(TextDecoration.ITALIC, false);
     }
 
     private static final TextComponent UNSUPPORTED = Component.text("ERROR PARSING", NamedTextColor.RED);

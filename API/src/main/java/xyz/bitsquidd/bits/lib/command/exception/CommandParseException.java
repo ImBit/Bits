@@ -8,4 +8,5 @@ public class CommandParseException extends IllegalArgumentException {
     public CommandParseException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

@@ -79,8 +79,8 @@ public final class BitsCommandBuilder {
         if (constructors.length > 0) {
             Constructor<?> constructor = constructors[0];
             return Arrays.stream(constructor.getParameters())
-                  .filter(param -> !param.isSynthetic() && !BitsCommand.class.isAssignableFrom(param.getType()))
-                  .toList();
+              .filter(param -> !param.isSynthetic() && !BitsCommand.class.isAssignableFrom(param.getType()))
+              .toList();
         }
         return Collections.emptyList();
     }
@@ -88,15 +88,15 @@ public final class BitsCommandBuilder {
     @SuppressWarnings("unchecked")
     public List<Class<? extends BitsCommand>> getSubcommandClasses() {
         return Stream.of(commandClass.getDeclaredClasses())
-              .filter(nestedClass -> BitsCommand.class.isAssignableFrom(nestedClass) && nestedClass.isAnnotationPresent(Command.class))
-              .map(nestedClass -> (Class<? extends BitsCommand>)nestedClass)
-              .collect(Collectors.toList());
+          .filter(nestedClass -> BitsCommand.class.isAssignableFrom(nestedClass) && nestedClass.isAnnotationPresent(Command.class))
+          .map(nestedClass -> (Class<? extends BitsCommand>)nestedClass)
+          .collect(Collectors.toList());
     }
 
     public List<Method> getCommandMethods() {
         return Arrays.stream(commandClass.getDeclaredMethods())
-              .filter(method -> method.isAnnotationPresent(Command.class))
-              .toList();
+          .filter(method -> method.isAnnotationPresent(Command.class))
+          .toList();
     }
 
     public Constructor<?> toConstructor() {
@@ -112,16 +112,16 @@ public final class BitsCommandBuilder {
         Permission permissionAnnotation = commandClass.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
-                  .toList());
+              .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
+              .toList());
         }
 
         // Gather requirement instances
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
-                  .toList());
+              .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
+              .toList());
         }
 
         if (commandInstance != null) requirements.addAll(commandInstance.getAddedRequirements());

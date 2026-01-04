@@ -53,4 +53,5 @@ public class ColorHelper {
 
         return (red << 16) | (green << 8) | blue;
     }
+
 }

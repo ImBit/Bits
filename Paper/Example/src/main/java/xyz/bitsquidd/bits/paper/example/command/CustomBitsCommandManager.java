@@ -19,8 +19,8 @@ import java.util.List;
 public class CustomBitsCommandManager extends PaperBitsCommandManager {
 
     private final CustomBitsCommandListener listener = new CustomBitsCommandListener(
-          CommandDecorator.of(CommandReturnType.ERROR),
-          Component.text(SpigotConfig.unknownCommandMessage)
+      CommandDecorator.of(CommandReturnType.ERROR),
+      Component.text(SpigotConfig.unknownCommandMessage)
     );
 
     @Override

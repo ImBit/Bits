@@ -41,4 +41,5 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     public Supplier<List<String>> getSuggestions() {
         return () -> Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
     }
+
 }

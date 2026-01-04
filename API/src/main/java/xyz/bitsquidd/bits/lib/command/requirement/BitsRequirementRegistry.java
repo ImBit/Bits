@@ -15,7 +15,7 @@ public class BitsRequirementRegistry<T> {
     protected Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> initialiseParsers() {
         return new HashMap<>();
     }
-    
+
     public BitsCommandRequirement getRequirement(Class<? extends BitsCommandRequirement> requirementClass) {
         BitsCommandRequirement requirement = requirementInstances.get(requirementClass);
         if (requirement == null) throw new IllegalArgumentException("No requirement registered for class: " + requirementClass.getName());

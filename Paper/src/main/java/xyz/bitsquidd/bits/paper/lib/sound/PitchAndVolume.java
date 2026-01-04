@@ -12,4 +12,5 @@ public final class PitchAndVolume {
     public static PitchAndVolume of(float pitch, float volume) {
         return new PitchAndVolume(pitch, volume);
     }
+
 }

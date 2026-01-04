@@ -25,4 +25,5 @@ public interface Sendable {
     default void sendAll(Collection<? extends Audience> targets) {
         targets.forEach(this::send);
     }
+
 }

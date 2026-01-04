@@ -56,4 +56,5 @@ public class VelocityBitsConfig extends BitsConfig {
     public Audience getAll() {
         return Audience.audience(getServer().getAllPlayers());
     }
+
 }

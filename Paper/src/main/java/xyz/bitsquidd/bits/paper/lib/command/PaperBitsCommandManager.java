@@ -47,14 +47,14 @@ public abstract class PaperBitsCommandManager extends BitsCommandManager<Command
 
         getAllCommands().forEach(this::registerCommand);
         getRegisteredCommands()
-              .forEach(bitsCommand -> {
-                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
-                        .forEach(node -> {
-                            dispatcher.getRoot().removeCommand(node.getName());
-                            dispatcher.getRoot().addChild(node);
-                        });
-                  bitsCommand.onRegister();
-              });
+          .forEach(bitsCommand -> {
+              brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
+                .forEach(node -> {
+                    dispatcher.getRoot().removeCommand(node.getName());
+                    dispatcher.getRoot().addChild(node);
+                });
+              bitsCommand.onRegister();
+          });
     }
 
 }

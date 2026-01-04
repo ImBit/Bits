@@ -33,16 +33,16 @@ public final class BrigadierTreeGenerator<T> {
     }
 
     public List<LiteralCommandNode<T>> createNodes(
-          BitsCommandBuilder commandBuilder
+      BitsCommandBuilder commandBuilder
     ) {
         // We create a "dummy_root" to be able to split core aliases.
         LiteralArgumentBuilder<T> dummyRoot = commandManager.createLiteral("dummy_root");
         processCommandClass(dummyRoot, commandBuilder, new ArrayList<>());
 
         List<LiteralCommandNode<T>> nodes = dummyRoot.getArguments().stream()
-              .filter(node -> node instanceof LiteralCommandNode)
-              .map(node -> (LiteralCommandNode<T>)node)
-              .toList();
+          .filter(node -> node instanceof LiteralCommandNode)
+          .map(node -> (LiteralCommandNode<T>)node)
+          .toList();
 
         if (BitsConfig.get().isDevelopment()) BitsConfig.get().logger().info(new TreeDebugger().visualizeCommandTree(nodes));
         return nodes;
@@ -51,8 +51,8 @@ public final class BrigadierTreeGenerator<T> {
     // Returns a non-empty list of branches that will be built upon. This includes command aliases.
     // TODO look into PaperBrigadier copyLiteral
     private List<ArgumentBuilder<T, ?>> createNextBranches(
-          final BitsCommandBuilder commandBuilder,
-          final @Nullable ArgumentBuilder<T, ?> root
+      final BitsCommandBuilder commandBuilder,
+      final @Nullable ArgumentBuilder<T, ?> root
     ) {
         List<ArgumentBuilder<T, ?>> commandBranches = new ArrayList<>();
 
@@ -66,15 +66,15 @@ public final class BrigadierTreeGenerator<T> {
             commandBranches.add(root);
         } else {
             List<LiteralArgumentBuilder<T>> nextBranches = commandAliases.stream()
-                  .map(commandManager::createLiteral)
-                  .toList();
+              .map(commandManager::createLiteral)
+              .toList();
 
             nextBranches.forEach(argumentBuilder -> {
                 mergeRequirement(
-                      argumentBuilder, ctx ->
-                            commandBuilder.getPermissions().stream().anyMatch(permission ->
-                                  permission.hasPermission(commandManager.createSourceContext(ctx).getSender())
-                            )
+                  argumentBuilder, ctx ->
+                    commandBuilder.getPermissions().stream().anyMatch(permission ->
+                      permission.hasPermission(commandManager.createSourceContext(ctx).getSender())
+                    )
                 );
             });
 
@@ -86,15 +86,15 @@ public final class BrigadierTreeGenerator<T> {
 
     @SuppressWarnings("unchecked")
     private void processCommandClass(
-          final ArgumentBuilder<T, ?> branch,
-          final BitsCommandBuilder commandBuilder,
-          final List<CommandParameterInfo> addedParameters
+      final ArgumentBuilder<T, ?> branch,
+      final BitsCommandBuilder commandBuilder,
+      final List<CommandParameterInfo> addedParameters
     ) {
         // Calculate requirements required for this branch
         mergeRequirement(
-              branch,
-              ctx -> commandBuilder.getRequirements().stream()
-                    .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
+          branch,
+          ctx -> commandBuilder.getRequirements().stream()
+            .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
         );
 
         // Create parameters needed for this class.
@@ -137,9 +137,9 @@ public final class BrigadierTreeGenerator<T> {
 
     // Builds executions onto the root.
     private void processCommandMethod(
-          final ArgumentBuilder<T, ?> nextBranch,
-          final BitsCommandBuilder commandBuilder,
-          final CommandMethodInfo<T> methodInfo
+      final ArgumentBuilder<T, ?> nextBranch,
+      final BitsCommandBuilder commandBuilder,
+      final CommandMethodInfo<T> methodInfo
     ) {
         // Add all extra parameters to the branch.
         List<ArgumentBuilder<T, ?>> paramBranch = new ArrayList<>();
@@ -163,9 +163,9 @@ public final class BrigadierTreeGenerator<T> {
 
         // Add method requirements
         mergeRequirement(
-              workingBranch, ctx ->
-                    methodInfo.getRequirements(commandBuilder.getCorePermission()).stream()
-                          .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
+          workingBranch, ctx ->
+            methodInfo.getRequirements(commandBuilder.getCorePermission()).stream()
+              .allMatch(requirement -> requirement.test(commandManager.createSourceContext(ctx)))
         );
         workingBranch.executes(createCommandExecution(commandBuilder, methodInfo));
 
@@ -176,8 +176,8 @@ public final class BrigadierTreeGenerator<T> {
     // Creates a command execution when no more parameters need to be added.
     @SuppressWarnings("NullableProblems")
     private Command<T> createCommandExecution(
-          final BitsCommandBuilder commandBuilder,
-          final CommandMethodInfo<T> methodInfo
+      final BitsCommandBuilder commandBuilder,
+      final CommandMethodInfo<T> methodInfo
     ) {
         return ctx -> {
             final BitsCommandContext<T> bitsCtx = commandManager.createContext(ctx);

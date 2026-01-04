@@ -35,10 +35,10 @@ public class CommandMethodInfo<T> {
 
         // If the first parameter is a BitsCommandContext, we filter it, technically means we cant "parse" any BitsCommandContext args, this shouldn't be an issue...
         this.methodParameters = new ArrayList<>(
-              Arrays.stream(method.getParameters())
-                    .filter(param -> !BitsCommandContext.class.isAssignableFrom(param.getType()))
-                    .map(CommandParameterInfo::new)
-                    .toList()
+          Arrays.stream(method.getParameters())
+            .filter(param -> !BitsCommandContext.class.isAssignableFrom(param.getType()))
+            .map(CommandParameterInfo::new)
+            .toList()
         );
 
         this.classParameters = new ArrayList<>(classParameters);
@@ -82,16 +82,16 @@ public class CommandMethodInfo<T> {
         Permission permissionAnnotation = method.getAnnotation(Permission.class);
         if (permissionAnnotation != null) {
             requirements.addAll(Arrays.stream(permissionAnnotation.value())
-                  .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
-                  .toList());
+              .map(appended -> PermissionRequirement.of(xyz.bitsquidd.bits.lib.permission.Permission.of(corePermission + "." + appended)))
+              .toList());
         }
 
         // Gather requirement instances
         Requirement requirementAnnotation = method.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-                  .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
-                  .toList());
+              .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
+              .toList());
         }
 
         return requirements;

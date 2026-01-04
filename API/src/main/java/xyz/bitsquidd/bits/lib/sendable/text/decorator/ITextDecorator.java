@@ -6,4 +6,5 @@ import java.util.Locale;
 
 public interface ITextDecorator {
     Component format(Component component, Locale locale);
+
 }

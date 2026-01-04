@@ -11,4 +11,5 @@ public abstract class BitsCommandRequirement {
     public @Nullable Text getFailureMessage(BitsCommandSourceContext<?> ctx) {
         return null;
     }
+
 }

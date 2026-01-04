@@ -39,4 +39,5 @@ public class ExampleBitsPlugin extends JavaPlugin {
 
         getLogger().info("Disabled " + getName());
     }
+
 }

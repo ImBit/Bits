@@ -16,8 +16,8 @@ public class PaperBitsRequirementRegistry extends BitsRequirementRegistry<Comman
         Map<Class<? extends BitsCommandRequirement>, BitsCommandRequirement> parsers = super.initialiseParsers();
 
         parsers.putAll(Map.ofEntries(
-              Map.entry(PlayerSenderRequirement.class, PlayerSenderRequirement.INSTANCE),
-              Map.entry(ConsoleSenderRequirement.class, ConsoleSenderRequirement.INSTANCE)
+          Map.entry(PlayerSenderRequirement.class, PlayerSenderRequirement.INSTANCE),
+          Map.entry(ConsoleSenderRequirement.class, ConsoleSenderRequirement.INSTANCE)
         ));
 
         return parsers;

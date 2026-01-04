@@ -16,12 +16,13 @@ import xyz.bitsquidd.bits.paper.lib.command.PaperBitsCommandContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class PlayerCollectionArgumentParser extends AbstractArgumentParser<Collection<Player>> {
 
-    // TODO just pull from vanilla EntitySelector. Also pull the completion.
+    // TODO: Just pull from vanilla EntitySelector. Also pull the completion.
     private enum SelectorType {
         ALL("@a", ctx -> new ArrayList<>(Bukkit.getOnlinePlayers())),
         SELF("@s", ctx -> List.of(((PaperBitsCommandContext)ctx).requirePlayer())),
@@ -44,7 +45,7 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
             return null;
         }
 
-        public Collection<Player> get(BitsCommandContext ctx) {
+        public Collection<Player> get(BitsCommandContext<?> ctx) {
             return playerFunction.apply(ctx);
         }
     }
@@ -59,9 +60,10 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
 
         try {
             return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
-                  .stream()
-                  .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
-                  .toList();
+              .stream()
+              .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
+              .filter(Objects::nonNull)
+              .toList();
         } catch (Exception e) {
             throw new CommandParseException("Players not found");
         }

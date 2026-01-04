@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.jetbrains.annotations.NotNull;
 
 public class StyleFormatter extends AbstractFormatter {
     private final Style style;
@@ -36,4 +35,5 @@ public class StyleFormatter extends AbstractFormatter {
     public static StyleFormatter obfuscated() {
         return new StyleFormatter(Style.style().decoration(TextDecoration.OBFUSCATED, true).build());
     }
+
 }

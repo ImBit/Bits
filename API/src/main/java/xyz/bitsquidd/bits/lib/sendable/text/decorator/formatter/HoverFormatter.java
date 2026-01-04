@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.jetbrains.annotations.NotNull;
 
 public class HoverFormatter extends AbstractFormatter {
     private final HoverEvent<?> hoverEvent;
@@ -16,4 +15,5 @@ public class HoverFormatter extends AbstractFormatter {
     public Component format(Component input) {
         return input.hoverEvent(hoverEvent);
     }
+
 }

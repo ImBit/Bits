@@ -77,10 +77,10 @@ public final class BlockPos {
         if (!(obj instanceof BlockPos other)) return false;
 
         return this.x == other.x
-              && this.y == other.y
-              && this.z == other.z
-              && this.yaw == other.yaw
-              && this.pitch == other.pitch;
+          && this.y == other.y
+          && this.z == other.z
+          && this.yaw == other.yaw
+          && this.pitch == other.pitch;
     }
 
     @Override

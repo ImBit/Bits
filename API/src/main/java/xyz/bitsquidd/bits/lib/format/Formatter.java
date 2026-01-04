@@ -14,6 +14,7 @@ public final class Formatter {
     @FunctionalInterface
     public interface FormatterFunction<T> {
         String apply(T obj);
+
     }
 
     public static <T> void registerFormatter(Class<T> clazz, FormatterFunction<? super T> formatter) {

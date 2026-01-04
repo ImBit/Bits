@@ -3,7 +3,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.jetbrains.annotations.NotNull;
 
 public class DynamicColorFormatter extends AbstractFormatter {
     @Override
@@ -41,4 +40,5 @@ public class DynamicColorFormatter extends AbstractFormatter {
             default -> null;
         };
     }
+
 }

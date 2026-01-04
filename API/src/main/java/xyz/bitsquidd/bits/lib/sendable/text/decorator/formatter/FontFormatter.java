@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 
 public class FontFormatter extends AbstractFormatter {
     public final Key fontKey;
@@ -15,4 +14,5 @@ public class FontFormatter extends AbstractFormatter {
     public Component format(Component input) {
         return input.font(fontKey);
     }
+
 }

@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.jetbrains.annotations.NotNull;
 
 import xyz.bitsquidd.bits.lib.helper.component.ComponentHelper;
 import xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter.AbstractFormatter;
@@ -32,8 +31,8 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     }
 
     private List<Component> processComponentWithTags(
-          TextComponent textComponent,
-          TagContext context
+      TextComponent textComponent,
+      TagContext context
     ) {
 
         String content = textComponent.content();
@@ -71,9 +70,9 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
     }
 
     private Component createStyledComponent(
-          String text,
-          net.kyori.adventure.text.format.Style baseStyle,
-          Map<String, String> activeTags
+      String text,
+      net.kyori.adventure.text.format.Style baseStyle,
+      Map<String, String> activeTags
     ) {
 
         Component component = Component.text(text, baseStyle);
@@ -134,6 +133,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
 
     private static class TagContext {
         final Map<String, String> activeTags = new LinkedHashMap<>();
+
     }
 
 }

@@ -97,9 +97,9 @@ public final class TypeSignature<T> {
     @Override
     public String toString() {
         return "TypeSignature{" +
-              "rawType=" + rawType +
-              ", typeArguments=" + Arrays.toString(typeArguments) +
-              '}';
+          "rawType=" + rawType +
+          ", typeArguments=" + Arrays.toString(typeArguments) +
+          '}';
     }
 
     @Override

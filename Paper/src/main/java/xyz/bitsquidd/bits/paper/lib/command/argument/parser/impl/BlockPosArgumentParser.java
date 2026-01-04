@@ -27,9 +27,9 @@ public final class BlockPosArgumentParser extends AbstractArgumentParser<BlockPo
     @Override
     public List<InputTypeContainer> getInputTypes() {
         return List.of(
-              new InputTypeContainer(TypeSignature.of(Double.class), "x"),
-              new InputTypeContainer(TypeSignature.of(Double.class), "y"),
-              new InputTypeContainer(TypeSignature.of(Double.class), "z")
+          new InputTypeContainer(TypeSignature.of(Double.class), "x"),
+          new InputTypeContainer(TypeSignature.of(Double.class), "y"),
+          new InputTypeContainer(TypeSignature.of(Double.class), "z")
         );
     }
 

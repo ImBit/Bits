@@ -2,7 +2,6 @@ package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.jetbrains.annotations.NotNull;
 
 public class ClickFormatter extends AbstractFormatter {
     public final ClickEvent fontKey;
@@ -15,4 +14,5 @@ public class ClickFormatter extends AbstractFormatter {
     public Component format(Component input) {
         return input.clickEvent(fontKey);
     }
+
 }

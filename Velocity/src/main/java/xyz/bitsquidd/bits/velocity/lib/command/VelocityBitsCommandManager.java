@@ -37,10 +37,10 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
     protected void executeCommand(boolean isAsync, Runnable commandExecution) {
         // Note all Velocity tasks are async by default, so we don't need to differentiate
         ((VelocityBitsConfig)BitsConfig.get())
-              .getServer()
-              .getScheduler()
-              .buildTask(((VelocityBitsConfig)BitsConfig.get()).getPlugin(), commandExecution)
-              .schedule();
+          .getServer()
+          .getScheduler()
+          .buildTask(((VelocityBitsConfig)BitsConfig.get()).getPlugin(), commandExecution)
+          .schedule();
     }
 
     @Override
@@ -49,19 +49,19 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
 
         getAllCommands().forEach(this::registerCommand);
         getRegisteredCommands()
-              .forEach(bitsCommand -> {
-                  brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
-                        .forEach(node -> {
-                            velocityCommandManager.register(
-                                  velocityCommandManager
-                                        .metaBuilder(node.getName())
-                                        .plugin(((VelocityBitsConfig)BitsConfig.get()).getPlugin())
-                                        .build(),
-                                  new BrigadierCommand(node)
-                            );
-                        });
-                  bitsCommand.onRegister();
-              });
+          .forEach(bitsCommand -> {
+              brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
+                .forEach(node -> {
+                    velocityCommandManager.register(
+                      velocityCommandManager
+                        .metaBuilder(node.getName())
+                        .plugin(((VelocityBitsConfig)BitsConfig.get()).getPlugin())
+                        .build(),
+                      new BrigadierCommand(node)
+                    );
+                });
+              bitsCommand.onRegister();
+          });
     }
 
 }

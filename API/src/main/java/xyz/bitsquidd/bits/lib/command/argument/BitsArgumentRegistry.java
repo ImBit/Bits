@@ -51,12 +51,12 @@ public abstract class BitsArgumentRegistry<T> {
 
     protected List<PrimitiveArgumentParser<?>> initialisePrimitiveParsers() {
         return List.of(
-              new BooleanArgumentParser(),
-              new DoubleArgumentParser(),
-              new FloatArgumentParser(),
-              new IntegerArgumentParser(),
-              new LongArgumentParser(),
-              new StringArgumentParser()
+          new BooleanArgumentParser(),
+          new DoubleArgumentParser(),
+          new FloatArgumentParser(),
+          new IntegerArgumentParser(),
+          new LongArgumentParser(),
+          new StringArgumentParser()
         );
     }
 
@@ -112,9 +112,9 @@ public abstract class BitsArgumentRegistry<T> {
                                           : baseName;
 
                     holders.add(new BrigadierArgumentMapping(
-                          brigadierType,
-                          inputType.typeSignature(),
-                          argumentName
+                      brigadierType,
+                      inputType.typeSignature(),
+                      argumentName
                     ));
                     handled = true;
                 }

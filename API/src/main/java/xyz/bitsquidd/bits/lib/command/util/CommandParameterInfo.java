@@ -90,8 +90,9 @@ public class CommandParameterInfo {
     @Override
     public String toString() {
         return "CommandParameterInfo{" +
-              "typeSignature=" + typeSignature +
-              ", parameter=" + parameter +
-              '}';
+          "typeSignature=" + typeSignature +
+          ", parameter=" + parameter +
+          '}';
     }
+
 }

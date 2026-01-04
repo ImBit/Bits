@@ -44,11 +44,11 @@ public class PaperBitsArgumentRegistry extends BitsArgumentRegistry<CommandSourc
     protected List<AbstractArgumentParser<?>> initialiseParsers() {
         List<AbstractArgumentParser<?>> parsers = new ArrayList<>(super.initialiseParsers());
         parsers.addAll(List.of(
-              new WorldArgumentParser(),
-              new LocationArgumentParser(),
-              new BlockPosArgumentParser(),
-              new PlayerCollectionArgumentParser(),
-              new PlayerSingleArgumentParser()
+          new WorldArgumentParser(),
+          new LocationArgumentParser(),
+          new BlockPosArgumentParser(),
+          new PlayerCollectionArgumentParser(),
+          new PlayerSingleArgumentParser()
         ));
 
         return parsers;

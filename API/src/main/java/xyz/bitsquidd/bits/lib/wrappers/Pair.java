@@ -1,7 +1,5 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 
 public final class Pair<A, B> {
@@ -85,9 +83,9 @@ public final class Pair<A, B> {
     @Override
     public String toString() {
         return "Pair{" +
-              "first=" + first +
-              ", second=" + second +
-              '}';
+          "first=" + first +
+          ", second=" + second +
+          '}';
     }
 
 }

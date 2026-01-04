@@ -24,7 +24,7 @@ public class CustomBitsCommandListener implements Listener {
         Component message = unknownCommandEvent.message();
 
         Text.of(message == null ? unknownCommandMessage : message)
-              .decorate(errorDecorator).send(unknownCommandEvent.getSender());
+          .decorate(errorDecorator).send(unknownCommandEvent.getSender());
     }
 
 }

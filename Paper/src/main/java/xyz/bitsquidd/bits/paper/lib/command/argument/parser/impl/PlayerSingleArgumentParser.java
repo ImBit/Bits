@@ -26,10 +26,10 @@ public final class PlayerSingleArgumentParser extends AbstractArgumentParser<Pla
 
         try {
             return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
-                  .stream()
-                  .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
-                  .findFirst()
-                  .get();
+              .stream()
+              .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
+              .findFirst()
+              .get();
         } catch (Exception e) {
             throw new CommandParseException("Player not found!");
         }

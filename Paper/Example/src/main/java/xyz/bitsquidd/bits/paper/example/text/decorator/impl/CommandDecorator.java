@@ -25,8 +25,8 @@ public class CommandDecorator extends StyleDecorator {
     @Override
     public Component format(Component component, Locale locale) {
         return Component.empty()
-              .append(Component.text(toMessageIcon(commandReturnType)))
-              .append(super.format(component, locale));
+          .append(Component.text(toMessageIcon(commandReturnType)))
+          .append(super.format(component, locale));
     }
 
     private static int toMessageColor(CommandReturnType commandReturnType) {

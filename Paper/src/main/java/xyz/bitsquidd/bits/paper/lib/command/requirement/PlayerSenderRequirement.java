@@ -22,4 +22,5 @@ public class PlayerSenderRequirement extends BitsCommandRequirement {
     public @Nullable Text getFailureMessage(BitsCommandSourceContext<?> ctx) {
         return Text.of(Component.text("This command can only be executed by a player."));
     }
+
 }

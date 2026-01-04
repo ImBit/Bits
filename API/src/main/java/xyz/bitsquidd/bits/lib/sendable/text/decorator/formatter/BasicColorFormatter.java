@@ -23,4 +23,5 @@ public class BasicColorFormatter extends AbstractFormatter {
     public Component format(Component input) {
         return input.color(TextColor.color(color));
     }
+
 }

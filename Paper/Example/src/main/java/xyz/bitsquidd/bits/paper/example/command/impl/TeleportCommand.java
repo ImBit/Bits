@@ -85,6 +85,7 @@ public final class TeleportCommand extends BitsCommand {
             targetPlayer.teleport(spawnLocation);
             ctx.respond(Text.of("Teleported " + targetPlayer.getName() + " to spawn"), CommandReturnType.SUCCESS);
         }
+
     }
 
 
@@ -132,6 +133,7 @@ public final class TeleportCommand extends BitsCommand {
 
             ctx.respond(Text.of("Teleported " + count + " players to spawn"), CommandReturnType.SUCCESS);
         }
+
     }
 
 }

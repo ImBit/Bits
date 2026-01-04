@@ -53,11 +53,11 @@ public final class Text implements Sendable {
     private final List<Text> appendedText = new ArrayList<>();
 
     private static final List<ITextDecorator> PRE_DEFAULT_DECORATORS = List.of(
-          // These will always be applied first.
+      // These will always be applied first.
     );
     private static final List<ITextDecorator> POST_DEFAULT_DECORATORS = List.of(
-          // These will always be applied last.
-          new BlankDecorator()
+      // These will always be applied last.
+      new BlankDecorator()
     );
 
     private Text(Component component, List<ITextDecorator> decorators) {
