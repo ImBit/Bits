@@ -35,6 +35,8 @@ public abstract class BitsConfig {
         if (instance == null) throw new IllegalStateException("BitsConfig hasn't been initialised!");
     }
 
+    protected void initialise() {}
+
 
     public Logger logger() {
         return logger;

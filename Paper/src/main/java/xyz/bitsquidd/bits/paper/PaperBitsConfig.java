@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.permission.Permission;
+import xyz.bitsquidd.bits.paper.lib.format.CommonPaperFormatters;
 
 import java.util.Locale;
 
@@ -17,6 +18,15 @@ public class PaperBitsConfig extends BitsConfig {
     public PaperBitsConfig(JavaPlugin plugin) {
         super(plugin.getSLF4JLogger());
         this.plugin = plugin;
+
+        initialise();
+    }
+
+    @Override
+    protected void initialise() {
+        super.initialise();
+
+        CommonPaperFormatters.init();
     }
 
 

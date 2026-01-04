@@ -33,11 +33,11 @@ public final class Formatter {
         return obj.toString();
     }
 
-    public static final FormatterFunction<Date> dateFormatter = date -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+    public static final FormatterFunction<Date> DATE_FORMATTER = date -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 
-    public static final FormatterFunction<UUID> uuidFormatter = UUID::toString;
+    public static final FormatterFunction<UUID> UUID_FORMATTER = UUID::toString;
 
-    public static final FormatterFunction<Map<?, ?>> mapFormatter = map -> {
+    public static final FormatterFunction<Map<?, ?>> MAP_FORMATTER = map -> {
         StringBuilder sb = new StringBuilder("{");
         boolean first = true;
         for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -49,7 +49,7 @@ public final class Formatter {
         return sb.toString();
     };
 
-    public static final FormatterFunction<Collection<?>> collectionFormatter = collection -> {
+    public static final FormatterFunction<Collection<?>> COLLECTION_FORMATTER = collection -> {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
         for (Object item : collection) {
@@ -62,10 +62,10 @@ public final class Formatter {
     };
 
     static {
-        registerFormatter(Collection.class, collectionFormatter);
-        registerFormatter(Map.class, mapFormatter);
-        registerFormatter(Date.class, dateFormatter);
-        registerFormatter(UUID.class, uuidFormatter);
+        registerFormatter(Collection.class, COLLECTION_FORMATTER);
+        registerFormatter(Map.class, MAP_FORMATTER);
+        registerFormatter(Date.class, DATE_FORMATTER);
+        registerFormatter(UUID.class, UUID_FORMATTER);
     }
 
 }
