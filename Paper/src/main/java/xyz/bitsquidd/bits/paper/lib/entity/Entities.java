@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Suite of utilities for working with entities.
+ * A collection of utilities for working with entities.
  */
 public final class Entities {
     private Entities() {}

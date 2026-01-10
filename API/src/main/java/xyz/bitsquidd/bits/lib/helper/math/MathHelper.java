@@ -3,6 +3,9 @@ package xyz.bitsquidd.bits.lib.helper.math;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * A collection of useful mathematical operations.
+ */
 public final class MathHelper {
 
     /**

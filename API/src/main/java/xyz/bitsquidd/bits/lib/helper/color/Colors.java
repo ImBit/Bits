@@ -3,7 +3,7 @@ package xyz.bitsquidd.bits.lib.helper.color;
 import org.jetbrains.annotations.Range;
 
 /**
- * Suite of color manipulation utilities.
+ * A collection of color manipulation utilities.
  */
 public final class Colors {
     private Colors() {}

@@ -1,4 +1,3 @@
-// HoverFormatter.java
 package xyz.bitsquidd.bits.lib.sendable.text.decorator.formatter;
 
 import net.kyori.adventure.text.Component;

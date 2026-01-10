@@ -15,7 +15,7 @@ import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import java.util.*;
 
 /**
- * Suite of helper methods for working with Adventure Components.
+ * A collection of utilities for working with {@link Component Adventure Components}.
  */
 public final class Components {
     private Components() {}

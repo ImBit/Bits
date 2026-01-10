@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 /**
- * Suite of helper methods for working with Enums.
+ * A collection of utilities for working with Enums.
  */
 public final class Enums {
     private Enums() {}

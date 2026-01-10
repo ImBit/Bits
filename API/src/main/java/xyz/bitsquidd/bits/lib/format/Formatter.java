@@ -17,6 +17,8 @@ public final class Formatter {
 
     }
 
+    private Formatter() {}
+
     public static <T> void registerFormatter(Class<T> clazz, FormatterFunction<? super T> formatter) {
         formatters.put(clazz, formatter);
     }

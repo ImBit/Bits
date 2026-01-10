@@ -8,6 +8,9 @@ import xyz.bitsquidd.bits.lib.permission.Permission;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+/**
+ * Represents an object that can be sent to one or more audiences.
+ */
 public interface Sendable {
 
     void send(Audience target);

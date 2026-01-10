@@ -2,6 +2,10 @@ package xyz.bitsquidd.bits.lib.helper.math;
 
 import org.jetbrains.annotations.Range;
 
+/**
+ * A collection of easing functions for smooth animations and transitions.
+ * Each function takes a parameter t in the range [0, 1] and returns a transformed value in the same range.
+ */
 public final class Easing {
     private static final double EASING_MAGIC = 1.70158;
 
