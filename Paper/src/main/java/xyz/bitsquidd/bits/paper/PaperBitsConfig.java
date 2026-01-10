@@ -46,6 +46,11 @@ public class PaperBitsConfig extends BitsConfig {
     }
 
     @Override
+    public void registerPermission(Permission permission) {
+        Bukkit.getPluginManager().addPermission(new org.bukkit.permissions.Permission(permission.toString()));
+    }
+
+    @Override
     public Locale getLocale(Audience audience) {
         checkInitialized();
         if (audience instanceof Player player) {

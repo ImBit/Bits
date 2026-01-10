@@ -43,6 +43,11 @@ public class VelocityBitsConfig extends BitsConfig {
     }
 
     @Override
+    public void registerPermission(Permission permission) {
+        // Unimplemented in Velocity
+    }
+
+    @Override
     public Locale getLocale(Audience audience) {
         checkInitialized();
         if (audience instanceof Player player) {

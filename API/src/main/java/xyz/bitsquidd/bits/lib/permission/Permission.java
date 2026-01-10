@@ -58,4 +58,8 @@ public final class Permission {
         return value.isEmpty() || BitsConfig.get().hasPermission(audience, this);
     }
 
+    public void register() {
+        BitsConfig.get().registerPermission(this);
+    }
+
 }

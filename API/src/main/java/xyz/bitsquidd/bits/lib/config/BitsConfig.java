@@ -60,6 +60,7 @@ public abstract class BitsConfig {
         return Objects.requireNonNull(commandManager, "BitsCommandManager has not been set!");
     }
 
+    public abstract void registerPermission(Permission permission);
 
     public abstract boolean hasPermission(Audience audience, Permission permission);
 
