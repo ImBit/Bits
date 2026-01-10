@@ -1,11 +1,6 @@
 package xyz.bitsquidd.bits.lib.command;
 
-import net.kyori.adventure.text.Component;
-
-import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
-import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.sendable.text.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,11 +13,6 @@ public abstract class BitsCommand {
     public void onRegister() {
         // Default implementation does nothing
         // Use this method to set up necessary states or permissions for roles dynamically.
-    }
-
-    @Command("usage")
-    public void sendUsage(final BitsCommandContext<?> ctx) {
-        ctx.respond(Text.of(Component.text("Test from " + getClass().getSimpleName() + "!")));
     }
 
     /**

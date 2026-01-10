@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.CustomBitsCommandManager;
 
-// TODO:
-//  BitsConfig.DEBUGMODE
 public class ExampleBitsPlugin extends JavaPlugin {
     private static @Nullable ExampleBitsPlugin instance;
 
