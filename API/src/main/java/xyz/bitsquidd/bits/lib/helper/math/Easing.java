@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Range;
  * Each function takes a parameter t in the range [0, 1] and returns a transformed value in the same range.
  */
 public final class Easing {
+    private Easing() {}
+
     private static final double EASING_MAGIC = 1.70158;
 
     private static final double PI = Math.PI;
@@ -35,10 +37,24 @@ public final class Easing {
     }
 
     /**
+     * Default ease in (quadratic)
+     */
+    public static float in(@Range(from = 0, to = 1) float t) {
+        return in(t, 2);
+    }
+
+    /**
      * Ease out with a custom power
      */
     public static float out(@Range(from = 0, to = 1) float t, float index) {
         return (float)(1 - Math.pow(1 - t, index));
+    }
+
+    /**
+     * Default ease out (quadratic)
+     */
+    public static float out(@Range(from = 0, to = 1) float t) {
+        return out(t, 2);
     }
 
     /**
@@ -50,6 +66,15 @@ public final class Easing {
         } else {
             return out((1 - t) * 2, index) / 2f + 0.5f;
         }
+    }
+
+    /**
+     * Blends a linear transition with an ease in-out transition.
+     * Note: a multiplier of 0 results in a linear transition, while a multiplier of 1 results in a full ease in-out transition.
+     */
+    public static float inOutSmooth(float t, float index, @Range(from = 0, to = 1) float multiplier) {
+        float eased = inOut(t, index);
+        return (1 - multiplier) * t + multiplier * eased;
     }
 
 
