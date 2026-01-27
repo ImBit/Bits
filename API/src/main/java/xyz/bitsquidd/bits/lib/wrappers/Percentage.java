@@ -11,7 +11,7 @@ public final class Percentage {
         this.value = (float)Math.clamp(value, 0.0, 1.0);
     }
 
-    public static Percentage EMPTY = new Percentage(0.0f);
+    public static Percentage ZERO = new Percentage(0.0f);
     public static Percentage FULL = new Percentage(1.0f);
 
     public static Percentage of(final double value) {
@@ -19,7 +19,7 @@ public final class Percentage {
     }
 
     public static Percentage ofFraction(final double numerator, final double denominator) {
-        if (denominator == 0.0) return EMPTY;
+        if (denominator == 0.0) return ZERO;
         return new Percentage(numerator / denominator);
     }
 
