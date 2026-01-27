@@ -24,6 +24,7 @@ allprojects {
         if (project.path != ":API") implementation(project(":API"))
         implementation(rootProject.libs.jb.annotations)
         implementation(rootProject.libs.jspecify)
+        implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
         implementation(rootProject.libs.brigadier)
 
