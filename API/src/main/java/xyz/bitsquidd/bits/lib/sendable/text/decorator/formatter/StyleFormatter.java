@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 
-public class StyleFormatter extends AbstractFormatter {
+public final class StyleFormatter extends AbstractFormatter {
     private final Style style;
 
     public StyleFormatter(Style style) {
@@ -13,7 +13,7 @@ public class StyleFormatter extends AbstractFormatter {
 
     @Override
     public Component format(Component input) {
-        return input.style(input.style().merge(style));
+        return input.applyFallbackStyle(style);
     }
 
     public static StyleFormatter bold() {

@@ -21,7 +21,7 @@ public class BasicColorFormatter extends AbstractFormatter {
 
     @Override
     public Component format(Component input) {
-        return input.color(TextColor.color(color));
+        return input.applyFallbackStyle(TextColor.color(color));
     }
 
 }

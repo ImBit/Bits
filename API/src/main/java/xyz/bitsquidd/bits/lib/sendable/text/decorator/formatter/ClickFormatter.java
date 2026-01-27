@@ -12,7 +12,7 @@ public class ClickFormatter extends AbstractFormatter {
 
     @Override
     public Component format(Component input) {
-        return input.clickEvent(fontKey);
+        return input.applyFallbackStyle(fontKey);
     }
 
 }

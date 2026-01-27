@@ -12,7 +12,7 @@ public class HoverFormatter extends AbstractFormatter {
 
     @Override
     public Component format(Component input) {
-        return input.hoverEvent(hoverEvent);
+        return input.applyFallbackStyle(hoverEvent);
     }
 
 }
