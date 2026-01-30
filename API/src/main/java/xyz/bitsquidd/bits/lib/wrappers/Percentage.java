@@ -1,5 +1,7 @@
 package xyz.bitsquidd.bits.lib.wrappers;
 
+import xyz.bitsquidd.bits.lib.helper.math.MathHelper;
+
 /**
  * An immutable class representing number inbetween 0 and 1 representing a percentage.
  */
@@ -38,6 +40,22 @@ public final class Percentage {
 
     public float get() {
         return value;
+    }
+
+
+    @Override
+    public String toString() {
+        return MathHelper.round(value * 100, 0) + "%";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Percentage other && this.value == other.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(value);
     }
 
 }
