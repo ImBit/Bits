@@ -23,6 +23,15 @@ public final class MathHelper {
     }
 
 
+    public static double sin(final double period, final double amplitude, final double phase) {
+        return amplitude * Math.sin(phase * 2 * Math.PI / period);
+    }
+
+    public static double cos(final double period, final double amplitude, final double phase) {
+        return amplitude * Math.cos(phase * 2 * Math.PI / period);
+    }
+
+
     /**
      * Set of utility functions for working with quaternions.
      */
