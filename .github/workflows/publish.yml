@@ -68,7 +68,7 @@ jobs:
                     
                     git fetch --tags --force
 
-                    CURRENT_TAG="v${{ env.VERSION }}"
+                    CURRENT_TAG="${{ env.VERSION }}"
                     PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -vx "$CURRENT_TAG" | head -n1)
 
                     if [ -z "$PREVIOUS_TAG" ]; then
