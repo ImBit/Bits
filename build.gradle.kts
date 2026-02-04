@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.errorprone)
 }
 
-group = "xyz.bitsquidd.bits"
+group = "com.github.imbit"
 version = "0.0.6"
 
 allprojects {
