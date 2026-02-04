@@ -46,6 +46,20 @@ jobs:
                     fi
                     echo "VERSION=${{ env.VERSION }}"
 
+            -   name: Update README
+                run: |
+                    VERSION="${{ env.VERSION }}"
+                    sed -i "s/Bits:[0-9.]\+/Bits:$VERSION/g" README.md
+                    sed -i "s/<version>[0-9.]\+<\/version>/<version>$VERSION<\/version>/g" README.md
+
+            -   name: Commit README changes
+                run: |
+                    git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                    git config --local user.name "github-actions[bot]"
+                    git add README.md
+                    git diff --staged --quiet || git commit -m "📝 Update README to version ${{ env.VERSION }}"
+                    git push
+
             -   name: Generate Changelog
                 id: changelog
                 run: |
@@ -61,32 +75,28 @@ jobs:
                     else
                       echo "## 🚀 Release $CURRENT_TAG" > changelog.md
                       echo "" >> changelog.md
-                    
-                      # Features
+
                       FEATURES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^✨" || true)
                       if [ ! -z "$FEATURES" ]; then
                         echo "### ✨ Features" >> changelog.md
                         echo "$FEATURES" | sed 's/^✨ /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
-                    
-                      # Bug Fixes
+
                       BUGFIXES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🐛" || true)
                       if [ ! -z "$BUGFIXES" ]; then
                         echo "### 🐛 Bug Fixes" >> changelog.md
                         echo "$BUGFIXES" | sed 's/^🐛 /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
-                    
-                      # Optimisations
+
                       REFACTOR=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🎨" || true)
                       if [ ! -z "$REFACTOR" ]; then
                         echo "### 🎨 Performance" >> changelog.md
                         echo "$REFACTOR" | sed 's/^🎨 /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
-                    
-                      # Other changes
+
                       OTHER=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep -v "^✨" | grep -v "^🐛" | grep -v "^🎨" | grep -v "Merge" || true)
                       if [ ! -z "$OTHER" ]; then
                         echo "### 📦 Other Changes" >> changelog.md

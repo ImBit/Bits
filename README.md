@@ -1,5 +1,86 @@
 # Bits
-🦑 Utility plugin for Minecraft development.
 
-> [!WARNING]  
-> This resource is actively being developed. Core structure is subject to change.
+💾 A Utility library for Minecraft development.
+
+[![JitPack](https://jitpack.io/v/ImBit/Bits.svg)](https://jitpack.io/#ImBit/Bits)
+[![License](https://img.shields.io/github/license/ImBit/Bits)](LICENSE)
+
+## About
+
+Bits is a multi-platform Minecraft utility library designed to streamline plugin development across Paper and Velocity platforms. It provides common utilities, abstractions, and helper classes to reduce boilerplate code and accelerate your development workflow.
+
+### Features:
+
+- Multi-platform support
+- Annotation-based [Brigadier](https://github.com/Mojang/brigadier) Command API (Paper, Velocity, +)
+- Automatic Text formatting
+- Common Plugin utilities (Color, Sound, Location, Item, Math, Permission APIs)
+
+> [!NOTE]
+> This project is in active development, expect regular changes and additions!
+
+## Installation
+
+### Gradle (Kotlin DSL)
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    // Core API (required)
+    implementation("com.github.ImBit.Bits:API:0.0.6")
+
+    // Paper implementation
+    implementation("com.github.ImBit.Bits:Paper:0.0.6")
+
+    // Velocity implementation
+    implementation("com.github.ImBit.Bits:Velocity:0.0.6")
+}
+```
+
+### Maven
+
+```xml
+
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+<!-- Core API (required) -->
+<dependency>
+    <groupId>com.github.ImBit.Bits</groupId>
+    <artifactId>API</artifactId>
+    <version>0.0.6</version>
+</dependency>
+
+<!-- Paper implementation -->
+<dependency>
+    <groupId>com.github.ImBit.Bits</groupId>
+    <artifactId>Paper</artifactId>
+    <version>0.0.6</version>
+</dependency>
+
+<!-- Velocity implementation -->
+<dependency>
+    <groupId>com.github.ImBit.Bits</groupId>
+    <artifactId>Velocity</artifactId>
+    <version>0.0.6</version>
+</dependency>
+</dependencies>
+```
+
+## Libraries
+
+- **API** - Core interfaces and abstractions
+- **Paper** - Paper platform implementation
+- **Velocity** - Velocity platform implementation
+
+---
+Made with 🦑 by [ImBit](https://github.com/ImBit)
