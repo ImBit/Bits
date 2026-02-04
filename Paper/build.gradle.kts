@@ -15,7 +15,3 @@ subprojects {
         implementation(project(":Paper"))
     }
 }
-
-tasks.withType<Jar> {
-    archiveBaseName.set("Bits-Paper")
-}

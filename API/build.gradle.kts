@@ -6,6 +6,3 @@ repositories {
 dependencies {
 }
 
-tasks.withType<Jar> {
-    archiveBaseName.set("Bits-API")
-}
