@@ -1,8 +1,3 @@
-import org.gradle.kotlin.dsl.libs
-import org.gradle.kotlin.dsl.paperweight
-
-group = "xyz.bitsquidd.bits.paper"
-
 plugins {
     alias(libs.plugins.paperweight.userdev)
 }

@@ -1,8 +1,3 @@
-import org.gradle.kotlin.dsl.libs
-
-group = "xyz.bitsquidd.bits.paper"
-
-
 allprojects {
     dependencies {
         implementation(rootProject.libs.velocity.api.get())
