@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.errorprone)
 }
 
-group = "com.github.imbit"
+group = "xyz.bitsquidd.bits"
 version = "0.0.6"
 
 allprojects {
@@ -74,12 +74,13 @@ subprojects {
         }
     }
 
-    afterEvaluate {
-        publishing {
-            publications {
-                create<MavenPublication>("mavenJava") {
-                    from(components["java"])
-                }
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
+                from(components["java"])
             }
         }
     }
