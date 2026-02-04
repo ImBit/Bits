@@ -9,7 +9,7 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.debugging.TreeDebugger;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.CommandMethodInfo;
@@ -62,7 +62,7 @@ public final class BrigadierTreeGenerator<T> {
 
         // Note: Aliases are not created for commands without names.
         if (commandName.isEmpty()) {
-            if (root == null) throw new CommandParseException("Root command class must have a name.");
+            if (root == null) throw new CommandBuildException("Root command class must have a name.");
             commandBranches.add(root);
         } else {
             List<LiteralArgumentBuilder<T>> nextBranches = commandAliases.stream()
@@ -248,7 +248,7 @@ public final class BrigadierTreeGenerator<T> {
                     methodInfo.getMethod().invoke(instance, methodArguments.toArray());
 
                 } catch (Exception e) {
-                    throw new CommandParseException("Failed to execute command method: " + methodInfo.getMethod().getName() + " ", e);
+                    throw new CommandBuildException("Failed to execute command method: " + methodInfo.getMethod().getName() + " ", e);
                 }
             };
 
@@ -260,7 +260,7 @@ public final class BrigadierTreeGenerator<T> {
 
 
     private ArgumentBuilder<T, ?> buildBackward(List<ArgumentBuilder<T, ?>> toAdd) {
-        if (toAdd.isEmpty()) throw new CommandParseException("No more branches to add.");
+        if (toAdd.isEmpty()) throw new CommandBuildException("No more branches to add.");
         if (toAdd.size() == 1) return toAdd.getFirst();
 
         ArgumentBuilder<T, ?> first = toAdd.getFirst();

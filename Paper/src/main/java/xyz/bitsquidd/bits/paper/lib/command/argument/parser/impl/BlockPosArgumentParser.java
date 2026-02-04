@@ -1,8 +1,9 @@
 package xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 import xyz.bitsquidd.bits.paper.lib.location.BlockPos;
@@ -16,7 +17,7 @@ public final class BlockPosArgumentParser extends AbstractArgumentParser<BlockPo
     }
 
     @Override
-    public BlockPos parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
+    public BlockPos parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);

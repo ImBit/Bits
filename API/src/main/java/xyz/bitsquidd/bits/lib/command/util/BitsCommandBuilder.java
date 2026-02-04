@@ -6,7 +6,7 @@ import xyz.bitsquidd.bits.lib.command.BitsCommand;
 import xyz.bitsquidd.bits.lib.command.annotation.Command;
 import xyz.bitsquidd.bits.lib.command.annotation.Permission;
 import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.lib.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.lib.command.requirement.impl.PermissionRequirement;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
@@ -47,7 +47,7 @@ public final class BitsCommandBuilder {
         this.isStaticClass = Modifier.isStatic(commandClass.getModifiers());
 
         commandAnnotation = commandClass.getAnnotation(Command.class);
-        if (commandAnnotation == null) throw new CommandParseException("Class " + commandClass + " must be annotated with @Command");
+        if (commandAnnotation == null) throw new CommandBuildException("Class " + commandClass + " must be annotated with @Command");
         commandName = commandAnnotation.value();
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();

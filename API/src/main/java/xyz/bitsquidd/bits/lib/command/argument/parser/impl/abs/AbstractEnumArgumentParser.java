@@ -1,10 +1,11 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
@@ -26,14 +27,14 @@ public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends Abst
     }
 
     @Override
-    public T parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
+    public T parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         T enumValue;
         try {
             enumValue = Enum.valueOf(enumClass, inputString);
         } catch (IllegalArgumentException e) {
-            throw new CommandParseException(inputString + " is not a valid " + enumClass.getSimpleName() + ".");
+            throw ExceptionBuilder.createCommandException(inputString + " is not a valid " + enumClass.getSimpleName() + ".");
         }
 
         return enumValue;

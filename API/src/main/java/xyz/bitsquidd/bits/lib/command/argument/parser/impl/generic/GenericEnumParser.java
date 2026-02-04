@@ -1,8 +1,10 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.abs.AbstractEnumArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
@@ -25,16 +27,14 @@ public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgument
     }
 
     @Override
-    public E parse(List<Object> inputObjects, BitsCommandContext<?> ctx) {
+    public E parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         for (E constant : enumClass.getEnumConstants()) {
-            if (constant.name().equalsIgnoreCase(inputString)) {
-                return constant;
-            }
+            if (constant.name().equalsIgnoreCase(inputString)) return constant;
         }
 
-        throw new CommandParseException("Enum constant not found: " + inputString + " for enum " + enumClass.getSimpleName());
+        throw ExceptionBuilder.createCommandException("Enum constant not found: " + inputString + " for enum " + enumClass.getSimpleName() + ".");
     }
 
     @Override

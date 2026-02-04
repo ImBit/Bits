@@ -1,10 +1,11 @@
 package xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
@@ -18,11 +19,11 @@ public final class WorldArgumentParser extends AbstractArgumentParser<World> {
     }
 
     @Override
-    public World parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
+    public World parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         String inputString = singletonInputValidation(inputObjects, String.class);
 
         World world = Bukkit.getWorld(inputString);
-        if (world == null) throw new CommandParseException("World not found: " + inputString);
+        if (world == null) throw ExceptionBuilder.createCommandException("World not found: " + inputString + ".");
         return world;
     }
 

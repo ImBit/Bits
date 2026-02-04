@@ -1,5 +1,6 @@
 package xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import org.bukkit.Bukkit;
@@ -8,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 import xyz.bitsquidd.bits.paper.lib.command.PaperBitsCommandContext;
@@ -55,18 +55,14 @@ public final class PlayerCollectionArgumentParser extends AbstractArgumentParser
     }
 
     @Override
-    public Collection<Player> parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
+    public Collection<Player> parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         EntitySelector entitySelctor = singletonInputValidation(inputObjects, EntitySelector.class);
 
-        try {
-            return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
-              .stream()
-              .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
-              .filter(Objects::nonNull)
-              .toList();
-        } catch (Exception e) {
-            throw new CommandParseException("Players not found");
-        }
+        return entitySelctor.findPlayers((CommandSourceStack)ctx.getBrigadierContext().getSource())
+          .stream()
+          .map(playerEntity -> playerEntity.getBukkitEntity().getPlayer())
+          .map(Objects::requireNonNull)
+          .toList();
     }
 
     @Override

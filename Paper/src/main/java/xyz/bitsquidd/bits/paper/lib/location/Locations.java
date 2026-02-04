@@ -12,12 +12,6 @@ public final class Locations {
     /**
      * Safe distance check between two locations.
      * Returns false if either location is null or they are in different worlds.
-     *
-     * @param loc1     The first location to compare.
-     * @param loc2     The second location to compare.
-     * @param distance The distance threshold.
-     *
-     * @return true if the locations are within the specified distance, false otherwise.
      */
     public static boolean isWithinDistance(Location loc1, Location loc2, double distance) {
         if (loc1 == null || loc2 == null) return false;

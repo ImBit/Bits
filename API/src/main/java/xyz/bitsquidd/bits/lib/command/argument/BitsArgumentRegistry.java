@@ -1,6 +1,7 @@
 package xyz.bitsquidd.bits.lib.command.argument;
 
 import com.mojang.brigadier.arguments.*;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
@@ -8,7 +9,7 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.impl.GreedyStringArgumentP
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.VoidParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
 import xyz.bitsquidd.bits.lib.type.GreedyString;
@@ -130,7 +131,7 @@ public abstract class BitsArgumentRegistry<T> {
     }
 
     // Parses primitives into required objects needed by the parser
-    public Object parseArguments(AbstractArgumentParser<?> parser, List<Object> primitiveList, BitsCommandContext<?> ctx) throws CommandParseException {
+    public Object parseArguments(AbstractArgumentParser<?> parser, List<Object> primitiveList, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
         // If the input size is 1, we can directly parse it
@@ -142,7 +143,7 @@ public abstract class BitsArgumentRegistry<T> {
             AbstractArgumentParser<?> nestedParser = getParser(inputType.typeSignature());
 
             int requiredSize = nestedParser.getInputTypes().size();
-            if (primitiveList.size() < requiredSize) throw new CommandParseException("Not enough arguments for " + inputType.typeName());
+            if (primitiveList.size() < requiredSize) throw new CommandBuildException("Not enough arguments for " + inputType.typeName());
 
             ArrayList<Object> inputObjects = new ArrayList<>(primitiveList.subList(0, requiredSize));
             primitiveList = new ArrayList<>(primitiveList.subList(requiredSize, primitiveList.size()));

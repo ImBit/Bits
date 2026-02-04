@@ -1,10 +1,11 @@
 package xyz.bitsquidd.bits.lib.command.argument.parser;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import org.jspecify.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
+import xyz.bitsquidd.bits.lib.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
@@ -25,7 +26,7 @@ public abstract class AbstractArgumentParser<O> {
     }
 
 
-    public abstract O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException;
+    public abstract O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException;
 
     /**
      * Returns a list of required objects the parser expects in.
@@ -44,18 +45,18 @@ public abstract class AbstractArgumentParser<O> {
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
      */
-    protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) {
+    protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
-        if (inputTypes.size() != 1) throw new CommandParseException("Expected exactly one input type, got " + inputTypes.size());
+        if (inputTypes.size() != 1) throw ExceptionBuilder.createCommandException("Expected exactly one input type, got " + inputTypes.size() + ".");
         if (inputTypes.getFirst().typeSignature().toRawType() != expectedType) {
-            throw new CommandParseException("Expected input type signature to be " + expectedType.getSimpleName() + ", got " + inputTypes.getFirst().typeSignature().toRawType().getSimpleName());
+            throw ExceptionBuilder.createCommandException("Expected input type signature to be " + expectedType.getSimpleName() + ", got " + inputTypes.getFirst().typeSignature().toRawType().getSimpleName() + ".");
         }
 
-        if (inputObjects.size() != 1) throw new CommandParseException("Expected exactly one input object, got " + inputObjects.size());
+        if (inputObjects.size() != 1) throw ExceptionBuilder.createCommandException("Expected exactly one input object, got " + inputObjects.size() + ".");
         Object value = inputObjects.getFirst();
 
         if (!expectedType.isInstance(value)) {
-            throw new CommandParseException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName());
+            throw ExceptionBuilder.createCommandException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName() + ".");
         }
 
         return expectedType.cast(value);
@@ -64,11 +65,13 @@ public abstract class AbstractArgumentParser<O> {
     /**
      * Helper function to validate multiple arguments for complex argument parsers..
      */
-    protected List<Object> inputValidation(List<Object> inputObjects) {
+    protected List<Object> inputValidation(List<Object> inputObjects) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
         int inputSize = inputTypes.size();
 
-        if (inputObjects.size() != inputSize) throw new CommandParseException("Expected exactly " + inputSize + " input object" + (inputSize > 1 ? "s" : "") + ", got " + inputObjects.size());
+        if (inputObjects.size() != inputSize) {
+            throw ExceptionBuilder.createCommandException("Expected exactly " + inputSize + " input object" + (inputSize > 1 ? "s" : "") + ", got " + inputObjects.size() + ".");
+        }
 
         List<Object> returnList = new ArrayList<>();
 
@@ -78,7 +81,7 @@ public abstract class AbstractArgumentParser<O> {
             Class<?> expectedType = expectedTypeContainer.typeSignature().toRawType();
 
             if (!expectedType.isInstance(value)) {
-                throw new CommandParseException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName());
+                throw ExceptionBuilder.createCommandException("Expected input object of type " + expectedType.getSimpleName() + ", got " + value.getClass().getSimpleName() + ".");
             }
 
             returnList.add(expectedType.cast(value));

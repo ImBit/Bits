@@ -1,11 +1,11 @@
 package xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.lib.command.exception.CommandParseException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
 
@@ -18,7 +18,7 @@ public final class LocationArgumentParser extends AbstractArgumentParser<Locatio
     }
 
     @Override
-    public Location parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandParseException {
+    public Location parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         List<Object> inputs = inputValidation(inputObjects);
         double x = (double)inputs.get(0);
         double y = (double)inputs.get(1);
