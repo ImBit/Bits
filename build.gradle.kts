@@ -68,7 +68,10 @@ allprojects {
 subprojects {
     extensions.configure<JavaPluginExtension>("java") {
         withSourcesJar()
-        withJavadocJar()
+        // Javadocs break JitPack generation. TODO: Fix this.
+        if (project.name != "Paper") {
+            withJavadocJar()
+        }
     }
 }
 
