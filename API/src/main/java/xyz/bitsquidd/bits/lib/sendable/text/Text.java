@@ -122,4 +122,8 @@ public final class Text implements Sendable {
         return returnComponent;
     }
 
+    public Component toComponent() {
+        return getComponent(Audience.empty());
+    }
+
 }

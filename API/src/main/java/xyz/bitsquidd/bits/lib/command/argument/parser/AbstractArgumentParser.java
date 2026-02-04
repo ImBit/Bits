@@ -32,7 +32,7 @@ public abstract class AbstractArgumentParser<O> {
      * Returns a list of required objects the parser expects in.
      * In the case of most custom parsers this will be a String.
      * <p>
-     * In the case a <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a> is passed in, we expect a parser to be present for this.     * <p>
+     * In the case a <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a> is passed in, we expect a parser to be present for this.<p>
      * For example: <ul>
      * <li> An Integer parser would expect a single int {@code List.of(Integer.class)} </li>
      * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
@@ -41,6 +41,9 @@ public abstract class AbstractArgumentParser<O> {
     public List<InputTypeContainer> getInputTypes() {
         return List.of(new InputTypeContainer(TypeSignature.of(String.class), getArgumentName()));
     }
+
+
+    //region Validation
 
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
@@ -63,7 +66,7 @@ public abstract class AbstractArgumentParser<O> {
     }
 
     /**
-     * Helper function to validate multiple arguments for complex argument parsers..
+     * Helper function to validate multiple arguments for complex argument parsers.
      */
     protected List<Object> inputValidation(List<Object> inputObjects) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
@@ -89,6 +92,7 @@ public abstract class AbstractArgumentParser<O> {
 
         return returnList;
     }
+    //endregion
 
 
     public final <T> SuggestionProvider<T> getSuggestionProvider() {
