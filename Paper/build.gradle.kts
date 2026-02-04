@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.libs
+import org.gradle.kotlin.dsl.paperweight
+
 group = "xyz.bitsquidd.bits.paper"
 
 plugins {
@@ -16,4 +19,8 @@ subprojects {
     dependencies {
         implementation(project(":Paper"))
     }
+}
+
+tasks.withType<Jar> {
+    archiveBaseName.set("Bits-Paper")
 }
