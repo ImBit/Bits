@@ -1,10 +1,9 @@
-# Creates GitHub releases and publishes to GitHub Packages and Maven Central
+# Creates GitHub releases
 
 name: Release and Publish
 
 permissions:
     contents: write
-    packages: write
 
 on:
     workflow_dispatch:
@@ -51,10 +50,10 @@ jobs:
                 id: changelog
                 run: |
                     git fetch --tags --force
-                    
+
                     CURRENT_TAG="v${{ env.VERSION }}"
                     PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -vx "$CURRENT_TAG" | head -n1)
-                    
+
                     if [ -z "$PREVIOUS_TAG" ]; then
                       echo "## 🚀 Initial Release $CURRENT_TAG" > changelog.md
                       echo "" >> changelog.md
@@ -62,16 +61,42 @@ jobs:
                     else
                       echo "## 🚀 Release $CURRENT_TAG" > changelog.md
                       echo "" >> changelog.md
-                      echo "### Changes since $PREVIOUS_TAG:" >> changelog.md
-                      echo "" >> changelog.md
                     
-                      git log --pretty=format:"* %s (%h)" "$PREVIOUS_TAG"..HEAD \
-                        | grep -v "Merge" \
-                        | grep -v "Merge remote-tracking branch" >> changelog.md
+                      # Features
+                      FEATURES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^✨" || true)
+                      if [ ! -z "$FEATURES" ]; then
+                        echo "### ✨ Features" >> changelog.md
+                        echo "$FEATURES" | sed 's/^✨ /\* /' >> changelog.md
+                        echo "" >> changelog.md
+                      fi
+                    
+                      # Bug Fixes
+                      BUGFIXES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🐛" || true)
+                      if [ ! -z "$BUGFIXES" ]; then
+                        echo "### 🐛 Bug Fixes" >> changelog.md
+                        echo "$BUGFIXES" | sed 's/^🐛 /\* /' >> changelog.md
+                        echo "" >> changelog.md
+                      fi
+                    
+                      # Optimisations
+                      REFACTOR=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🎨" || true)
+                      if [ ! -z "$REFACTOR" ]; then
+                        echo "### 🎨 Performance" >> changelog.md
+                        echo "$REFACTOR" | sed 's/^🎨 /\* /' >> changelog.md
+                        echo "" >> changelog.md
+                      fi
+                    
+                      # Other changes
+                      OTHER=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep -v "^✨" | grep -v "^🐛" | grep -v "^🎨" | grep -v "Merge" || true)
+                      if [ ! -z "$OTHER" ]; then
+                        echo "### 📦 Other Changes" >> changelog.md
+                        echo "$OTHER" | sed 's/^/\* /' >> changelog.md
+                        echo "" >> changelog.md
+                      fi
                     fi
-                    
+
                     cat changelog.md
-                    
+
                     CHANGELOG=$(cat changelog.md)
                     echo "changelog<<EOF" >> $GITHUB_OUTPUT
                     echo "$CHANGELOG" >> $GITHUB_OUTPUT
@@ -87,16 +112,12 @@ jobs:
                     draft: false
                     prerelease: false
                     files: |
-                        API/build/libs/*.jar
-                        Common/build/libs/*.jar
+                        API/build/libs/*-${{ env.VERSION }}.jar
+                        API/build/libs/*-${{ env.VERSION }}-javadoc.jar
+                        Paper/build/libs/*-${{ env.VERSION }}.jar
+                        Paper/build/libs/*-${{ env.VERSION }}-javadoc.jar
+                        Velocity/build/libs/*-${{ env.VERSION }}.jar
+                        Velocity/build/libs/*-${{ env.VERSION }}-javadoc.jar
                         LICENSE
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            -   name: Publish to BiomeBattle Maven
-                uses: gradle/gradle-build-action@v2
-                with:
-                    arguments: publish
-                env:
-                    BB_REPO_USERNAME: ${{ secrets.BB_REPO_USERNAME }}
-                    BB_REPO_PASSWORD: ${{ secrets.BB_REPO_PASSWORD }}
