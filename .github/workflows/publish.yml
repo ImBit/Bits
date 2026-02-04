@@ -123,8 +123,8 @@ jobs:
                 id: create_release
                 uses: softprops/action-gh-release@v1
                 with:
-                    tag_name: v${{ env.VERSION }}
-                    name: Release v${{ env.VERSION }}
+                    tag_name: ${{ env.VERSION }}
+                    name: Release ${{ env.VERSION }}
                     body: ${{ steps.changelog.outputs.changelog }}
                     draft: false
                     prerelease: false
