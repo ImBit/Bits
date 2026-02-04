@@ -63,6 +63,9 @@ jobs:
             -   name: Generate Changelog
                 id: changelog
                 run: |
+                    export LC_ALL=C.UTF-8
+                    export LANG=C.UTF-8
+                    
                     git fetch --tags --force
 
                     CURRENT_TAG="v${{ env.VERSION }}"
@@ -76,33 +79,37 @@ jobs:
                       echo "## 🚀 Release $CURRENT_TAG" > changelog.md
                       echo "" >> changelog.md
 
-                      FEATURES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^✨" || true)
+                      git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD > all_commits.txt
+
+                      FEATURES=$(grep -E "^(✨|:sparkles:)" all_commits.txt || true)
                       if [ ! -z "$FEATURES" ]; then
                         echo "### ✨ Features" >> changelog.md
-                        echo "$FEATURES" | sed 's/^✨ /\* /' >> changelog.md
+                        echo "$FEATURES" | sed -E 's/^(✨|:sparkles:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
-                      BUGFIXES=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🐛" || true)
+                      BUGFIXES=$(grep -E "^(🐛|:bug:)" all_commits.txt || true)
                       if [ ! -z "$BUGFIXES" ]; then
                         echo "### 🐛 Bug Fixes" >> changelog.md
-                        echo "$BUGFIXES" | sed 's/^🐛 /\* /' >> changelog.md
+                        echo "$BUGFIXES" | sed -E 's/^(🐛|:bug:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
-                      REFACTOR=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep "^🎨" || true)
+                      REFACTOR=$(grep -E "^(🎨|:art:)" all_commits.txt || true)
                       if [ ! -z "$REFACTOR" ]; then
                         echo "### 🎨 Performance" >> changelog.md
-                        echo "$REFACTOR" | sed 's/^🎨 /\* /' >> changelog.md
+                        echo "$REFACTOR" | sed -E 's/^(🎨|:art:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
-                      OTHER=$(git log --pretty=format:"%s (%h)" "$PREVIOUS_TAG"..HEAD | grep -v "^✨" | grep -v "^🐛" | grep -v "^🎨" | grep -v "Merge" || true)
+                      OTHER=$(grep -vE "^(✨|:sparkles:|🐛|:bug:|🎨|:art:|Merge)" all_commits.txt || true)
                       if [ ! -z "$OTHER" ]; then
                         echo "### 📦 Other Changes" >> changelog.md
                         echo "$OTHER" | sed 's/^/\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
+
+                      rm -f all_commits.txt
                     fi
 
                     cat changelog.md
