@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.lifecycle;
+package xyz.bitsquidd.bits.lifecycle.manager;
 
 import xyz.bitsquidd.bits.util.Safety;
 

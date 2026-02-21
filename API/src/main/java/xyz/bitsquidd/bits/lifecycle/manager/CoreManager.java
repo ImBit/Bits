@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.lifecycle;
+package xyz.bitsquidd.bits.lifecycle.manager;
 
 /**
  * A template class for managers with lifecycle methods.
