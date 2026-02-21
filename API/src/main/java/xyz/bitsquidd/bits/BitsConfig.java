@@ -10,9 +10,9 @@ package xyz.bitsquidd.bits;
 
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import xyz.bitsquidd.bits.command.BitsCommandManager;
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
@@ -31,11 +31,11 @@ public abstract class BitsConfig {
     protected @Nullable BitsCommandManager<?> commandManager;
 
 
-    protected BitsConfig(Logger logger) {
+    protected BitsConfig() {
         if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
         instance = this;
 
-        this.logger = logger;
+        this.logger = createLogger();
     }
 
     public static BitsConfig get() {
@@ -50,10 +50,6 @@ public abstract class BitsConfig {
     protected void initialise() {}
 
 
-    public Logger logger() {
-        return logger;
-    }
-
     public boolean isDevelopment() {
         return developmentMode;
     }
@@ -67,6 +63,9 @@ public abstract class BitsConfig {
     public BitsCommandManager<?> getCommandManager() {
         return Objects.requireNonNull(commandManager, "BitsCommandManager has not been set!");
     }
+
+
+    protected abstract Logger createLogger();
 
     public abstract void registerPermission(Permission permission);
 

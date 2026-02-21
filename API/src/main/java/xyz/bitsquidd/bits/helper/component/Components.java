@@ -18,7 +18,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.log.Logger;
 
 import java.util.*;
 
@@ -85,7 +85,7 @@ public final class Components {
         } else if (component instanceof TranslatableComponent translatableComponent) {
             return Component.text(getTranslatedString(locale != null ? locale : Locale.getDefault(), translatableComponent));
         } else {
-            BitsConfig.get().logger().warn("Unsupported component type: {}", component);
+            Logger.warn("Unsupported component type: " + component);
             return UNSUPPORTED;
         }
     }

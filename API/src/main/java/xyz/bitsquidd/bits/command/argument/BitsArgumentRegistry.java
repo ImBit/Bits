@@ -19,7 +19,7 @@ import xyz.bitsquidd.bits.command.argument.parser.impl.generic.GenericEnumParser
 import xyz.bitsquidd.bits.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.wrapper.GreedyString;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
@@ -92,7 +92,7 @@ public abstract class BitsArgumentRegistry<T> {
                 return new GenericEnumParser<>(enumClass);
             }
 
-            BitsConfig.get().logger().error("No parser registered for type: " + typeSignature);
+            Logger.error("No parser registered for type: " + typeSignature);
             return new VoidParser();
         }
 

@@ -15,8 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.bitsquidd.bits.BitsConfig;
-import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.paper.format.CommonPaperFormatters;
+import xyz.bitsquidd.bits.paper.log.PaperBitsLogger;
+import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 
@@ -24,7 +26,6 @@ public class PaperBitsConfig extends BitsConfig {
     private final JavaPlugin plugin;
 
     public PaperBitsConfig(JavaPlugin plugin) {
-        super(plugin.getSLF4JLogger());
         this.plugin = plugin;
 
         initialise();
@@ -41,6 +42,11 @@ public class PaperBitsConfig extends BitsConfig {
     public JavaPlugin getPlugin() {
         checkInitialized();
         return plugin;
+    }
+
+    @Override
+    protected Logger createLogger() {
+        return new PaperBitsLogger(plugin, Logger.LogFlags.defaultFlags());
     }
 
     @Override

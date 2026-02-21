@@ -14,6 +14,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import org.jspecify.annotations.Nullable;
 
+import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.debugging.TreeDebugger;
@@ -22,7 +23,7 @@ import xyz.bitsquidd.bits.command.util.BitsCommandBuilder;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.command.util.CommandMethodInfo;
 import xyz.bitsquidd.bits.command.util.CommandParameterInfo;
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.wrapper.GreedyString;
 
 import java.lang.reflect.Constructor;
@@ -52,7 +53,7 @@ public final class BrigadierTreeGenerator<T> {
           .map(node -> (LiteralCommandNode<T>)node)
           .toList();
 
-        if (BitsConfig.get().isDevelopment()) BitsConfig.get().logger().info(new TreeDebugger().visualizeCommandTree(nodes));
+        if (BitsConfig.get().isDevelopment()) Logger.info(new TreeDebugger<T>().visualizeCommandTree(nodes));
         return nodes;
     }
 
@@ -130,7 +131,7 @@ public final class BrigadierTreeGenerator<T> {
 
             for (Method method : commandBuilder.getCommandMethods()) {
                 if (!Modifier.isPublic(method.getModifiers())) {
-                    BitsConfig.get().logger().warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
+                    Logger.warn("Skipping non-public command method: " + method.getName() + " for command: " + commandBuilder.getCommandName());
                     continue;
                 }
                 processCommandMethod(workingBranch, commandBuilder, new CommandMethodInfo(method, nonMutatedParameters));

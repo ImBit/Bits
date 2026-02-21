@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerTextures;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.log.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -79,7 +79,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(extractUrlFromBase64(base64));
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.get().logger().warn("Failed to set skull texture from base64: " + e.getMessage());
+            Logger.warn("Failed to set skull texture from base64: " + e.getMessage());
         }
         return this;
     }
@@ -89,7 +89,7 @@ public final class SkullBuilder {
             PlayerProfile profile = createProfileWithTexture(url);
             meta.setPlayerProfile(profile);
         } catch (Exception e) {
-            BitsConfig.get().logger().warn("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
+            Logger.warn("Failed to set skull texture from URL: " + url + " - " + e.getMessage());
         }
         return this;
     }
