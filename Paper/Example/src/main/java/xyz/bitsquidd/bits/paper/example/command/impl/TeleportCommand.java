@@ -3,12 +3,12 @@ package xyz.bitsquidd.bits.paper.example.command.impl;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import xyz.bitsquidd.bits.lib.command.BitsCommand;
-import xyz.bitsquidd.bits.lib.command.CommandReturnType;
-import xyz.bitsquidd.bits.lib.command.annotation.Command;
-import xyz.bitsquidd.bits.lib.command.annotation.Requirement;
-import xyz.bitsquidd.bits.lib.format.Formatter;
-import xyz.bitsquidd.bits.lib.sendable.text.Text;
+import xyz.bitsquidd.bits.command.BitsCommand;
+import xyz.bitsquidd.bits.command.CommandReturnType;
+import xyz.bitsquidd.bits.command.annotation.Command;
+import xyz.bitsquidd.bits.command.annotation.Requirement;
+import xyz.bitsquidd.bits.format.Formatter;
+import xyz.bitsquidd.bits.sendable.text.Text;
 import xyz.bitsquidd.bits.paper.example.command.CustomCommandContext;
 import xyz.bitsquidd.bits.paper.lib.command.requirement.PlayerSenderRequirement;
 

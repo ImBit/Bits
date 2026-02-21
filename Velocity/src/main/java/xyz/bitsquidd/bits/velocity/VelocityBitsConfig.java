@@ -14,8 +14,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.audience.Audience;
 import org.slf4j.Logger;
 
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.permission.Permission;
+import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 

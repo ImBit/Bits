@@ -14,9 +14,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.permission.Permission;
-import xyz.bitsquidd.bits.paper.lib.format.CommonPaperFormatters;
+import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.paper.format.CommonPaperFormatters;
 
 import java.util.Locale;
 

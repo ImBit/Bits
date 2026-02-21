@@ -1,4 +1,0 @@
-@NotNullByDefault
-package xyz.bitsquidd.bits.paper.lib.location;
-
-import org.jetbrains.annotations.NotNullByDefault;

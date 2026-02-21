@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.spigotmc.SpigotConfig;
 
-import xyz.bitsquidd.bits.lib.command.BitsCommand;
-import xyz.bitsquidd.bits.lib.command.CommandReturnType;
+import xyz.bitsquidd.bits.command.BitsCommand;
+import xyz.bitsquidd.bits.command.CommandReturnType;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 import xyz.bitsquidd.bits.paper.example.command.impl.TeleportCommand;
 import xyz.bitsquidd.bits.paper.example.text.decorator.impl.CommandDecorator;

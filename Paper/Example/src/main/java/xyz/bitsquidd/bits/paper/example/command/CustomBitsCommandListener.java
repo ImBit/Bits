@@ -6,8 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.command.UnknownCommandEvent;
 
-import xyz.bitsquidd.bits.lib.sendable.text.Text;
-import xyz.bitsquidd.bits.lib.sendable.text.decorator.ITextDecorator;
+import xyz.bitsquidd.bits.sendable.text.Text;
+import xyz.bitsquidd.bits.sendable.text.decorator.ITextDecorator;
 
 public class CustomBitsCommandListener implements Listener {
     private final ITextDecorator errorDecorator;
