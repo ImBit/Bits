@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2024-2026 ImBit
  *
- * Enjoy the Bits and Bobs this provides :)
+ * Enjoy the Bits and Bobs :)
  */
 
 package xyz.bitsquidd.bits.lib.lifecycle;
