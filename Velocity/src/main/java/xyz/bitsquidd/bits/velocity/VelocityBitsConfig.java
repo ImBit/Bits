@@ -12,21 +12,23 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.audience.Audience;
-import org.slf4j.Logger;
 
 import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.velocity.log.VelocityBitsLogger;
 
 import java.util.Locale;
 
 public class VelocityBitsConfig extends BitsConfig {
     private final Object plugin;
     private final ProxyServer server;
+    private final org.slf4j.Logger slf4j;
 
-    public VelocityBitsConfig(ProxyServer server, Logger logger, Object plugin) {
-        super(logger);
+    public VelocityBitsConfig(ProxyServer server, Object plugin, org.slf4j.Logger slf4j) {
         this.server = server;
         this.plugin = plugin;
+        this.slf4j = slf4j;
     }
 
 
@@ -38,6 +40,11 @@ public class VelocityBitsConfig extends BitsConfig {
     public ProxyServer getServer() {
         checkInitialized();
         return server;
+    }
+
+    @Override
+    protected Logger createLogger() {
+        return new VelocityBitsLogger(slf4j, Logger.LogFlags.defaultFlags());
     }
 
     @Override
