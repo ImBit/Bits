@@ -31,13 +31,13 @@ repositories {
 
 dependencies {
     // Core API (required)
-    implementation("xyz.bitsquidd.Bits:API:0.0.6")
+    implementation("com.github.ImBit.Bits:API:0.0.6")
 
     // Paper implementation
-    implementation("xyz.bitsquidd.Bits:Paper:0.0.6")
+    implementation("com.github.ImBit.Bits:Paper:0.0.6")
 
     // Velocity implementation
-    implementation("xyz.bitsquidd.Bits:Velocity:0.0.6")
+    implementation("com.github.ImBit.Bits:Velocity:0.0.6")
 }
 ```
 
@@ -55,21 +55,21 @@ dependencies {
 <dependencies>
 <!-- Core API (required) -->
 <dependency>
-    <groupId>xyz.bitsquidd.Bits</groupId>
+    <groupId>com.github.ImBit.Bits</groupId>
     <artifactId>API</artifactId>
     <version>0.0.6</version>
 </dependency>
 
 <!-- Paper implementation -->
 <dependency>
-    <groupId>xyz.bitsquidd.Bits</groupId>
+    <groupId>com.github.ImBit.Bits</groupId>
     <artifactId>Paper</artifactId>
     <version>0.0.6</version>
 </dependency>
 
 <!-- Velocity implementation -->
 <dependency>
-    <groupId>xyz.bitsquidd.Bits</groupId>
+    <groupId>com.github.ImBit.Bits</groupId>
     <artifactId>Velocity</artifactId>
     <version>0.0.6</version>
 </dependency>
