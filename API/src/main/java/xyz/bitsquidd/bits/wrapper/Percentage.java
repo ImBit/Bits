@@ -8,7 +8,7 @@
 
 package xyz.bitsquidd.bits.wrapper;
 
-import xyz.bitsquidd.bits.helper.math.MathHelper;
+import xyz.bitsquidd.bits.util.math.MathHelper;
 
 import java.util.Collection;
 

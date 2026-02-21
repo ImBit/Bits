@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.location;
+package xyz.bitsquidd.bits.paper.util.location;
 
 import org.bukkit.Location;
 import org.bukkit.Rotation;

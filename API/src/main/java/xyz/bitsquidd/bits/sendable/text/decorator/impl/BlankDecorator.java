@@ -11,7 +11,7 @@ package xyz.bitsquidd.bits.sendable.text.decorator.impl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 
-import xyz.bitsquidd.bits.helper.component.Components;
+import xyz.bitsquidd.bits.util.component.Components;
 
 import java.util.Locale;
 

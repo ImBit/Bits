@@ -7,6 +7,6 @@
  */
 
 @NotNullByDefault
-package xyz.bitsquidd.bits.paper.entity;
+package xyz.bitsquidd.bits.util;
 
 import org.jetbrains.annotations.NotNullByDefault;

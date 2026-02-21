@@ -7,6 +7,6 @@
  */
 
 @NotNullByDefault
-package xyz.bitsquidd.bits.paper.location;
+package xyz.bitsquidd.bits.util.color;
 
 import org.jetbrains.annotations.NotNullByDefault;

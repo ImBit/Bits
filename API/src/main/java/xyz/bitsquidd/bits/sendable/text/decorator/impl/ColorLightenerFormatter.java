@@ -11,9 +11,9 @@ package xyz.bitsquidd.bits.sendable.text.decorator.impl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
-import xyz.bitsquidd.bits.helper.color.Colors;
-import xyz.bitsquidd.bits.helper.component.Components;
 import xyz.bitsquidd.bits.sendable.text.decorator.formatter.AbstractFormatter;
+import xyz.bitsquidd.bits.util.color.Colors;
+import xyz.bitsquidd.bits.util.component.Components;
 
 public class ColorLightenerFormatter extends AbstractFormatter {
     private static final int FALLBACK_COLOR = 0xFFFFFF;

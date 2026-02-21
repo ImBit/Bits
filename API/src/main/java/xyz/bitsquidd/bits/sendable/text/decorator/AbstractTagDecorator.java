@@ -11,8 +11,8 @@ package xyz.bitsquidd.bits.sendable.text.decorator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
-import xyz.bitsquidd.bits.helper.component.Components;
 import xyz.bitsquidd.bits.sendable.text.decorator.formatter.AbstractFormatter;
+import xyz.bitsquidd.bits.util.component.Components;
 
 import java.util.*;
 import java.util.regex.Matcher;

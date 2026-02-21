@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.helper;
+package xyz.bitsquidd.bits.paper.util;
 
 import org.bukkit.Bukkit;
 

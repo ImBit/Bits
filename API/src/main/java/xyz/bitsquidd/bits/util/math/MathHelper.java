@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.helper.math;
+package xyz.bitsquidd.bits.util.math;
 
 import org.joml.Quaternionf;
 

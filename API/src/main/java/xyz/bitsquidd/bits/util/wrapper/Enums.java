@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.helper;
+package xyz.bitsquidd.bits.util.wrapper;
 
 import org.jetbrains.annotations.Nullable;
 

@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.entity;
+package xyz.bitsquidd.bits.paper.util.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

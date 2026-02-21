@@ -8,7 +8,7 @@
 
 package xyz.bitsquidd.bits.lifecycle;
 
-import xyz.bitsquidd.bits.helper.Safety;
+import xyz.bitsquidd.bits.util.Safety;
 
 import java.util.LinkedHashSet;
 import java.util.List;

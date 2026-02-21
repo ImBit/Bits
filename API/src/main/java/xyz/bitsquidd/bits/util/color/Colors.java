@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.helper.color;
+package xyz.bitsquidd.bits.util.color;
 
 import org.jetbrains.annotations.Range;
 
