@@ -1,4 +1,4 @@
-@NullMarked
+@NotNullByDefault
 package xyz.bitsquidd.bits.paper;
 
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
