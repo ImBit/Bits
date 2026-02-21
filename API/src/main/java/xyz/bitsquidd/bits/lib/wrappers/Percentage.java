@@ -2,8 +2,10 @@ package xyz.bitsquidd.bits.lib.wrappers;
 
 import xyz.bitsquidd.bits.lib.helper.math.MathHelper;
 
+import java.util.Collection;
+
 /**
- * An immutable class representing number inbetween 0 and 1 representing a percentage.
+ * Immutable class representing number inbetween 0 and 1; a percentage.
  */
 public final class Percentage {
     private final float value;
@@ -16,6 +18,8 @@ public final class Percentage {
     public static Percentage ZERO = new Percentage(0.0f);
     public static Percentage FULL = new Percentage(1.0f);
 
+
+    //region Constructors
     public static Percentage of(final double value) {
         return new Percentage(value);
     }
@@ -30,6 +34,15 @@ public final class Percentage {
         return new Percentage(1 - (numerator / denominator));
     }
 
+    public static Percentage ofAverage(Collection<Percentage> percentages) {
+        if (percentages.isEmpty()) return ZERO;
+        double sum = percentages.stream().mapToDouble(Percentage::get).sum();
+        return new Percentage(sum / (float)percentages.size());
+    }
+    //endregion
+
+
+    //region Math operations
     public Percentage add(final Percentage other) {
         return new Percentage(this.value + other.value);
     }
@@ -37,12 +50,17 @@ public final class Percentage {
     public Percentage subtract(final Percentage other) {
         return new Percentage(this.value - other.value);
     }
+    //endregion
 
+
+    //region Getters
     public float get() {
         return value;
     }
+    //endregion
 
 
+    //region Java internals
     @Override
     public String toString() {
         return MathHelper.round(value * 100, 0) + "%";
@@ -57,5 +75,6 @@ public final class Percentage {
     public int hashCode() {
         return Float.hashCode(value);
     }
+    //endregion
 
 }
