@@ -43,9 +43,9 @@ public abstract class PaperBitsCommandManager extends BitsCommandManager<Command
     @Override
     protected void executeCommand(boolean isAsync, Runnable commandExecution) {
         if (isAsync) {
-            Bukkit.getScheduler().runTaskAsynchronously(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
+            Bukkit.getScheduler().runTaskAsynchronously(PaperBitsConfig.get().plugin(), commandExecution);
         } else {
-            Bukkit.getScheduler().runTask(((PaperBitsConfig)PaperBitsConfig.get()).getPlugin(), commandExecution);
+            Bukkit.getScheduler().runTask(PaperBitsConfig.get().plugin(), commandExecution);
         }
     }
 

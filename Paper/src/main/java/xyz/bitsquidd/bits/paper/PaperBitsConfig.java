@@ -31,6 +31,11 @@ public class PaperBitsConfig extends BitsConfig {
         initialise();
     }
 
+    public static PaperBitsConfig get() {
+        return (PaperBitsConfig)BitsConfig.get();
+    }
+
+
     @Override
     protected void initialise() {
         super.initialise();
@@ -39,7 +44,7 @@ public class PaperBitsConfig extends BitsConfig {
     }
 
 
-    public JavaPlugin getPlugin() {
+    public JavaPlugin plugin() {
         checkInitialized();
         return plugin;
     }

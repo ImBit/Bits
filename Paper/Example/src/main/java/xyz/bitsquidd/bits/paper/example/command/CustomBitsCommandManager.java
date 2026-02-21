@@ -26,7 +26,7 @@ public class CustomBitsCommandManager extends PaperBitsCommandManager {
     @Override
     public void startup() {
         super.startup();
-        Bukkit.getPluginManager().registerEvents(listener, ((PaperBitsConfig)PaperBitsConfig.get()).getPlugin());
+        Bukkit.getPluginManager().registerEvents(listener, (PaperBitsConfig.get()).getPlugin());
     }
 
     @Override
