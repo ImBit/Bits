@@ -18,9 +18,8 @@ import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.primitive.PrimitiveArgumentParser;
 import xyz.bitsquidd.bits.paper.command.argument.parser.impl.*;
-import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
-import xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.paper.command.argument.parser.impl.primitive.EntitySelectorArgumentParser;
+import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.util.ArrayList;
 import java.util.List;
