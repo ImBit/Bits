@@ -1,5 +1,3 @@
-# Creates GitHub releases
-
 name: Release and Publish
 
 permissions:
@@ -7,11 +5,6 @@ permissions:
 
 on:
     workflow_dispatch:
-        inputs:
-            version:
-                description: 'Version to release'
-                required: true
-                type: string
 
 jobs:
     build:
@@ -32,19 +25,19 @@ jobs:
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
 
-            -   name: Build with Gradle
-                run: ./gradlew build
-
             -   name: Determine version
                 id: determine-version
                 run: |
-                    if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-                      echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-                    else
-                      TAG=${GITHUB_REF#refs/tags/v}
-                      echo "VERSION=$TAG" >> $GITHUB_ENV
+                    VERSION=$(grep -E "^bits_version=" gradle.properties | cut -d'=' -f2 | tr -d '[:space:]')
+                    if [ -z "$VERSION" ]; then
+                      echo "❌ Could not read version from gradle.properties"
+                      exit 1
                     fi
-                    echo "VERSION=${{ env.VERSION }}"
+                    echo "VERSION=$VERSION" >> $GITHUB_ENV
+                    echo "Detected version: $VERSION"
+
+            -   name: Build with Gradle
+                run: ./gradlew build
 
             -   name: Update README
                 run: |
