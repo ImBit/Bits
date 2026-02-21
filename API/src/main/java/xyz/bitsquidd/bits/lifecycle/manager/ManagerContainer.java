@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Container for multiple CoreManagers.
+ * Containerized storage for multiple {@link CoreManager}s, allowing for easy registration and lifecycle management of multiple managers.
  */
 public abstract class ManagerContainer implements CoreManager {
     private final Set<CoreManager> managers = new LinkedHashSet<>();
@@ -25,7 +25,7 @@ public abstract class ManagerContainer implements CoreManager {
         return manager;
     }
 
-    public final void registerManagers(Iterable<? extends CoreManager> managers) {
+    protected final void registerManagers(Iterable<? extends CoreManager> managers) {
         managers.forEach(this::registerManager);
     }
 
@@ -37,9 +37,7 @@ public abstract class ManagerContainer implements CoreManager {
 
     @Override
     public void startup() {
-        for (CoreManager manager : getAllManagers()) {
-            startupManager(manager);
-        }
+        getAllManagers().forEach(this::startupManager);
     }
 
     protected void startupManager(CoreManager manager) {
@@ -48,9 +46,7 @@ public abstract class ManagerContainer implements CoreManager {
 
     @Override
     public void initialise() {
-        for (CoreManager manager : getAllManagers()) {
-            initialiseManager(manager);
-        }
+        getAllManagers().forEach(this::initialiseManager);
     }
 
     protected void initialiseManager(CoreManager manager) {
@@ -59,9 +55,7 @@ public abstract class ManagerContainer implements CoreManager {
 
     @Override
     public void cleanup() {
-        for (CoreManager manager : getAllManagers()) {
-            cleanupManager(manager);
-        }
+        getAllManagers().forEach(this::cleanupManager);
     }
 
     protected void cleanupManager(CoreManager manager) {
@@ -70,9 +64,7 @@ public abstract class ManagerContainer implements CoreManager {
 
     @Override
     public void shutdown() {
-        for (CoreManager manager : getAllManagers()) {
-            shutdownManager(manager);
-        }
+        getAllManagers().forEach(this::shutdownManager);
     }
 
     protected void shutdownManager(CoreManager manager) {

@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 
 /**
  * A special listener interface that should never be cancelled.
- * By default all listeners should be cancelled on {@link xyz.bitsquidd.bits.lifecycle.manager.CoreManager#cleanup() CoreManager#cleanup()}.
+ * By default all listeners should be cancelled on {@link xyz.bitsquidd.bits.paper.lifecycle.manager.PaperManagerContainer#cleanup() PaperManagerContainer#cleanup()}.
  */
 public interface PermanentListener extends Listener {
 }

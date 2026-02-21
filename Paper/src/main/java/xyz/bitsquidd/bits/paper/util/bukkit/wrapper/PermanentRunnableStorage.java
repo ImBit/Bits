@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A special storage for runnables that should never be cancelled.
- * By default all runnables should be cancelled on {@link xyz.bitsquidd.bits.lifecycle.manager.CoreManager#cleanup() CoreManager#cleanup()}.
+ * By default all runnables should be cancelled on {@link xyz.bitsquidd.bits.paper.lifecycle.manager.PaperManagerContainer#cleanup() PaperManagerContainer#cleanup()}.
  */
 public final class PermanentRunnableStorage {
     private PermanentRunnableStorage() {}
