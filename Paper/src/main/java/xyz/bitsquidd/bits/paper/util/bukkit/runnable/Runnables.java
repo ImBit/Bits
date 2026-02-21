@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lifecycle.builder.ExtendableBuildable;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
+import xyz.bitsquidd.bits.paper.util.bukkit.wrapper.PermanentRunnableStorage;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,7 +36,9 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
 
 
     public final BukkitTask run() {
-        return createTask(asRunnable());
+        BukkitTask task = createTask(asRunnable());
+        if (isForced) PermanentRunnableStorage.add(task.getTaskId());
+        return task;
     }
 
 

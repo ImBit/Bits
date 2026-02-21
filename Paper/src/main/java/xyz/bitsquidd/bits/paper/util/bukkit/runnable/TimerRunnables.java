@@ -11,8 +11,6 @@ package xyz.bitsquidd.bits.paper.util.bukkit.runnable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import xyz.bitsquidd.bits.paper.util.bukkit.wrapper.PermanentRunnableStorage;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,7 +38,7 @@ public final class TimerRunnables extends Runnables {
 
     @Override
     public BukkitRunnable asRunnable() {
-        BukkitRunnable runnable = new BukkitRunnable() {
+        return new BukkitRunnable() {
             int tick = 0;
 
             @Override
@@ -56,9 +54,6 @@ public final class TimerRunnables extends Runnables {
                 tick++;
             }
         };
-
-        if (isForced) PermanentRunnableStorage.add(runnable.getTaskId());
-        return runnable;
     }
 
     @Override

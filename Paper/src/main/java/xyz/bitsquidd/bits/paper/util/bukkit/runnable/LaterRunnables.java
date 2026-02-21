@@ -11,8 +11,6 @@ package xyz.bitsquidd.bits.paper.util.bukkit.runnable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import xyz.bitsquidd.bits.paper.util.bukkit.wrapper.PermanentRunnableStorage;
-
 
 public final class LaterRunnables extends Runnables {
     private final Runnable task;
@@ -28,15 +26,12 @@ public final class LaterRunnables extends Runnables {
 
     @Override
     public BukkitRunnable asRunnable() {
-        BukkitRunnable runnable = new BukkitRunnable() {
+        return new BukkitRunnable() {
             @Override
             public void run() {
                 task.run();
             }
         };
-
-        if (isForced) PermanentRunnableStorage.add(runnable.getTaskId());
-        return runnable;
     }
 
     @Override
