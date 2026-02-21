@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "xyz.bitsquidd.bits"
-version = "0.0.6"
+version = "0.0.7"
 
 allprojects {
     group = rootProject.group
@@ -26,7 +26,8 @@ allprojects {
         implementation(rootProject.libs.jspecify)
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
-        implementation(rootProject.libs.brigadier)
+
+        api(rootProject.libs.brigadier)
 
         implementation(rootProject.libs.adventure)
         implementation(rootProject.libs.adventure.text.serializer.plain)
