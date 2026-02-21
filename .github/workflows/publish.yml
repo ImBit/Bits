@@ -42,7 +42,7 @@ jobs:
             -   name: Update README
                 run: |
                     VERSION="${{ env.VERSION }}"
-                    sed -i "s/Bits:[0-9.]\+/Bits:$VERSION/g" README.md
+                    sed -i "s/\(Bits:[A-Za-z]\+:\)[0-9.]\+/\1$VERSION/g" README.md
                     sed -i "s/<version>[0-9.]\+<\/version>/<version>$VERSION<\/version>/g" README.md
 
             -   name: Commit README changes
