@@ -31,13 +31,13 @@ repositories {
 
 dependencies {
     // Core API (required)
-    implementation("com.github.ImBit.Bits:API:0.0.6")
+    implementation("com.github.ImBit.Bits:API:0.0.7")
 
     // Paper implementation
-    implementation("com.github.ImBit.Bits:Paper:0.0.6")
+    implementation("com.github.ImBit.Bits:Paper:0.0.7")
 
     // Velocity implementation
-    implementation("com.github.ImBit.Bits:Velocity:0.0.6")
+    implementation("com.github.ImBit.Bits:Velocity:0.0.7")
 }
 ```
 
