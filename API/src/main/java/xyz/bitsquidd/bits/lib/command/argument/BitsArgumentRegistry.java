@@ -12,8 +12,8 @@ import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.lib.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.type.GreedyString;
-import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
+import xyz.bitsquidd.bits.lib.wrapper.GreedyString;
+import xyz.bitsquidd.bits.lib.wrapper.type.TypeSignature;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package xyz.bitsquidd.bits.paper.lib.helper;
 
 import org.bukkit.Bukkit;
 
-import xyz.bitsquidd.bits.lib.wrappers.Percentage;
+import xyz.bitsquidd.bits.lib.wrapper.Percentage;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;

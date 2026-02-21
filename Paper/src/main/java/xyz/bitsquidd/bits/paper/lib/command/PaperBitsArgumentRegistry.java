@@ -9,7 +9,7 @@ import org.jspecify.annotations.Nullable;
 import xyz.bitsquidd.bits.lib.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.argument.parser.impl.primitive.PrimitiveArgumentParser;
-import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
+import xyz.bitsquidd.bits.lib.wrapper.type.TypeSignature;
 import xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.paper.lib.command.argument.parser.impl.primitive.EntitySelectorArgumentParser;
 

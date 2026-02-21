@@ -8,7 +8,7 @@ import xyz.bitsquidd.bits.lib.command.BitsCommandManager;
 import xyz.bitsquidd.bits.lib.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
+import xyz.bitsquidd.bits.lib.wrapper.type.TypeSignature;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.type;
+package xyz.bitsquidd.bits.lib.wrapper;
 
 /**
  * A wrapper class for holding a string. Usually used for command parsing of strings with spaces.

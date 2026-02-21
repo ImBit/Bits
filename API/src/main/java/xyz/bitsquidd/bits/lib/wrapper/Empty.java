@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.wrappers;
+package xyz.bitsquidd.bits.lib.wrapper;
 
 /**
  * A placeholder class. It has no purpose other than being empty.

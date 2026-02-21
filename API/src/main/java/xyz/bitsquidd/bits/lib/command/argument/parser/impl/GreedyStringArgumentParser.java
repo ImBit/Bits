@@ -3,8 +3,8 @@ package xyz.bitsquidd.bits.lib.command.argument.parser.impl;
 import xyz.bitsquidd.bits.lib.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.lib.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.lib.type.GreedyString;
-import xyz.bitsquidd.bits.lib.wrappers.TypeSignature;
+import xyz.bitsquidd.bits.lib.wrapper.GreedyString;
+import xyz.bitsquidd.bits.lib.wrapper.type.TypeSignature;
 
 import java.util.List;
 

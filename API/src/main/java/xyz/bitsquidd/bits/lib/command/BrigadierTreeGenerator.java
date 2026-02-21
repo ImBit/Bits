@@ -15,7 +15,7 @@ import xyz.bitsquidd.bits.lib.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.lib.command.util.CommandMethodInfo;
 import xyz.bitsquidd.bits.lib.command.util.CommandParameterInfo;
 import xyz.bitsquidd.bits.lib.config.BitsConfig;
-import xyz.bitsquidd.bits.lib.type.GreedyString;
+import xyz.bitsquidd.bits.lib.wrapper.GreedyString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

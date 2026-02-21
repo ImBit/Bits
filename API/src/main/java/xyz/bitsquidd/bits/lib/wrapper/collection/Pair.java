@@ -1,4 +1,4 @@
-package xyz.bitsquidd.bits.lib.wrappers;
+package xyz.bitsquidd.bits.lib.wrapper.collection;
 
 import java.util.Objects;
 

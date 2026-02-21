@@ -10,10 +10,16 @@ import java.util.Locale;
 public final class Enums {
     private Enums() {}
 
+    /**
+     * Returns the enum constant of the specified enum type with the specified name, ignoring case.
+     */
     public static <T extends Enum<T>> @Nullable T valueOf(Class<T> enumClass, @Nullable String name) {
         return valueOfOrDefault(enumClass, name, null);
     }
 
+    /**
+     * Returns the enum constant of the specified enum type with the specified name, ignoring case. If no such constant exists, returns the provided default value.
+     */
     public static <T extends Enum<T>> @Nullable T valueOfOrDefault(Class<T> enumClass, @Nullable String name, @Nullable T defaultValue) {
         if (name == null) return defaultValue;
 
