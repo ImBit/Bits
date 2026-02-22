@@ -9,7 +9,7 @@
 package xyz.bitsquidd.bits.velocity.util.velocity.listener;
 
 /**
- * A special A special {@link Listener Listener} that should never be cancelled. listener interface that should never be cancelled.
+ * Empty interface to act as a flag for automatic listener registration in a {@link xyz.bitsquidd.bits.velocity.lifecycle.manager.VelocityManagerContainer VelocityManagerContainer}.
  */
-public interface PermanentListener extends Listener {
+public interface Listener {
 }
