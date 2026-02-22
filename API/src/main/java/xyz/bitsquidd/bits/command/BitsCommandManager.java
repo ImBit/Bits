@@ -13,11 +13,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.command.util.BitsCommandSourceContext;
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Collection;
@@ -30,7 +31,7 @@ import java.util.Set;
 /**
  * Manages the registration and lifecycle of all {@link BitsCommand}s.
  */
-public abstract class BitsCommandManager<T> {
+public abstract class BitsCommandManager<T> implements CoreManager {
     protected final BitsArgumentRegistry<T> argumentRegistry;
     protected final BitsRequirementRegistry<T> requirementRegistry;
     protected final BrigadierTreeGenerator<T> brigadierTreeGenerator;
@@ -46,6 +47,18 @@ public abstract class BitsCommandManager<T> {
         this.brigadierTreeGenerator = new BrigadierTreeGenerator<>(this);
     }
 
+    /**
+     * Registers the command listener and enables all commands.
+     * <p>
+     * Ensure this method is run on onEnable() oe.
+     */
+    @Override
+    public void startup() {
+        enableAllCommands();
+    }
+
+
+    //region Registries
     protected abstract BitsArgumentRegistry<T> initialiseArgumentRegistry();
 
     public final BitsArgumentRegistry<T> getArgumentRegistry() {
@@ -57,14 +70,22 @@ public abstract class BitsCommandManager<T> {
     public final BitsRequirementRegistry<T> getRequirementRegistry() {
         return requirementRegistry;
     }
+    //endregion
+
+
+    //region Context
 
     /**
      * Creates a new {@link BitsCommandContext} for the given {@link CommandContext}.
-     * This  can be overridden to provide custom context implementations i.e. format a command response.
+     * This can be overridden to provide custom context implementations i.e. format a command response.
      */
     public abstract BitsCommandContext<T> createContext(CommandContext<T> brigadierContext);
 
     public abstract BitsCommandSourceContext<T> createSourceContext(T sourceStack);
+    //endregion
+
+
+    //region Commands
 
     /**
      * Gets all currently registered commands.
@@ -73,28 +94,13 @@ public abstract class BitsCommandManager<T> {
         return registeredCommands;
     }
 
+    /**
+     * Registers a command to be enabled on startup.
+     */
     protected final void registerCommand(BitsCommand command) {
         registeredCommands.add(command);
     }
-
-
-    /**
-     * Registers the command listener and enables all commands.
-     * <p>
-     * Ensure this method is run on onEnable() oe.
-     */
-    public void startup() {
-        enableAllCommands();
-    }
-
-    /**
-     * Unregisters the command listener.
-     * <p>
-     * Ensure this method is run on onDisable() oe.
-     */
-    public void shutdown() {
-
-    }
+    //endregion
 
 
     /**
