@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.util.bukkit;
+package xyz.bitsquidd.bits.paper.util.bukkit.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -20,6 +20,11 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 
+/**
+ * Utility class for managing Bukkit event listeners.
+ * <p>
+ * See <a href="https://docs.papermc.io/paper/dev/event-listeners/">Listeners</a> for more information.
+ */
 public final class Listeners {
     private static final JavaPlugin plugin = PaperBitsConfig.get().plugin();
 
