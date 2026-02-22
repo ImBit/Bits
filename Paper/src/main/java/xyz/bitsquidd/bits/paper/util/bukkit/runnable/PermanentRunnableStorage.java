@@ -6,7 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.util.bukkit.wrapper;
+package xyz.bitsquidd.bits.paper.util.bukkit.runnable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

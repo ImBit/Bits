@@ -6,20 +6,21 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.util.bukkit.runnable.sequence;
+package xyz.bitsquidd.bits.velocity.util.velocity.runnable.sequence;
 
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
-import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
+import xyz.bitsquidd.bits.velocity.util.velocity.runnable.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A sequence of runnables to be executed at specified ticks.
  */
 public final class Sequence {
     private record Step(
-      long tick,
+      long ms,
       Runnable runnable
     ) {}
 
@@ -30,10 +31,7 @@ public final class Sequence {
     }
 
     public void run() {
-        steps.forEach(step -> {
-            Runnables.later(step.runnable, step.tick);
-        });
-
+        steps.forEach(step -> Tasks.builder(step.runnable).delay(step.ms, TimeUnit.MILLISECONDS).schedule());
     }
 
 

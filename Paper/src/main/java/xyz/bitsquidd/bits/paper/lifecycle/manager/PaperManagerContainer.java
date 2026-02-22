@@ -12,8 +12,8 @@ import org.bukkit.event.Listener;
 
 import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.lifecycle.manager.ManagerContainer;
-import xyz.bitsquidd.bits.paper.util.bukkit.Listeners;
-import xyz.bitsquidd.bits.paper.util.bukkit.wrapper.PermanentListener;
+import xyz.bitsquidd.bits.paper.util.bukkit.listener.Listeners;
+import xyz.bitsquidd.bits.paper.util.bukkit.listener.PermanentListener;
 
 /**
  * ManagerContainer implementation for Paper, which handles registering and unregistering listeners with the Bukkit event system.

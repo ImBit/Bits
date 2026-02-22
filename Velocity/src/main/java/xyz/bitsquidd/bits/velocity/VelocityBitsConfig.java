@@ -31,6 +31,10 @@ public class VelocityBitsConfig extends BitsConfig {
         this.slf4j = slf4j;
     }
 
+    public static VelocityBitsConfig get() {
+        return (VelocityBitsConfig)BitsConfig.get();
+    }
+
 
     public Object getPlugin() {
         checkInitialized();

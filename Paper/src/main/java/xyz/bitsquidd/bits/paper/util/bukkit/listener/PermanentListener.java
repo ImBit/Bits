@@ -6,12 +6,12 @@
  * Enjoy the Bits and Bobs :)
  */
 
-package xyz.bitsquidd.bits.paper.util.bukkit.wrapper;
+package xyz.bitsquidd.bits.paper.util.bukkit.listener;
 
 import org.bukkit.event.Listener;
 
 /**
- * A special listener interface that should never be cancelled.
+ * A special {@link Listener Listener} that should never be cancelled.
  * By default all listeners should be cancelled on {@link xyz.bitsquidd.bits.paper.lifecycle.manager.PaperManagerContainer#cleanup() PaperManagerContainer#cleanup()}.
  */
 public interface PermanentListener extends Listener {

@@ -12,12 +12,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lifecycle.builder.ExtendableBuildable;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
-import xyz.bitsquidd.bits.paper.util.bukkit.wrapper.PermanentRunnableStorage;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 
 public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, TimerRunnables {
     protected static final JavaPlugin plugin = PaperBitsConfig.get().plugin();
+    protected static final BukkitScheduler scheduler = Bukkit.getScheduler();
 
     protected final boolean isForced;
     protected final boolean isAsync;
@@ -97,13 +98,17 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
     //endregion
 
     //region Cleanup
+    public static void cleanupAll() {
+        scheduler.cancelTasks(PaperBitsConfig.get().plugin());
+    }
+
     public static @Nullable BukkitTask cleanup(final @Nullable BukkitTask bukkitTask) {
         if (bukkitTask != null && !bukkitTask.isCancelled()) bukkitTask.cancel();
         return null;
     }
 
     public static @Nullable Integer cleanup(final @Nullable Integer taskId) {
-        if (taskId != null) Bukkit.getScheduler().cancelTask(taskId);
+        if (taskId != null) scheduler.cancelTask(taskId);
         return null;
     }
 
