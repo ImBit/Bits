@@ -10,7 +10,7 @@ package xyz.bitsquidd.bits.command.argument;
 
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.GreedyStringArgumentParser;

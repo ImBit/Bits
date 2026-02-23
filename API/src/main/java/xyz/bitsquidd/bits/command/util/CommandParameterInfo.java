@@ -10,12 +10,11 @@ package xyz.bitsquidd.bits.command.util;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import org.jspecify.annotations.NullMarked;
 
+import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.lang.reflect.Parameter;
@@ -25,7 +24,6 @@ import java.util.List;
 /**
  * Stores information about a parameter in a command method.
  */
-@NullMarked
 public class CommandParameterInfo {
     private final Parameter parameter;
 

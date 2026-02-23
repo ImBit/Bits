@@ -12,7 +12,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.argument.BrigadierArgumentMapping;

@@ -9,8 +9,7 @@
 package xyz.bitsquidd.bits.command.argument.parser.impl.abs;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.exception.ExceptionBuilder;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 /**
  * Argument parser for enum types.
  */
-@NullMarked
 public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParser<T> {
     private final Class<T> enumClass;
 

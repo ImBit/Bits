@@ -6,6 +6,7 @@
  * Enjoy the Bits and Bobs :)
  */
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.ltgt.gradle.errorprone.errorprone
 import xyz.bitsquidd.bits.util.BuildUtil
 
@@ -30,17 +31,16 @@ allprojects {
     plugins.apply(rootProject.libs.plugins.errorprone.get().pluginId)
 
     dependencies {
-        if (project.path != ":API") implementation(project(":API"))
-        implementation(rootProject.libs.jb.annotations)
-        implementation(rootProject.libs.jspecify)
+        if (project.path != ":API") implementation(project(":API", configuration = "shadow"))
+        compileOnly(rootProject.libs.jb.annotations)
+
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
-
-        api(rootProject.libs.brigadier)
-
-        implementation(rootProject.libs.adventure)
         implementation(rootProject.libs.adventure.text.serializer.plain)
 
+        api(rootProject.libs.brigadier)
+        api(rootProject.libs.adventure)
+        
         errorprone(rootProject.libs.errorprone)
     }
 
@@ -51,28 +51,38 @@ allprojects {
         maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    tasks.withType<JavaCompile> {
-        options.encoding = "UTF-8"
-        options.errorprone.isEnabled.set(true)
-        options.errorprone.disableWarningsInGeneratedCode.set(true)
-        options.errorprone.disableAllWarnings.set(true)
-        options.errorprone.errorproneArgs.addAll(
-            listOf(
-                "-Xep:CollectionIncompatibleType:ERROR",
-                "-Xep:EqualsIncompatibleType:ERROR",
+    tasks {
+        jar { finalizedBy(shadowJar) }
+        assemble { dependsOn(shadowJar) }
+        javadoc { options.encoding = "UTF-8" }
 
-                "-Xep:MissingOverride:ERROR",
-                "-Xep:SelfAssignment:ERROR",
-                "-Xep:StreamResourceLeak:ERROR",
+        withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            options.errorprone.isEnabled.set(true)
+            options.errorprone.disableWarningsInGeneratedCode.set(true)
+            options.errorprone.disableAllWarnings.set(true)
+            options.errorprone.errorproneArgs.addAll(
+                listOf(
+                    "-Xep:CollectionIncompatibleType:ERROR",
+                    "-Xep:EqualsIncompatibleType:ERROR",
 
-                "-Xep:CanonicalDuration:OFF",
-                "-Xep:InlineMeSuggester:OFF",
-                "-Xep:ImmutableEnumChecker:OFF"
+                    "-Xep:MissingOverride:ERROR",
+                    "-Xep:SelfAssignment:ERROR",
+                    "-Xep:StreamResourceLeak:ERROR",
+
+                    "-Xep:CanonicalDuration:OFF",
+                    "-Xep:InlineMeSuggester:OFF",
+                    "-Xep:ImmutableEnumChecker:OFF"
+                )
             )
-        )
-    }
+        }
 
-    tasks.javadoc { options.encoding = "UTF-8" }
+        named<ShadowJar>("shadowJar") {
+            archiveClassifier.set("")          // Omits classifier from jar name.
+            manifest { attributes["Implementation-Version"] = project.version }
+            from(sourceSets.main.get().output)
+        }
+    }
 }
 
 subprojects {

@@ -1,4 +1,4 @@
 @NotNullByDefault
-package xyz.bitsquidd.bits.util.component;
+package xyz.bitsquidd.bits.log.pretty;
 
 import org.jetbrains.annotations.NotNullByDefault;

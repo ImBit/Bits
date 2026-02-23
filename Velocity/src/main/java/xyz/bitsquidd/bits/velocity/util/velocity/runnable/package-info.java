@@ -1,4 +1,4 @@
 @NotNullByDefault
-package xyz.bitsquidd.bits.util.component;
+package xyz.bitsquidd.bits.velocity.util.velocity.runnable;
 
 import org.jetbrains.annotations.NotNullByDefault;

@@ -1,4 +1,4 @@
 @NotNullByDefault
-package xyz.bitsquidd.bits.util.component;
+package xyz.bitsquidd.bits.paper.lifecycle.manager;
 
 import org.jetbrains.annotations.NotNullByDefault;

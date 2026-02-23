@@ -12,7 +12,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.selector.EntitySelector;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;

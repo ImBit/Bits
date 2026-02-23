@@ -10,7 +10,7 @@ package xyz.bitsquidd.bits.command.argument.parser;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.command.exception.ExceptionBuilder;

@@ -8,7 +8,7 @@
 
 package xyz.bitsquidd.bits.format;
 
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
