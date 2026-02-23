@@ -57,6 +57,11 @@ public abstract class Logger {
 
     protected abstract void debugInternal(final String msg);
 
+
+    protected void onLog(LogData logData) {
+        // Override this method to handle log events, e.g. for staff notifications.
+    }
+
     public static void debug(final String msg) {
         if (!get().flags.logDebug()) return;
         get().debugInternal(msg);
