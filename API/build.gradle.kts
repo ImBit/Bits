@@ -7,3 +7,7 @@
  */
 
 description = "🦑 Utility API for Bits Plugin development."
+
+allprojects {
+    dependencies {}
+}

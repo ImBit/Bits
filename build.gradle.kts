@@ -31,7 +31,6 @@ allprojects {
     plugins.apply(rootProject.libs.plugins.errorprone.get().pluginId)
 
     dependencies {
-        if (project.path != ":API") implementation(project(":API", configuration = "shadow"))
         compileOnly(rootProject.libs.jb.annotations)
 
         implementation(rootProject.libs.joml)
@@ -40,7 +39,7 @@ allprojects {
 
         api(rootProject.libs.brigadier)
         api(rootProject.libs.adventure)
-        
+
         errorprone(rootProject.libs.errorprone)
     }
 
