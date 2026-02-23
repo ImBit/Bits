@@ -11,6 +11,8 @@ package xyz.bitsquidd.bits.util.wrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * A collection of utilities for working with Enums.
@@ -36,6 +38,18 @@ public final class Enums {
         } catch (IllegalArgumentException | NullPointerException e) {
             return defaultValue;
         }
+    }
+
+    /**
+     * Returns the enum constant of the specified enum that matches the provided identifier predicate.
+     */
+    public static <T extends Enum<T>> Optional<T> getFromIdentifier(Predicate<T> identifier, Class<T> enumClass) {
+        for (T constant : enumClass.getEnumConstants()) {
+            if (identifier.test(constant)) {
+                return Optional.of(constant);
+            }
+        }
+        return Optional.empty();
     }
 
 }
