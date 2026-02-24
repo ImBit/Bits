@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Argument parser for Void variables.
  */
-public final class VoidParser extends AbstractArgumentParser<Void> {
+public final class VoidArgumentParser extends AbstractArgumentParser<Void> {
 
-    public VoidParser() {
+    public VoidArgumentParser() {
         super(TypeSignature.of(Void.class), "Void");
     }
 

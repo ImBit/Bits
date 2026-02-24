@@ -14,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.GreedyStringArgumentParser;
-import xyz.bitsquidd.bits.command.argument.parser.impl.VoidParser;
+import xyz.bitsquidd.bits.command.argument.parser.impl.UUIDArgumentParser;
+import xyz.bitsquidd.bits.command.argument.parser.impl.VoidArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.command.exception.CommandBuildException;
@@ -71,7 +72,10 @@ public abstract class BitsArgumentRegistry<T> {
 
     protected List<AbstractArgumentParser<?>> initialiseParsers() {
         // Override to add custom parsers
-        return List.of(new GreedyStringArgumentParser());
+        return List.of(
+          new GreedyStringArgumentParser(),
+          new UUIDArgumentParser()
+        );
     }
 
     /**
@@ -93,7 +97,7 @@ public abstract class BitsArgumentRegistry<T> {
             }
 
             Logger.error("No parser registered for type: " + typeSignature);
-            return new VoidParser();
+            return new VoidArgumentParser();
         }
 
         return parser;
