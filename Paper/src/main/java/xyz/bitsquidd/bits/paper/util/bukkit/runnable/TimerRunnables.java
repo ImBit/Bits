@@ -68,16 +68,16 @@ public final class TimerRunnables extends Runnables {
     public static final class Builder extends AbstractRunnableBuilder<TimerRunnables, Builder> {
         private final Consumer<Integer> onTick;
 
-        private final long period;
         private final long delay;
+        private final long period;
 
         private Function<Integer, Boolean> stopCondition = tick -> false;
         private Consumer<Integer> onStop = (tick) -> {};
 
-        public Builder(Consumer<Integer> onTick, long period, long delay) {
+        public Builder(Consumer<Integer> onTick, long delay, long period) {
             this.onTick = onTick;
-            this.period = period;
             this.delay = delay;
+            this.period = period;
         }
 
         public Builder stopCondition(Function<Integer, Boolean> stopCondition) {
