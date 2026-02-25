@@ -14,7 +14,7 @@ allprojects {
     plugins.apply(rootProject.libs.plugins.paperweight.userdev.get().pluginId)
 
     dependencies {
-        implementation(project(":API"))
+        implementation(project(":API", configuration = "shadow"))
 
         paperweight.paperDevBundle(rootProject.libs.versions.paper.api.get())
     }
@@ -22,6 +22,6 @@ allprojects {
 
 subprojects {
     dependencies {
-        implementation(project(":Paper"))
+        implementation(project(":Paper", configuration = "shadow"))
     }
 }

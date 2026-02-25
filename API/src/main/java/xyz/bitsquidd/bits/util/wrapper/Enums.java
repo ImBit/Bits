@@ -43,7 +43,7 @@ public final class Enums {
     /**
      * Returns the enum constant of the specified enum that matches the provided identifier predicate.
      */
-    public static <T extends Enum<T>> Optional<T> getFromIdentifier(Predicate<T> identifier, Class<T> enumClass) {
+    public static <T extends Enum<T>> Optional<T> getFromIdentifier(Class<T> enumClass, Predicate<T> identifier) {
         for (T constant : enumClass.getEnumConstants()) {
             if (identifier.test(constant)) {
                 return Optional.of(constant);
