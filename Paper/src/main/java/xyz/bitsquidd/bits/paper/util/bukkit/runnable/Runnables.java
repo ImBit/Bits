@@ -29,10 +29,12 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
 
     protected final boolean isForced;
     protected final boolean isAsync;
+    protected final boolean isPausable;
 
     Runnables(AbstractRunnableBuilder<?, ?> builder) {
         this.isForced = builder.isForced;
         this.isAsync = builder.isAsync;
+        this.isPausable = builder.isPausable;
     }
 
 
@@ -171,6 +173,7 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
     public abstract static class AbstractRunnableBuilder<B extends Runnables, SELF extends AbstractRunnableBuilder<B, SELF>> extends ExtendableBuildable<B, SELF> {
         protected boolean isForced = false;
         protected boolean isAsync = false;
+        protected boolean isPausable = false;
 
         public SELF forced() {
             return forced(true);
@@ -187,6 +190,11 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
 
         public SELF async(boolean async) {
             this.isAsync = async;
+            return self();
+        }
+
+        public SELF pausable() {
+            this.isPausable = true;
             return self();
         }
 

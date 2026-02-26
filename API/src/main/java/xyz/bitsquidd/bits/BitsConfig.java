@@ -64,6 +64,10 @@ public abstract class BitsConfig {
         return Objects.requireNonNull(commandManager, "BitsCommandManager has not been set!");
     }
 
+    public boolean isPaused() {
+        return false;
+    }
+
 
     protected abstract Logger createLogger();
 

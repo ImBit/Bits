@@ -36,6 +36,15 @@ public final class LaterRunnables extends Runnables {
 
     @Override
     protected BukkitTask createTask(BukkitRunnable runnable) {
+        if (isPausable) {
+            // Pausable "laters" must be delegated to a timer for correct functionality.
+            return Runnables.buildTimer(task, delay, 1, 1)
+              .async(isAsync)
+              .forced(isForced)
+              .pausable()
+              .run();
+        }
+
         if (isAsync) {
             return runnable.runTaskLaterAsynchronously(plugin, delay);
         } else {

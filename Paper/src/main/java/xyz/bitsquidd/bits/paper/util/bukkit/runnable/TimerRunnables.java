@@ -11,6 +11,8 @@ package xyz.bitsquidd.bits.paper.util.bukkit.runnable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import xyz.bitsquidd.bits.BitsConfig;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,30 +40,56 @@ public final class TimerRunnables extends Runnables {
 
     @Override
     public BukkitRunnable asRunnable() {
-        return new BukkitRunnable() {
-            int tick = 0;
+        if (isPausable) {
+            return new BukkitRunnable() {
+                int tick = -(int)delay;
 
-            @Override
-            public void run() {
-                if (stopCondition.apply(tick)) {
-                    onStop.accept(tick);
-                    this.cancel();
-                    return;
-                } else {
-                    onTick.accept(tick);
+                @Override
+                public void run() {
+                    tick++;
+
+                    if (tick < 0 || tick % period != 0 || BitsConfig.get().isPaused()) return;
+
+                    if (stopCondition.apply(tick)) {
+                        onStop.accept(tick);
+                        this.cancel();
+                        return;
+                    } else {
+                        onTick.accept(tick);
+                    }
                 }
+            };
+        } else {
+            return new BukkitRunnable() {
+                int tick = 0;
 
-                tick++;
-            }
-        };
+                @Override
+                public void run() {
+                    if (stopCondition.apply(tick)) {
+                        onStop.accept(tick);
+                        this.cancel();
+                        return;
+                    } else {
+                        onTick.accept(tick);
+                    }
+
+                    tick++;
+                }
+            };
+        }
+
+
     }
 
     @Override
     protected BukkitTask createTask(BukkitRunnable runnable) {
+        long effectiveDelay = isPausable ? 0 : delay;
+        long effectivePeriod = isPausable ? 1 : period;
+
         if (isAsync) {
-            return runnable.runTaskTimerAsynchronously(plugin, delay, period);
+            return runnable.runTaskTimerAsynchronously(plugin, effectiveDelay, effectivePeriod);
         } else {
-            return runnable.runTaskTimer(plugin, delay, period);
+            return runnable.runTaskTimer(plugin, effectiveDelay, effectivePeriod);
         }
     }
 
