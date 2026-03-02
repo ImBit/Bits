@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.GreedyStringArgumentParser;
+import xyz.bitsquidd.bits.command.argument.parser.impl.LinkArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.UUIDArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.VoidArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.generic.GenericEnumParser;
@@ -74,6 +75,7 @@ public abstract class BitsArgumentRegistry<T> {
         // Override to add custom parsers
         return List.of(
           new GreedyStringArgumentParser(),
+          new LinkArgumentParser(),
           new UUIDArgumentParser()
         );
     }

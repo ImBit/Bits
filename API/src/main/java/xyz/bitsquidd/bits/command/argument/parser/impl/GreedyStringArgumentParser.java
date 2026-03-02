@@ -17,8 +17,8 @@ import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 import java.util.List;
 
 /**
- * Argument parser for GreedyString values.
- * A {@link GreedyString} is special as it captures all remaining input as a single string.
+ * Argument parser for {@link GreedyString} values.
+ * This parser is special as it is {@link xyz.bitsquidd.bits.command.BrigadierTreeGenerator#createCommandExecution hardcoded}  to capture all remaining inputs as a single string.
  */
 public final class GreedyStringArgumentParser extends AbstractArgumentParser<GreedyString> {
     public GreedyStringArgumentParser() {
