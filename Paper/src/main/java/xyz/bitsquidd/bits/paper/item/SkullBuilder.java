@@ -9,6 +9,8 @@
 package xyz.bitsquidd.bits.paper.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -22,6 +24,7 @@ import xyz.bitsquidd.bits.log.Logger;
 
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -30,6 +33,7 @@ import java.util.UUID;
  */
 public final class SkullBuilder implements Buildable<ItemStack> {
     private static final Material SKULL_MATERIAL = Material.PLAYER_HEAD;
+    private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
     private final ItemStack item;
     private final SkullMeta meta;
@@ -41,7 +45,8 @@ public final class SkullBuilder implements Buildable<ItemStack> {
     }
 
     /**
-     * Passes in an existing skull ItemStack to modify. Note: the item will be mutated directly.
+     * Passes in an existing skull ItemStack to modify.
+     * Note: the item will be mutated directly.
      */
     public SkullBuilder(ItemStack base) {
         if (base.getType() != SKULL_MATERIAL) throw new IllegalArgumentException("Base ItemStack must be a " + SKULL_MATERIAL);
@@ -56,22 +61,6 @@ public final class SkullBuilder implements Buildable<ItemStack> {
     }
 
 
-    public static SkullBuilder fromBase64(String base64) {
-        return new SkullBuilder().textureFromBase64(base64);
-    }
-
-    public static SkullBuilder fromUrl(URL url) {
-        return new SkullBuilder().textureFromUrl(url);
-    }
-
-    public static SkullBuilder fromUuid(UUID uuid) {
-        return new SkullBuilder().owner(uuid);
-    }
-
-    public static SkullBuilder fromPlayer(OfflinePlayer player) {
-        return new SkullBuilder().owner(player);
-    }
-
     @Override
     public ItemStack build() {
         item.setItemMeta(meta);
@@ -79,43 +68,64 @@ public final class SkullBuilder implements Buildable<ItemStack> {
     }
 
 
-    public SkullBuilder owner(OfflinePlayer player) {
+    //region Creators
+    public static SkullBuilder fromBase64(final String base64) {
+        return new SkullBuilder().textureFromBase64(base64);
+    }
+
+    public static SkullBuilder fromUrl(final URL url) {
+        return new SkullBuilder().textureFromUrl(url);
+    }
+
+    public static SkullBuilder fromUuid(final UUID uuid) {
+        return new SkullBuilder().owner(uuid);
+    }
+
+    public static SkullBuilder fromPlayer(final OfflinePlayer player) {
+        return new SkullBuilder().owner(player);
+    }
+    //endregion
+
+    //region Builder Methods
+    public SkullBuilder owner(final OfflinePlayer player) {
         meta.setPlayerProfile(player.getPlayerProfile());
         return this;
     }
 
-    public SkullBuilder owner(UUID uuid) {
+    public SkullBuilder owner(final UUID uuid) {
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
         return this;
     }
 
-    public SkullBuilder noteBlockSound(NamespacedKey noteBlockSound) {
+    public SkullBuilder noteBlockSound(final NamespacedKey noteBlockSound) {
         meta.setNoteBlockSound(noteBlockSound);
         return this;
     }
 
-    public SkullBuilder textureFromBase64(String base64) {
+    public SkullBuilder textureFromBase64(final String base64) {
         try {
-            textureFromUrl(URI.create(extractUrlFromBase64(base64)).toURL());
+            return textureFromUrl(URI.create(extractUrlFromBase64(base64)).toURL());
         } catch (Exception e) {
-            Logger.exception("Failed to set skull texture from base64: " + base64, e);
+            Logger.exception("Failed to set skull texture from base64", e);
         }
         return this;
     }
 
-    public SkullBuilder textureFromUrl(URL url) {
+    public SkullBuilder textureFromUrl(final URL url) {
         PlayerProfile profile = createProfileWithTexture(url);
         meta.setPlayerProfile(profile);
         return this;
     }
 
-    public SkullBuilder profile(PlayerProfile profile) {
+    public SkullBuilder profile(final PlayerProfile profile) {
         meta.setPlayerProfile(profile);
         return this;
     }
+    //endregion
 
 
-    private PlayerProfile createProfileWithTexture(URL url) {
+    //region Private Utilities
+    private static PlayerProfile createProfileWithTexture(final URL url) {
         PlayerProfile profile = Bukkit.getServer().createProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
         textures.setSkin(url);
@@ -123,26 +133,15 @@ public final class SkullBuilder implements Buildable<ItemStack> {
         return profile;
     }
 
-    private String extractUrlFromBase64(String base64) {
-        try {
-            byte[] decodedBytes = Base64.getDecoder().decode(base64);
-            String decodedString = new String(decodedBytes);
 
-            int urlStartIndex = decodedString.indexOf("\"url\":\"");
-            if (urlStartIndex == -1) {
-                throw new IllegalArgumentException("No URL found in base64 texture data");
-            }
-            urlStartIndex += 7;
-
-            int urlEndIndex = decodedString.indexOf("\"", urlStartIndex);
-            if (urlEndIndex == -1) {
-                throw new IllegalArgumentException("Malformed URL in base64 texture data");
-            }
-
-            return decodedString.substring(urlStartIndex, urlEndIndex);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid base64 string: " + e.getMessage(), e);
-        }
+    private static String extractUrlFromBase64(final String base64) {
+        String decoded = new String(BASE64_DECODER.decode(base64), StandardCharsets.UTF_8);
+        JsonObject json = JsonParser.parseString(decoded).getAsJsonObject();
+        return json.getAsJsonObject("textures")
+          .getAsJsonObject("SKIN")
+          .get("url")
+          .getAsString();
     }
+    //endregion
 
 }

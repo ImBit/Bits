@@ -6,6 +6,7 @@ adventure = "4.26.1"
 jb-annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
 joml = { group = "org.joml", name = "joml", version = "1.10.8" }
 logger = { group = "org.slf4j", name = "slf4j-api", version = "2.0.17" }
+gson = { group = "com.google.code.gson", name = "gson", version = "2.13.2" }
 
 brigadier = { group = "com.mojang", name = "brigadier", version = "1.0.18" }
 

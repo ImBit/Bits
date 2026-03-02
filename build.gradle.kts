@@ -35,6 +35,7 @@ allprojects {
 
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
+        implementation(rootProject.libs.gson)
         implementation(rootProject.libs.adventure.text.serializer.plain)
 
         api(rootProject.libs.brigadier)
