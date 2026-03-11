@@ -1,24 +1,58 @@
-*.iml
-*.xml
-*.ipr
-*.iws
-*.DS_Store
+# ── Gradle ─────────────────────────────────────────
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
+# ── IntelliJ ───────────────────────────────────────
+.idea/*
+!.idea/codeStyles
+!.idea/inspectionProfiles
+!.idea/icon.png
+!.idea/copyright
+
+# ── Kotlin ─────────────────────────────────────────
+.kotlin
+
+# ── Eclipse ────────────────────────────────────────
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# ── NetBeans ───────────────────────────────────────
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ── VS Code ────────────────────────────────────────
+.vscode/
+
+# ── Mac OS ─────────────────────────────────────────
+.DS_Store
+
+# ── Minecraft ──────────────────────────────────────
+run/
+plugins/
+
+# ── Misc ───────────────────────────────────────────
 *.jar
-*.war
-*.nar
-*.ear
 *.zip
 *.tar.gz
 *.rar
-
-.idea_modules/
-.idea/
-.kotlin/
-.paper-nms/
-build/
-target/
 out/
-.gradle/
+temp/
+test/
+
+!libs/**
 
 .env
