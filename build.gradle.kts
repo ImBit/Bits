@@ -88,10 +88,7 @@ allprojects {
 subprojects {
     extensions.configure<JavaPluginExtension>("java") {
         withSourcesJar()
-        // Javadocs break JitPack generation. TODO: Fix this.
-        if (project.name != "Paper") {
-            withJavadocJar()
-        }
+        withJavadocJar()
     }
 
     publishing {
@@ -100,7 +97,8 @@ subprojects {
                 groupId = project.group.toString()
                 artifactId = project.name
                 version = project.version.toString()
-                artifact(tasks.named("shadowJar"))
+                
+                from(components["java"])
             }
         }
     }
