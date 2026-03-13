@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * Argument parser for {@link GreedyString} values.
- * This parser is special as it is {@link xyz.bitsquidd.bits.command.BrigadierTreeGenerator#createCommandExecution hardcoded}  to capture all remaining inputs as a single string.
+ * This parser is special as it is {@link xyz.bitsquidd.bits.command.BrigadierTreeGenerator#createCommandExecution}  hardcoded}  to capture all remaining inputs as a single string.
  */
 public final class GreedyStringArgumentParser extends AbstractArgumentParser<GreedyString> {
     public GreedyStringArgumentParser() {
