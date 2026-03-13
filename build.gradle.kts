@@ -18,7 +18,7 @@ plugins {
     alias(libs.plugins.errorprone)
 }
 
-group = "xyz.bitsquidd.bits"
+group = "com.github.ImBit.Bits"
 
 allprojects {
     group = rootProject.group
@@ -96,11 +96,11 @@ subprojects {
 
     publishing {
         publications {
-            create<MavenPublication>("mavenJava") {
+            create<MavenPublication>("maven") {
                 groupId = project.group.toString()
                 artifactId = project.name
                 version = project.version.toString()
-                from(components["java"])
+                artifact(tasks.named("shadowJar"))
             }
         }
     }

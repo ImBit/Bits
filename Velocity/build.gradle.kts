@@ -8,7 +8,7 @@
 
 allprojects {
     dependencies {
-        implementation(project(":API", configuration = "shadow"))
+        api(project(":API", configuration = "shadow"))
 
         implementation(rootProject.libs.velocity.api.get())
         annotationProcessor(rootProject.libs.velocity.api.get())
