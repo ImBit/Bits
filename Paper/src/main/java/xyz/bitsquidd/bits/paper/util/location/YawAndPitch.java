@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.paper.util.location;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.util.Vector;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -24,9 +25,11 @@ public final class YawAndPitch {
 
     public static final YawAndPitch ZERO = new YawAndPitch(0f, 0f);
 
+    // Yaw is normalized between [-180, 180]
+    // Pitch is normalized between [-90, 90]
     private YawAndPitch(float yaw, float pitch) {
-        this.yaw = (yaw + 360) % 360;
-        this.pitch = pitch;
+        this.yaw = ((yaw + 180) % 360) - 180;
+        this.pitch = ((pitch + 90) % 180) - 90;
     }
 
     public static YawAndPitch of(float yaw, float pitch) {
@@ -59,7 +62,7 @@ public final class YawAndPitch {
             case SOUTH_SOUTH_WEST -> new YawAndPitch(-157.5f, 0);
             case WEST_SOUTH_WEST -> new YawAndPitch(-112.5f, 0);
 
-            default -> new YawAndPitch(0, 0);
+            default -> YawAndPitch.ZERO;
         };
     }
 
@@ -69,6 +72,7 @@ public final class YawAndPitch {
         return new YawAndPitch((float)Math.toDegrees(-euler.y + Math.PI), (float)Math.toDegrees(euler.x));
     }
 
+
     public YawAndPitch add(YawAndPitch yawAndPitch) {
         return new YawAndPitch(this.yaw + yawAndPitch.yaw, this.pitch + yawAndPitch.pitch);
     }
@@ -76,6 +80,16 @@ public final class YawAndPitch {
     public YawAndPitch subtract(YawAndPitch yawAndPitch) {
         return new YawAndPitch(this.yaw - yawAndPitch.yaw, this.pitch - yawAndPitch.pitch);
     }
+
+    // We convert to quaternion, add, then convert back to avoid gimbal lock
+    public YawAndPitch addWrap(YawAndPitch yawAndPitch) {
+        return from(this.toQuaternion().mul(yawAndPitch.toQuaternion()));
+    }
+
+    public YawAndPitch subtractWrap(YawAndPitch yawAndPitch) {
+        return from(this.toQuaternion().mul(yawAndPitch.toQuaternion().invert()));
+    }
+
 
     public Quaternionf toQuaternion() {
         Quaternionf quaternion = new Quaternionf();
@@ -112,11 +126,15 @@ public final class YawAndPitch {
         return BlockFace.SELF; // Fallback, should not reach here
     }
 
-    public Quaternionf addToQuaternion(Quaternionf quaternion) {
-        quaternion.rotateY((float)Math.toRadians(yaw));
-        quaternion.rotateX((float)Math.toRadians(pitch));
-        return quaternion;
+    public Vector toVector() {
+        double yawRad = Math.toRadians(yaw);
+        double pitchRad = Math.toRadians(pitch);
+        double x = -Math.cos(pitchRad) * Math.sin(yawRad);
+        double y = -Math.sin(pitchRad);
+        double z = Math.cos(pitchRad) * Math.cos(yawRad);
+        return new Vector(x, y, z);
     }
+
 
     public Location applyTo(Location location) {
         location.setRotation(yaw, pitch);
@@ -125,6 +143,12 @@ public final class YawAndPitch {
 
     public BlockPos applyTo(BlockPos blockPos) {
         return BlockPos.of(blockPos.x, blockPos.y, blockPos.z, yaw, pitch);
+    }
+
+    public Quaternionf addTo(Quaternionf quaternion) {
+        quaternion.rotateY((float)Math.toRadians(yaw));
+        quaternion.rotateX((float)Math.toRadians(pitch));
+        return quaternion;
     }
 
 
