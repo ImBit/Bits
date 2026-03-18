@@ -23,6 +23,8 @@ import java.util.function.Supplier;
 
 /**
  * A parser which can be defined to convert a list of input command arguments into a specific object type.
+ *
+ * @param <O> The type this parser converts to.
  */
 public abstract class AbstractArgumentParser<O> {
     private final TypeSignature<?> typeSignature; // The type signature this parser handles
@@ -43,8 +45,10 @@ public abstract class AbstractArgumentParser<O> {
      * In the case a <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a> is passed in, we expect a parser to be present for this.<p>
      * For example: <ul>
      * <li> An Integer parser would expect a single int {@code List.of(Integer.class)} </li>
-     * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
+     * <li> A <a href="https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Location.html">Bukkit Location</a> parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
      * </ul>
+     *
+     * @return A list of expects required objects.
      */
     public List<InputTypeContainer> getInputTypes() {
         return List.of(new InputTypeContainer(TypeSignature.of(String.class), getArgumentName()));
@@ -55,6 +59,11 @@ public abstract class AbstractArgumentParser<O> {
 
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
+     *
+     * @param inputObjects The list of input objects to validate, expected to contain exactly one object.
+     * @param expectedType The expected type of the single input object.
+     *
+     * @return The validated input object cast to the expected type.
      */
     protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
@@ -75,6 +84,10 @@ public abstract class AbstractArgumentParser<O> {
 
     /**
      * Helper function to validate multiple arguments for complex argument parsers.
+     *
+     * @param inputObjects The list of input objects to validate, expected to match the size and types of the list returned by {@link #getInputTypes()}.
+     *
+     * @return A list of validated input objects cast to their expected types.
      */
     protected List<Object> inputValidation(List<Object> inputObjects) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
