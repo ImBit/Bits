@@ -21,11 +21,33 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Argument parser for enum types.
+ * Base abstract parser providing common parsing and suggestion logic for enum types.
+ * <p>
+ * Implementations provide the exact enum class, and this base handles parsing string inputs
+ * into enum constants whilst automatically generating case-insensitive tab completion suggestions.
+ * <p>
+ * Example implementation:
+ * <pre>{@code
+ * public class MyEnumParser extends AbstractEnumArgumentParser<MyEnum> {
+ *     public MyEnumParser() {
+ *         super(MyEnum.class);
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <T> the specific enum type
+ *
+ * @since 0.0.10
  */
 public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends AbstractArgumentParser<T> {
     private final Class<T> enumClass;
 
+    /**
+     * @param enumClass the class object representing the enum to parse, not null
+     *
+     * @throws IllegalArgumentException if the provided class is not an enum
+     * @since 0.0.10
+     */
     public AbstractEnumArgumentParser(Class<T> enumClass) {
         super(TypeSignature.of(Enum.class), enumClass.getName());
         this.enumClass = enumClass;

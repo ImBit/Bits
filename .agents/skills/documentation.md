@@ -157,12 +157,14 @@ public abstract class BitPlugin {
 
 ### Methods and Constructors
 Every public and protected method must have:
-
 - A **summary sentence** stating what the method does (not how).
 - `@param` for every parameter - describe the meaning, not just the type. Note null-safety where relevant.
 - `@return` for any non-void return - describe what is returned, not just its type.
 - `@throws` for **every exception this method can throw**, both checked and unchecked. Document the condition under which each is thrown.
 - `@since`.
+
+> Note that constructors should not be documented with summary sentence or `@since` tags if their purpose is clear.
+> However, they must still have `@param`, `@throws` tags as applicable.
 
 ```java
 /**

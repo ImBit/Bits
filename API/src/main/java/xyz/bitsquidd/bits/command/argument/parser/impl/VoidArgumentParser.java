@@ -15,7 +15,11 @@ import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 import java.util.List;
 
 /**
- * Argument parser for Void variables.
+ * A fallback argument parser that explicitly consumes and returns {@code null} for {@link Void} types.
+ * <p>
+ * Usually dispatched when no proper parser exists for an unregistered command parameter type.
+ *
+ * @since 0.0.10
  */
 public final class VoidArgumentParser extends AbstractArgumentParser<Void> {
 

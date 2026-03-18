@@ -23,7 +23,11 @@ import java.util.stream.Stream;
 //TODO add better validation for this, enum for a type? WWW. HTTPS:// etc.?
 
 /**
- * Argument parser for {@link Link} values.
+ * Argument parser designed to structure command inputs into safe {@link Link} representations.
+ * <p>
+ * This automatically suggests prefixes like {@code https://} to the command sender.
+ *
+ * @since 0.0.10
  */
 public final class LinkArgumentParser extends AbstractArgumentParser<Link> {
     public LinkArgumentParser() {

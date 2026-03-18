@@ -13,8 +13,11 @@ import java.util.function.Supplier;
 
 /**
  * Argument parser for Boolean values.
+ *
+ * @since 0.0.10
  */
 public final class BooleanArgumentParser extends PrimitiveArgumentParser<Boolean> {
+
     public BooleanArgumentParser() {
         super(Boolean.class, "Boolean");
     }

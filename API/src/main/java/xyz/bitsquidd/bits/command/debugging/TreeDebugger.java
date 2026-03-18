@@ -15,7 +15,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Utility class for debugging and visualising Brigadier command trees.
+ * <p>
+ * Provides methods to convert a list of {@link com.mojang.brigadier.tree.LiteralCommandNode}s
+ * into a readable string representation, showing the hierarchy and executable status.
+ *
+ * @param <T> the command source type
+ *
+ * @since 0.0.10
+ */
 public class TreeDebugger<T> {
+    /**
+     * Converts a collection of command nodes into a human-readable visual tree representation.
+     *
+     * @param nodes the root literal nodes to visualise, not null
+     *
+     * @return a formatted string illustrating the node hierarchy
+     *
+     * @since 0.0.10
+     */
     public String visualizeCommandTree(List<LiteralCommandNode<T>> nodes) {
         StringBuilder sb = new StringBuilder();
         sb.append("Command Tree:\n");

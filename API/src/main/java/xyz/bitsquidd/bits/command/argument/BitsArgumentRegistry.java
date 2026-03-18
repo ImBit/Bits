@@ -30,6 +30,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Registry responsible for mapping generic Java types to command argument parsers.
+ * <p>
+ * This class initialises default parsers for primitives and common classes, and allows implementations
+ * to register custom parsers for specific types. It handles the resolution of nested generic types
+ * and recursively building Brigadier argument trees.
+ * <p>
+ * Example internal usage:
+ * <pre>{@code
+ * BitsArgumentRegistry<?> registry = manager.getArgumentRegistry();
+ * AbstractArgumentParser<?> parser = registry.getParser(TypeSignature.of(Player.class));
+ * }</pre>
+ *
+ * @param <T> the type of the platform's original source object
+ *
+ * @since 0.0.10
+ */
 public abstract class BitsArgumentRegistry<T> {
     private final Map<TypeSignature<?>, AbstractArgumentParser<?>> parsers = new HashMap<>();
 
@@ -39,6 +56,16 @@ public abstract class BitsArgumentRegistry<T> {
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
     }
 
+
+    /**
+     * Converts a basic type signature into a Brigadier {@link ArgumentType}.
+     *
+     * @param inputType the parsed type signature
+     *
+     * @return the corresponding Brigadier argument type, or null if it cannot be mapped trivially
+     *
+     * @since 0.0.10
+     */
     protected @Nullable ArgumentType<?> toArgumentType(TypeSignature<?> inputType) {
         Class<?> clazz = inputType.toRawType();
         if (clazz == Integer.class || clazz == int.class) {
@@ -60,6 +87,13 @@ public abstract class BitsArgumentRegistry<T> {
         return null;
     }
 
+    /**
+     * Initialises the list of base primitive argument parsers provided by the core API.
+     *
+     * @return a list of primitive parsers
+     *
+     * @since 0.0.10
+     */
     protected List<PrimitiveArgumentParser<?>> initialisePrimitiveParsers() {
         return List.of(
           new BooleanArgumentParser(),
@@ -71,6 +105,13 @@ public abstract class BitsArgumentRegistry<T> {
         );
     }
 
+    /**
+     * Initialises the list of abstract argument parsers provided by the implementation.
+     *
+     * @return a list of additional registered parsers
+     *
+     * @since 0.0.10
+     */
     protected List<AbstractArgumentParser<?>> initialiseParsers() {
         // Override to add custom parsers
         return List.of(
@@ -82,6 +123,12 @@ public abstract class BitsArgumentRegistry<T> {
 
     /**
      * Retrieves the appropriate parser for the given type signature.
+     *
+     * @param typeSignature the type signature generated from the method parameter
+     *
+     * @return the argument parser associated with the type, falling back to enum parsing or void
+     *
+     * @since 0.0.10
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public AbstractArgumentParser<?> getParser(TypeSignature<?> typeSignature) {
@@ -105,6 +152,16 @@ public abstract class BitsArgumentRegistry<T> {
         return parser;
     }
 
+    /**
+     * Recursively constructs the required Brigadier argument nodes based on the input types of the parser.
+     *
+     * @param parser   the argument parser
+     * @param baseName the base parameter name assigned in the command syntax
+     *
+     * @return a list of mappings directly translatable to Brigadier argument builders
+     *
+     * @since 0.0.10
+     */
     public List<BrigadierArgumentMapping> getArgumentTypeContainer(AbstractArgumentParser<?> parser, String baseName) {
         List<BrigadierArgumentMapping> holders = new ArrayList<>();
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
@@ -144,7 +201,18 @@ public abstract class BitsArgumentRegistry<T> {
         return holders;
     }
 
-    // Parses primitives into required objects needed by the parser
+    /**
+     * Parses a list of primitive objects recursively back into the complex object expected by the parser.
+     *
+     * @param parser        the argument parser invoked on the primitive inputs
+     * @param primitiveList the list of parsed base arguments (such as Strings, Integers)
+     * @param ctx           the context of the command execution
+     *
+     * @return the completely constructed complex object
+     *
+     * @throws CommandSyntaxException if there's an error in parsing validation
+     * @since 0.0.10
+     */
     public Object parseArguments(AbstractArgumentParser<?> parser, List<Object> primitiveList, BitsCommandContext<?> ctx) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 

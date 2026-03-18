@@ -10,6 +10,8 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.primitive;
 
 /**
  * Argument parser for Double values.
+ *
+ * @since 0.0.10
  */
 public final class DoubleArgumentParser extends PrimitiveArgumentParser<Double> {
     public DoubleArgumentParser() {

@@ -41,8 +41,6 @@ public abstract class BitsCommandContext<T> {
     protected final BitsCommandSourceContext<T> source;
 
     /**
-     * Constructs a new command context.
-     *
      * @param brigadierContext the underlying Brigadier context
      *
      * @since 0.0.10

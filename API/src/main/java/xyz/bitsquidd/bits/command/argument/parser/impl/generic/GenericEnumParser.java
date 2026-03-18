@@ -11,7 +11,6 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.generic;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.command.argument.parser.impl.abs.AbstractEnumArgumentParser;
 import xyz.bitsquidd.bits.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
@@ -21,9 +20,16 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * <b>Developer Note:</b> Custom enum parsers should override {@link AbstractEnumArgumentParser} if you want more fine-grained control over enum arguments / tab completion etc.
+ * A fallback, generically instantiated parser that handles unmapped enum types automatically.
  * <p>
- * This implementation serves as a basic parser that should be fallen back upon when no specific enum parser is available.
+ * <b>Developer Note:</b> Custom enum parsers should override {@link xyz.bitsquidd.bits.command.argument.parser.impl.abs.AbstractEnumArgumentParser}
+ * if you want more fine-grained control over enum arguments and tab completion.
+ * <p>
+ * This implementation serves as a basic parser that is fallen back upon when no specific enum parser is available.
+ *
+ * @param <E> the enum type
+ *
+ * @since 0.0.10
  */
 public final class GenericEnumParser<E extends Enum<E>> extends AbstractArgumentParser<E> {
 

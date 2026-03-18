@@ -10,6 +10,8 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.primitive;
 
 /**
  * Argument parser for Float values.
+ *
+ * @since 0.0.10
  */
 public final class FloatArgumentParser extends PrimitiveArgumentParser<Float> {
     public FloatArgumentParser() {

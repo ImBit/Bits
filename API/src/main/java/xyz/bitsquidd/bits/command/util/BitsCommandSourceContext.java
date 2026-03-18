@@ -33,8 +33,6 @@ public abstract class BitsCommandSourceContext<T> {
     protected final T source;
 
     /**
-     * Constructs a new command source context.
-     *
      * @param source the platform's command source object
      *
      * @since 0.0.10

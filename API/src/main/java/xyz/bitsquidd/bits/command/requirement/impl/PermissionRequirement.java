@@ -22,19 +22,46 @@ import java.util.List;
 
 /**
  * A command requirement that checks if the command sender has the specified permissions.
- * Note: Although can't be directly instantiated via annotation, still useful to have a constructor for manual use.
+ * <p>
+ * <b>Developer Note:</b> Although this can't be directly instantiated via annotation, it is
+ * still useful to have a constructor for manual requirement registration.
+ *
+ * @since 0.0.10
  */
 public class PermissionRequirement extends BitsCommandRequirement {
     public final List<Permission> permissions = new ArrayList<>();
 
+    /**
+     * @param permissions the collection of required permissions
+     *
+     * @since 0.0.10
+     */
     protected PermissionRequirement(Collection<Permission> permissions) {
         this.permissions.addAll(permissions);
     }
 
+    /**
+     * Creates a new permission requirement from a collection of permissions.
+     *
+     * @param permissions the collection of permissions
+     *
+     * @return the new permission requirement
+     *
+     * @since 0.0.10
+     */
     public static PermissionRequirement of(Collection<Permission> permissions) {
         return new PermissionRequirement(permissions);
     }
 
+    /**
+     * Creates a new permission requirement from an array of permissions.
+     *
+     * @param permissions the array of permissions
+     *
+     * @return the new permission requirement
+     *
+     * @since 0.0.10
+     */
     public static PermissionRequirement of(Permission... permissions) {
         return new PermissionRequirement(List.of(permissions));
     }
