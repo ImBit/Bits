@@ -8,13 +8,13 @@
 
 package xyz.bitsquidd.bits.command.util;
 
+import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.annotation.Async;
 import xyz.bitsquidd.bits.command.annotation.Command;
 import xyz.bitsquidd.bits.command.annotation.Permission;
 import xyz.bitsquidd.bits.command.annotation.Requirement;
 import xyz.bitsquidd.bits.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.command.requirement.impl.PermissionRequirement;
-import xyz.bitsquidd.bits.BitsConfig;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,7 +22,22 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Stores information about a method in a command.
+ * Stores reflection and metadata information about a specific command method.
+ * <p>
+ * This class parses method-level annotations and parameter types to help the command tree
+ * generator understand how to invoke the method at runtime and what arguments it expects.
+ * <p>
+ * Example internal usage:
+ * <pre>{@code
+ * CommandMethodInfo<?> info = new CommandMethodInfo<>(method, classParams);
+ * if (info.isAsync()) {
+ *     // Execute asynchronously
+ * }
+ * }</pre>
+ *
+ * @param <T> the type of the platform's original source object
+ *
+ * @since 0.0.10
  */
 public class CommandMethodInfo<T> {
     private final Method method;
@@ -52,37 +67,96 @@ public class CommandMethodInfo<T> {
         this.classParameters = new ArrayList<>(classParameters);
     }
 
+    /**
+     * Returns the underlying reflection method.
+     *
+     * @return the method
+     *
+     * @since 0.0.10
+     */
     public Method getMethod() {
         return method;
     }
 
+    /**
+     * Indicates whether the command should be executed asynchronously.
+     *
+     * @return true if marked with {@link xyz.bitsquidd.bits.command.annotation.Async}, false otherwise
+     *
+     * @since 0.0.10
+     */
     public boolean isAsync() {
         return isAsync;
     }
 
+    /**
+     * Indicates whether the method's first parameter expects a context object.
+     *
+     * @return true if the first parameter is assignable from {@link BitsCommandContext}, false otherwise
+     *
+     * @since 0.0.10
+     */
     public boolean requiresContext() {
         return requiresContext;
     }
 
+    /**
+     * Returns a list of parameters gathered from the enclosing command constructor.
+     *
+     * @return the class parameters
+     *
+     * @since 0.0.10
+     */
     public List<CommandParameterInfo> getClassParameters() {
         return classParameters;
     }
 
+    /**
+     * Returns a list of parameters explicitly defined on the command method (excluding the context).
+     *
+     * @return the method-specific parameters
+     *
+     * @since 0.0.10
+     */
     public List<CommandParameterInfo> getMethodParameters() {
         return methodParameters;
     }
 
+    /**
+     * Returns a combined list of all class and method parameters required for execution.
+     *
+     * @return all required parameters
+     *
+     * @since 0.0.10
+     */
     public List<CommandParameterInfo> getAllParameters() {
         List<CommandParameterInfo> allParams = new ArrayList<>(classParameters);
         allParams.addAll(methodParameters);
         return allParams;
     }
 
+    /**
+     * Returns the registered name mapping for the method from the {@link xyz.bitsquidd.bits.command.annotation.Command} annotation.
+     *
+     * @return the literal command string
+     *
+     * @since 0.0.10
+     */
     public String literalName() {
         return commandAnnotation.value();
     }
 
     //TODO: Merge with BitsCommandBuilder permission gathering?
+
+    /**
+     * Retrieves a compiled list of requirements that must be met to invoke this method.
+     *
+     * @param corePermission the base permission string for the command tree
+     *
+     * @return a list of parsed command requirements
+     *
+     * @since 0.0.10
+     */
     public List<BitsCommandRequirement> getRequirements(xyz.bitsquidd.bits.permission.Permission corePermission) {
         List<BitsCommandRequirement> requirements = new ArrayList<>();
 
