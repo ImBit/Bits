@@ -78,5 +78,7 @@ public abstract class BitsConfig {
     public abstract Locale getLocale(Audience audience);
 
     public abstract Audience getAll();
+    
+    public abstract void runLater(Runnable runnable, long delay);
 
 }

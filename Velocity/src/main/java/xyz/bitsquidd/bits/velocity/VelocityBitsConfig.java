@@ -17,8 +17,10 @@ import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.permission.Permission;
 import xyz.bitsquidd.bits.velocity.log.VelocityBitsLogger;
+import xyz.bitsquidd.bits.velocity.util.velocity.runnable.Tasks;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class VelocityBitsConfig extends BitsConfig {
     private final Object plugin;
@@ -79,6 +81,11 @@ public class VelocityBitsConfig extends BitsConfig {
     @Override
     public Audience getAll() {
         return Audience.audience(getServer().getAllPlayers());
+    }
+
+    @Override
+    public void runLater(Runnable runnable, long delay) {
+        Tasks.builder(runnable).delay(delay, TimeUnit.MILLISECONDS).schedule();
     }
 
 }

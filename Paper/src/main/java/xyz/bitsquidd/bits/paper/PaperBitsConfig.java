@@ -18,6 +18,7 @@ import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.paper.format.CommonPaperFormatters;
 import xyz.bitsquidd.bits.paper.log.PaperBitsLogger;
+import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
@@ -81,6 +82,11 @@ public class PaperBitsConfig extends BitsConfig {
     @Override
     public Audience getAll() {
         return Audience.audience(Bukkit.getOnlinePlayers());
+    }
+
+    @Override
+    public void runLater(Runnable runnable, long delay) {
+        Runnables.later(runnable, delay / 50); // Convert ms to ticks
     }
 
 }
