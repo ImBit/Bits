@@ -9,23 +9,34 @@
 package xyz.bitsquidd.bits.paper.cooldown;
 
 import net.kyori.adventure.key.Key;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 // TODO - duration cooldowns might be better async?
 public record Cooldown(
   Key key,
-  long ticks
+  long ticks,
+  @Nullable Consumer<UUID> onExpire
 ) {
     private static final CooldownManager COOLDOWN_MANAGER = CooldownManager.INSTANCE;
 
     public static Cooldown of(Key key, long ticks) {
-        return new Cooldown(key, ticks);
+        return new Cooldown(key, ticks, null);
+    }
+
+    public static Cooldown of(Key key, long ticks, Consumer<UUID> onExpire) {
+        return new Cooldown(key, ticks, onExpire);
     }
 
     public static Cooldown ofDuration(Key key, Duration duration) {
-        return new Cooldown(key, CooldownManager.toTicks(duration));
+        return new Cooldown(key, CooldownManager.toTicks(duration), null);
+    }
+
+    public static Cooldown ofDuration(Key key, Duration duration, Consumer<UUID> onExpire) {
+        return new Cooldown(key, CooldownManager.toTicks(duration), onExpire);
     }
 
 
@@ -50,34 +61,39 @@ public record Cooldown(
         return COOLDOWN_MANAGER.getRemainingTicks(uuid, this);
     }
 
-
-    /**
-     * Runs the action if the cooldown is not ready (on cooldown).
-     */
-    public Cooldown ifNotReady(UUID uuid, Runnable action) {
-        if (has(uuid)) action.run();
-        return this;
+    public Duration remainingDuration(UUID uuid) {
+        return CooldownManager.fromTicks(COOLDOWN_MANAGER.getRemainingTicks(uuid, this));
     }
 
-    /**
-     * Runs the action if the cooldown is ready (not on cooldown).
-     */
-    public Cooldown ifReady(UUID uuid, Runnable action) {
-        if (!has(uuid)) action.run();
-        return this;
+
+    public CooldownState state(UUID uuid) {
+        return new CooldownState(uuid, this);
     }
 
-    /**
-     * Applies the cooldown and runs the action if the cooldown is ready (not on cooldown).
-     */
-    public Cooldown applyIfReady(UUID uuid, Runnable action) {
-        ifReady(
-          uuid, () -> {
-              apply(uuid);
-              action.run();
-          }
-        );
-        return this;
+    public record CooldownState(
+      UUID uuid,
+      Cooldown cooldown
+    ) {
+        public CooldownState ifNotReady(Runnable action) {
+            if (cooldown.has(uuid)) action.run();
+            return this;
+        }
+
+        public CooldownState ifReady(Runnable action) {
+            if (!cooldown.has(uuid)) action.run();
+            return this;
+        }
+
+        public CooldownState applyIfReady(Runnable action) {
+            ifReady(
+              () -> {
+                  cooldown.apply(uuid);
+                  action.run();
+              }
+            );
+            return this;
+        }
+
     }
 
 

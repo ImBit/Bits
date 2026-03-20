@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public final class CooldownManager implements CoreManager {
     public static final CooldownManager INSTANCE = new CooldownManager();
@@ -27,9 +28,9 @@ public final class CooldownManager implements CoreManager {
 
     private static final class CooldownEntry {
         private long remainingTicks;
-        private @Nullable Runnable onExpire;
+        private @Nullable Consumer<UUID> onExpire;
 
-        CooldownEntry(long remainingTicks, @Nullable Runnable onExpire) {
+        CooldownEntry(long remainingTicks, @Nullable Consumer<UUID> onExpire) {
             this.remainingTicks = remainingTicks;
             this.onExpire = onExpire;
         }
@@ -45,6 +46,7 @@ public final class CooldownManager implements CoreManager {
 
     private void tick() {
         for (Map.Entry<UUID, Map<Key, CooldownEntry>> playerEntry : cooldowns.entrySet()) {
+            UUID uuid = playerEntry.getKey();
             Map<Key, CooldownEntry> playerCooldowns = playerEntry.getValue();
             Iterator<Map.Entry<Key, CooldownEntry>> it = playerCooldowns.entrySet().iterator();
 
@@ -54,7 +56,7 @@ public final class CooldownManager implements CoreManager {
 
                 if (--cd.remainingTicks <= 0) {
                     it.remove();
-                    if (cd.onExpire != null) cd.onExpire.run();
+                    if (cd.onExpire != null) cd.onExpire.accept(uuid);
                 }
             }
 
@@ -70,7 +72,7 @@ public final class CooldownManager implements CoreManager {
     public void addCooldown(UUID uuid, Cooldown cooldown) {
         cooldowns
           .computeIfAbsent(uuid, k -> new ConcurrentHashMap<>())
-          .put(cooldown.key(), new CooldownEntry(cooldown.ticks(), null));
+          .put(cooldown.key(), new CooldownEntry(cooldown.ticks(), cooldown.onExpire()));
     }
 
     public void removeCooldown(UUID uuid, Cooldown cooldown, boolean ignoreExpire) {
@@ -80,7 +82,7 @@ public final class CooldownManager implements CoreManager {
         CooldownEntry entry = playerCooldowns.remove(cooldown.key());
         if (entry == null) return;
 
-        if (!ignoreExpire && entry.onExpire != null) entry.onExpire.run();
+        if (!ignoreExpire && entry.onExpire != null) entry.onExpire.accept(uuid);
     }
 
     public boolean isOnCooldown(UUID uuid, Cooldown cooldown) {
@@ -102,7 +104,7 @@ public final class CooldownManager implements CoreManager {
 
         if (!ignoreExpire) {
             for (CooldownEntry entry : playerCooldowns.values()) {
-                if (entry.onExpire != null) entry.onExpire.run();
+                if (entry.onExpire != null) entry.onExpire.accept(uuid);
             }
         }
     }
