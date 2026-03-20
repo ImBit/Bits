@@ -20,7 +20,11 @@ import java.util.Objects;
 
 /**
  * The main configuration class for the Bits library.
- * This must be created for correct Bits functionality.
+ * <p>
+ * This must be created for correct Bits functionality. It acts as the central hub
+ * for accessing core services like the logger and command manager.
+ *
+ * @since 0.0.10
  */
 public abstract class BitsConfig {
     private static @Nullable BitsConfig instance;
@@ -31,6 +35,10 @@ public abstract class BitsConfig {
     protected @Nullable BitsCommandManager<?> commandManager;
 
 
+    /**
+     * @throws IllegalStateException if a configuration instance already exists
+     * @since 0.0.10
+     */
     protected BitsConfig() {
         if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
         instance = this;
@@ -38,18 +46,34 @@ public abstract class BitsConfig {
         this.logger = createLogger();
     }
 
+    /**
+     * Retrieves the active configuration instance.
+     *
+     * @return the configuration instance
+     *
+     * @throws IllegalStateException if the configuration has not been created
+     * @since 0.0.10
+     */
     public static BitsConfig get() {
         if (instance == null) throw new IllegalStateException("BitsConfig instance has not been created yet!");
         return instance;
     }
 
-    protected void checkInitialized() {
+    protected void checkInitialized() throws IllegalStateException {
         if (instance == null) throw new IllegalStateException("BitsConfig hasn't been initialised!");
     }
 
     protected void initialise() {}
 
 
+    /**
+     * Indicates whether the library is operating in development mode.
+     * This is used for showing increased debugging.
+     *
+     * @return true if development mode is active, false otherwise
+     *
+     * @since 0.0.10
+     */
     public boolean isDevelopment() {
         return developmentMode;
     }
@@ -78,7 +102,7 @@ public abstract class BitsConfig {
     public abstract Locale getLocale(Audience audience);
 
     public abstract Audience getAll();
-    
+
     public abstract void runLater(Runnable runnable, long delay);
 
 }

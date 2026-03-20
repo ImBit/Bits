@@ -9,31 +9,47 @@
 package xyz.bitsquidd.bits.lifecycle.manager;
 
 /**
- * A template class for managers with lifecycle methods.
- * This is intended to be implemented by any manager that needs to perform actions at
- * specific points in the server lifecycle, such as startup, round initialisation,
- * round cleanup, and shutdown.
+ * Defines a template for service managers that respond to server lifecycle events.
+ * <p>
+ * Implementing classes can hook into various stages such as initial startup,
+ * round-based initialisation/cleanup, and final shutdown sequences.
+ *
+ * @since 0.0.10
  */
 public interface CoreManager {
 
     /**
-     * Should be called when the server is starting up, before anything else.
+     * Invoked during the global server startup phase.
+     * <p>
+     * This should be used for one-time setup tasks that must occur before any
+     * game logic or command processing begins.
+     *
+     * @since 0.0.10
      */
     default void startup() {}
 
 
     /**
-     * Should be called at the start of a round or significant occasion.
+     * Invoked at the beginning of a game round or significant lifecycle event.
+     *
+     * @since 0.0.10
      */
     default void initialise() {}
 
     /**
-     * Should be called at the end of every round or significant occasion.
+     * Invoked at the conclusion of a game round or significant lifecycle event.
+     *
+     * @since 0.0.10
      */
     default void cleanup() {}
 
     /**
-     * Called when the server is shutting down, after everything else.
+     * Invoked during the global server shutdown phase.
+     * <p>
+     * This should be used for releasing resources, saving data, and ensuring a
+     * clean exit after all other activities have ceased.
+     *
+     * @since 0.0.10
      */
     default void shutdown() {}
 

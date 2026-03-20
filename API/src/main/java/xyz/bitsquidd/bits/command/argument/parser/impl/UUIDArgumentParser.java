@@ -20,7 +20,17 @@ import java.util.UUID;
 
 
 /**
- * Argument parser for UUIDs.
+ * Argument parser for standard {@link java.util.UUID}s.
+ * <p>
+ * Automatically sanitises string inputs by stripping non-hexadecimal characters before attempting
+ * to parse into canonical UUID representation.
+ * <p>
+ * Example internal mapping:
+ * <pre>{@code
+ * manager.getArgumentRegistry().getParser(TypeSignature.of(UUID.class));
+ * }</pre>
+ *
+ * @since 0.0.10
  */
 public final class UUIDArgumentParser extends AbstractArgumentParser<UUID> {
 

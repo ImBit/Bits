@@ -8,6 +8,11 @@
 
 package xyz.bitsquidd.bits.command;
 
+/**
+ * Represents the status resulting from the execution of a command.
+ *
+ * @since 0.0.10
+ */
 public enum CommandReturnType {
     SUCCESS,
     INFO,

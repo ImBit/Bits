@@ -10,6 +10,8 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.primitive;
 
 /**
  * Argument parser for String values.
+ *
+ * @since 0.0.10
  */
 public final class StringArgumentParser extends PrimitiveArgumentParser<String> {
     public StringArgumentParser() {

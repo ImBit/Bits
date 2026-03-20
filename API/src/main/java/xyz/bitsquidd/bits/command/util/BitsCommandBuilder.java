@@ -28,6 +28,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A builder utility that introspects {@link BitsCommand} classes via reflection.
+ * <p>
+ * This class extracts command methods, arguments, requirements, and permissions defined by annotations,
+ * and helps the manager construct Brigadier nodes.
+ * <p>
+ * Example internal usage:
+ * <pre>{@code
+ * BitsCommandBuilder builder = new BitsCommandBuilder(TeleportCommand.class);
+ * String name = builder.getCommandName();
+ * List<Method> methods = builder.getCommandMethods();
+ * }</pre>
+ *
+ * @since 0.0.10
+ */
 public final class BitsCommandBuilder {
     private @Nullable BitsCommand commandInstance;
     private final Class<? extends BitsCommand> commandClass;
@@ -66,23 +81,58 @@ public final class BitsCommandBuilder {
     }
 
 
+    /**
+     * Returns the command class being built.
+     *
+     * @return the command class
+     *
+     * @since 0.0.10
+     */
     public Class<? extends BitsCommand> getCommandClass() {
         return commandClass;
     }
 
+    /**
+     * Returns the base name of the command.
+     *
+     * @return the command name
+     *
+     * @since 0.0.10
+     */
     public String getCommandName() {
         return commandName;
     }
 
+    /**
+     * Returns the aliases associated with the command.
+     *
+     * @return a list of aliases
+     *
+     * @since 0.0.10
+     */
     public List<String> getCommandAliases() {
         return commandAliases;
     }
 
+    /**
+     * Returns the description of the command.
+     *
+     * @return the description
+     *
+     * @since 0.0.10
+     */
     public String getCommandDescription() {
         return commandDescription;
     }
 
 
+    /**
+     * Returns a list of reflective parameters from the command's primary constructor.
+     *
+     * @return a list of parameters
+     *
+     * @since 0.0.10
+     */
     public List<Parameter> getParameters() {
         Constructor<?>[] constructors = commandClass.getConstructors();
         if (constructors.length > 0) {
@@ -94,6 +144,13 @@ public final class BitsCommandBuilder {
         return Collections.emptyList();
     }
 
+    /**
+     * Extracts and returns all nested subcommand classes mapped within the command.
+     *
+     * @return a list of nested subcommand classes
+     *
+     * @since 0.0.10
+     */
     @SuppressWarnings("unchecked")
     public List<Class<? extends BitsCommand>> getSubcommandClasses() {
         return Stream.of(commandClass.getDeclaredClasses())
@@ -102,17 +159,38 @@ public final class BitsCommandBuilder {
           .collect(Collectors.toList());
     }
 
+    /**
+     * Extracts and returns all methods inside this class annotated as executable commands.
+     *
+     * @return a list of target methods
+     *
+     * @since 0.0.10
+     */
     public List<Method> getCommandMethods() {
         return Arrays.stream(commandClass.getDeclaredMethods())
           .filter(method -> method.isAnnotationPresent(Command.class))
           .toList();
     }
 
+    /**
+     * Returns the primary constructor for the command class.
+     *
+     * @return the first declared constructor
+     *
+     * @since 0.0.10
+     */
     public Constructor<?> toConstructor() {
         return commandClass.getDeclaredConstructors()[0];
     }
 
 
+    /**
+     * Compiles all requirements associated with the command from annotations or instances.
+     *
+     * @return a set of requirements ensuring safe execution
+     *
+     * @since 0.0.10
+     */
     public Set<BitsCommandRequirement> getRequirements() {
         Set<BitsCommandRequirement> requirements = new HashSet<>();
         if (commandName.isEmpty()) requirements.add(PermissionRequirement.of(permissions));
@@ -137,14 +215,35 @@ public final class BitsCommandBuilder {
         return requirements;
     }
 
+    /**
+     * Returns the base core permission configured for this command.
+     *
+     * @return the core permission
+     *
+     * @since 0.0.10
+     */
     public xyz.bitsquidd.bits.permission.Permission getCorePermission() {
         return corePermission;
     }
 
+    /**
+     * Returns an unmodifiable list of all permissions applying to this command.
+     *
+     * @return a list of permissions
+     *
+     * @since 0.0.10
+     */
     public List<xyz.bitsquidd.bits.permission.Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
     }
 
+    /**
+     * Checks if this command class requires an outer instance (i.e. is an inner non-static class).
+     *
+     * @return true if an outer instance is required
+     *
+     * @since 0.0.10
+     */
     public boolean requiresOuterInstance() {
         return !isStaticClass && commandClass.isMemberClass();
     }

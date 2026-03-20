@@ -15,8 +15,17 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a class or method as a command.
- * When applied to a class, creates a command group.
- * When applied to a method, creates an executable command.
+ * <p>
+ * When applied to a class, it creates a command group. When applied to a method,
+ * it creates an executable command.
+ * <p>
+ * Example usage:
+ * <pre>{@code
+ * @Command(value = "give", description = "Give an item")
+ * public class GiveCommand extends BitsCommand { ... }
+ * }</pre>
+ *
+ * @since 0.0.10
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

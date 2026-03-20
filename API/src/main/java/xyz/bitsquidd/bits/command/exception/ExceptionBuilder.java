@@ -12,9 +12,21 @@ import com.mojang.brigadier.Message;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
+/**
+ * Utility class for constructing Brigadier {@link com.mojang.brigadier.exceptions.CommandSyntaxException}s.
+ *
+ * @since 0.0.10
+ */
 public final class ExceptionBuilder {
     private ExceptionBuilder() {}
 
+    /**
+     * @param stringMessage the failure message to embed in the exception
+     *
+     * @return the constructed {@link CommandSyntaxException}
+     *
+     * @since 0.0.10
+     */
     public static CommandSyntaxException createCommandException(String stringMessage) {
         Message message = toMessage(stringMessage);
         return new CommandSyntaxException(createExceptionType(message), message);

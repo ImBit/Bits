@@ -12,6 +12,21 @@ import xyz.bitsquidd.bits.sendable.text.decorator.AbstractTagDecorator;
 import xyz.bitsquidd.bits.sendable.text.decorator.formatter.DynamicColorFormatter;
 import xyz.bitsquidd.bits.sendable.text.decorator.formatter.StyleFormatter;
 
+/**
+ * A tag-based decorator that provides standard formatting operations like bold, italic, and color.
+ * <p>
+ * This decorator recognizes the following tags:
+ * <ul>
+ *     <li>{@code <bTag>} / {@code <b>} - Bold</li>
+ *     <li>{@code <iTag>} / {@code <i>} - Italic</li>
+ *     <li>{@code <sTag>} / {@code <s>} - Strikethrough</li>
+ *     <li>{@code <uTag>} / {@code <u>} - Underlined</li>
+ *     <li>{@code <oTag>} / {@code <o>} - Obfuscated</li>
+ *     <li>{@code <c:color>} - Color (hex or named)</li>
+ * </ul>
+ *
+ * @since 0.0.10
+ */
 public class StyleDecorator extends AbstractTagDecorator {
 
     public StyleDecorator() {

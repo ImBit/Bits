@@ -34,13 +34,39 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * Utility responsible for constructing Brigadier command trees from defined command builders.
+ * <p>
+ * This handles parsing arguments, applying requirements, and wiring execution logic from the
+ * abstracted command definitions into Brigadier's native node structure.
+ *
+ * @param <T> the type of the platform's original source object
+ *
+ * @since 0.0.10
+ */
 public final class BrigadierTreeGenerator<T> {
     private final BitsCommandManager<T> commandManager;
 
+    /**
+     * Constructs a new Brigadier tree generator.
+     *
+     * @param commandManager the command manager managing the registry and context
+     *
+     * @since 0.0.10
+     */
     public BrigadierTreeGenerator(BitsCommandManager<T> commandManager) {
         this.commandManager = commandManager;
     }
 
+    /**
+     * Creates and returns a list of literal command nodes based on the provided builder.
+     *
+     * @param commandBuilder the command builder defining the structure and logic
+     *
+     * @return a list of generated literal nodes
+     *
+     * @since 0.0.10
+     */
     public List<LiteralCommandNode<T>> createNodes(
       BitsCommandBuilder commandBuilder
     ) {

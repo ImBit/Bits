@@ -11,8 +11,12 @@ package xyz.bitsquidd.bits.util.math;
 import org.jetbrains.annotations.Range;
 
 /**
- * A collection of easing functions for smooth animations and transitions.
- * Each function takes a parameter t in the range [0, 1] and returns a transformed value in the same range.
+ * Provides static methods for various easing functions used in smooth animations and transitions.
+ * <p>
+ * Each function accepts a time parameter {@code t} representing the progress of an animation,
+ * where {@code 0.0} is the start and {@code 1.0} is the end.
+ *
+ * @since 0.0.10
  */
 public final class Easing {
     private Easing() {}
@@ -24,49 +28,80 @@ public final class Easing {
     private static final double HALF_PI = PI / 2;
 
 
-    /// Linear
+    //region Linear
+
     /**
-     * Linear easing function (no easing).
+     * Applies linear interpolation (no easing).
+     *
+     * @since 0.0.10
      */
     public static float linear(@Range(from = 0, to = 1) float t) {
         return t;
     }
 
+    /**
+     * Applies a linear interpolation back to the start value, creating a looping effect.
+     *
+     * @since 0.0.10
+     */
+    public static float backLinear(@Range(from = 0, to = 1) float t) {
+        return t * 2 <= 1 ? t * 2 : (2 - t * 2);
+    }
 
-    /// Curved
+    //endregion
+
+
+    //region Curved
 
     /**
-     * Ease in with a custom power
+     * Applies an ease-in transformation with a custom exponent.
      *
-     * @param index the power to raise t to (e.g., 2 for quadratic, 3 for cubic)
+     * @param t     the progress, between 0.0 and 1.0
+     * @param index the power to apply (e.g., 2.0 for quadratic)
+     *
+     * @since 0.0.10
      */
     public static float in(@Range(from = 0, to = 1) float t, float index) {
         return (float)(Math.pow(t, index));
     }
 
     /**
-     * Default ease in (quadratic)
+     * Applies a default quadratic ease-in transformation.
+     *
+     * @since 0.0.10
      */
     public static float in(@Range(from = 0, to = 1) float t) {
         return in(t, 2);
     }
 
     /**
-     * Ease out with a custom power
+     * Applies an ease-out transformation with a custom exponent.
+     *
+     * @param t     the progress, between 0.0 and 1.0
+     * @param index the power to apply
+     *
+     * @since 0.0.10
      */
     public static float out(@Range(from = 0, to = 1) float t, float index) {
         return (float)(1 - Math.pow(1 - t, index));
     }
 
     /**
-     * Default ease out (quadratic)
+     * Applies a default quadratic ease-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float out(@Range(from = 0, to = 1) float t) {
         return out(t, 2);
     }
 
     /**
-     * Ease in-out with a custom power
+     * Applies an ease-in-out transformation with a custom exponent.
+     *
+     * @param t     the progress, between 0.0 and 1.0
+     * @param index the power to apply
+     *
+     * @since 0.0.10
      */
     public static float inOut(@Range(from = 0, to = 1) float t, float index) {
         if (t < 0.5) {
@@ -77,56 +112,86 @@ public final class Easing {
     }
 
     /**
-     * Blends a linear transition with an ease in-out transition.
-     * Note: a multiplier of 0 results in a linear transition, while a multiplier of 1 results in a full ease in-out transition.
+     * Blends a linear transition with an ease-in-out transition.
+     *
+     * @param t          the progress, between 0.0 and 1.0
+     * @param index      the power for the easing component
+     * @param multiplier the blending ratio (0.0 for linear, 1.0 for ease-in-out)
+     *
+     * @since 0.0.10
      */
     public static float inOutSmooth(float t, float index, @Range(from = 0, to = 1) float multiplier) {
         float eased = inOut(t, index);
         return (1 - multiplier) * t + multiplier * eased;
     }
+    //endregion
 
 
-    /// Sine
+    //region Trigonometric
+
     /**
-     * Ease in sine function.
+     * Applies a sine-based ease-in transformation.
+     *
+     * @since 0.0.10
      */
     public static float inSin(@Range(from = 0, to = 1) float t) {
         return (float)(1 - Math.cos((t * PI) / 2f));
     }
 
     /**
-     * Ease out sine function.
+     * Applies a sine-based ease-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float outSin(@Range(from = 0, to = 1) float t) {
         return (float)(Math.sin((t * PI) / 2f));
     }
 
     /**
-     * Ease in-out sine function.
+     * Applies a sine-based ease-in-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float inOutSin(@Range(from = 0, to = 1) float t) {
         return (float)(-(Math.cos(PI * t) - 1) / 2f);
     }
 
+    /**
+     * Applies a sine-based transformation that returns to the start value at the end, creating a looping effect.
+     *
+     * @since 0.0.10
+     */
+    public static float backSin(@Range(from = 0, to = 1) float t) {
+        return (float)(Math.sin(t * TAU));
+    }
 
-    // Exponential
+    //endregion
+
+
+    //region Exponential
 
     /**
-     * Ease in exponential function.
+     * Applies an exponential ease-in transformation.
+     *
+     * @since 0.0.10
      */
     public static float inExpo(@Range(from = 0, to = 1) float t) {
         return (float)(t == 0 ? 0f : Math.pow(2, 10 * (t - 1)));
     }
 
     /**
-     * Ease out exponential function.
+     * Applies an exponential ease-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float outExpo(@Range(from = 0, to = 1) float t) {
         return (float)(t == 1 ? 1f : 1 - Math.pow(2, -10 * t));
     }
 
     /**
-     * Ease in-out exponential function.
+     * Applies an exponential ease-in-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float inOutExpo(@Range(from = 0, to = 1) float t) {
         if (t <= 0) return 0;
@@ -134,26 +199,33 @@ public final class Easing {
         if (t < 0.5) return (float)(Math.pow(2, 20 * t - 10) / 2);
         return (float)((2 - Math.pow(2, -20 * t + 10)) / 2f);
     }
+    //endregion
 
 
-    // Return back
+    //region Overshooting
 
     /**
-     * Ease in back function. Creates an overshooting effect at the beginning.
+     * Applies an ease-in-back transformation with an overshooting effect.
+     *
+     * @since 0.0.10
      */
     public static float inBack(@Range(from = 0, to = 1) float t) {
         return (float)((EASING_MAGIC + 1) * t * t * t - EASING_MAGIC * t * t);
     }
 
     /**
-     * Ease out back function. Creates an overshooting effect at the end.
+     * Applies an ease-out-back transformation with an overshooting effect.
+     *
+     * @since 0.0.10
      */
     public static float outBack(@Range(from = 0, to = 1) float t) {
         return (float)(1 + (EASING_MAGIC + 1) * Math.pow(t - 1, 3) + EASING_MAGIC * Math.pow(t - 1, 2));
     }
 
     /**
-     * Ease in-out back function. Creates an overshooting effect at both the beginning and end.
+     * Applies an ease-in-out-back transformation with overshooting at both ends.
+     *
+     * @since 0.0.10
      */
     public static float inOutBack(@Range(from = 0, to = 1) float t) {
         double c = EASING_MAGIC * 1.525;
@@ -163,37 +235,47 @@ public final class Easing {
         if (t < 0.5) return (float)(Math.pow(2 * t, 2) * ((c + 1) * 2 * t - c)) / 2;
         return (float)(Math.pow(2 * t - 2, 2) * ((c + 1) * (t * 2 - 2) + c) + 2) / 2;
     }
+    //endregion
 
 
-    // Circular
+    //region Circular
 
     /**
-     * Circular ease in - accelerating from zero velocity.
+     * Applies a circular ease-in transformation.
+     *
+     * @since 0.0.10
      */
     public static float inCirc(@Range(from = 0, to = 1) float t) {
         return 1 - (float)Math.sqrt(1 - t * t);
     }
 
     /**
-     * Circular ease out - decelerating to zero velocity.
+     * Applies a circular ease-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float outCirc(@Range(from = 0, to = 1) float t) {
         return (float)Math.sqrt(1 - Math.pow(t - 1, 2));
     }
 
     /**
-     * Circular ease in-out - acceleration until halfway, then deceleration.
+     * Applies a circular ease-in-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float inOutCirc(@Range(from = 0, to = 1) float t) {
         if (t < 0.5) return (1 - (float)Math.sqrt(1 - Math.pow(2 * t, 2))) / 2;
         return ((float)Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2;
     }
+    //endregion
 
 
-    // Elastic
+    //region Elastic
 
     /**
-     * Elastic ease in - creates a spring-like effect at the beginning.
+     * Applies an elastic ease-in transformation with a spring effect.
+     *
+     * @since 0.0.10
      */
     public static float inElastic(@Range(from = 0, to = 1) float t) {
         double c = TAU / 3;
@@ -204,7 +286,9 @@ public final class Easing {
     }
 
     /**
-     * Elastic ease out - creates a spring-like effect at the end.
+     * Applies an elastic ease-out transformation with a spring effect.
+     *
+     * @since 0.0.10
      */
     public static float outElastic(@Range(from = 0, to = 1) float t) {
         double c = TAU / 3;
@@ -215,7 +299,9 @@ public final class Easing {
     }
 
     /**
-     * Elastic ease in-out - creates a spring-like effect at both the beginning and end.
+     * Applies an elastic ease-in-out transformation with spring effects at both ends.
+     *
+     * @since 0.0.10
      */
     public static float inOutElastic(@Range(from = 0, to = 1) float t) {
         double c = TAU / 4.5;
@@ -227,19 +313,24 @@ public final class Easing {
         }
         return (float)((Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c)) / 2 + 1);
     }
+    //endregion
 
 
-    // Bounce
+    //region Bounce
 
     /**
-     * Bounce ease in - creates a bouncing effect at the beginning.
+     * Applies a bounce-based ease-in transformation.
+     *
+     * @since 0.0.10
      */
     public static float inBounce(@Range(from = 0, to = 1) float t) {
         return 1 - outBounce(1 - t);
     }
 
     /**
-     * Bounce ease out - creates a bouncing effect at the end.
+     * Applies a bounce-based ease-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float outBounce(@Range(from = 0, to = 1) float t) {
         double c1 = 7.5625;
@@ -257,11 +348,14 @@ public final class Easing {
     }
 
     /**
-     * Bounce ease in-out - creates a bouncing effect at both the beginning and end.
+     * Applies a bounce-based ease-in-out transformation.
+     *
+     * @since 0.0.10
      */
     public static float inOutBounce(@Range(from = 0, to = 1) float t) {
         if (t < 0.5) return inBounce(t * 2) / 2;
         return (outBounce(t * 2 - 1) + 1) / 2;
     }
+    //endregion
 
 }

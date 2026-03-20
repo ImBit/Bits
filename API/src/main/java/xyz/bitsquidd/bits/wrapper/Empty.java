@@ -9,11 +9,20 @@
 package xyz.bitsquidd.bits.wrapper;
 
 /**
- * A placeholder class. It has no purpose other than being empty.
+ * A placeholder type used to represent an empty or absent value.
+ *
+ * @since 0.0.10
  */
 public final class Empty {
     private Empty() {}
 
+    /**
+     * Returns a new empty instance.
+     *
+     * @return an empty instance
+     *
+     * @since 0.0.10
+     */
     public static Empty empty() {
         return new Empty();
     }

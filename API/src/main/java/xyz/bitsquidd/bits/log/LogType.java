@@ -14,6 +14,15 @@ import xyz.bitsquidd.bits.log.pretty.PrettyLogLevel;
 
 import java.util.List;
 
+/**
+ * Represents a specific log category with its own unique identifier, priority, and visual style.
+ *
+ * @param id       the unique string identifier for this log type
+ * @param priority the execution priority associated with this log level
+ * @param logLevel the visual formatting component defining how this type is rendered in console
+ *
+ * @since 0.0.10
+ */
 public record LogType(
   String id,
   int priority,

@@ -12,6 +12,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 
+/**
+ * A formatter that applies a full {@link Style} to an Adventure {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public final class StyleFormatter extends AbstractFormatter {
     private final Style style;
 

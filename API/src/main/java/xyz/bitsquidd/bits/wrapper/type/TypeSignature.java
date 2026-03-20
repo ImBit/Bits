@@ -18,11 +18,18 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents a type signature, including raw type and type arguments.
- * For example: <ul>
- * <li>A {@code List<Integer>} would be represented as: {@code TypeSignature.of(List.class, Integer.class)}
- * <li>A {@code Map<String, Float>} would be represented as: {@code TypeSignature.of(Map.class, String.class, Float.class)}
+ * Represents a complete type signature, including the raw class and any generic type arguments.
+ * <p>
+ * This is useful for capturing complex types like {@code List<Integer>} at runtime.
+ * For example:
+ * <ul>
+ * <li>{@code TypeSignature.of(List.class, Integer.class)} represents {@code List<Integer>}
+ * <li>{@code TypeSignature.of(Map.class, String.class, Float.class)} represents {@code Map<String, Float>}
  * </ul>
+ *
+ * @param <T> the raw type
+ *
+ * @since 0.0.10
  */
 public final class TypeSignature<T> {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_BOXED;

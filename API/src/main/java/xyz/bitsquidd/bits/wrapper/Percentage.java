@@ -13,7 +13,12 @@ import xyz.bitsquidd.bits.util.math.MathHelper;
 import java.util.Collection;
 
 /**
- * Immutable class representing number inbetween 0 and 1; a percentage.
+ * Represents a numerical value clamped between 0 and 1, inclusive.
+ * <p>
+ * This immutable class provides a type-safe way to handle percentages and
+ * proportions, with static factories for common scenarios like averages or fractions.
+ *
+ * @since 0.0.10
  */
 public final class Percentage {
     private final float value;

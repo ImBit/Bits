@@ -21,39 +21,17 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * A sendable message, supporting complex formatting.
- *
- * <p>This class wraps an Adventure {@link net.kyori.adventure.text.Component} and allows for the application
- * of multiple {@link xyz.bitsquidd.bits.sendable.text.decorator.ITextDecorator} instances to format the text before sending.
- * Decorators are applied in the order:
+ * A highly customizable {@link Sendable} implementation for text-based messages.
+ * <p>
+ * This class wraps an Adventure {@link Component} and provides a mechanism for applying
+ * multiple {@link ITextDecorator}s. Decorators are processed in a specific sequence:
  * <ol>
- *   <li>Pre-default decorators (always applied first)</li>
- *   <li>Custom decorators (specified during construction)</li>
- *   <li>Post-default decorators (always applied last)</li>
+ *   <li>Internal pre-default decorators</li>
+ *   <li>User-defined decorators (passed via constructor or {@link #decorate})</li>
+ *   <li>Internal post-default decorators (e.g., {@link BlankDecorator} for tag cleanup)</li>
  * </ol>
  *
- * <p>Default decorators include:
- * <ul>
- *   <li>{@link xyz.bitsquidd.bits.sendable.text.decorator.impl.BlankDecorator} - Applied last as a final processing to remove regular tags</li>
- * </ul>
- *
- * <p>Example usage:
- * <pre>{@code
- * // Simple text without decorators
- * Text.of("Hello World").send(player);
- *
- * // Text with custom decorator
- * Text.of(Component.text("Formatted text"), new ColorDecorator()).send(player);
- *
- * // Text with multiple decorators
- * Text.of("Complex text", List.of(decorator1, decorator2)).send(player);
- *
- * // Text with formatting tags
- * Text.of("This <b>text is bold<b> and this is <i>italic<i>, <b,i>this is both</b,/i>", new FancyTagDecorator()).send(player);
- *
- * // Text with appended Text objects
- * Text.of("Hello ").append(Text.of("World!")).send(player);
- * }</pre>
+ * @since 0.0.10
  */
 public final class Text implements Sendable {
     private final Component component;
@@ -91,26 +69,64 @@ public final class Text implements Sendable {
     }
 
 
+    /**
+     * Creates a new text instance with the specified decorators added.
+     *
+     * @param decorators the list of decorators to apply
+     *
+     * @since 0.0.10
+     */
     public Text decorate(List<ITextDecorator> decorators) {
         return new Text(component, decorators);
     }
 
+    /**
+     * Creates a new text instance with the specified decorators added.
+     *
+     * @param decorators the decorators to apply
+     *
+     * @since 0.0.10
+     */
     public Text decorate(ITextDecorator... decorators) {
         return new Text(component, new ArrayList<>(List.of(decorators)));
     }
 
 
+    /**
+     * Appends another text instance to the end of this one.
+     *
+     * @param text the text to append
+     *
+     * @return this text instance for fluent chaining
+     *
+     * @since 0.0.10
+     */
     public Text append(Text text) {
         this.appendedText.add(text);
         return this;
     }
 
 
+    /**
+     * Dispatches the fully decorated component to the target audience.
+     *
+     * @param audience the target audience
+     *
+     * @since 0.0.10
+     */
     @Override
     public void send(Audience audience) {
         audience.forEachAudience(a -> a.sendMessage(getComponent(a)));
     }
 
+    /**
+     * Builds the final {@link Component} for a specific audience,
+     * applying all decorators and locale-sensitive transformations.
+     *
+     * @param audience the audience to build for
+     *
+     * @since 0.0.10
+     */
     public Component getComponent(Audience audience) {
         Component returnComponent = component;
 
@@ -130,6 +146,11 @@ public final class Text implements Sendable {
         return returnComponent;
     }
 
+    /**
+     * Returns a representation of this text as a {@link Component} using a default locale.
+     *
+     * @since 0.0.10
+     */
     public Component toComponent() {
         return getComponent(Audience.empty());
     }

@@ -9,7 +9,10 @@
 package xyz.bitsquidd.bits.wrapper;
 
 /**
- * A wrapper class for holding a string. Usually used for command parsing of strings with spaces.
+ * A wrapper for strings that should be parsed "greedily", typically consuming
+ * the remainder of a command input including spaces.
+ *
+ * @since 0.0.10
  */
 public final class GreedyString {
     public final String value;

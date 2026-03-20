@@ -11,10 +11,12 @@ package xyz.bitsquidd.bits.wrapper.collection;
 import java.util.Objects;
 
 /**
- * A generic Pair collection to hold two objects.
+ * A generic container for holding two related objects.
  *
  * @param <A> the type of the first object
  * @param <B> the type of the second object
+ *
+ * @since 0.0.10
  */
 public final class Pair<A, B> {
     private A first;
@@ -26,25 +28,38 @@ public final class Pair<A, B> {
     }
 
     /**
-     * Static factory method to create a new Pair instance.
+     * Creates a new pair of objects.
+     *
+     * @param <A>    the type of the first object
+     * @param <B>    the type of the second object
+     * @param first  the first object, may be null
+     * @param second the second object, may be null
+     *
+     * @return a new pair containing the given objects
+     *
+     * @since 0.0.10
      */
     public static <A, B> Pair<A, B> of(A first, B second) {
         return new Pair<>(first, second);
     }
 
     /**
-     * Gets the first value of the pair.
+     * Gets the first element of the pair.
      *
-     * @return the value of the first element
+     * @return the first element, may be null
+     *
+     * @since 0.0.10
      */
     public A getFirst() {
         return this.first;
     }
 
     /**
-     * Gets the second value of the pair.
+     * Gets the second element of the pair.
      *
-     * @return the value of the second element
+     * @return the second element, may be null
+     *
+     * @since 0.0.10
      */
     public B getSecond() {
         return this.second;
@@ -52,11 +67,13 @@ public final class Pair<A, B> {
 
 
     /**
-     * Sets the first value of the pair.
+     * Updates the first element of the pair.
      *
-     * @param first the new value
+     * @param first the new value for the first element
      *
-     * @return the old value (if present)
+     * @return the previous value of the first element
+     *
+     * @since 0.0.10
      */
     public A setFirst(A first) {
         A old = this.first;
@@ -65,11 +82,13 @@ public final class Pair<A, B> {
     }
 
     /**
-     * Sets the second value of the pair.
+     * Updates the second element of the pair.
      *
-     * @param second the new value
+     * @param second the new value for the second element
      *
-     * @return the old value (if present)
+     * @return the previous value of the second element
+     *
+     * @since 0.0.10
      */
     public B setSecond(B second) {
         B old = this.second;

@@ -22,18 +22,54 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * A parser which can be defined to convert a list of input command arguments into a specific object type.
+ * A parser responsible for converting a list of raw command arguments into a specific object type.
+ * <p>
+ * This class serves as the foundation for all custom argument parsing within the Bits command framework.
+ * Implementations define how string inputs or other basic types from Brigadier are structurally resolved
+ * into complex objects, and optionally provide tab-completion suggestions.
+ * <p>
+ * Example parser implementation:
+ * <pre>{@code
+ * public class PlayerArgumentParser extends AbstractArgumentParser<Player> {
+ *     public PlayerArgumentParser() {
+ *         super(TypeSignature.of(Player.class), "player_name");
+ *     }
+ *
+ *     // Override methods to dictate parsing logic and input types.
+ * }
+ * }</pre>
+ *
+ * @param <O> The type this parser converts to.
+ *
+ * @since 0.0.10
  */
 public abstract class AbstractArgumentParser<O> {
     private final TypeSignature<?> typeSignature; // The type signature this parser handles
     private final String argumentName;            // The name of the argument, used while displaying suggestions
 
+    /**
+     * @param typeSignature the expected type this parser handles
+     * @param argumentName  the label to display in command syntax suggestions
+     *
+     * @since 0.0.10
+     */
     protected AbstractArgumentParser(TypeSignature<?> typeSignature, String argumentName) {
         this.typeSignature = typeSignature;
         this.argumentName = argumentName;
     }
 
 
+    /**
+     * Parses the provided primitive objects into the target complex object type {@code O}.
+     *
+     * @param inputObjects the raw inputs captured from the command context
+     * @param ctx          the command execution context
+     *
+     * @return the successfully parsed object
+     *
+     * @throws CommandSyntaxException if the input is malformed or invalid
+     * @since 0.0.10
+     */
     public abstract O parse(List<Object> inputObjects, BitsCommandContext<?> ctx) throws CommandSyntaxException;
 
     /**
@@ -43,8 +79,12 @@ public abstract class AbstractArgumentParser<O> {
      * In the case a <a href="https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/#arguments">non-vanilla primitive</a> is passed in, we expect a parser to be present for this.<p>
      * For example: <ul>
      * <li> An Integer parser would expect a single int {@code List.of(Integer.class)} </li>
-     * <li> A Location parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
+     * <li> A <a href="https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Location.html">Bukkit Location</a> parser may expect three doubles and a World {@code List.of(Double.class, Double.class, Double.class, World.class)} </li>
      * </ul>
+     *
+     * @return A list of expected required objects.
+     *
+     * @since 0.0.10
      */
     public List<InputTypeContainer> getInputTypes() {
         return List.of(new InputTypeContainer(TypeSignature.of(String.class), getArgumentName()));
@@ -55,6 +95,15 @@ public abstract class AbstractArgumentParser<O> {
 
     /**
      * Helper function to validate singleton inputs for basic argument parsers.
+     *
+     * @param <I>          the type parameter of the expected output
+     * @param inputObjects The list of input objects to validate, expected to contain exactly one object.
+     * @param expectedType The expected type of the single input object.
+     *
+     * @return The validated input object cast to the expected type.
+     *
+     * @throws CommandSyntaxException if the validation fails
+     * @since 0.0.10
      */
     protected <I> I singletonInputValidation(List<Object> inputObjects, Class<I> expectedType) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
@@ -75,6 +124,13 @@ public abstract class AbstractArgumentParser<O> {
 
     /**
      * Helper function to validate multiple arguments for complex argument parsers.
+     *
+     * @param inputObjects The list of input objects to validate, expected to match the size and types of the list returned by {@link #getInputTypes()}.
+     *
+     * @return A list of validated input objects cast to their expected types.
+     *
+     * @throws CommandSyntaxException if the input size or types are incorrect
+     * @since 0.0.10
      */
     protected List<Object> inputValidation(List<Object> inputObjects) throws CommandSyntaxException {
         List<InputTypeContainer> inputTypes = getInputTypes();
@@ -103,6 +159,17 @@ public abstract class AbstractArgumentParser<O> {
     //endregion
 
 
+    /**
+     * Retrieves a Brigadier compatible suggestion provider for this argument parser.
+     * <p>
+     * This method evaluates {@link #getSuggestions()} to dynamically supply tab completion results.
+     *
+     * @param <T> the command source type
+     *
+     * @return the suggestion provider context for Brigadier nodes
+     *
+     * @since 0.0.10
+     */
     public final <T> SuggestionProvider<T> getSuggestionProvider() {
         return (ctx, builder) -> {
             Supplier<List<String>> suggestionSupplier = getSuggestions();
@@ -122,17 +189,35 @@ public abstract class AbstractArgumentParser<O> {
     }
 
     /**
-     * Returns a list of suggestions for the argument at a given context state.
+     * Returns a dynamically loaded list of suggestions for the argument at a given context state.
+     *
+     * @return a supplier providing available string suggestions, or null if none exist
+     *
+     * @since 0.0.10
      */
     public @Nullable Supplier<List<String>> getSuggestions() {
         return null;
     }
 
 
+    /**
+     * Retrieves the core type signature handled by this parser.
+     *
+     * @return the type signature
+     *
+     * @since 0.0.10
+     */
     public TypeSignature<?> getTypeSignature() {
         return typeSignature;
     }
 
+    /**
+     * Retrieves the argument name meant for display in syntax sequences.
+     *
+     * @return the argument label
+     *
+     * @since 0.0.10
+     */
     public String getArgumentName() {
         return argumentName;
     }

@@ -9,7 +9,9 @@
 package xyz.bitsquidd.bits.log.pretty;
 
 /**
- * ANSI escape codes for coloring and styling console output.
+ * Provides a comprehensive set of ANSI escape codes for styling console output.
+ *
+ * @since 0.0.10
  */
 public class ANSI {
     public final String code;
@@ -28,6 +30,11 @@ public class ANSI {
 
     }
 
+    /**
+     * A collection of ANSI foreground (text) color codes.
+     *
+     * @since 0.0.10
+     */
     public static final class Foreground extends Color {
         public static final Foreground BLACK = new Foreground("\u001B[30m", false);
         public static final Foreground RED = new Foreground("\u001B[31m", true);
@@ -53,6 +60,11 @@ public class ANSI {
 
     }
 
+    /**
+     * A collection of ANSI background color codes.
+     *
+     * @since 0.0.10
+     */
     public static final class Background extends Color {
         public static final Background BLACK = new Background("\u001B[40m", false);
         public static final Background RED = new Background("\u001B[41m", true);
@@ -79,6 +91,11 @@ public class ANSI {
 
     }
 
+    /**
+     * A collection of ANSI text style escape codes (e.g., Bold, Italic).
+     *
+     * @since 0.0.10
+     */
     public static final class Style extends ANSI {
         public static final Style RESET = new Style("\u001B[0m");
         public static final Style BOLD = new Style("\u001B[1m");

@@ -14,7 +14,11 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Mutable container holding a single value.
+ * A mutable container that holds a single, potentially nullable value.
+ *
+ * @param <T> the type of value being wrapped
+ *
+ * @since 0.0.10
  */
 public final class Single<T> {
 
@@ -24,57 +28,97 @@ public final class Single<T> {
     private @Nullable T value;
 
     /**
-     * Creates a new {@code Single} containing the given value.
+     * Initialises a new container with the given value.
+     *
+     * @param value the initial value, may be null
+     *
+     * @since 0.0.10
      */
     public Single(@Nullable T value) {
         this.value = value;
     }
 
     /**
-     * Creates a new {@code Single} containing the given non-null value.
+     * Creates a new container holding a non-null value.
+     *
+     * @param <T>   the type of the value
+     * @param value the value to wrap, must not be null
+     *
+     * @return a new container holding the value
+     *
+     * @throws NullPointerException if the value is null
+     * @since 0.0.10
      */
     public static <T> Single<T> of(T value) {
         return new Single<>(Objects.requireNonNull(value, "value"));
     }
 
     /**
-     * Creates a new {@code Single} with a {@code null} value.
+     * Creates a new container with no initial value.
+     *
+     * @param <T> the type of the value
+     *
+     * @return a new empty container
+     *
+     * @since 0.0.10
      */
     public static <T> Single<T> empty() {
         return new Single<>(null);
     }
 
     /**
-     * Returns the current value.
+     * Retrieves the current value held in this container.
+     *
+     * @return the current value, may be null
+     *
+     * @since 0.0.10
      */
     public @Nullable T get() {
         return value;
     }
 
     /**
-     * Replaces the current value with the given value.
+     * Updates the value held in this container.
+     *
+     * @param value the new value, may be null
+     *
+     * @since 0.0.10
      */
     public void set(@Nullable T value) {
         this.value = value;
     }
 
     /**
-     * Returns {@code true} if the current value is not {@code null}.
+     * Checks if this container currently holds a non-null value.
+     *
+     * @return true if a value is present, false otherwise
+     *
+     * @since 0.0.10
      */
     public boolean isPresent() {
         return value != null;
     }
 
     /**
-     * Sets the current value to {@code null}.
+     * Resets the held value to null.
+     *
+     * @since 0.0.10
      */
     public void clear() {
         this.value = null;
     }
 
     /**
-     * Transforms the current value using the given mapper and returns
-     * a new {@code Single} containing the mapped value.
+     * Transforms the current value and returns a new container with the result.
+     * <p>
+     * If the current value is null, the resulting container will also be empty.
+     *
+     * @param <R>    the type of the transformed value
+     * @param mapper the function to apply to the value
+     *
+     * @return a new container holding the mapped value
+     *
+     * @since 0.0.10
      */
     public <R> Single<R> map(Function<? super T, ? extends R> mapper) {
         Objects.requireNonNull(mapper, "mapper");

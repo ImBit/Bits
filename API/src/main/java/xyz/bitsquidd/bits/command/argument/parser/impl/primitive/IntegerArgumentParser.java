@@ -10,8 +10,11 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.primitive;
 
 /**
  * Argument parser for Integer values.
+ *
+ * @since 0.0.10
  */
 public final class IntegerArgumentParser extends PrimitiveArgumentParser<Integer> {
+
     public IntegerArgumentParser() {
         super(Integer.class, "Integer");
     }

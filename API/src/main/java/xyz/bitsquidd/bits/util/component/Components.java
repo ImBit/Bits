@@ -23,11 +23,14 @@ import xyz.bitsquidd.bits.log.Logger;
 import java.util.*;
 
 /**
- * A collection of utilities for working with {@link Component Adventure Components}.
+ * Provides static utility methods for manipulating and processing Adventure {@link Component}s.
+ *
+ * @since 0.0.10
  */
 public final class Components {
     private Components() {}
 
+    // A blank component with all standard decorations explicitly disabled.
     public static final Component BLANK = Component.empty()
       .applyFallbackStyle(Style.empty()
         .color(NamedTextColor.WHITE)
@@ -40,17 +43,47 @@ public final class Components {
 
     private static final TextComponent UNSUPPORTED = Component.text("ERROR PARSING", NamedTextColor.RED);
 
+    /**
+     * Recursively applies a style to a component and all of its children.
+     *
+     * @param component the root component to style
+     * @param style     the style to apply
+     *
+     * @return the styled component
+     *
+     * @since 0.0.10
+     */
     public static Component styleAll(Component component, Style style) {
         List<Component> children = component.children();
         if (!children.isEmpty()) children.forEach(child -> styleAll(child, style));
         return component.style(style);
     }
 
+    /**
+     * Reduces a complex component tree into a flat list of text components using the default locale.
+     *
+     * @param component the component to flatten
+     *
+     * @return a list of flattened text components
+     *
+     * @since 0.0.10
+     */
     public static List<TextComponent> flatten(final Component component) {
         return flatten(component, null);
     }
 
-    // Adapted version of https://gist.github.com/Minikloon/e6a7679d171b90dc4e0731db46d77c84
+    /**
+     * Reduces a complex component tree into a flat list of text components for a specific locale.
+     * <p>
+     * Adapted version of <a href="https://gist.github.com/Minikloon/e6a7679d171b90dc4e0731db46d77c84">Kyori Adventure Component Word Wrapping</a>
+     *
+     * @param component the component to flatten
+     * @param locale    the locale to use for translations, may be null
+     *
+     * @return a list of flattened text components
+     *
+     * @since 0.0.10
+     */
     public static List<TextComponent> flatten(final Component component, final @Nullable Locale locale) {
         final List<TextComponent> flattened = new ArrayList<>();
         final Style style = component.style();
@@ -79,6 +112,24 @@ public final class Components {
         return flattened;
     }
 
+    /**
+     * Resolves a translated string for a component based on a specific locale.
+     *
+     * @param locale    the target locale
+     * @param component the translatable component
+     *
+     * @return the resolved plain text string
+     *
+     * @since 0.0.10
+     */
+    public static String getTranslatedString(final Locale locale, final Component component) {
+        Component rendered = GlobalTranslator.render(component, locale);
+
+        return PlainTextComponentSerializer.plainText().serialize(rendered);
+    }
+
+
+    //region Internal Utilities
     private static TextComponent convertToTextComponent(final Component component, final @Nullable Locale locale) {
         if (component instanceof TextComponent textComponent) {
             return textComponent;
@@ -100,11 +151,6 @@ public final class Components {
         });
         return builder.build();
     }
-
-    public static String getTranslatedString(final Locale locale, final Component component) {
-        Component rendered = GlobalTranslator.render(component, locale);
-
-        return PlainTextComponentSerializer.plainText().serialize(rendered);
-    }
+    //endregion
 
 }

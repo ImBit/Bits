@@ -15,6 +15,11 @@ import xyz.bitsquidd.bits.util.component.Components;
 
 import java.util.Locale;
 
+/**
+ * A decorator that strips all styling from a {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public class BlankDecorator extends StyleDecorator {
     @Override
     public Component format(Component component, Locale locale) {

@@ -27,7 +27,7 @@ the contract, write full Javadoc instead.
 ## General Rules
 - Write in **British English**, using full sentences with correct punctuation.
     - The **first sentence** is the summary - it appears in overview tables. Keep it concise and specific.
-    - If additional explanation is needed, add a blank line followed by `<p>` on its own line, then continue on the next line.
+    - If additional explanation is needed, add a blank line containing only `<p>`, then continue on the next line.
 - The `@since` tag is **required** on every public API type and member.
     - Always match the current version in `gradle.properties` under `bits_version`.
 - Line length should be limited to 100 characters for readability.
@@ -68,12 +68,10 @@ Every public class and interface in `API` must have:
 ```java
 /**
  * Manages the registration and lifecycle of platform-specific command executors.
- *
  * <p>
  * Implementations are responsible for binding annotated command classes to the
  * underlying platform dispatcher. Commands registered through this manager are
  * automatically unregistered on shutdown.
- *
  * <p>
  * Example usage:
  * <pre>{@code
@@ -115,7 +113,7 @@ public interface Registry<K, V> {
  * Returns the first value in this registry matching the given predicate.
  *
  * @param <V>       the type of value to search for
- * @param predicate the predicate to test against each value, not null
+ * @param predicate the predicate to test against each value
  *
  * @return the first matching value, or an empty optional if none match
  *
@@ -133,12 +131,10 @@ expected contract - what the implementor must guarantee.
 ```java
 /**
  * Base implementation of a platform-aware plugin entry point.
- *
  * <p>
  * Subclasses must implement {@link #onEnable()} and {@link #onDisable()} to perform
  * platform-specific startup and teardown logic. The base class handles manager
  * registration and lifecycle ordering.
- *
  * <p>
  * Example usage:
  * <pre>{@code
@@ -161,22 +157,23 @@ public abstract class BitPlugin {
 
 ### Methods and Constructors
 Every public and protected method must have:
-
 - A **summary sentence** stating what the method does (not how).
 - `@param` for every parameter - describe the meaning, not just the type. Note null-safety where relevant.
 - `@return` for any non-void return - describe what is returned, not just its type.
 - `@throws` for **every exception this method can throw**, both checked and unchecked. Document the condition under which each is thrown.
 - `@since`.
 
+> Note that constructors should not be documented with summary sentence or `@since` tags if their purpose is clear.
+> However, they must still have `@param`, `@throws` tags as applicable.
+
 ```java
 /**
  * Registers a command executor with this manager.
- *
  * <p>
  * The executor is inspected for annotated command methods at registration time.
  * Duplicate registrations for the same command name will replace the prior binding.
  *
- * @param executor the command executor to register, not null
+ * @param executor the command executor to register
 
  * @throws IllegalArgumentException if the executor contains no valid command annotations
  * @throws IllegalStateException    if this manager has already been shut down
@@ -208,7 +205,6 @@ and `@since`.
 ```java
 /**
  * Marks a method as a command handler to be registered by the {@link CommandManager}.
- *
  * <p>
  * The annotated method must be public, non-static, and accept a {@link CommandSender}
  * as its first argument. Methods that do not meet these requirements will be ignored
@@ -233,7 +229,7 @@ Do not add separate Javadoc blocks to the record's accessor methods.
 /**
  * Represents an immutable snapshot of a formatted text component and its raw value.
  *
- * @param raw       the unformatted source string, not null
+ * @param raw       the unformatted source string
  * @param formatted the platform-formatted component derived from {@code raw}, not null
  *
  * @since 0.0.10
@@ -280,7 +276,6 @@ on the contract shared across all permitted implementations.
 ```java
 /**
  * Represents the result of a command execution attempt.
- *
  * <p>
  * All permitted subtypes carry a human-readable message accessible via
  * {@link #message()}. Consumers should pattern-match on the concrete subtype

@@ -11,6 +11,11 @@ package xyz.bitsquidd.bits.sendable.text.decorator.formatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
+/**
+ * A formatter that applies a constant color to an Adventure {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public class BasicColorFormatter extends AbstractFormatter {
     public final int color;
 
@@ -27,6 +32,15 @@ public class BasicColorFormatter extends AbstractFormatter {
     }
 
 
+    /**
+     * Applies the constant color as a fallback style to the input component.
+     *
+     * @param input the component to style
+     *
+     * @return the styled component
+     *
+     * @since 0.0.10
+     */
     @Override
     public Component format(Component input) {
         return input.applyFallbackStyle(TextColor.color(color));

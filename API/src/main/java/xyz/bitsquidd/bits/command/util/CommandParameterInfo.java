@@ -22,7 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores information about a parameter in a command method.
+ * Stores argument parsing information and mapping details for a specific command parameter.
+ * <p>
+ * This class acts as a bridge between Brigadier's built-in argument system and custom internal
+ * type parsers registered in the manager.
+ * <p>
+ * Example internal usage:
+ * <pre>{@code
+ * CommandParameterInfo paramInfo = new CommandParameterInfo(reflectiveParam);
+ * List<ArgumentBuilder<T, ?>> brigArguments = paramInfo.createBrigadierArguments();
+ * }</pre>
+ *
+ * @since 0.0.10
  */
 public class CommandParameterInfo {
     private final Parameter parameter;
@@ -51,6 +62,15 @@ public class CommandParameterInfo {
         this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 
+    /**
+     * Constructs the necessary Brigadier argument builders for this parameter mapping.
+     *
+     * @param <T> the type of the platform's original source object
+     *
+     * @return a list of Brigadier argument builders
+     *
+     * @since 0.0.10
+     */
     @SuppressWarnings("unchecked")
     public <T> List<ArgumentBuilder<T, ?>> createBrigadierArguments() {
         BitsCommandManager<T> commandManager = (BitsCommandManager<T>)BitsConfig.get().getCommandManager();
@@ -82,24 +102,37 @@ public class CommandParameterInfo {
         return parser.getSuggestions() != null;
     }
 
+    /**
+     * Returns the underlying argument parser responsible for converting player input.
+     *
+     * @return the parser instance
+     *
+     * @since 0.0.10
+     */
     public AbstractArgumentParser<?> getParser() {
         return parser;
     }
 
+    /**
+     * Returns the mappings that specify how this parameter breaks down into Brigadier types.
+     *
+     * @return the list of argument mappings
+     *
+     * @since 0.0.10
+     */
     public List<BrigadierArgumentMapping> getHeldArguments() {
         return heldArguments;
     }
 
+    /**
+     * Returns the type signature corresponding to the parsed parameter's generic type.
+     *
+     * @return the parameter type signature
+     *
+     * @since 0.0.10
+     */
     public TypeSignature<?> getTypeSignature() {
         return typeSignature;
-    }
-
-    @Override
-    public String toString() {
-        return "CommandParameterInfo{" +
-          "typeSignature=" + typeSignature +
-          ", parameter=" + parameter +
-          '}';
     }
 
 }

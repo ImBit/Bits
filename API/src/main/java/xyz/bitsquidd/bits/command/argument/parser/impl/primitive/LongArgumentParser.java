@@ -10,8 +10,11 @@ package xyz.bitsquidd.bits.command.argument.parser.impl.primitive;
 
 /**
  * Argument parser for Long values.
+ *
+ * @since 0.0.10
  */
 public final class LongArgumentParser extends PrimitiveArgumentParser<Long> {
+
     public LongArgumentParser() {
         super(Long.class, "Long");
     }

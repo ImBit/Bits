@@ -14,13 +14,23 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * A collection of useful mathematical operations.
+ * Provides static utility methods for common mathematical operations and orientation handling.
+ *
+ * @since 0.0.10
  */
 public final class MathHelper {
     private MathHelper() {}
 
     /**
-     * Rounds a double to a certain number of decimal places.
+     * Rounds a double value to a specified number of decimal places using {@link RoundingMode#HALF_UP}.
+     *
+     * @param value  the value to round
+     * @param places the number of decimal places to keep, must be non-negative
+     *
+     * @return the rounded value
+     *
+     * @throws IllegalArgumentException if places is negative
+     * @since 0.0.10
      */
     public static double round(final double value, final int places) {
         if (places < 0) throw new IllegalArgumentException();
@@ -41,7 +51,9 @@ public final class MathHelper {
 
 
     /**
-     * Set of utility functions for working with quaternions.
+     * Set of static utility functions for manipulating and querying {@link Quaternionf} instances.
+     *
+     * @since 0.0.10
      */
     public static final class Quaternion {
         public static float getXRotation(final Quaternionf quat) {

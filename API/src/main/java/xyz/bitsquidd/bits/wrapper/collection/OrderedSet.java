@@ -15,9 +15,14 @@ import java.util.stream.Stream;
 
 
 /**
- * A simple implementation of an ordered set, which maintains the order of insertion while ensuring uniqueness of elements.
+ * A simple implementation of an ordered set that maintains insertion order while ensuring element uniqueness.
+ * <p>
+ * This class combines the properties of an {@link ArrayList} for ordering and a {@link HashSet} for
+ * fast uniqueness checks.
  *
  * @param <E> the type of elements maintained by this set
+ *
+ * @since 0.0.10
  */
 public final class OrderedSet<E> implements Iterable<E> {
     private final ArrayList<E> list = new ArrayList<>();
@@ -43,6 +48,13 @@ public final class OrderedSet<E> implements Iterable<E> {
         return list.iterator();
     }
 
+    /**
+     * Returns a sequential {@link Stream} with this set as its source.
+     *
+     * @return a stream of the elements in this set
+     *
+     * @since 0.0.10
+     */
     public Stream<E> stream() {
         return list.stream();
     }
@@ -50,8 +62,14 @@ public final class OrderedSet<E> implements Iterable<E> {
 
     /**
      * Adds the specified element to this set if it is not already present.
-     * If the set did not already contain the specified element, it is added to the end of the list and true is returned.
-     * If the set already contained the element, false is returned and the set remains unchanged.
+     * <p>
+     * If the set did not already contain the element, it is appended to the end of the insertion order.
+     *
+     * @param element the element to be added
+     *
+     * @return true if the element was added, false if it was already present
+     *
+     * @since 0.0.10
      */
     public boolean add(E element) {
         if (set.add(element)) {
@@ -63,7 +81,12 @@ public final class OrderedSet<E> implements Iterable<E> {
 
     /**
      * Removes the specified element from this set if it is present.
-     * If the set contained the specified element, it is removed from both the list and the set, and true is returned.
+     *
+     * @param element the element to be removed
+     *
+     * @return true if the set contained the specified element
+     *
+     * @since 0.0.10
      */
     public boolean remove(E element) {
         if (set.remove(element)) {
@@ -74,7 +97,11 @@ public final class OrderedSet<E> implements Iterable<E> {
     }
 
     /**
-     * Removes all of the elements from this set.
+     * Removes all elements from this set.
+     *
+     * @return always true
+     *
+     * @since 0.0.10
      */
     public boolean clear() {
         list.clear();
@@ -83,21 +110,38 @@ public final class OrderedSet<E> implements Iterable<E> {
     }
 
     /**
-     * Returns true if this set contains no elements.
+     * Checks if this set contains any elements.
+     *
+     * @return true if the set is empty, false otherwise
+     *
+     * @since 0.0.10
      */
     public boolean isEmpty() {
         return set.isEmpty();
     }
 
     /**
-     * Returns true if this set contains the specified element.
+     * Checks if the specified element is present in this set.
+     *
+     * @param element the element to check for
+     *
+     * @return true if the element is present, false otherwise
+     *
+     * @since 0.0.10
      */
     public boolean contains(E element) {
         return set.contains(element);
     }
 
     /**
-     * Returns the element at the specified position in this set.
+     * Returns the element at the specified position in the insertion order.
+     *
+     * @param index the index of the element to return
+     *
+     * @return the element at the specified index
+     *
+     * @throws IndexOutOfBoundsException if the index is out of range
+     * @since 0.0.10
      */
     public E get(int index) {
         return list.get(index);
@@ -105,7 +149,11 @@ public final class OrderedSet<E> implements Iterable<E> {
 
 
     /**
-     * Returns the number of elements in this set.
+     * Returns the total number of unique elements in this set.
+     *
+     * @return the size of the set
+     *
+     * @since 0.0.10
      */
     public int size() {
         return list.size();
