@@ -28,13 +28,10 @@ public final class Easing {
     private static final double HALF_PI = PI / 2;
 
 
-    /// Linear
+    //region Linear
+
     /**
      * Applies linear interpolation (no easing).
-     *
-     * @param t the interpolation progress, between 0.0 and 1.0
-     *
-     * @return the original progress value
      *
      * @since 0.0.10
      */
@@ -42,16 +39,25 @@ public final class Easing {
         return t;
     }
 
+    /**
+     * Applies a linear interpolation back to the start value, creating a looping effect.
+     *
+     * @since 0.0.10
+     */
+    public static float backLinear(@Range(from = 0, to = 1) float t) {
+        return t * 2 <= 1 ? t * 2 : (2 - t * 2);
+    }
 
-    /// Curved
+    //endregion
+
+
+    //region Curved
 
     /**
      * Applies an ease-in transformation with a custom exponent.
      *
      * @param t     the progress, between 0.0 and 1.0
      * @param index the power to apply (e.g., 2.0 for quadratic)
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -61,10 +67,6 @@ public final class Easing {
 
     /**
      * Applies a default quadratic ease-in transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the cubic transformed value
      *
      * @since 0.0.10
      */
@@ -78,8 +80,6 @@ public final class Easing {
      * @param t     the progress, between 0.0 and 1.0
      * @param index the power to apply
      *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float out(@Range(from = 0, to = 1) float t, float index) {
@@ -88,10 +88,6 @@ public final class Easing {
 
     /**
      * Applies a default quadratic ease-out transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -104,8 +100,6 @@ public final class Easing {
      *
      * @param t     the progress, between 0.0 and 1.0
      * @param index the power to apply
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -124,23 +118,19 @@ public final class Easing {
      * @param index      the power for the easing component
      * @param multiplier the blending ratio (0.0 for linear, 1.0 for ease-in-out)
      *
-     * @return the blended value
-     *
      * @since 0.0.10
      */
     public static float inOutSmooth(float t, float index, @Range(from = 0, to = 1) float multiplier) {
         float eased = inOut(t, index);
         return (1 - multiplier) * t + multiplier * eased;
     }
+    //endregion
 
 
-    /// Sine
+    //region Trigonometric
+
     /**
      * Applies a sine-based ease-in transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -151,10 +141,6 @@ public final class Easing {
     /**
      * Applies a sine-based ease-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float outSin(@Range(from = 0, to = 1) float t) {
@@ -164,25 +150,28 @@ public final class Easing {
     /**
      * Applies a sine-based ease-in-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float inOutSin(@Range(from = 0, to = 1) float t) {
         return (float)(-(Math.cos(PI * t) - 1) / 2f);
     }
 
+    /**
+     * Applies a sine-based transformation that returns to the start value at the end, creating a looping effect.
+     *
+     * @since 0.0.10
+     */
+    public static float backSin(@Range(from = 0, to = 1) float t) {
+        return (float)(Math.sin(t * TAU));
+    }
 
-    // Exponential
+    //endregion
+
+
+    //region Exponential
 
     /**
      * Applies an exponential ease-in transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -193,10 +182,6 @@ public final class Easing {
     /**
      * Applies an exponential ease-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float outExpo(@Range(from = 0, to = 1) float t) {
@@ -206,10 +191,6 @@ public final class Easing {
     /**
      * Applies an exponential ease-in-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float inOutExpo(@Range(from = 0, to = 1) float t) {
@@ -218,16 +199,13 @@ public final class Easing {
         if (t < 0.5) return (float)(Math.pow(2, 20 * t - 10) / 2);
         return (float)((2 - Math.pow(2, -20 * t + 10)) / 2f);
     }
+    //endregion
 
 
-    // Return back
+    //region Overshooting
 
     /**
      * Applies an ease-in-back transformation with an overshooting effect.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -238,10 +216,6 @@ public final class Easing {
     /**
      * Applies an ease-out-back transformation with an overshooting effect.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float outBack(@Range(from = 0, to = 1) float t) {
@@ -250,10 +224,6 @@ public final class Easing {
 
     /**
      * Applies an ease-in-out-back transformation with overshooting at both ends.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -265,16 +235,13 @@ public final class Easing {
         if (t < 0.5) return (float)(Math.pow(2 * t, 2) * ((c + 1) * 2 * t - c)) / 2;
         return (float)(Math.pow(2 * t - 2, 2) * ((c + 1) * (t * 2 - 2) + c) + 2) / 2;
     }
+    //endregion
 
 
-    // Circular
+    //region Circular
 
     /**
      * Applies a circular ease-in transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -285,10 +252,6 @@ public final class Easing {
     /**
      * Applies a circular ease-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float outCirc(@Range(from = 0, to = 1) float t) {
@@ -298,26 +261,19 @@ public final class Easing {
     /**
      * Applies a circular ease-in-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float inOutCirc(@Range(from = 0, to = 1) float t) {
         if (t < 0.5) return (1 - (float)Math.sqrt(1 - Math.pow(2 * t, 2))) / 2;
         return ((float)Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2;
     }
+    //endregion
 
 
-    // Elastic
+    //region Elastic
 
     /**
      * Applies an elastic ease-in transformation with a spring effect.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -332,10 +288,6 @@ public final class Easing {
     /**
      * Applies an elastic ease-out transformation with a spring effect.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float outElastic(@Range(from = 0, to = 1) float t) {
@@ -349,10 +301,6 @@ public final class Easing {
     /**
      * Applies an elastic ease-in-out transformation with spring effects at both ends.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float inOutElastic(@Range(from = 0, to = 1) float t) {
@@ -365,16 +313,13 @@ public final class Easing {
         }
         return (float)((Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c)) / 2 + 1);
     }
+    //endregion
 
 
-    // Bounce
+    //region Bounce
 
     /**
      * Applies a bounce-based ease-in transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -384,10 +329,6 @@ public final class Easing {
 
     /**
      * Applies a bounce-based ease-out transformation.
-     *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
      *
      * @since 0.0.10
      */
@@ -409,15 +350,12 @@ public final class Easing {
     /**
      * Applies a bounce-based ease-in-out transformation.
      *
-     * @param t the progress, between 0.0 and 1.0
-     *
-     * @return the transformed value
-     *
      * @since 0.0.10
      */
     public static float inOutBounce(@Range(from = 0, to = 1) float t) {
         if (t < 0.5) return inBounce(t * 2) / 2;
         return (outBounce(t * 2 - 1) + 1) / 2;
     }
+    //endregion
 
 }
