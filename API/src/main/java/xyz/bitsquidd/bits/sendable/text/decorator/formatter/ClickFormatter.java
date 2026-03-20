@@ -11,6 +11,11 @@ package xyz.bitsquidd.bits.sendable.text.decorator.formatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
+/**
+ * A formatter that applies a {@link ClickEvent} to an Adventure {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public class ClickFormatter extends AbstractFormatter {
     public final ClickEvent fontKey;
 

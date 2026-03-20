@@ -15,6 +15,11 @@ import xyz.bitsquidd.bits.sendable.text.decorator.formatter.AbstractFormatter;
 import xyz.bitsquidd.bits.util.color.Colors;
 import xyz.bitsquidd.bits.util.component.Components;
 
+/**
+ * A formatter that lightens the existing color of an Adventure {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public class ColorLightenerFormatter extends AbstractFormatter {
     private static final int FALLBACK_COLOR = 0xFFFFFF;
 

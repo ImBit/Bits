@@ -16,14 +16,26 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
- * A collection of utilities for working with Collections.
+ * Provides static utility methods for manipulated and querying Java {@link java.util.Collection}s.
+ *
+ * @since 0.0.10
  */
 public final class CollectionHelper {
     private CollectionHelper() {}
 
     /**
-     * Sets the element at the specified index in the list.
-     * If the index is out of bounds, it will automatically expand the list and fill any new positions with the provided default value, which can be null.
+     * Updates an element at a specific index, automatically populating preceding indices
+     * with a default value if the list needs to be expanded.
+     *
+     * @param <T>          the element type
+     * @param list         the target list
+     * @param index        the target index
+     * @param element      the element to set
+     * @param defaultValue a supplier for values used to fill gaps
+     *
+     * @return the modified list
+     *
+     * @since 0.0.10
      */
     public static <T> List<@Nullable T> setAndPopulate(List<@Nullable T> list, int index, T element, Supplier<@Nullable T> defaultValue) {
         while (list.size() <= index) {
@@ -34,7 +46,16 @@ public final class CollectionHelper {
     }
 
     /**
-     * Optional getter for lists that returns an empty Optional if the index is out of bounds, instead of throwing an exception.
+     * Safely retrieves an element from a list, returning an empty {@link Optional}
+     * if the index is out of range.
+     *
+     * @param <T>   the element type
+     * @param list  the list to query
+     * @param index the target index
+     *
+     * @return an optional containing the element, or empty if out of bounds
+     *
+     * @since 0.0.10
      */
     public static <T> Optional<T> get(List<T> list, int index) {
         if (index < 0 || index >= list.size()) return Optional.empty();
@@ -42,8 +63,17 @@ public final class CollectionHelper {
     }
 
     /**
-     * Sets the element at the specified index in the list.
-     * If the index is out of bounds, it will automatically expand the list and fill any new positions with the provided default value.
+     * Updates an element at a specific index, automatically expanding the list
+     * if necessary using a default value supplier.
+     *
+     * @param <T>          the element type
+     * @param list         the target list
+     * @param index        the target index, must be non-negative
+     * @param element      the element to set
+     * @param defaultValue a supplier for fill values
+     *
+     * @throws IndexOutOfBoundsException if index is negative
+     * @since 0.0.10
      */
     public static <T> void set(List<T> list, int index, T element, Supplier<T> defaultValue) {
         if (index < 0) throw new IndexOutOfBoundsException("Index cannot be negative");
@@ -54,7 +84,13 @@ public final class CollectionHelper {
     }
 
     /**
-     * Iterates over the list, providing both the index and the element to the given consumer.
+     * Iterates over a list and performs an action for each element, providing its index.
+     *
+     * @param <T>      the element type
+     * @param list     the list to iterate
+     * @param consumer the action to perform, receiving index and element
+     *
+     * @since 0.0.10
      */
     public static <T> void forEach(List<T> list, BiConsumer<Integer, T> consumer) {
         for (int i = 0; i < list.size(); i++) {
@@ -63,7 +99,15 @@ public final class CollectionHelper {
     }
 
     /**
-     * Shifts the elements of the list to the right by the specified amount, wrapping around the end of the list.
+     * Performs a cyclic shift of elements in a list.
+     *
+     * @param <T>         the element type
+     * @param list        the list to modify
+     * @param shiftAmount the number of positions to shift to the right
+     *
+     * @return the modified list
+     *
+     * @since 0.0.10
      */
     public static <T> List<T> shift(List<T> list, int shiftAmount) {
         if (list.isEmpty()) return list;

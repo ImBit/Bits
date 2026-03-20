@@ -11,6 +11,11 @@ package xyz.bitsquidd.bits.sendable.text.decorator.formatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 
+/**
+ * A formatter that applies a {@link HoverEvent} to an Adventure {@link Component}.
+ *
+ * @since 0.0.10
+ */
 public class HoverFormatter extends AbstractFormatter {
     private final HoverEvent<?> hoverEvent;
 

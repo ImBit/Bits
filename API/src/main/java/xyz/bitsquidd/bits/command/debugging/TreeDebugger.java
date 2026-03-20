@@ -29,7 +29,7 @@ public class TreeDebugger<T> {
     /**
      * Converts a collection of command nodes into a human-readable visual tree representation.
      *
-     * @param nodes the root literal nodes to visualise, not null
+     * @param nodes the root literal nodes to visualise
      *
      * @return a formatted string illustrating the node hierarchy
      *

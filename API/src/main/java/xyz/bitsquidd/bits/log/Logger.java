@@ -11,7 +11,13 @@ package xyz.bitsquidd.bits.log;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A logger that can be used to log messages to the console. Must be initialised before use.
+ * The core logging abstraction for the Bits library.
+ * <p>
+ * Implementations are responsible for directing log output to the platform's
+ * console or log files. The logger must be initialised via {@link xyz.bitsquidd.bits.BitsConfig}
+ * before it can be accessed globally.
+ *
+ * @since 0.0.10
  */
 public abstract class Logger {
     private static @Nullable Logger instance;
@@ -58,9 +64,17 @@ public abstract class Logger {
     protected abstract void debugInternal(final String msg);
 
 
-    protected void onLog(LogData logData) {
-        // Override this method to handle log events, e.g. for staff notifications.
-    }
+    /**
+     * Invoked every time a log message is processed.
+     * <p>
+     * Override this method to implement custom log handling, such as sending
+     * notifications to admin users or external monitoring services.
+     *
+     * @param logData the data associated with the log event
+     *
+     * @since 0.0.10
+     */
+    protected void onLog(LogData logData) {}
 
     public static void debug(final String msg) {
         if (!get().flags.logDebug()) return;

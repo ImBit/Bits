@@ -12,6 +12,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
+/**
+ * A formatter that dynamically resolves colors from tag data, supporting hex codes and named colors.
+ *
+ * @since 0.0.10
+ */
 public class DynamicColorFormatter extends AbstractFormatter {
     @Override
     public Component format(Component input) {

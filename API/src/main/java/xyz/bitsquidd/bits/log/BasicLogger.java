@@ -10,9 +10,23 @@ package xyz.bitsquidd.bits.log;
 
 import xyz.bitsquidd.bits.log.pretty.PrettyLogLevel;
 
+/**
+ * A standard implementation of {@link Logger} that outputs to the system console.
+ * <p>
+ * This logger uses {@link LogType} to apply visual formatting to messages
+ * before printing them to {@link java.lang.System#out}.
+ *
+ * @since 0.0.10
+ */
 public class BasicLogger extends Logger {
     private final org.slf4j.Logger slf4j;
 
+    /**
+     * @param slf4j the underlying SLF4J logger to wrap
+     * @param flags the logging configuration flags to apply
+     *
+     * @since 0.0.10
+     */
     public BasicLogger(org.slf4j.Logger slf4j, LogFlags flags) {
         super(flags);
         this.slf4j = slf4j;

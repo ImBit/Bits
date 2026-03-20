@@ -14,15 +14,32 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 /**
- * Utility class for safely executing tasks and handling exceptions.
+ * Provides static utilities for exception-safe task execution and error reporting.
+ *
+ * @since 0.0.10
  */
 public final class Safety {
     private Safety() {}
 
+    /**
+     * Executes a runnable task, swallowing and logging any exceptions that occur.
+     *
+     * @param task the task to execute
+     *
+     * @since 0.0.10
+     */
     public static void safeExecute(final Runnable task) {
         safeExecute("unnamed", task);
     }
 
+    /**
+     * Executes a named runnable task, swallowing and logging any exceptions that occur.
+     *
+     * @param name the descriptive name of the task
+     * @param task the task to execute
+     *
+     * @since 0.0.10
+     */
     public static void safeExecute(String name, final Runnable task) {
         try {
             task.run();
@@ -31,10 +48,29 @@ public final class Safety {
         }
     }
 
+    /**
+     * Executes a supplier and returns its result, or a default value if an exception is thrown.
+     *
+     * @param <T>          the type of value being returned
+     * @param task         the result supplier
+     * @param defaultValue the value to return on failure
+     *
+     * @since 0.0.10
+     */
     public static <T> T safeExecute(final Supplier<T> task, T defaultValue) {
         return safeExecute("unnamed", task, defaultValue);
     }
 
+    /**
+     * Executes a named supplier and returns its result, or a default value if an exception is thrown.
+     *
+     * @param <T>          the type of value being returned
+     * @param name         the descriptive name of the task
+     * @param task         the result supplier
+     * @param defaultValue the value to return on failure
+     *
+     * @since 0.0.10
+     */
     public static <T> T safeExecute(String name, final Supplier<T> task, T defaultValue) {
         try {
             return task.get();
@@ -45,6 +81,15 @@ public final class Safety {
     }
 
 
+    /**
+     * Logs an exception, unwrapping {@link InvocationTargetException} to reveal
+     * the underlying cause if necessary.
+     *
+     * @param message   the descriptive message for the error
+     * @param exception the throwable to log
+     *
+     * @since 0.0.10
+     */
     public static void logExceptionNicely(String message, Throwable exception) {
         if (exception instanceof InvocationTargetException invocationTargetException) {
             logExceptionNicely(message, invocationTargetException.getCause());

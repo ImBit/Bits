@@ -10,6 +10,14 @@ package xyz.bitsquidd.bits.log.pretty;
 
 import java.util.List;
 
+/**
+ * Defines the visual configuration for a specific log level, including its icon and color scheme.
+ * <p>
+ * This class combines an emoji, a prefix string, and formatting for both the
+ * prefix and the message content to create a unified visual style for console logs.
+ *
+ * @since 0.0.10
+ */
 public final class PrettyLogLevel {
     private final String emoji;
     private final String prefix;

@@ -13,7 +13,11 @@ import java.net.URI;
 import java.net.URL;
 
 /**
- * A wrapper class for holding a URL / link as a string. Usually used for command parsing of strings with spaces.
+ * A wrapper for string representations of URLs or URIs.
+ * <p>
+ * This is primarily used as a distinct type for command argument parsing.
+ *
+ * @since 0.0.10
  */
 public final class Link {
     public final String value;
@@ -26,6 +30,14 @@ public final class Link {
         return new Link(value);
     }
 
+    /**
+     * Converts the wrapped string value into a {@link URL}.
+     *
+     * @return the parsed URL
+     *
+     * @throws MalformedURLException if the string is not a valid URL
+     * @since 0.0.10
+     */
     public URL toURL() throws MalformedURLException {
         return URI.create(value).toURL();
     }

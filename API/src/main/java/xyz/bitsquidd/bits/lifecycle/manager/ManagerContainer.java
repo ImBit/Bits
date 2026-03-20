@@ -15,11 +15,27 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Containerized storage for multiple {@link CoreManager}s, allowing for easy registration and lifecycle management of multiple managers.
+ * A container that orchestrates the lifecycle of multiple {@link CoreManager} instances.
+ * <p>
+ * This class allows for bulk registration of managers and ensures that lifecycle
+ * events (startup, initialise, etc.) are propagated to all registered members
+ * in the order they were added.
+ *
+ * @since 0.0.10
  */
 public abstract class ManagerContainer implements CoreManager {
     private final Set<CoreManager> managers = new LinkedHashSet<>();
 
+    /**
+     * Registers a new manager to be handled by this container.
+     *
+     * @param <T>     the specific type of manager
+     * @param manager the manager instance to register
+     *
+     * @return the registered manager instance
+     *
+     * @since 0.0.10
+     */
     protected final <T extends CoreManager> T registerManager(T manager) {
         managers.add(manager);
         return manager;
@@ -30,6 +46,13 @@ public abstract class ManagerContainer implements CoreManager {
     }
 
 
+    /**
+     * Returns a read-only list of all currently registered managers.
+     *
+     * @return the list of managers
+     *
+     * @since 0.0.10
+     */
     public final List<CoreManager> getAllManagers() {
         return List.copyOf(managers);
     }

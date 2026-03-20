@@ -113,7 +113,7 @@ public interface Registry<K, V> {
  * Returns the first value in this registry matching the given predicate.
  *
  * @param <V>       the type of value to search for
- * @param predicate the predicate to test against each value, not null
+ * @param predicate the predicate to test against each value
  *
  * @return the first matching value, or an empty optional if none match
  *
@@ -173,7 +173,7 @@ Every public and protected method must have:
  * The executor is inspected for annotated command methods at registration time.
  * Duplicate registrations for the same command name will replace the prior binding.
  *
- * @param executor the command executor to register, not null
+ * @param executor the command executor to register
 
  * @throws IllegalArgumentException if the executor contains no valid command annotations
  * @throws IllegalStateException    if this manager has already been shut down
@@ -229,7 +229,7 @@ Do not add separate Javadoc blocks to the record's accessor methods.
 /**
  * Represents an immutable snapshot of a formatted text component and its raw value.
  *
- * @param raw       the unformatted source string, not null
+ * @param raw       the unformatted source string
  * @param formatted the platform-formatted component derived from {@code raw}, not null
  *
  * @since 0.0.10

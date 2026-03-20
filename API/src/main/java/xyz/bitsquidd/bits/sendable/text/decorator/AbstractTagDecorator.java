@@ -18,12 +18,30 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * An abstract base class for decorators that process custom tags within text components.
+ * <p>
+ * This class handles the identification and parsing of tags (e.g., {@code <tag>text</tag>})
+ * and delegates the actual styling to registered {@link AbstractFormatter}s.
+ *
+ * @since 0.0.10
+ */
 public abstract class AbstractTagDecorator implements ITextDecorator {
     protected final Set<AbstractFormatter> globalFormatters = new LinkedHashSet<>();
     protected final Map<String, AbstractFormatter> formatters = new LinkedHashMap<>();
 
     private static final Pattern TAG_PATTERN = Pattern.compile("<([^>]+)>");
 
+    /**
+     * Formats the component by flattening it and processing any identified tags.
+     *
+     * @param component the component to format
+     * @param locale    the target locale
+     *
+     * @return a new component with tags processed and styles applied
+     *
+     * @since 0.0.10
+     */
     @Override
     public Component format(Component component, Locale locale) {
         List<TextComponent> flattenedComponents = Components.flatten(component, locale);
@@ -100,7 +118,10 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return component;
     }
 
-    private void processTagOperations(String tagContent, Map<String, String> activeTags) {
+    private void processTagOperations(
+      String tagContent,
+      Map<String, String> activeTags
+    ) {
         boolean hasLeadingSlash = tagContent.startsWith("/");
         if (hasLeadingSlash) {
             tagContent = tagContent.substring(1);
@@ -135,7 +156,7 @@ public abstract class AbstractTagDecorator implements ITextDecorator {
         return tagName.split(":", 2)[0];
     }
 
-    protected boolean isKnownTag(String tagKey) {
+    private boolean isKnownTag(String tagKey) {
         return formatters.containsKey(tagKey);
     }
 

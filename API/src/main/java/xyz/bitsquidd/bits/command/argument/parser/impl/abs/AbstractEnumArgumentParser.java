@@ -43,7 +43,7 @@ public abstract class AbstractEnumArgumentParser<T extends Enum<T>> extends Abst
     private final Class<T> enumClass;
 
     /**
-     * @param enumClass the class object representing the enum to parse, not null
+     * @param enumClass the class object representing the enum to parse
      *
      * @throws IllegalArgumentException if the provided class is not an enum
      * @since 0.0.10
