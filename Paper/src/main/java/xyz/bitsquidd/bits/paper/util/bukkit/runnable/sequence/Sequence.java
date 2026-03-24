@@ -8,8 +8,12 @@
 
 package xyz.bitsquidd.bits.paper.util.bukkit.runnable.sequence;
 
+import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Nullable;
+
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
+import xyz.bitsquidd.bits.wrapper.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +29,31 @@ public final class Sequence {
 
     private final List<Step> steps;
 
+    private @Nullable Callback callback;
+    private final List<BukkitTask> tasks = new ArrayList<>();
+
     private Sequence(Builder builder) {
         this.steps = builder.steps;
     }
 
-    public void run() {
-        steps.forEach(step -> {
-            Runnables.later(step.runnable, step.tick);
-        });
+    public Callback run() {
+        cancel();
 
+        callback = Callback.create();
+        int longest = steps.stream().mapToInt(step -> (int)step.tick).max().orElse(0);
+
+        steps.forEach(step -> tasks.add((Runnables.later(step.runnable, step.tick))));
+        tasks.add(Runnables.later(callback::complete, longest));
+
+        return callback;
+    }
+
+    public void cancel() {
+        Runnables.cleanup(tasks);
+        tasks.clear();
+
+        if (callback != null) callback.complete();
+        callback = null;
     }
 
 
