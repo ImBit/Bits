@@ -20,7 +20,7 @@ import xyz.bitsquidd.bits.lifecycle.builder.ExtendableBuildable;
 import xyz.bitsquidd.bits.paper.PaperBitsConfig;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, TimerRunnables {
@@ -116,7 +116,7 @@ public sealed abstract class Runnables permits BasicRunnables, LaterRunnables, T
 
     public static void cleanup(final @Nullable Collection<? extends BukkitTask> tasks) {
         if (tasks != null) {
-            new HashSet<>(tasks).forEach(Runnables::cleanup);
+            Set.copyOf(tasks).forEach(Runnables::cleanup);
             try {
                 tasks.clear();
             } catch (UnsupportedOperationException ignored) {
