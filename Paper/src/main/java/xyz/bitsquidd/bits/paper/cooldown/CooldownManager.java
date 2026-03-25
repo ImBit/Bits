@@ -9,6 +9,7 @@
 package xyz.bitsquidd.bits.paper.cooldown;
 
 import net.kyori.adventure.key.Key;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
@@ -26,6 +27,8 @@ public final class CooldownManager implements CoreManager {
 
     private final Map<UUID, Map<Key, CooldownEntry>> cooldowns = new ConcurrentHashMap<>();
 
+    private @Nullable BukkitTask tickTask;
+
     private static final class CooldownEntry {
         private long remainingTicks;
         private @Nullable Consumer<UUID> onExpire;
@@ -41,7 +44,12 @@ public final class CooldownManager implements CoreManager {
 
     @Override
     public void startup() {
-        Runnables.timer(this::tick, 0, 1);
+        tickTask = Runnables.buildTimer(this::tick, 0, 1).forced().run();
+    }
+
+    @Override
+    public void shutdown() {
+        tickTask = Runnables.cleanup(tickTask);
     }
 
     private void tick() {

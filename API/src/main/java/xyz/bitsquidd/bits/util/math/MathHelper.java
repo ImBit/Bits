@@ -9,6 +9,7 @@
 package xyz.bitsquidd.bits.util.math;
 
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -56,6 +57,18 @@ public final class MathHelper {
      * @since 0.0.10
      */
     public static final class Quaternion {
+        public static Vector3f X_AXIS() {
+            return new Vector3f(1, 0, 0);
+        }
+
+        public static Vector3f Y_AXIS() {
+            return new Vector3f(0, 1, 0);
+        }
+
+        public static Vector3f Z_AXIS() {
+            return new Vector3f(0, 0, 1);
+        }
+
         public static float getXRotation(final Quaternionf quat) {
             return (float)Math.atan2(
               2.0 * (quat.w * quat.x + quat.z * quat.y),

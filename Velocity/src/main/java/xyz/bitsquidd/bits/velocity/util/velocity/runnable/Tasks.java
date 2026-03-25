@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
 
+import java.util.Collection;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public final class Tasks {
@@ -35,6 +37,17 @@ public final class Tasks {
     public static @Nullable ScheduledTask cleanup(final @Nullable ScheduledTask task) {
         if (task != null && task.status() == TaskStatus.SCHEDULED) task.cancel();
         return null;
+    }
+
+    public static void cleanup(final @Nullable Collection<? extends ScheduledTask> tasks) {
+        if (tasks != null) {
+            Set.copyOf(tasks).forEach(Tasks::cleanup);
+            try {
+                tasks.clear();
+            } catch (UnsupportedOperationException ignored) {
+                // Clearing unmodifiable collections is not supported.
+            }
+        }
     }
 
     public static void cleanupAll() {
