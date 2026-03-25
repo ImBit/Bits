@@ -91,6 +91,23 @@ public final class YawAndPitch {
     }
 
 
+    public YawAndPitch withYaw(float yaw) {
+        return new YawAndPitch(yaw, this.pitch);
+    }
+
+    public YawAndPitch withPitch(float pitch) {
+        return new YawAndPitch(this.yaw, pitch);
+    }
+
+    public YawAndPitch withInvertedYaw() {
+        return new YawAndPitch(-this.yaw, this.pitch);
+    }
+
+    public YawAndPitch withInvertedPitch() {
+        return new YawAndPitch(this.yaw, -this.pitch);
+    }
+
+
     public Quaternionf toQuaternion() {
         Quaternionf quaternion = new Quaternionf();
         quaternion.rotateY((float)Math.toRadians(yaw));
