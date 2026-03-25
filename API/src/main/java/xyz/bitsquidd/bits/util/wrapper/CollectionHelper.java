@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.util.wrapper;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -84,16 +85,17 @@ public final class CollectionHelper {
     }
 
     /**
-     * Iterates over a list and performs an action for each element, providing its index.
+     * Iterates over a collection and performs an action for each element, providing its index.
      *
-     * @param <T>      the element type
-     * @param list     the list to iterate
-     * @param consumer the action to perform, receiving index and element
+     * @param <T>        the element type
+     * @param collection the collection to iterate
+     * @param consumer   the action to perform, receiving index and element
      *
      * @since 0.0.10
      */
-    public static <T> void forEach(List<T> list, BiConsumer<Integer, T> consumer) {
-        for (int i = 0; i < list.size(); i++) {
+    public static <T> void forEach(Collection<T> collection, BiConsumer<Integer, T> consumer) {
+        List<T> list = List.copyOf(collection);
+        for (int i = 0; i < collection.size(); i++) {
             consumer.accept(i, list.get(i));
         }
     }
