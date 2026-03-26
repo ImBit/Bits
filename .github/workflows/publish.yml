@@ -81,21 +81,21 @@ jobs:
                         echo "" >> changelog.md
                       fi
 
-                      BUGFIXES=$(grep -E "^(🐛|:bug:)" all_commits.txt || true)
+                      BUGFIXES=$(grep -E "^(🐛|:bug:|🚑️|:ambulance:)" all_commits.txt || true)
                       if [ ! -z "$BUGFIXES" ]; then
                         echo "### 🐛 Bug Fixes" >> changelog.md
                         echo "$BUGFIXES" | sed -E 's/^(🐛|:bug:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
-                      REFACTOR=$(grep -E "^(🎨|:art:)" all_commits.txt || true)
+                      REFACTOR=$(grep -E "^(🎨|:art:|♻️|:recycle:)" all_commits.txt || true)
                       if [ ! -z "$REFACTOR" ]; then
-                        echo "### 🎨 Performance" >> changelog.md
+                        echo "### 🎨 Refinement" >> changelog.md
                         echo "$REFACTOR" | sed -E 's/^(🎨|:art:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
-                      OTHER=$(grep -vE "^(✨|:sparkles:|🐛|:bug:|🎨|:art:|Merge)" all_commits.txt || true)
+                      OTHER=$(grep -vE "^(✨|:sparkles:|🐛|:bug:|🚑️|:ambulance:|🎨|:art:|♻️|:recycle:|Merge)" all_commits.txt || true)
                       if [ ! -z "$OTHER" ]; then
                         echo "### 📦 Other Changes" >> changelog.md
                         echo "$OTHER" | sed 's/^/\* /' >> changelog.md
