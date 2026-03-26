@@ -35,9 +35,11 @@ allprojects {
 
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
-        implementation(rootProject.libs.gson)
         implementation(rootProject.libs.adventure.text.serializer.plain)
 
+        api(rootProject.libs.gson)
+        api(rootProject.libs.classgraph)
+        api(rootProject.libs.guava)
         api(rootProject.libs.brigadier)
         api(rootProject.libs.adventure)
 
@@ -53,6 +55,7 @@ allprojects {
 
     tasks {
         jar { finalizedBy(shadowJar) }
+        build { dependsOn(shadowJar) }
         assemble { dependsOn(shadowJar) }
         javadoc { options.encoding = "UTF-8" }
 
@@ -97,7 +100,7 @@ subprojects {
                 groupId = project.group.toString()
                 artifactId = project.name
                 version = project.version.toString()
-                
+
                 from(components["java"])
             }
         }
