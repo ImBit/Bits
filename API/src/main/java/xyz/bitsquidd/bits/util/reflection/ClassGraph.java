@@ -31,10 +31,11 @@ import java.util.function.Supplier;
 public final class ClassGraph {
     private ClassGraph() {}
 
-    private static Function<? super String, ? extends io.github.classgraph.ClassGraph> CLASSGRAPH_SUPPLIER = packageName -> new io.github.classgraph.ClassGraph()
-      .enableClassInfo()
-      .enableAnnotationInfo()
-      .acceptPackages(packageName);
+    private static volatile Function<? super String, ? extends io.github.classgraph.ClassGraph> CLASSGRAPH_SUPPLIER =
+      packageName -> new io.github.classgraph.ClassGraph()
+        .enableClassInfo()
+        .enableAnnotationInfo()
+        .acceptPackages(packageName);
 
     public static void setSupplier(Function<? super String, ? extends io.github.classgraph.ClassGraph> supplier) {
         if (supplier == null) throw new IllegalArgumentException("Supplier cannot be null");
@@ -43,7 +44,7 @@ public final class ClassGraph {
 
 
     /**
-     * Helper class for converting between Java primitive types and their corresponding wrapper classes.
+     * Converts between Java primitive types and their corresponding wrapper classes.
      */
     public static final class Primitive {
         private Primitive() {}
@@ -62,7 +63,7 @@ public final class ClassGraph {
 
         public static Class<?> to(Class<?> wrapper) {
             Class<?> primitive = WRAPPER_TO_PRIMITIVE.get(wrapper);
-            if (primitive == null) throw new IllegalArgumentException("Provided class is not a wrapper: " + wrapper);
+            if (primitive == null) throw new IllegalArgumentException("Not a wrapper class: " + wrapper);
             return primitive;
         }
 
@@ -83,12 +84,12 @@ public final class ClassGraph {
     }
 
     /**
-     * Helper class for invoking methods via reflection.
+     * Invokes instance and static methods via reflection with caching.
      */
     public static final class Method {
         private Method() {}
 
-        private static final Map<MethodKey, java.lang.reflect.Method> INNER_METHOD_CACHE = new ConcurrentHashMap<>();
+        private static final Map<MethodKey, java.lang.reflect.Method> METHOD_CACHE = new ConcurrentHashMap<>();
 
         private record MethodKey(
           Class<?> clazz,
@@ -98,8 +99,8 @@ public final class ClassGraph {
             @Override
             public boolean equals(Object obj) {
                 if (this == obj) return true;
-                if (!(obj instanceof MethodKey(Class<?> clazz1, String name, Class<?>[] types))) return false;
-                return clazz.equals(clazz1) && methodName.equals(name) && Arrays.equals(parameterTypes, types);
+                if (!(obj instanceof MethodKey(Class<?> c, String n, Class<?>[] t))) return false;
+                return clazz.equals(c) && methodName.equals(n) && Arrays.equals(parameterTypes, t);
             }
 
             @Override
@@ -109,46 +110,52 @@ public final class ClassGraph {
 
         }
 
-        private static java.lang.reflect.Method cacheMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-            if (clazz == null || methodName == null || methodName.isEmpty()) throw new IllegalArgumentException("Class and methodName must be non-null and non-empty");
+        private static java.lang.reflect.Method resolveMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+            if (clazz == null || methodName == null || methodName.isEmpty()) {
+                throw new IllegalArgumentException("Class and methodName must be non-null and non-empty");
+            }
 
             MethodKey key = new MethodKey(clazz, methodName, parameterTypes);
+            java.lang.reflect.Method cached = METHOD_CACHE.get(key);
+            if (cached != null) return cached;
 
-            return INNER_METHOD_CACHE.computeIfAbsent(
-              key, k -> {
-                  Class<?> search = clazz;
-                  while (search != null) {
-                      try {
-                          java.lang.reflect.Method m = search.getDeclaredMethod(methodName, parameterTypes);
-                          m.setAccessible(true);
-                          return m;
-                      } catch (NoSuchMethodException ignored) {
-                          search = search.getSuperclass();
-                      }
-                  }
-
-                  throw new ReflectionException("Method not found: " + methodName + " in " + clazz.getName());
-              }
-            );
+            Class<?> search = clazz;
+            while (search != null) {
+                try {
+                    java.lang.reflect.Method m = search.getDeclaredMethod(methodName, parameterTypes);
+                    m.setAccessible(true);
+                    METHOD_CACHE.put(key, m);
+                    return m;
+                } catch (NoSuchMethodException ignored) {
+                    search = search.getSuperclass();
+                }
+            }
+            throw new ReflectionException("Method not found: " + methodName + " in " + clazz.getName());
         }
 
+        /**
+         * Invokes a non-static method on {@code object}.
+         * The {@code returnType} parameter is not used at runtime; callers rely on the
+         * unchecked cast.
+         */
         @SuppressWarnings("unchecked")
         public static <T> T invoke(Object object, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
             if (object == null) throw new IllegalArgumentException("Object cannot be null");
-
             try {
-                return (T)cacheMethod(object.getClass(), methodName, paramTypes).invoke(object, args);
+                return (T)resolveMethod(object.getClass(), methodName, paramTypes).invoke(object, args);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectionException("Unable to invoke method: " + methodName, e);
             }
         }
 
+        /**
+         * Invokes a static method on {@code clazz}.
+         */
         @SuppressWarnings("unchecked")
-        public static <T> T invoke(Class<?> clazz, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
-            if (clazz == null) throw new IllegalArgumentException("class cannot be null");
-
+        public static <T> T invokeStatic(Class<?> clazz, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
+            if (clazz == null) throw new IllegalArgumentException("Class cannot be null");
             try {
-                return (T)cacheMethod(clazz, methodName, paramTypes).invoke(null, args);
+                return (T)resolveMethod(clazz, methodName, paramTypes).invoke(null, args);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectionException("Unable to invoke static method: " + methodName, e);
             }
@@ -157,59 +164,59 @@ public final class ClassGraph {
     }
 
     /**
-     * Helper class for accessing and modifying fields via reflection.
+     * Reads and writes fields via reflection with caching.
      */
     public static final class Value {
         private Value() {}
 
-        private static final Map<FieldKey, Field> INNER_FIELD_CACHE = new ConcurrentHashMap<>();
+        private static final Map<FieldKey, Field> FIELD_CACHE = new ConcurrentHashMap<>();
 
         private record FieldKey(
           Class<?> clazz,
           String fieldName
         ) {
-
             @Override
             public boolean equals(Object obj) {
                 if (this == obj) return true;
-                if (!(obj instanceof FieldKey(Class<?> clazz1, String name))) return false;
-                return clazz.equals(clazz1) && fieldName.equals(name);
+                if (!(obj instanceof FieldKey(Class<?> c, String n))) return false;
+                return clazz.equals(c) && fieldName.equals(n);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(clazz, fieldName);
             }
 
         }
 
-        private static Field cacheField(Class<?> clazz, String fieldName) {
-            if (clazz == null || fieldName == null || fieldName.isEmpty()) throw new IllegalArgumentException("Class and fieldName must be non-null and non-empty");
+        private static Field resolveField(Class<?> clazz, String fieldName) {
+            if (clazz == null || fieldName == null || fieldName.isEmpty()) {
+                throw new IllegalArgumentException("Class and fieldName must be non-null and non-empty");
+            }
 
             FieldKey key = new FieldKey(clazz, fieldName);
+            Field cached = FIELD_CACHE.get(key);
+            if (cached != null) return cached;
 
-            return INNER_FIELD_CACHE.computeIfAbsent(
-              key, k -> {
-                  Class<?> search = clazz;
-                  while (search != null) {
-                      try {
-                          Field f = search.getDeclaredField(fieldName);
-                          f.setAccessible(true);
-                          return f;
-                      } catch (NoSuchFieldException ignored) {
-                          search = search.getSuperclass();
-                      }
-                  }
-
-                  throw new ReflectionException("Field not found: " + fieldName + " in " + clazz.getName());
-              }
-            );
-        }
-
-        private static Field cacheField(Object object, String fieldName) {
-            if (object == null) throw new IllegalArgumentException("Object must be non-null");
-            return cacheField(object.getClass(), fieldName);
+            Class<?> search = clazz;
+            while (search != null) {
+                try {
+                    Field f = search.getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    FIELD_CACHE.put(key, f);
+                    return f;
+                } catch (NoSuchFieldException ignored) {
+                    search = search.getSuperclass();
+                }
+            }
+            throw new ReflectionException("Field not found: " + fieldName + " in " + clazz.getName());
         }
 
         @SuppressWarnings("unchecked")
         public static <T> T get(Object object, String fieldName, Class<T> fieldType) {
+            if (object == null) throw new IllegalArgumentException("Object cannot be null");
             try {
-                return (T)cacheField(object, fieldName).get(object);
+                return (T)resolveField(object.getClass(), fieldName).get(object);
             } catch (IllegalAccessException e) {
                 throw new ReflectionException("Unable to access field: " + fieldName, e);
             }
@@ -218,32 +225,33 @@ public final class ClassGraph {
         @SuppressWarnings("unchecked")
         public static <T> T getStatic(Class<?> clazz, String fieldName, Class<T> fieldType) {
             try {
-                return (T)cacheField(clazz, fieldName).get(null);
+                return (T)resolveField(clazz, fieldName).get(null);
             } catch (IllegalAccessException e) {
                 throw new ReflectionException("Unable to access static field: " + fieldName, e);
             }
         }
 
         public static <T> void set(Object object, String fieldName, T value) {
+            if (object == null) throw new IllegalArgumentException("Object cannot be null");
             try {
-                cacheField(object, fieldName).set(object, value);
+                resolveField(object.getClass(), fieldName).set(object, value);
             } catch (IllegalAccessException e) {
-                throw new ReflectionException("Unable to access field: " + fieldName, e);
+                throw new ReflectionException("Unable to set field: " + fieldName, e);
             }
         }
 
         public static <T> void setStatic(Class<?> clazz, String fieldName, T value) {
             try {
-                cacheField(clazz, fieldName).set(null, value);
+                resolveField(clazz, fieldName).set(null, value);
             } catch (IllegalAccessException e) {
-                throw new ReflectionException("Unable to access static field: " + fieldName, e);
+                throw new ReflectionException("Unable to set static field: " + fieldName, e);
             }
         }
 
     }
 
     /**
-     * Helper class for instantiating objects via reflection.
+     * Instantiates objects via reflection with constructor caching.
      */
     public static final class Instance {
         private Instance() {}
@@ -257,8 +265,8 @@ public final class ClassGraph {
             @Override
             public boolean equals(Object obj) {
                 if (this == obj) return true;
-                if (!(obj instanceof ConstructorKey(Class<?> clazz1, Class<?>[] types))) return false;
-                return clazz.equals(clazz1) && Arrays.equals(parameterTypes, types);
+                if (!(obj instanceof ConstructorKey(Class<?> c, Class<?>[] t))) return false;
+                return clazz.equals(c) && Arrays.equals(parameterTypes, t);
             }
 
             @Override
@@ -268,55 +276,65 @@ public final class ClassGraph {
 
         }
 
-        private static Class<?>[] getParameterTypes(Object... args) {
-            Class<?>[] paramTypes = new Class<?>[args.length];
+        /**
+         * Derives parameter types from the supplied args, guarding against null elements.
+         */
+        private static Class<?>[] paramTypesFrom(Object... args) {
+            Class<?>[] types = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++) {
-                paramTypes[i] = Primitive.fromOrSelf(args[i].getClass());
+                if (args[i] == null) throw new IllegalArgumentException("Null argument at index " + i + " — cannot infer type");
+                types[i] = Primitive.fromOrSelf(args[i].getClass());
             }
-            return paramTypes;
+            return types;
         }
 
         @SuppressWarnings("unchecked")
-        private static <T> Constructor<T> cacheConstructor(Class<T> clazz, Class<?>[] parameterTypes) throws ReflectionException {
+        private static <T> Constructor<T> resolveConstructor(Class<T> clazz, Class<?>[] parameterTypes) {
             if (clazz == null) throw new IllegalArgumentException("Class must be non-null");
 
             ConstructorKey key = new ConstructorKey(clazz, parameterTypes);
+            Constructor<?> cached = CONSTRUCTOR_CACHE.get(key);
+            if (cached != null) return (Constructor<T>)cached;
 
-            return (Constructor<T>)CONSTRUCTOR_CACHE.computeIfAbsent(
-              key, k -> {
-                  try {
-                      Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
-                      constructor.setAccessible(true);
-                      return constructor;
-                  } catch (NoSuchMethodException e) {
-                      throw new ReflectionException("Constructor not found: " + clazz.getName() + " with parameters: " + Arrays.toString(parameterTypes), e);
-                  }
-              }
-            );
+            try {
+                Constructor<T> ctor = clazz.getDeclaredConstructor(parameterTypes);
+                ctor.setAccessible(true);
+                CONSTRUCTOR_CACHE.put(key, ctor);
+                return ctor;
+            } catch (NoSuchMethodException e) {
+                throw new ReflectionException("Constructor not found: " + clazz.getName() + " with params: " + Arrays.toString(parameterTypes), e);
+            }
         }
 
-        public static <T> T create(Class<T> clazz, Object... args) throws ReflectionException {
+        public static <T> T create(Class<T> clazz, Object... args) {
             try {
-                Class<?>[] paramTypes = getParameterTypes(args);
-                Constructor<T> constructor = cacheConstructor(clazz, paramTypes);
-                return constructor.newInstance(args);
+                return resolveConstructor(clazz, paramTypesFrom(args)).newInstance(args);
             } catch (InvocationTargetException e) {
                 Throwable cause = e.getCause();
-                throw new ReflectionException("Constructor failed for " + clazz.getName(), cause != null ? cause : e);
+                throw new ReflectionException("Constructor threw for " + clazz.getName(), cause != null ? cause : e);
+            } catch (ReflectionException e) {
+                throw e;
             } catch (Exception e) {
                 throw new ReflectionException("Failed to create instance of " + clazz.getName(), e);
             }
         }
 
-        public static <T> Supplier<T> supplier(Class<T> clazz, Object... args) throws ReflectionException {
-            Class<?>[] paramTypes = getParameterTypes(args);
-            Constructor<T> constructor = cacheConstructor(clazz, paramTypes);
+        /**
+         * Returns a {@link Supplier} that repeatedly creates instances using a pre-resolved constructor.
+         * Any exception thrown during instantiation includes the original cause.
+         */
+        public static <T> Supplier<T> supplier(Class<T> clazz, Object... args) {
+            Class<?>[] paramTypes = paramTypesFrom(args);
+            Constructor<T> ctor = resolveConstructor(clazz, paramTypes);
 
             return () -> {
                 try {
-                    return constructor.newInstance(args);
+                    return ctor.newInstance(args);
+                } catch (InvocationTargetException e) {
+                    Throwable cause = e.getCause();
+                    throw new ReflectionException("Supplier instantiation failed for " + clazz.getName(), cause != null ? cause : e);
                 } catch (Exception e) {
-                    throw new ReflectionException("Reflection Failed.");
+                    throw new ReflectionException("Supplier instantiation failed for " + clazz.getName(), e);
                 }
             };
         }
@@ -324,11 +342,19 @@ public final class ClassGraph {
     }
 
     /**
-     * Helper class for scanning the classpath using the io.github.classgraph library.
+     * Scans the classpath using the classgraph library.
      */
     public static final class Scanner {
         private Scanner() {}
 
+        /**
+         * Controls which classes are included in a scan.
+         *
+         * <p>Start from {@link ScannerFlags#DEFAULT} and compose with the {@code with*} methods:
+         * <pre>{@code
+         *   ScannerFlags flags = ScannerFlags.DEFAULT.withAbstract().withDeprecated();
+         * }</pre>
+         */
         public record ScannerFlags(
           boolean includeAbstract,
           boolean includeDeprecated,
@@ -354,22 +380,21 @@ public final class ClassGraph {
             return getClasses(packageName, baseClass, ScannerFlags.DEFAULT);
         }
 
-        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass, ScannerFlags flags) throws ReflectionException {
+        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass, ScannerFlags flags) {
             List<Class<? extends T>> classes = new ArrayList<>();
 
-            try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).enableClassInfo().scan()) {
-                ClassInfoList classInfoList;
-                if (baseClass.isInterface()) {
-                    classInfoList = scanResult.getClassesImplementing(baseClass.getName());
-                } else {
-                    classInfoList = scanResult.getSubclasses(baseClass.getName());
-                }
+            // CLASSGRAPH_SUPPLIER already applies enableClassInfo() and enableAnnotationInfo()
+            // they are not called again here.
+            try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
+                ClassInfoList classInfoList = baseClass.isInterface()
+                                              ? scanResult.getClassesImplementing(baseClass.getName())
+                                              : scanResult.getSubclasses(baseClass.getName());
 
-                for (io.github.classgraph.ClassInfo classInfo : classInfoList) {
-                    if (!flags.includeAbstract && (classInfo.isAbstract() || classInfo.isInterface())) continue;
-                    if (!flags.includeDeprecated && classInfo.hasAnnotation(Deprecated.class.getName())) continue;
-                    if (!flags.includeInnerClasses && classInfo.isInnerClass()) continue;
-                    classes.add(classInfo.loadClass(baseClass));
+                for (io.github.classgraph.ClassInfo info : classInfoList) {
+                    if (!flags.includeAbstract() && (info.isAbstract() || info.isInterface())) continue;
+                    if (!flags.includeDeprecated() && info.hasAnnotation(Deprecated.class.getName())) continue;
+                    if (!flags.includeInnerClasses() && info.isInnerClass()) continue;
+                    classes.add(info.loadClass(baseClass));
                 }
             } catch (Exception e) {
                 throw new ReflectionException("Failed to scan package: " + packageName, e);
@@ -380,10 +405,9 @@ public final class ClassGraph {
 
         public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> annotation) {
             List<Class<?>> classes = new ArrayList<>();
-            try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).enableAnnotationInfo().scan()) {
-                ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(annotation.getName());
-                for (io.github.classgraph.ClassInfo classInfo : classInfoList) {
-                    classes.add(classInfo.loadClass());
+            try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
+                for (io.github.classgraph.ClassInfo info : scanResult.getClassesWithAnnotation(annotation.getName())) {
+                    classes.add(info.loadClass());
                 }
             }
             return classes;
