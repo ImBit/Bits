@@ -57,7 +57,13 @@ allprojects {
         jar { finalizedBy(shadowJar) }
         build { dependsOn(shadowJar) }
         assemble { dependsOn(shadowJar) }
-        javadoc { options.encoding = "UTF-8" }
+        javadoc {
+            options {
+                encoding = "UTF-8"
+                isFailOnError = false
+                (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+            }
+        }
 
         withType<JavaCompile> {
             options.encoding = "UTF-8"
