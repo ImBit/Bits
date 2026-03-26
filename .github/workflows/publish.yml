@@ -131,3 +131,25 @@ jobs:
                         LICENSE
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Bump minor version
+                run: |
+                    CURRENT="${{ env.VERSION }}"
+                    MAJOR=$(echo "$CURRENT" | cut -d'.' -f1)
+                    MID=$(echo "$CURRENT" | cut -d'.' -f2)
+                    MINOR=$(echo "$CURRENT" | cut -d'.' -f3)
+
+                    NEW_MINOR=$((MINOR + 1))
+                    NEW_VERSION="$MAJOR.$MID.$NEW_MINOR"
+
+                    sed -i "s/^bits_version=.*/bits_version=$NEW_VERSION/" gradle.properties
+
+                    echo "Bumped version: $CURRENT → $NEW_VERSION"
+                    echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+            -   name: Commit version bump
+                run: |
+                    git config user.name  "github-actions[bot]"
+                    git config user.email "github-actions[bot]@users.noreply.github.com"
+                    git add gradle.properties
+                    git commit -m "🏷️ Bump version to ${{ env.NEW_VERSION }}"
+                    git push
