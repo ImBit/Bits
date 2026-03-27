@@ -6,9 +6,24 @@
  * Enjoy the Bits and Bobs :)
  */
 
+pluginManagement {
+    repositories {
+        maven {
+            name = "Fabric"
+            url = uri("https://maven.fabricmc.net/")
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "Bits"
 
 include("API")
 
 include("Paper")
 include("Velocity")
+
+include("Fabric")
+include("Fabric:Server")
+include("Fabric:Client")

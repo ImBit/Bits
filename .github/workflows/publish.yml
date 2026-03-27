@@ -84,14 +84,14 @@ jobs:
                       BUGFIXES=$(grep -E "^(🐛|:bug:|🚑️|:ambulance:)" all_commits.txt || true)
                       if [ ! -z "$BUGFIXES" ]; then
                         echo "### 🐛 Bug Fixes" >> changelog.md
-                        echo "$BUGFIXES" | sed -E 's/^(🐛|:bug:) /\* /' >> changelog.md
+                        echo "$BUGFIXES" | sed -E 's/^(🐛|:bug:|🚑️|:ambulance:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
                       REFACTOR=$(grep -E "^(🎨|:art:|♻️|:recycle:)" all_commits.txt || true)
                       if [ ! -z "$REFACTOR" ]; then
                         echo "### 🎨 Refinement" >> changelog.md
-                        echo "$REFACTOR" | sed -E 's/^(🎨|:art:) /\* /' >> changelog.md
+                        echo "$REFACTOR" | sed -E 's/^(🎨|:art:|♻️|:recycle:) /\* /' >> changelog.md
                         echo "" >> changelog.md
                       fi
 
