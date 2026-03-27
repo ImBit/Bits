@@ -22,7 +22,7 @@ public final class Pair<A, B> {
     private A first;
     private B second;
 
-    private Pair(A first, B second) {
+    public Pair(A first, B second) {
         this.first = first;
         this.second = second;
     }
