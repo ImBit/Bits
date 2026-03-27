@@ -50,7 +50,8 @@ allprojects {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
-        maven("https://repo.papermc.io/repository/maven-public/")
+        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        maven { url = uri("https://jitpack.io") }
     }
 
     tasks {
@@ -95,6 +96,14 @@ allprojects {
 }
 
 subprojects {
+    dependencies {
+        if (project.path != ":API") {
+            dependencies {
+                api(project(":API", configuration = "shadow"))
+            }
+        }
+    }
+
     extensions.configure<JavaPluginExtension>("java") {
         withSourcesJar()
         withJavadocJar()
