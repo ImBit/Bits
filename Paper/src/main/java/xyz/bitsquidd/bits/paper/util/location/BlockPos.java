@@ -134,8 +134,20 @@ public final class BlockPos {
         return new BlockPos(this.x + other.x, this.y + other.y, this.z + other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos add(Location loc) {
+        return new BlockPos(this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    }
+
+    public Location addTo(Location loc) {
+        return new Location(loc.getWorld(), this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos add(Vector vec) {
         return new BlockPos(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ(), this.yaw, this.pitch);
+    }
+
+    public Vector addTo(Vector vec) {
+        return new Vector(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ());
     }
 
     public BlockPos add(double x, double y, double z) {
@@ -146,8 +158,20 @@ public final class BlockPos {
         return new BlockPos(this.x - other.x, this.y - other.y, this.z - other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos subtract(Location loc) {
+        return new BlockPos(this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
+    }
+
+    public Location subtractFrom(Location loc) {
+        return new Location(loc.getWorld(), this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos subtract(Vector vec) {
         return new BlockPos(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ(), this.yaw, this.pitch);
+    }
+
+    public Vector subtractFrom(Vector vec) {
+        return new Vector(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ());
     }
 
     public BlockPos subtract(double x, double y, double z) {
