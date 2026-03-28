@@ -35,6 +35,7 @@ public final class ClassGraph {
       packageName -> new io.github.classgraph.ClassGraph()
         .enableClassInfo()
         .enableAnnotationInfo()
+        .overrideClassLoaders(Thread.currentThread().getContextClassLoader())
         .acceptPackages(packageName);
 
     public static void setSupplier(Function<? super String, ? extends io.github.classgraph.ClassGraph> supplier) {
@@ -376,25 +377,30 @@ public final class ClassGraph {
 
         }
 
+        private static Class<?> getCorrectLoader(io.github.classgraph.ClassInfo info, Class<?> base) throws ClassNotFoundException {
+            return Class.forName(info.getName(), true, base.getClassLoader());
+        }
+
         public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass) {
             return getClasses(packageName, baseClass, ScannerFlags.DEFAULT);
         }
 
-        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass, ScannerFlags flags) {
+        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> clazz, ScannerFlags flags) {
             List<Class<? extends T>> classes = new ArrayList<>();
 
             // CLASSGRAPH_SUPPLIER already applies enableClassInfo() and enableAnnotationInfo()
             // they are not called again here.
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
-                ClassInfoList classInfoList = baseClass.isInterface()
-                                              ? scanResult.getClassesImplementing(baseClass.getName())
-                                              : scanResult.getSubclasses(baseClass.getName());
+                ClassInfoList classInfoList = clazz.isInterface()
+                                              ? scanResult.getClassesImplementing(clazz.getName())
+                                              : scanResult.getSubclasses(clazz.getName());
 
                 for (io.github.classgraph.ClassInfo info : classInfoList) {
                     if (!flags.includeAbstract() && (info.isAbstract() || info.isInterface())) continue;
                     if (!flags.includeDeprecated() && info.hasAnnotation(Deprecated.class.getName())) continue;
                     if (!flags.includeInnerClasses() && info.isInnerClass()) continue;
-                    classes.add(info.loadClass(baseClass));
+
+                    classes.add(getCorrectLoader(info, clazz).asSubclass(clazz));
                 }
             } catch (Exception e) {
                 throw new ReflectionException("Failed to scan package: " + packageName, e);
@@ -403,12 +409,14 @@ public final class ClassGraph {
             return classes;
         }
 
-        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> annotation) {
+        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz) {
             List<Class<?>> classes = new ArrayList<>();
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
-                for (io.github.classgraph.ClassInfo info : scanResult.getClassesWithAnnotation(annotation.getName())) {
-                    classes.add(info.loadClass());
+                for (io.github.classgraph.ClassInfo info : scanResult.getClassesWithAnnotation(clazz.getName())) {
+                    classes.add(getCorrectLoader(info, clazz));
                 }
+            } catch (Exception e) {
+                throw new ReflectionException("Failed to scan package: " + packageName, e);
             }
             return classes;
         }
