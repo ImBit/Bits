@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.paper.util.location;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -39,6 +40,10 @@ public final class YawAndPitch {
 
     public static YawAndPitch from(Location location) {
         return new YawAndPitch(location.getYaw(), location.getPitch());
+    }
+
+    public static YawAndPitch from(Entity entity) {
+        return from(entity.getLocation());
     }
 
     public static YawAndPitch from(BlockFace blockFace) {
