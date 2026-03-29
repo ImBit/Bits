@@ -6,9 +6,32 @@
  * Enjoy the Bits and Bobs :)
  */
 
+pluginManagement {
+    repositories {
+        mavenLocal()
+
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        mavenLocal()
+
+        // PaperMC - required for paperweight dev bundle
+        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        maven { url = uri("https://jitpack.io") }
+
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "Bits"
 
 include("API")
 
 include("Paper")
 include("Velocity")
+
