@@ -8,10 +8,27 @@
 
 pluginManagement {
     repositories {
+        mavenLocal()
+
         maven {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
         }
+
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        mavenLocal()
+
+        // PaperMC - required for paperweight dev bundle
+        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        maven { url = uri("https://jitpack.io") }
+
         mavenCentral()
         gradlePluginPortal()
     }
@@ -23,6 +40,7 @@ include("API")
 
 include("Paper")
 include("Velocity")
+
 
 include("Fabric")
 include("Fabric:Server")

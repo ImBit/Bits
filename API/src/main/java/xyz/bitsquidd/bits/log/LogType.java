@@ -12,6 +12,7 @@ import xyz.bitsquidd.bits.log.pretty.ANSI;
 import xyz.bitsquidd.bits.log.pretty.FormattingComponents;
 import xyz.bitsquidd.bits.log.pretty.PrettyLogLevel;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,5 +93,25 @@ public record LogType(
         FormattingComponents.of(ANSI.Foreground.WHITE, ANSI.Background.BRIGHT_RED, List.of(ANSI.Style.BOLD))
       )
     );
+
+
+    public enum Standard {
+        DEBUG(LogType.DEBUG),
+        SUCCESS(LogType.SUCCESS),
+        INFO(LogType.INFO),
+        WARNING(LogType.WARNING),
+        ERROR(LogType.ERROR),
+        FATAL(LogType.FATAL);
+
+        public final LogType logType;
+
+        Standard(LogType logType) {
+            this.logType = logType;
+        }
+
+        public static Standard fromType(LogType type) {
+            return Arrays.stream(values()).filter(standard -> standard.logType.id().equals(type.id())).findFirst().orElse(INFO);
+        }
+    }
 
 }

@@ -11,16 +11,16 @@ package xyz.bitsquidd.bits.paper.util.location;
 import org.bukkit.Location;
 import org.bukkit.Rotation;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 /**
  * Immutable class representing a position in the world with x, y, z coordinates and yaw, pitch rotation.
  */
-public final class BlockPos {
+public final class BlockPos implements Locatable {
     public final double x;
     public final double y;
     public final double z;
@@ -30,8 +30,6 @@ public final class BlockPos {
 
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0, 0, 0);
 
-    private static final DecimalFormat df = new DecimalFormat("#.00");
-
     private BlockPos(double x, double y, double z, float yaw, float pitch) {
         this.x = x;
         this.y = y;
@@ -40,6 +38,7 @@ public final class BlockPos {
         this.pitch = (pitch + 90) % 180 - 90; // Normalizes pitch to [-90, 90]
     }
 
+    //region Static Constructors
     public static BlockPos of(double x, double y, double z) {
         return new BlockPos(x, y, z, 0, 0);
     }
@@ -54,12 +53,6 @@ public final class BlockPos {
 
     public static BlockPos of(Location location) {
         return new BlockPos(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-    }
-
-
-    @Override
-    public String toString() {
-        return df.format(x) + "," + df.format(y) + "," + df.format(z) + "," + df.format(yaw) + "," + df.format(pitch);
     }
 
     public static BlockPos fromString(String str) {
@@ -78,6 +71,14 @@ public final class BlockPos {
         }
     }
 
+    //endregion
+
+
+    //region Java Methods
+    @Override
+    public String toString() {
+        return df.format(x) + "," + df.format(y) + "," + df.format(z) + "," + df.format(yaw) + "," + df.format(pitch);
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -101,41 +102,54 @@ public final class BlockPos {
     public BlockPos clone() {
         return new BlockPos(x, y, z, yaw, pitch);
     }
+    //endregion
 
 
+    //region Convertors
+    @Override
     public Location asLocation(World world) {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
+    @Override
+    public Block asBlock(World world) {
+        return world.getBlockAt((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
+    }
+
+    @Override
     public Vector asVector() {
         return new Vector(x, y, z);
     }
+    //endregion
 
-    public int[] asIntArray() {
-        return new int[]{(int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z)};
+
+    //region Getters
+
+    @Override
+    public YawAndPitch getDirection() {
+        return YawAndPitch.of(yaw, pitch);
     }
 
-
-    public double distance(BlockPos other) {
-        double dx = this.x - other.x;
-        double dy = this.y - other.y;
-        double dz = this.z - other.z;
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
-    }
-
-    public double distanceSquared(BlockPos other) {
-        double dx = this.x - other.x;
-        double dy = this.y - other.y;
-        double dz = this.z - other.z;
-        return dx * dx + dy * dy + dz * dz;
-    }
+    //endregion
 
     public BlockPos add(BlockPos other) {
         return new BlockPos(this.x + other.x, this.y + other.y, this.z + other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos add(Location loc) {
+        return new BlockPos(this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    }
+
+    public Location addTo(Location loc) {
+        return new Location(loc.getWorld(), this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos add(Vector vec) {
         return new BlockPos(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ(), this.yaw, this.pitch);
+    }
+
+    public Vector addTo(Vector vec) {
+        return new Vector(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ());
     }
 
     public BlockPos add(double x, double y, double z) {
@@ -146,8 +160,20 @@ public final class BlockPos {
         return new BlockPos(this.x - other.x, this.y - other.y, this.z - other.z, this.yaw, this.pitch);
     }
 
+    public BlockPos subtract(Location loc) {
+        return new BlockPos(this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
+    }
+
+    public Location subtractFrom(Location loc) {
+        return new Location(loc.getWorld(), this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
+    }
+
     public BlockPos subtract(Vector vec) {
         return new BlockPos(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ(), this.yaw, this.pitch);
+    }
+
+    public Vector subtractFrom(Vector vec) {
+        return new Vector(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ());
     }
 
     public BlockPos subtract(double x, double y, double z) {

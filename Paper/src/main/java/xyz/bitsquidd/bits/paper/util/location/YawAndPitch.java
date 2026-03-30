@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.paper.util.location;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -41,6 +42,10 @@ public final class YawAndPitch {
         return new YawAndPitch(location.getYaw(), location.getPitch());
     }
 
+    public static YawAndPitch from(Entity entity) {
+        return from(entity.getLocation());
+    }
+
     public static YawAndPitch from(BlockFace blockFace) {
         return switch (blockFace) {
             case NORTH -> new YawAndPitch(0, 0);
@@ -66,6 +71,17 @@ public final class YawAndPitch {
         };
     }
 
+    public static YawAndPitch from(Cardinal cardinal) {
+        return switch (cardinal) {
+            case NORTH -> new YawAndPitch(0, 0);
+            case EAST -> new YawAndPitch(90, 0);
+            case SOUTH -> new YawAndPitch(180, 0);
+            case WEST -> new YawAndPitch(-90, 0);
+            case UP -> new YawAndPitch(0, -90);
+            case DOWN -> new YawAndPitch(0, 90);
+        };
+    }
+
     public static YawAndPitch from(Quaternionf quaternion) {
         Vector3f euler = new Vector3f();
         quaternion.getEulerAnglesYXZ(euler);
@@ -81,9 +97,11 @@ public final class YawAndPitch {
         return new YawAndPitch(this.yaw - yawAndPitch.yaw, this.pitch - yawAndPitch.pitch);
     }
 
-    // We convert to quaternion, add, then convert back to avoid gimbal lock
+    /**
+     * Adds the given yaw and pitch to this one, wrapping around axes if needed.
+     */
     public YawAndPitch addWrap(YawAndPitch yawAndPitch) {
-        return from(this.toQuaternion().mul(yawAndPitch.toQuaternion()));
+        return from(this.toQuaternion().mul(yawAndPitch.toQuaternion())); // We convert to quaternion, add then convert back to avoid gimbal lock
     }
 
     public YawAndPitch subtractWrap(YawAndPitch yawAndPitch) {
@@ -141,6 +159,26 @@ public final class YawAndPitch {
         }
 
         return BlockFace.SELF; // Fallback, should not reach here
+    }
+
+    public Cardinal toCardinal() {
+        float normalizedYaw = ((yaw % 360) + 360) % 360;
+
+        if (pitch > 45) {
+            return Cardinal.DOWN;
+        } else if (pitch < -45) {
+            return Cardinal.UP;
+        } else if (normalizedYaw >= 315 || normalizedYaw < 45) {
+            return Cardinal.NORTH;
+        } else if (normalizedYaw >= 45 && normalizedYaw < 135) {
+            return Cardinal.EAST;
+        } else if (normalizedYaw >= 135 && normalizedYaw < 225) {
+            return Cardinal.SOUTH;
+        } else if (normalizedYaw >= 225) {
+            return Cardinal.WEST;
+        }
+
+        return Cardinal.NORTH; // Fallback, should not reach here
     }
 
     public Vector toVector() {
