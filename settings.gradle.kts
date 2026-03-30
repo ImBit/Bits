@@ -21,18 +21,20 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        mavenLocal()
-
-        // PaperMC - required for paperweight dev bundle
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-        maven { url = uri("https://jitpack.io") }
-
-        mavenCentral()
-        gradlePluginPortal()
+    versionCatalogs {
+        create("fabricLibs") {
+            from(files("Fabric/gradle/libs.versions.toml"))
+        }
+        create("paperLibs") {
+            from(files("Paper/gradle/libs.versions.toml"))
+        }
+        create("velocityLibs") {
+            from(files("Velocity/gradle/libs.versions.toml"))
+        }
     }
 }
+
+
 
 rootProject.name = "Bits"
 

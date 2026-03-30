@@ -1,16 +1,8 @@
 [versions]
-fabric = "0.18.4"
 convention = "1.0.1"
-paper-api = "1.21.11-R0.1-SNAPSHOT"
 adventure = "4.26.1"
 
 [libraries]
-fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric" }
-fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric" }
-
-velocity-api = { group = "com.velocitypowered", name = "velocity-api", version = "3.4.0-SNAPSHOT" }
-
-
 jb-annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
 joml = { group = "org.joml", name = "joml", version = "1.10.8" }
 logger = { group = "org.slf4j", name = "slf4j-api", version = "2.0.17" }
@@ -30,9 +22,6 @@ imbit-convention = { id = "com.github.ImBit.convention", version.ref = "conventi
 
 shadow = { id = "com.gradleup.shadow", version = "9.0.1" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0" }
-
-paperweight-userdev = { id = "io.papermc.paperweight.userdev", version = "2.0.0-beta.19" }
-fabric-loom = { id = "fabric-loom", version = "1.14-SNAPSHOT" }
 
 errorprone = { id = "net.ltgt.errorprone", version = "4.3.0" }
 

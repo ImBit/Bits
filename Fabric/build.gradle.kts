@@ -7,24 +7,31 @@
  */
 
 plugins {
-    alias(libs.plugins.fabric.loom)
+    alias(fabricLibs.plugins.fabric.loom)
 }
 
 allprojects {
-    plugins.apply(rootProject.libs.plugins.fabric.loom.get().pluginId)
+    plugins.apply(rootProject.fabricLibs.plugins.fabric.loom.get().pluginId)
+
+    repositories {
+        mavenLocal()
+
+        maven { url = uri("https://maven.fabricmc.net/") }
+
+        mavenCentral()
+    }
 
     dependencies {
         minecraft("com.mojang:minecraft:1.21.11")
-
         mappings(loom.officialMojangMappings())
 
-        modImplementation(rootProject.libs.fabric.loader)
-        modImplementation(rootProject.libs.fabric.api)
+        modImplementation(rootProject.fabricLibs.fabric.loader)
+        modImplementation(rootProject.fabricLibs.fabric.api)
     }
 }
 
 subprojects {
     dependencies {
-        implementation(project(":Fabric", configuration = "shadow"))
+        implementation(project(":Fabric"))
     }
 }

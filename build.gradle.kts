@@ -24,6 +24,13 @@ allprojects {
     group = rootProject.group
     version = rootProject.version
 
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+        maven { url = uri("https://jitpack.io") }
+    }
+
     dependencies {
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)

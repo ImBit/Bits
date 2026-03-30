@@ -7,9 +7,13 @@
  */
 
 allprojects {
+    repositories {
+        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    }
+
     dependencies {
-        implementation(rootProject.libs.velocity.api.get())
-        annotationProcessor(rootProject.libs.velocity.api.get())
+        implementation(rootProject.velocityLibs.velocity.api.get())
+        annotationProcessor(rootProject.velocityLibs.velocity.api.get())
     }
 }
 
