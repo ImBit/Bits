@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -8,6 +10,18 @@
 
 plugins {
     alias(fabricLibs.plugins.fabric.loom)
+}
+
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        create("bits") {
+            sourceSet(sourceSets.main.get())
+            sourceSet(sourceSets["client"])
+//            sourceSet(sourceSets["server"])
+        }
+    }
 }
 
 repositories {
@@ -29,8 +43,18 @@ dependencies {
 
     modImplementation("me.lucko:fabric-permissions-api:0.5.0")
 
-    modImplementation(project(":API"))
-    api(project(":API"))
+    shade(project(":Minecraft"))
+}
+
+tasks.withType<ShadowJar> {
+    enabled = false
+}
+
+tasks {
+    jar {
+        from(sourceSets.main.get().output)
+        from(sourceSets["client"].output)
+    }
 }
 
 afterEvaluate {
