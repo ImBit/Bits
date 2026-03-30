@@ -1,5 +1,3 @@
-import xyz.bitsquidd.relocate
-
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -36,8 +34,6 @@ allprojects {
         implementation(rootProject.libs.logger)
         implementation(rootProject.libs.adventure.text.serializer.plain)
 
-        shade(rootProject.libs.classgraph)
-
         api(rootProject.libs.gson)
         api(rootProject.libs.guava)
         api(rootProject.libs.brigadier)
@@ -45,6 +41,4 @@ allprojects {
 
         errorprone(rootProject.libs.errorprone)
     }
-
-    relocate("io.github.classgraph" to "xyz.bitsquidd.internal.classgraph")
 }

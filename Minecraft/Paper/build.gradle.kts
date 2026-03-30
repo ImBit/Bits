@@ -18,6 +18,8 @@ allprojects {
     }
 
     dependencies {
+        shade(project(":API"))
+
         paperweight.paperDevBundle(rootProject.paperLibs.versions.paper.api.get())
     }
 }

@@ -1,5 +1,7 @@
 package xyz.bitsquidd.bits.config;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
@@ -9,6 +11,7 @@ import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 
+@Environment(EnvType.CLIENT)
 public class FabricClientBitsConfig extends FabricBitsConfig {
 
     public FabricClientBitsConfig(org.slf4j.Logger slf4j) {

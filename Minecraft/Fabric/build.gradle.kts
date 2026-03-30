@@ -10,34 +10,38 @@ plugins {
     alias(fabricLibs.plugins.fabric.loom)
 }
 
-allprojects {
-    group = "com.github.imbit.bits.fabric"
+repositories {
+    mavenLocal()
 
-    plugins.apply(rootProject.fabricLibs.plugins.fabric.loom.get().pluginId)
+    maven { url = uri("https://maven.fabricmc.net/") }
 
-    repositories {
-        mavenLocal()
-
-        maven { url = uri("https://maven.fabricmc.net/") }
-
-        mavenCentral()
-    }
-
-    dependencies {
-        minecraft("com.mojang:minecraft:1.21.11")
-        mappings(loom.officialMojangMappings())
-
-        modImplementation(rootProject.fabricLibs.fabric.loader)
-        modImplementation(rootProject.fabricLibs.fabric.api)
-
-        modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
-
-        modImplementation("me.lucko:fabric-permissions-api:0.5.0")
-    }
+    mavenCentral()
 }
 
-subprojects {
-    dependencies {
-        implementation(project(":Minecraft:Fabric"))
+dependencies {
+    minecraft("com.mojang:minecraft:1.21.11")
+    mappings(loom.officialMojangMappings())
+
+    modImplementation(rootProject.fabricLibs.fabric.loader)
+    modImplementation(rootProject.fabricLibs.fabric.api)
+
+    modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
+
+    modImplementation("me.lucko:fabric-permissions-api:0.5.0")
+
+    modImplementation(project(":API"))
+    api(project(":API"))
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            named<MavenPublication>("maven") {
+                artifacts.clear()
+                artifact(tasks.named("remapJar"))
+                artifact(tasks.named("sourcesJar"))
+                artifact(tasks.named("javadocJar"))
+            }
+        }
     }
 }

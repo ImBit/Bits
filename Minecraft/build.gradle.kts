@@ -5,14 +5,15 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-allprojects {
-    dependencies {
-        api(project(":API"))
-    }
-}
 
 subprojects {
     dependencies {
-        api(project(":Minecraft"))
+        shade(project(":Minecraft"))
+    }
+}
+
+allprojects {
+    dependencies {
+        shade(project(":API"))
     }
 }

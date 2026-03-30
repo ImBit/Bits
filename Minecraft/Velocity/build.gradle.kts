@@ -12,6 +12,8 @@ allprojects {
     }
 
     dependencies {
+        shade(project(":API"))
+
         implementation(rootProject.velocityLibs.velocity.api.get())
         annotationProcessor(rootProject.velocityLibs.velocity.api.get())
     }

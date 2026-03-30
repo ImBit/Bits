@@ -47,5 +47,3 @@ include("Minecraft:Paper")
 include("Minecraft:Velocity")
 
 include("Minecraft:Fabric")
-include("Minecraft:Fabric:Server")
-include("Minecraft:Fabric:Client")

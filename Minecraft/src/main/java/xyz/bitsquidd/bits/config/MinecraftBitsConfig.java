@@ -17,11 +17,14 @@ import java.util.Locale;
 public abstract class MinecraftBitsConfig extends BitsConfig {
     private boolean paused = false;
 
-    protected final BitsCommandManager<?> commandManager;
+    protected BitsCommandManager<?> commandManager;
 
 
-    public MinecraftBitsConfig() {
+    @Override
+    public void startup() {
         this.commandManager = registerManager(createCommandManager());
+        
+        super.startup();
     }
 
     public static MinecraftBitsConfig get() {

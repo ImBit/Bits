@@ -33,8 +33,12 @@ public abstract class BitsConfig extends ManagerContainer {
      * @since 0.0.10
      */
     protected BitsConfig() {
-        if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
+        System.out.println("DEBUG: BitsConfig constructor started. This: " + this.hashCode());
         instance = this;
+        System.out.println("DEBUG: Instance set to: " + instance.hashCode());
+
+//        if (instance != null) throw new IllegalStateException("BitsConfig instance already exists!");
+//        instance = this;
 
         this.logger = createLogger();
     }
@@ -48,6 +52,8 @@ public abstract class BitsConfig extends ManagerContainer {
      * @since 0.0.10
      */
     public static BitsConfig get() {
+        System.out.println("DEBUG: get() called from ClassLoader: " + BitsConfig.class.getClassLoader());
+        System.out.println("DEBUG: Current instance value: " + instance);
         return Objects.requireNonNull(instance, "BitsConfig instance has not been created yet.");
     }
 
