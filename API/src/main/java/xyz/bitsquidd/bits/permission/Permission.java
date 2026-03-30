@@ -10,7 +10,7 @@ package xyz.bitsquidd.bits.permission;
 
 import net.kyori.adventure.audience.Audience;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.config.BitsConfig;
 
 /**
  * Represents a unique permission node used for access control within the Bits library.

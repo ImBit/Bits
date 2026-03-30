@@ -10,7 +10,7 @@ package xyz.bitsquidd.bits.sendable;
 
 import net.kyori.adventure.audience.Audience;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.config.BitsConfig;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Collection;

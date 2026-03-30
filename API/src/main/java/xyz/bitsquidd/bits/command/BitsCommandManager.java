@@ -13,7 +13,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
-import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
@@ -58,8 +57,6 @@ public abstract class BitsCommandManager<T> implements CoreManager {
     private final Permission commandBasePermission = initialiseBasePermission();
 
     protected BitsCommandManager() {
-        BitsConfig.get().setCommandManager(this);
-
         this.argumentRegistry = initialiseArgumentRegistry();
         this.requirementRegistry = initialiseRequirementRegistry();
         this.brigadierTreeGenerator = new BrigadierTreeGenerator<>(this);

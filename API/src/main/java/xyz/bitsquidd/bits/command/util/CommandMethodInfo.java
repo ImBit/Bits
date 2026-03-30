@@ -8,13 +8,13 @@
 
 package xyz.bitsquidd.bits.command.util;
 
-import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.annotation.Async;
 import xyz.bitsquidd.bits.command.annotation.Command;
 import xyz.bitsquidd.bits.command.annotation.Permission;
 import xyz.bitsquidd.bits.command.annotation.Requirement;
 import xyz.bitsquidd.bits.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.command.requirement.impl.PermissionRequirement;
+import xyz.bitsquidd.bits.config.BitsConfig;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

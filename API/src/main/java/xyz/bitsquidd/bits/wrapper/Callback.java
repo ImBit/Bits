@@ -8,7 +8,7 @@
 
 package xyz.bitsquidd.bits.wrapper;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.config.BitsConfig;
 
 import java.util.ArrayList;
 import java.util.List;

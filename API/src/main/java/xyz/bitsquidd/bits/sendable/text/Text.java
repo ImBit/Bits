@@ -11,7 +11,7 @@ package xyz.bitsquidd.bits.sendable.text;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import xyz.bitsquidd.bits.BitsConfig;
+import xyz.bitsquidd.bits.config.BitsConfig;
 import xyz.bitsquidd.bits.sendable.Sendable;
 import xyz.bitsquidd.bits.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.sendable.text.decorator.impl.BlankDecorator;

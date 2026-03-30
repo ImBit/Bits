@@ -10,11 +10,14 @@ package xyz.bitsquidd.bits.log;
 
 import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.config.BitsConfig;
+
+
 /**
  * The core logging abstraction for the Bits library.
  * <p>
  * Implementations are responsible for directing log output to the platform's
- * console or log files. The logger must be initialised via {@link xyz.bitsquidd.bits.BitsConfig}
+ * console or log files. The logger must be initialised via {@link BitsConfig}
  * before it can be accessed globally.
  *
  * @since 0.0.10

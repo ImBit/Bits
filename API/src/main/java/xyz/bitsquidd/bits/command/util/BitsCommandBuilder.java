@@ -11,7 +11,6 @@ package xyz.bitsquidd.bits.command.util;
 
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.BitsConfig;
 import xyz.bitsquidd.bits.command.BitsCommand;
 import xyz.bitsquidd.bits.command.annotation.Command;
 import xyz.bitsquidd.bits.command.annotation.Permission;
@@ -19,6 +18,7 @@ import xyz.bitsquidd.bits.command.annotation.Requirement;
 import xyz.bitsquidd.bits.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.command.requirement.impl.PermissionRequirement;
+import xyz.bitsquidd.bits.config.BitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

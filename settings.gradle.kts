@@ -40,6 +40,8 @@ rootProject.name = "Bits"
 
 include("API")
 
+include("Minecraft")
+
 include("Paper")
 include("Velocity")
 
