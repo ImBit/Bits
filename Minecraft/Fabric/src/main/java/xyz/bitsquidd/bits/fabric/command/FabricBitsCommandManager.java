@@ -8,7 +8,7 @@ import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.command.util.BitsCommandBuilder;
 
-public abstract class FabricBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
+public class FabricBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
 
     @Override
     protected FabricBitsArgumentRegistry initialiseArgumentRegistry() {

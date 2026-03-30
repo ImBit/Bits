@@ -21,6 +21,7 @@ import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -180,7 +181,10 @@ public abstract class BitsCommandManager<T> implements CoreManager {
      *
      * @since 0.0.10
      */
-    protected abstract Collection<BitsCommand> getAllCommands();
+    protected Collection<BitsCommand> getAllCommands() {
+        // Override this method to provide a collection of commands to be registered on startup.
+        return Collections.emptyList();
+    }
 
     /**
      * Defines the base permission string for all commands.

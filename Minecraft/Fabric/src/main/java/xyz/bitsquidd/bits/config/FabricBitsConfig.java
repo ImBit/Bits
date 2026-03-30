@@ -35,10 +35,14 @@ public abstract class FabricBitsConfig extends MinecraftBitsConfig {
     }
 
     @Override
-    public abstract FabricBitsCommandManager getCommandManager();
+    protected FabricBitsCommandManager createCommandManager() {
+        return new FabricBitsCommandManager();
+    }
 
     @Override
-    protected abstract FabricBitsCommandManager createCommandManager();
+    public FabricBitsCommandManager getCommandManager() {
+        return (FabricBitsCommandManager)super.getCommandManager();
+    }
 
 
     @Override

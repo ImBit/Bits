@@ -85,9 +85,13 @@ public abstract class VelocityBitsConfig extends MinecraftBitsConfig {
 
 
     @Override
-    protected abstract VelocityBitsCommandManager createCommandManager();
+    protected VelocityBitsCommandManager createCommandManager() {
+        return new VelocityBitsCommandManager();
+    }
 
     @Override
-    public abstract VelocityBitsCommandManager getCommandManager();
+    public VelocityBitsCommandManager getCommandManager() {
+        return (VelocityBitsCommandManager)super.getCommandManager();
+    }
 
 }

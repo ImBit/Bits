@@ -82,10 +82,14 @@ public abstract class PaperBitsConfig extends MinecraftBitsConfig {
 
 
     @Override
-    protected abstract PaperBitsCommandManager createCommandManager();
+    protected PaperBitsCommandManager createCommandManager() {
+        return new PaperBitsCommandManager();
+    }
 
     @Override
-    public abstract PaperBitsCommandManager getCommandManager();
+    public PaperBitsCommandManager getCommandManager() {
+        return (PaperBitsCommandManager)super.getCommandManager();
+    }
 
 
 }

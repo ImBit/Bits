@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.util.BitsCommandBuilder;
 
-public abstract class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
+public class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
 
     @Override
     protected PaperBitsArgumentRegistry initialiseArgumentRegistry() {
