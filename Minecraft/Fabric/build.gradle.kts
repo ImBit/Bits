@@ -27,11 +27,16 @@ allprojects {
 
         modImplementation(rootProject.fabricLibs.fabric.loader)
         modImplementation(rootProject.fabricLibs.fabric.api)
+
+        modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
+
+        include("me.lucko:fabric-permissions-api:0.5.0")
+        modImplementation("me.lucko:fabric-permissions-api:0.5.0")
     }
 }
 
 subprojects {
     dependencies {
-        implementation(project(":Fabric"))
+        implementation(project(":Minecraft:Fabric"))
     }
 }

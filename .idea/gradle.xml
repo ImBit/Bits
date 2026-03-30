@@ -9,12 +9,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/API" />
-            <option value="$PROJECT_DIR$/Fabric" />
-            <option value="$PROJECT_DIR$/Fabric/Client" />
-            <option value="$PROJECT_DIR$/Fabric/Server" />
             <option value="$PROJECT_DIR$/Minecraft" />
-            <option value="$PROJECT_DIR$/Paper" />
-            <option value="$PROJECT_DIR$/Velocity" />
+            <option value="$PROJECT_DIR$/Minecraft/Fabric" />
+            <option value="$PROJECT_DIR$/Minecraft/Fabric/Client" />
+            <option value="$PROJECT_DIR$/Minecraft/Fabric/Server" />
+            <option value="$PROJECT_DIR$/Minecraft/Paper" />
+            <option value="$PROJECT_DIR$/Minecraft/Velocity" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />

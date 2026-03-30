@@ -10,7 +10,7 @@ package xyz.bitsquidd.bits.velocity.util.velocity.listener;
 
 import com.velocitypowered.api.event.EventManager;
 
-import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
+import xyz.bitsquidd.bits.config.VelocityBitsConfig;
 
 import java.util.Collection;
 

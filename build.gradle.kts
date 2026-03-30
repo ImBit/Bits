@@ -48,10 +48,3 @@ allprojects {
 
     relocate("io.github.classgraph" to "xyz.bitsquidd.internal.classgraph")
 }
-
-subprojects {
-    dependencies {
-        if (project.path != ":API") api(project(":API"))
-    }
-}
-

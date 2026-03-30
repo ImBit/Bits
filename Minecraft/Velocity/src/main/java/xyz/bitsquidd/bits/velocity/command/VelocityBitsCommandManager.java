@@ -16,8 +16,7 @@ import com.velocitypowered.api.command.CommandSource;
 import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.command.util.BitsCommandBuilder;
-import xyz.bitsquidd.bits.config.BitsConfig;
-import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
+import xyz.bitsquidd.bits.config.VelocityBitsConfig;
 
 public abstract class VelocityBitsCommandManager extends BitsCommandManager<CommandSource> {
 
@@ -42,18 +41,8 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
     }
 
     @Override
-    protected void executeCommand(boolean isAsync, Runnable commandExecution) {
-        // Note all Velocity tasks are async by default, so we don't need to differentiate
-        ((VelocityBitsConfig)BitsConfig.get())
-          .getServer()
-          .getScheduler()
-          .buildTask(((VelocityBitsConfig)BitsConfig.get()).getPlugin(), commandExecution)
-          .schedule();
-    }
-
-    @Override
     protected void enableAllCommands() {
-        CommandManager velocityCommandManager = ((VelocityBitsConfig)BitsConfig.get()).getServer().getCommandManager();
+        CommandManager velocityCommandManager = VelocityBitsConfig.get().getServer().getCommandManager();
 
         getAllCommands().forEach(this::registerCommand);
         getRegisteredCommands()
@@ -63,7 +52,7 @@ public abstract class VelocityBitsCommandManager extends BitsCommandManager<Comm
                     velocityCommandManager.register(
                       velocityCommandManager
                         .metaBuilder(node.getName())
-                        .plugin(((VelocityBitsConfig)BitsConfig.get()).getPlugin())
+                        .plugin(VelocityBitsConfig.get().getPlugin())
                         .build(),
                       new BrigadierCommand(node)
                     );

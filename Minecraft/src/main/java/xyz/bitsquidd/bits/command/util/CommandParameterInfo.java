@@ -15,6 +15,7 @@ import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.config.BitsConfig;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.lang.reflect.Parameter;
@@ -58,7 +59,7 @@ public class CommandParameterInfo {
             name = parameterName.contains("arg") ? typeSignature.toRawType().getSimpleName().toLowerCase() : parameterName;
         }
 
-        this.parser = BitsConfig.get().getCommandManager().getArgumentRegistry().getParser(typeSignature);
+        this.parser = MinecraftBitsConfig.get().getCommandManager().getArgumentRegistry().getParser(typeSignature);
         this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 

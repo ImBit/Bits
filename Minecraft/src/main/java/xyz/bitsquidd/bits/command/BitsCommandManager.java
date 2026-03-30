@@ -1,9 +1,8 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.command;
@@ -17,6 +16,7 @@ import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.command.util.BitsCommandSourceContext;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.permission.Permission;
 
@@ -216,7 +216,13 @@ public abstract class BitsCommandManager<T> implements CoreManager {
      *
      * @since 0.0.10
      */
-    protected abstract void executeCommand(boolean isAsync, Runnable commandExecution);
+    protected final void executeCommand(boolean isAsync, Runnable commandExecution) {
+        if (isAsync) {
+            MinecraftBitsConfig.get().runLaterAsync(commandExecution, 0);
+        } else {
+            MinecraftBitsConfig.get().runLater(commandExecution, 0);
+        }
+    }
 
 
     /**

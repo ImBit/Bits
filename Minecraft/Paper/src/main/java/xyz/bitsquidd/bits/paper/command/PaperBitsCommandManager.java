@@ -12,11 +12,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
-import org.bukkit.Bukkit;
 
 import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.util.BitsCommandBuilder;
-import xyz.bitsquidd.bits.paper.config.PaperBitsConfig;
 
 public abstract class PaperBitsCommandManager extends BitsCommandManager<CommandSourceStack> {
 
@@ -38,15 +36,6 @@ public abstract class PaperBitsCommandManager extends BitsCommandManager<Command
     @Override
     public PaperBitsCommandSourceContext createSourceContext(CommandSourceStack sourceStack) {
         return new PaperBitsCommandSourceContext(sourceStack);
-    }
-
-    @Override
-    protected void executeCommand(boolean isAsync, Runnable commandExecution) {
-        if (isAsync) {
-            Bukkit.getScheduler().runTaskAsynchronously(PaperBitsConfig.get().plugin(), commandExecution);
-        } else {
-            Bukkit.getScheduler().runTask(PaperBitsConfig.get().plugin(), commandExecution);
-        }
     }
 
     @Override

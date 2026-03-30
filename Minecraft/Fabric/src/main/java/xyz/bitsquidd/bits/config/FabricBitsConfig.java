@@ -1,0 +1,78 @@
+/*
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
+ *
+ * Copyright (c) 2023-2026 ImBit
+ */
+
+package xyz.bitsquidd.bits.config;
+
+import xyz.bitsquidd.bits.fabric.command.FabricBitsCommandManager;
+import xyz.bitsquidd.bits.fabric.log.FabricBitsLogger;
+import xyz.bitsquidd.bits.log.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class FabricBitsConfig extends MinecraftBitsConfig {
+    private final org.slf4j.Logger slf4j;
+
+    private final List<ScheduledTask> pendingTasks = new ArrayList<>();
+
+    public FabricBitsConfig(org.slf4j.Logger slf4j) {
+        this.slf4j = slf4j;
+    }
+
+
+    public static FabricBitsConfig get() {
+        return (FabricBitsConfig)BitsConfig.get();
+    }
+
+
+    @Override
+    protected Logger createLogger() {
+        return new FabricBitsLogger(slf4j, Logger.LogFlags.defaultFlags());
+    }
+
+    @Override
+    public abstract FabricBitsCommandManager getCommandManager();
+
+    @Override
+    protected abstract FabricBitsCommandManager createCommandManager();
+
+
+    @Override
+    public void runLater(Runnable runnable, long delayTicks) {
+        pendingTasks.add(new ScheduledTask(runnable, delayTicks));
+    }
+
+    @Override
+    public void runLaterAsync(Runnable runnable, long delay) {
+        Thread.ofVirtual().start(runnable);
+    }
+
+    protected final void tickAll() {
+        pendingTasks.removeIf(ScheduledTask::tick);
+    }
+
+
+    private static final class ScheduledTask {
+        private final Runnable runnable;
+        private long ticksRemaining;
+
+        ScheduledTask(Runnable runnable, long delayTicks) {
+            this.runnable = runnable;
+            this.ticksRemaining = delayTicks;
+        }
+
+        boolean tick() {
+            if (--ticksRemaining <= 0) {
+                runnable.run();
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+}

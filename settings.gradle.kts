@@ -23,13 +23,13 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("fabricLibs") {
-            from(files("Fabric/gradle/libs.versions.toml"))
+            from(files("Minecraft/Fabric/gradle/libs.versions.toml"))
         }
         create("paperLibs") {
-            from(files("Paper/gradle/libs.versions.toml"))
+            from(files("Minecraft/Paper/gradle/libs.versions.toml"))
         }
         create("velocityLibs") {
-            from(files("Velocity/gradle/libs.versions.toml"))
+            from(files("Minecraft/Velocity/gradle/libs.versions.toml"))
         }
     }
 }
@@ -42,10 +42,10 @@ include("API")
 
 include("Minecraft")
 
-include("Paper")
-include("Velocity")
+include("Minecraft:Paper")
 
+include("Minecraft:Velocity")
 
-include("Fabric")
-include("Fabric:Server")
-include("Fabric:Client")
+include("Minecraft:Fabric")
+include("Minecraft:Fabric:Server")
+include("Minecraft:Fabric:Client")

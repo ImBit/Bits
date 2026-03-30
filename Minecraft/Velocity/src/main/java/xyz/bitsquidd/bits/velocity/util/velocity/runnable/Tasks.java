@@ -14,7 +14,7 @@ import com.velocitypowered.api.scheduler.Scheduler;
 import com.velocitypowered.api.scheduler.TaskStatus;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.velocity.VelocityBitsConfig;
+import xyz.bitsquidd.bits.config.VelocityBitsConfig;
 
 import java.util.Collection;
 import java.util.Set;

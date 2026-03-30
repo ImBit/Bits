@@ -14,25 +14,37 @@ import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 
-public abstract class MCBitsConfig extends BitsConfig {
+public abstract class MinecraftBitsConfig extends BitsConfig {
     private boolean paused = false;
 
     protected final BitsCommandManager<?> commandManager;
 
 
-    public MCBitsConfig() {
+    public MinecraftBitsConfig() {
         this.commandManager = registerManager(createCommandManager());
     }
 
+    public static MinecraftBitsConfig get() {
+        return (MinecraftBitsConfig)BitsConfig.get();
+    }
 
+
+    //region Sendable Utils
     public abstract boolean hasPermission(Audience audience, Permission permission);
+
+    public abstract void registerPermission(Permission permission);
 
     public abstract Locale getLocale(Audience audience);
 
     public abstract Audience getAll();
+    //endregion
 
 
-    //region Pause API
+    //region Runnable API
+    public abstract void runLater(Runnable runnable, long delay);
+
+    public abstract void runLaterAsync(Runnable runnable, long delay);
+
     public boolean isPaused() {
         return paused;
     }
@@ -43,10 +55,10 @@ public abstract class MCBitsConfig extends BitsConfig {
     //endregion
 
 
-    //region Command Manager
+    //region Managers
     protected abstract BitsCommandManager<?> createCommandManager();
 
-    public final BitsCommandManager<?> getCommandManager() {
+    public BitsCommandManager<?> getCommandManager() {
         return commandManager;
     }
     //endregion

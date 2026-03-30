@@ -5,7 +5,7 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.paper.config;
+package xyz.bitsquidd.bits.config;
 
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
@@ -13,9 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import xyz.bitsquidd.bits.config.BitsConfig;
-import xyz.bitsquidd.bits.config.MCBitsConfig;
 import xyz.bitsquidd.bits.log.Logger;
+import xyz.bitsquidd.bits.paper.command.PaperBitsCommandManager;
 import xyz.bitsquidd.bits.paper.format.CommonPaperFormatters;
 import xyz.bitsquidd.bits.paper.log.PaperBitsLogger;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
@@ -23,13 +22,11 @@ import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 
-public class PaperBitsConfig extends MCBitsConfig {
+public abstract class PaperBitsConfig extends MinecraftBitsConfig {
     private final JavaPlugin plugin;
 
     public PaperBitsConfig(JavaPlugin plugin) {
         this.plugin = plugin;
-
-        initialise();
     }
 
     public static PaperBitsConfig get() {
@@ -49,7 +46,7 @@ public class PaperBitsConfig extends MCBitsConfig {
     }
 
     @Override
-    protected Logger createLogger() {
+    protected PaperBitsLogger createLogger() {
         return new PaperBitsLogger(plugin, Logger.LogFlags.defaultFlags());
     }
 
@@ -69,10 +66,7 @@ public class PaperBitsConfig extends MCBitsConfig {
 
     @Override
     public Locale getLocale(Audience audience) {
-        checkInitialized();
-        if (audience instanceof Player player) {
-            return player.locale();
-        }
+        if (audience instanceof Player player) return player.locale();
         return Locale.getDefault();
     }
 
@@ -82,8 +76,16 @@ public class PaperBitsConfig extends MCBitsConfig {
     }
 
     @Override
-    public void runLater(Runnable runnable, long delay) {
-        Runnables.later(runnable, delay / 50); // Convert ms to ticks
+    public void runLater(Runnable runnable, long delayMs) {
+        Runnables.later(runnable, delayMs / 50); // Convert ms to ticks
     }
+
+
+    @Override
+    protected abstract PaperBitsCommandManager createCommandManager();
+
+    @Override
+    public abstract PaperBitsCommandManager getCommandManager();
+
 
 }

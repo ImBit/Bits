@@ -1,9 +1,8 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.command.util;
@@ -18,7 +17,7 @@ import xyz.bitsquidd.bits.command.annotation.Requirement;
 import xyz.bitsquidd.bits.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.command.requirement.impl.PermissionRequirement;
-import xyz.bitsquidd.bits.config.BitsConfig;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -76,7 +75,7 @@ public final class BitsCommandBuilder {
         commandAliases = List.of(commandAnnotation.aliases());
         commandDescription = commandAnnotation.description();
 
-        this.corePermission = BitsConfig.get().getCommandManager().getCommandBasePermission().append("." + commandName.replaceAll(" ", "_").toLowerCase());
+        this.corePermission = MinecraftBitsConfig.get().getCommandManager().getCommandBasePermission().append("." + commandName.replaceAll(" ", "_").toLowerCase());
         this.permissions.add(corePermission);
     }
 
@@ -207,7 +206,7 @@ public final class BitsCommandBuilder {
         Requirement requirementAnnotation = commandClass.getAnnotation(Requirement.class);
         if (requirementAnnotation != null) {
             requirements.addAll(Arrays.stream(requirementAnnotation.value())
-              .map(clazz -> BitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
+              .map(clazz -> MinecraftBitsConfig.get().getCommandManager().getRequirementRegistry().getRequirement(clazz))
               .toList());
         }
 

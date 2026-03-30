@@ -11,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lifecycle.manager.ManagerContainer;
 import xyz.bitsquidd.bits.log.Logger;
-import xyz.bitsquidd.bits.permission.Permission;
+
+import java.util.Objects;
 
 /**
  * The main configuration class for the Bits library.
@@ -47,8 +48,7 @@ public abstract class BitsConfig extends ManagerContainer {
      * @since 0.0.10
      */
     public static BitsConfig get() {
-        if (instance == null) throw new IllegalStateException("BitsConfig instance has not been created yet!");
-        return instance;
+        return Objects.requireNonNull(instance, "BitsConfig instance has not been created yet.");
     }
 
 
@@ -65,10 +65,5 @@ public abstract class BitsConfig extends ManagerContainer {
     }
 
     protected abstract Logger createLogger();
-
-    public abstract void registerPermission(Permission permission);
-
-
-    public abstract void runLater(Runnable runnable, long delay);
 
 }

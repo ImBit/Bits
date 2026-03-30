@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import xyz.bitsquidd.bits.paper.config.PaperBitsConfig;
+import xyz.bitsquidd.bits.config.PaperBitsConfig;
 
 import java.util.Collection;
 import java.util.function.Predicate;

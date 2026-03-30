@@ -1,28 +1,27 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.velocity;
+package xyz.bitsquidd.bits.config;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.audience.Audience;
 
-import xyz.bitsquidd.bits.config.BitsConfig;
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.velocity.command.VelocityBitsCommandManager;
 import xyz.bitsquidd.bits.velocity.log.VelocityBitsLogger;
 import xyz.bitsquidd.bits.velocity.util.velocity.runnable.Tasks;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class VelocityBitsConfig extends BitsConfig {
+public abstract class VelocityBitsConfig extends MinecraftBitsConfig {
     private final Object plugin;
     private final ProxyServer server;
     private final org.slf4j.Logger slf4j;
@@ -34,17 +33,15 @@ public class VelocityBitsConfig extends BitsConfig {
     }
 
     public static VelocityBitsConfig get() {
-        return (VelocityBitsConfig)BitsConfig.get();
+        return VelocityBitsConfig.get();
     }
 
 
     public Object getPlugin() {
-        checkInitialized();
         return plugin;
     }
 
     public ProxyServer getServer() {
-        checkInitialized();
         return server;
     }
 
@@ -55,7 +52,6 @@ public class VelocityBitsConfig extends BitsConfig {
 
     @Override
     public boolean hasPermission(Audience audience, Permission permission) {
-        checkInitialized();
         if (audience instanceof CommandSource commandSource) {
             return commandSource.hasPermission(permission.toString());
         } else {
@@ -70,7 +66,6 @@ public class VelocityBitsConfig extends BitsConfig {
 
     @Override
     public Locale getLocale(Audience audience) {
-        checkInitialized();
         if (audience instanceof Player player) {
             Locale locale = player.getEffectiveLocale();
             if (locale != null) player.getEffectiveLocale();
@@ -87,5 +82,12 @@ public class VelocityBitsConfig extends BitsConfig {
     public void runLater(Runnable runnable, long delay) {
         Tasks.builder(runnable).delay(delay, TimeUnit.MILLISECONDS).schedule();
     }
+
+
+    @Override
+    protected abstract VelocityBitsCommandManager createCommandManager();
+
+    @Override
+    public abstract VelocityBitsCommandManager getCommandManager();
 
 }
