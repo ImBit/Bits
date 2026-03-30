@@ -15,6 +15,6 @@ allprojects {
 
 subprojects {
     dependencies {
-        implementation(project(":Velocity", configuration = "shadow"))
+        implementation(project(":Velocity"))
     }
 }

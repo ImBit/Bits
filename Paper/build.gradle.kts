@@ -20,6 +20,6 @@ allprojects {
 
 subprojects {
     dependencies {
-        implementation(project(":Paper", configuration = "shadow"))
+        implementation(project(":Paper"))
     }
 }

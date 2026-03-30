@@ -1,3 +1,5 @@
+import xyz.bitsquidd.relocate
+
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -19,26 +21,30 @@ plugins {
 }
 
 allprojects {
-    dependencies {
-        compileOnly(rootProject.libs.jb.annotations)
+    group = rootProject.group
+    version = rootProject.version
 
+    dependencies {
         implementation(rootProject.libs.joml)
         implementation(rootProject.libs.logger)
         implementation(rootProject.libs.adventure.text.serializer.plain)
 
+        shade(rootProject.libs.classgraph)
+
         api(rootProject.libs.gson)
-        api(rootProject.libs.classgraph)
         api(rootProject.libs.guava)
         api(rootProject.libs.brigadier)
         api(rootProject.libs.adventure)
 
         errorprone(rootProject.libs.errorprone)
     }
+
+    relocate("io.github.classgraph" to "xyz.bitsquidd.internal.classgraph")
 }
 
 subprojects {
     dependencies {
-        if (project.path != ":API") api(project(":API", configuration = "shadow"))
+        if (project.path != ":API") api(project(":API"))
     }
 }
 
