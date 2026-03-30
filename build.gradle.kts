@@ -8,7 +8,7 @@ import xyz.bitsquidd.relocate
  * Enjoy the Bits and Bobs :)
  */
 
-group = "com.github.ImBit.Bits"
+group = "com.github.imbit.bits"
 version = property("bits_version") as String
 
 plugins {

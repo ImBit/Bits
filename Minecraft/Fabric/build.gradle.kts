@@ -11,6 +11,8 @@ plugins {
 }
 
 allprojects {
+    group = "com.github.imbit.bits.fabric"
+
     plugins.apply(rootProject.fabricLibs.plugins.fabric.loom.get().pluginId)
 
     repositories {
@@ -30,7 +32,6 @@ allprojects {
 
         modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
 
-        include("me.lucko:fabric-permissions-api:0.5.0")
         modImplementation("me.lucko:fabric-permissions-api:0.5.0")
     }
 }
