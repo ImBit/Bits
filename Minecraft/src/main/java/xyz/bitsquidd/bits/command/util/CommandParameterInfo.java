@@ -14,7 +14,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import xyz.bitsquidd.bits.command.BitsCommandManager;
 import xyz.bitsquidd.bits.command.argument.BrigadierArgumentMapping;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
-import xyz.bitsquidd.bits.config.BitsConfig;
 import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
@@ -60,7 +59,7 @@ public class CommandParameterInfo {
         }
 
         this.parser = MinecraftBitsConfig.get().getCommandManager().getArgumentRegistry().getParser(typeSignature);
-        this.heldArguments.addAll(BitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
+        this.heldArguments.addAll(MinecraftBitsConfig.get().getCommandManager().getArgumentRegistry().getArgumentTypeContainer(parser, name));
     }
 
     /**
@@ -74,7 +73,7 @@ public class CommandParameterInfo {
      */
     @SuppressWarnings("unchecked")
     public <T> List<ArgumentBuilder<T, ?>> createBrigadierArguments() {
-        BitsCommandManager<T> commandManager = (BitsCommandManager<T>)BitsConfig.get().getCommandManager();
+        BitsCommandManager<T> commandManager = (BitsCommandManager<T>)MinecraftBitsConfig.get().getCommandManager();
         List<ArgumentBuilder<T, ?>> brigadierArguments = new ArrayList<>();
 
         boolean useArgSuggestions = heldArguments.size() > 1; // We use the arg suggestions only if there are multiple held arguments

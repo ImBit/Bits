@@ -66,4 +66,9 @@ public abstract class BitsConfig extends ManagerContainer {
 
     protected abstract Logger createLogger();
 
+
+    public abstract void runLater(Runnable runnable, long delay);
+
+    public abstract void runLaterAsync(Runnable runnable, long delay);
+
 }

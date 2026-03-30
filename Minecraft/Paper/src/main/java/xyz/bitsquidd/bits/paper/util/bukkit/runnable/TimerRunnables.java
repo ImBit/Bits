@@ -11,7 +11,7 @@ package xyz.bitsquidd.bits.paper.util.bukkit.runnable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import xyz.bitsquidd.bits.config.BitsConfig;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,7 +48,7 @@ public final class TimerRunnables extends Runnables {
                 public void run() {
                     tick++;
 
-                    if (tick < 0 || tick % period != 0 || BitsConfig.get().isPaused()) return;
+                    if (tick < 0 || tick % period != 0 || MinecraftBitsConfig.get().isPaused()) return;
 
                     if (stopCondition.apply(tick)) {
                         onStop.accept(tick);

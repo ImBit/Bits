@@ -33,7 +33,7 @@ public abstract class VelocityBitsConfig extends MinecraftBitsConfig {
     }
 
     public static VelocityBitsConfig get() {
-        return VelocityBitsConfig.get();
+        return (VelocityBitsConfig)BitsConfig.get();
     }
 
 

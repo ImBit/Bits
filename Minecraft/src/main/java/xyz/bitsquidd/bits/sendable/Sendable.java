@@ -1,16 +1,15 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.sendable;
 
 import net.kyori.adventure.audience.Audience;
 
-import xyz.bitsquidd.bits.config.BitsConfig;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Collection;
@@ -40,7 +39,7 @@ public interface Sendable {
      * @since 0.0.10
      */
     default void sendAll(Predicate<Audience> predicate) {
-        BitsConfig.get().getAll().forEachAudience(audience -> {
+        MinecraftBitsConfig.get().getAll().forEachAudience(audience -> {
             if (predicate.test(audience)) send(audience);
         });
     }

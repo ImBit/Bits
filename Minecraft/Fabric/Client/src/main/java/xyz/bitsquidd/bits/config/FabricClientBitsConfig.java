@@ -1,4 +1,4 @@
-/*
+package xyz.bitsquidd.bits.config;/*
  * This file is part of a Bit libraries package.
  * Licensed under the GNU Lesser General Public License v3.0.
  *
@@ -10,9 +10,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
 import net.minecraft.client.Minecraft;
 
-import xyz.bitsquidd.bits.command.BitsCommandManager;
-import xyz.bitsquidd.bits.config.BitsConfig;
-import xyz.bitsquidd.bits.config.FabricBitsConfig;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
@@ -41,15 +38,9 @@ public class FabricClientBitsConfig extends FabricBitsConfig {
     }
 
     @Override
-    protected BitsCommandManager<?> createCommandManager() {
-        return null;
-    }
-
-    @Override
     public Locale getLocale(Audience audience) {
         // TODO have MinecraftServer interface
         // On the client, the local player's locale comes from game options.
-        // MinecraftClientAudiences provides full localization support including this.
         return Locale.forLanguageTag(Minecraft.getInstance()
           .getLanguageManager()
           .getSelected()
@@ -59,7 +50,7 @@ public class FabricClientBitsConfig extends FabricBitsConfig {
     @Override
     public void registerPermission(Permission permission) {
         // TODO have MinecraftServer interface
-        // No-op on client — permissions are a server-side concept
+        // No-op on client - permissions are a server-side concept
     }
 
     @Override

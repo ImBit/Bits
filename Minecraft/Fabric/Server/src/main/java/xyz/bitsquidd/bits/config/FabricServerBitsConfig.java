@@ -11,9 +11,9 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.fabric.FabricServerAudiences;
+import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.permission.Permission;
@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class FabricServerBitsConfig extends FabricBitsConfig {
     private @Nullable MinecraftServer server;
-    private @Nullable FabricServerAudiences adventure;
+    private @Nullable MinecraftServerAudiences adventure;
 
     public FabricServerBitsConfig(org.slf4j.Logger slf4j) {
         super(slf4j);
@@ -37,12 +37,11 @@ public class FabricServerBitsConfig extends FabricBitsConfig {
         super.startup();
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = server;
-            this.adventure = FabricServerAudiences.of(server);
+            this.adventure = MinecraftServerAudiences.of(server);
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             this.server = null;
             this.adventure = null;
-            pendingTasks.clear();
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> tickAll());
@@ -50,16 +49,13 @@ public class FabricServerBitsConfig extends FabricBitsConfig {
 
     @Override
     public Audience getAll() {
-        if (server == null || adventure == null) {
-            return Audience.empty();
-        }
-
-        return adventure.audience(server.getPlayerManager().getPlayerList());
+        if (server == null || adventure == null) return Audience.empty();
+        return adventure.audience(server.getPlayerList().getPlayers());
     }
 
     @Override
     public Locale getLocale(Audience audience) {
-        if (audience instanceof ServerPlayerEntity player) return player.getLocale();     // returns the client-reported Locale
+        if (audience instanceof ServerPlayer player) return Locale.forLanguageTag(player.clientInformation().language());
         return Locale.getDefault();
     }
 
@@ -70,7 +66,7 @@ public class FabricServerBitsConfig extends FabricBitsConfig {
 
     @Override
     public boolean hasPermission(Audience audience, Permission permission) {
-        if (audience instanceof ServerPlayerEntity player) return Permissions.check(player, permission.getKey());
+        if (audience instanceof ServerPlayer player) return Permissions.check(player, permission.toString());
         return true;
     }
 

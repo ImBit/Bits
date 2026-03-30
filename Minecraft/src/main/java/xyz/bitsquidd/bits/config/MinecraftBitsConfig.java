@@ -41,10 +41,6 @@ public abstract class MinecraftBitsConfig extends BitsConfig {
 
 
     //region Runnable API
-    public abstract void runLater(Runnable runnable, long delay);
-
-    public abstract void runLaterAsync(Runnable runnable, long delay);
-
     public boolean isPaused() {
         return paused;
     }

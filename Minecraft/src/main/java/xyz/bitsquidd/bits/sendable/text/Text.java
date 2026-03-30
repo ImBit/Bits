@@ -1,9 +1,8 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.sendable.text;
@@ -11,7 +10,7 @@ package xyz.bitsquidd.bits.sendable.text;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import xyz.bitsquidd.bits.config.BitsConfig;
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.sendable.Sendable;
 import xyz.bitsquidd.bits.sendable.text.decorator.ITextDecorator;
 import xyz.bitsquidd.bits.sendable.text.decorator.impl.BlankDecorator;
@@ -134,7 +133,7 @@ public final class Text implements Sendable {
         componentDecorators.addAll(decorators);
         componentDecorators.addAll(POST_DEFAULT_DECORATORS);
 
-        Locale locale = BitsConfig.get().getLocale(audience);
+        Locale locale = MinecraftBitsConfig.get().getLocale(audience);
         for (ITextDecorator decorator : componentDecorators) {
             returnComponent = decorator.format(returnComponent, locale);
         }
