@@ -28,10 +28,10 @@ public final class GenericBitsConfig extends BitsConfig {
     }
 
     @Override
-    public void runLater(Runnable runnable, long delay) {
+    public void runLater(Runnable runnable, long delayMs) {
         new Thread(() -> {
             try {
-                Thread.sleep(delay);
+                Thread.sleep(delayMs);
                 runnable.run();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -40,8 +40,8 @@ public final class GenericBitsConfig extends BitsConfig {
     }
 
     @Override
-    public void runLaterAsync(Runnable runnable, long delay) {
-        runLater(runnable, delay);
+    public void runLaterAsync(Runnable runnable, long delayMs) {
+        runLater(runnable, delayMs); // All threads are "async"
     }
 
 }

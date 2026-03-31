@@ -79,10 +79,14 @@ public abstract class VelocityBitsConfig extends MinecraftBitsConfig {
     }
 
     @Override
-    public void runLater(Runnable runnable, long delay) {
-        Tasks.builder(runnable).delay(delay, TimeUnit.MILLISECONDS).schedule();
+    public void runLater(Runnable runnable, long delayMs) {
+        Tasks.builder(runnable).delay(delayMs, TimeUnit.MILLISECONDS).schedule();
     }
 
+    @Override
+    public void runLaterAsync(Runnable runnable, long delayMs) {
+        runLater(runnable, delayMs); // Velocity runs all tasks asynchronously by default.
+    }
 
     @Override
     protected VelocityBitsCommandManager createCommandManager() {

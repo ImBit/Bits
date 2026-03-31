@@ -80,6 +80,10 @@ public abstract class PaperBitsConfig extends MinecraftBitsConfig {
         Runnables.later(runnable, delayMs / 50); // Convert ms to ticks
     }
 
+    @Override
+    public void runLaterAsync(Runnable runnable, long delayMs) {
+        Runnables.buildLater(runnable, delayMs / 50).async().run(); // Convert ms to ticks
+    }
 
     @Override
     protected PaperBitsCommandManager createCommandManager() {

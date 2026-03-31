@@ -46,12 +46,12 @@ public abstract class FabricBitsConfig extends MinecraftBitsConfig {
 
 
     @Override
-    public void runLater(Runnable runnable, long delayTicks) {
-        pendingTasks.add(new ScheduledTask(runnable, delayTicks));
+    public void runLater(Runnable runnable, long delayMs) {
+        pendingTasks.add(new ScheduledTask(runnable, delayMs));
     }
 
     @Override
-    public void runLaterAsync(Runnable runnable, long delay) {
+    public void runLaterAsync(Runnable runnable, long delayMs) {
         Thread.ofVirtual().start(runnable);
     }
 
