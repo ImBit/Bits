@@ -1,3 +1,5 @@
+import xyz.bitsquidd.includeLibrary
+
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -12,7 +14,7 @@ allprojects {
     }
 
     dependencies {
-        shade(project(":API"))
+        includeLibrary(project(":api"))
 
         implementation(rootProject.velocityLibs.velocity.api.get())
         annotationProcessor(rootProject.velocityLibs.velocity.api.get())
@@ -21,6 +23,6 @@ allprojects {
 
 subprojects {
     dependencies {
-        implementation(project(":Velocity"))
+        includeLibrary(project(":velocity"))
     }
 }

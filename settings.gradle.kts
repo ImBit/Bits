@@ -23,13 +23,13 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("fabricLibs") {
-            from(files("Minecraft/Fabric/gradle/libs.versions.toml"))
+            from(files("minecraft/fabric/gradle/libs.versions.toml"))
         }
         create("paperLibs") {
-            from(files("Minecraft/Paper/gradle/libs.versions.toml"))
+            from(files("minecraft/paper/gradle/libs.versions.toml"))
         }
         create("velocityLibs") {
-            from(files("Minecraft/Velocity/gradle/libs.versions.toml"))
+            from(files("minecraft/velocity/gradle/libs.versions.toml"))
         }
     }
 }
@@ -38,12 +38,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "Bits"
 
-include("API")
+include("api")
 
-include("Minecraft")
+include("minecraft")
 
-include("Minecraft:Paper")
+include("minecraft:paper")
 
-include("Minecraft:Velocity")
+include("minecraft:velocity")
 
-include("Minecraft:Fabric")
+include("minecraft:fabric")

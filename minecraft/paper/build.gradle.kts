@@ -1,3 +1,5 @@
+import xyz.bitsquidd.includeLibrary
+
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -18,7 +20,7 @@ allprojects {
     }
 
     dependencies {
-        shade(project(":API"))
+        includeLibrary(project(":api"))
 
         paperweight.paperDevBundle(rootProject.paperLibs.versions.paper.api.get())
     }
@@ -26,6 +28,6 @@ allprojects {
 
 subprojects {
     dependencies {
-        implementation(project(":Paper"))
+        implementation(project(":paper"))
     }
 }

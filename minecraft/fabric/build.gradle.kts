@@ -41,8 +41,8 @@ dependencies {
 
     modImplementation("me.lucko:fabric-permissions-api:0.5.0")
 
-    modApi(project(":Minecraft"))
-    include(project(":Minecraft"))
+    api(project(":minecraft"))
+    include(project(":minecraft"))
 }
 
 tasks {

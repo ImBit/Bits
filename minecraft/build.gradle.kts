@@ -10,13 +10,13 @@ import xyz.bitsquidd.includeLibrary
 
 subprojects {
     dependencies {
-        includeLibrary(project(":Minecraft", configuration = "shadow"))
+        includeLibrary(project(":minecraft", configuration = "shadow"))
     }
 }
 
 allprojects {
     dependencies {
-        includeLibrary(project(":API", configuration = "shadow"))
+        includeLibrary(project(":api", configuration = "shadow"))
 
         includeLibrary(rootProject.libs.brigadier)
     }
