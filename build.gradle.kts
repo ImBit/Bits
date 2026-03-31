@@ -10,11 +10,6 @@ group = "com.github.imbit.bits"
 version = property("bits_version") as String
 
 plugins {
-    `java-library`
-    `maven-publish`
-    alias(libs.plugins.kotlin)
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.errorprone)
     alias(libs.plugins.imbit.convention)
 }
 
@@ -36,7 +31,6 @@ allprojects {
 
         api(rootProject.libs.gson)
         api(rootProject.libs.guava)
-        api(rootProject.libs.brigadier)
         api(rootProject.libs.adventure)
 
         errorprone(rootProject.libs.errorprone)

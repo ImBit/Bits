@@ -1,3 +1,5 @@
+import xyz.bitsquidd.includeLibrary
+
 /*
  * This file is part of a Bit libraries package.
  * Licensed under the GNU Lesser General Public License v3.0.
@@ -8,12 +10,14 @@
 
 subprojects {
     dependencies {
-        shade(project(":Minecraft"))
+        includeLibrary(project(":Minecraft", configuration = "shadow"))
     }
 }
 
 allprojects {
     dependencies {
-        shade(project(":API"))
+        includeLibrary(project(":API", configuration = "shadow"))
+
+        includeLibrary(rootProject.libs.brigadier)
     }
 }
