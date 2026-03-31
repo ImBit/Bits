@@ -19,12 +19,9 @@ public abstract class MinecraftBitsConfig extends BitsConfig {
 
     protected BitsCommandManager<?> commandManager;
 
-
-    @Override
-    public void startup() {
+    protected MinecraftBitsConfig() {
+        super();
         this.commandManager = registerManager(createCommandManager());
-        
-        super.startup();
     }
 
     public static MinecraftBitsConfig get() {
