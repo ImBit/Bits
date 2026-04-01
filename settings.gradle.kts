@@ -10,28 +10,40 @@ pluginManagement {
     repositories {
         mavenLocal()
 
-        gradlePluginPortal()
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        mavenLocal()
-
-        // PaperMC - required for paperweight dev bundle
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-        maven { url = uri("https://jitpack.io") }
+        maven {
+            name = "Fabric"
+            url = uri("https://maven.fabricmc.net/")
+        }
 
         mavenCentral()
         gradlePluginPortal()
     }
 }
 
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("fabricLibs") {
+            from(files("minecraft/fabric/gradle/libs.versions.toml"))
+        }
+        create("paperLibs") {
+            from(files("minecraft/paper/gradle/libs.versions.toml"))
+        }
+        create("velocityLibs") {
+            from(files("minecraft/velocity/gradle/libs.versions.toml"))
+        }
+    }
+}
+
+
+
 rootProject.name = "Bits"
 
-include("API")
+include("api")
 
-include("Paper")
-include("Velocity")
+include("minecraft")
 
+include("minecraft:paper")
+
+include("minecraft:velocity")
+
+include("minecraft:fabric")
