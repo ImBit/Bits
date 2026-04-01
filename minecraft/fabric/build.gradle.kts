@@ -1,3 +1,5 @@
+import xyz.bitsquidd.includeLibrary
+
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
  *
@@ -38,17 +40,21 @@ dependencies {
     modImplementation(rootProject.fabricLibs.fabric.api)
 
     modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
-
     modImplementation("me.lucko:fabric-permissions-api:0.5.0")
 
-    api(project(":minecraft"))
-    include(project(":minecraft"))
+    includeLibrary(project(":minecraft"))
 }
 
 tasks {
     jar {
         from(sourceSets.main.get().output)
         from(sourceSets["client"].output)
+
+        // TODO improve this to use "actual shadow"
+        //  this is messy but it does the job for now: I hate loom's shading...
+        from(project(":minecraft").sourceSets.main.get().output)
+        from(project(":api").sourceSets.main.get().output)
+
     }
 }
 

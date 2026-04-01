@@ -8,16 +8,8 @@ import xyz.bitsquidd.includeLibrary
  */
 
 
-subprojects {
-    dependencies {
-        includeLibrary(project(":minecraft", configuration = "shadow"))
-    }
-}
+dependencies {
+    includeLibrary(project(":api"))
 
-allprojects {
-    dependencies {
-        includeLibrary(project(":api", configuration = "shadow"))
-
-        includeLibrary(rootProject.libs.brigadier)
-    }
+    includeLibrary(rootProject.libs.brigadier)
 }

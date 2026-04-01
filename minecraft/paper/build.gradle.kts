@@ -12,22 +12,11 @@ plugins {
     alias(paperLibs.plugins.paperweight.userdev)
 }
 
-allprojects {
-    plugins.apply(rootProject.paperLibs.plugins.paperweight.userdev.get().pluginId)
-
-    repositories {
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    }
-
-    dependencies {
-        includeLibrary(project(":api"))
-
-        paperweight.paperDevBundle(rootProject.paperLibs.versions.paper.api.get())
-    }
+repositories {
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
 }
 
-subprojects {
-    dependencies {
-        implementation(project(":paper"))
-    }
+dependencies {
+    includeLibrary(project(":minecraft"))
+    paperweight.paperDevBundle(rootProject.paperLibs.versions.paper.api.get())
 }
