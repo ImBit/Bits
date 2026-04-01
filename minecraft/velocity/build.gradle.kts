@@ -8,21 +8,9 @@ import xyz.bitsquidd.includeLibrary
  * Enjoy the Bits and Bobs :)
  */
 
-allprojects {
-    repositories {
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    }
+dependencies {
+    includeLibrary(project(":minecraft"))
 
-    dependencies {
-        includeLibrary(project(":api"))
-
-        implementation(rootProject.velocityLibs.velocity.api.get())
-        annotationProcessor(rootProject.velocityLibs.velocity.api.get())
-    }
-}
-
-subprojects {
-    dependencies {
-        includeLibrary(project(":velocity"))
-    }
+    implementation(rootProject.velocityLibs.velocity.api.get())
+    annotationProcessor(rootProject.velocityLibs.velocity.api.get())
 }

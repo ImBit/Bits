@@ -42,7 +42,7 @@ public class PaperBitsCommandManager extends BitsCommandManager<CommandSourceSta
     protected void enableAllCommands() {
         CommandDispatcher<CommandSourceStack> dispatcher = MinecraftServer.getServer().getCommands().getDispatcher();
 
-        getAllCommands().forEach(this::registerCommand);
+        getAllCommands().build().forEach(this::registerCommand);
         getRegisteredCommands()
           .forEach(bitsCommand -> {
               brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
