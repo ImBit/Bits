@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,9 +103,10 @@ public final class TypeSignature<T> {
         if (typeArguments.length != other.typeArguments.length) return false;
 
         for (int i = 0; i < typeArguments.length; i++) {
-            if (!Objects.equals(typeArguments[i], other.typeArguments[i])) {
-                return false;
-            }
+            Type a = typeArguments[i];
+            Type b = other.typeArguments[i];
+            if (a instanceof WildcardType || b instanceof WildcardType) continue; // wildcard matches anything
+            if (!Objects.equals(a, b)) return false;
         }
         return true;
     }
