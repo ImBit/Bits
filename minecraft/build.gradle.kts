@@ -9,7 +9,7 @@ import xyz.bitsquidd.includeLibrary
 
 
 dependencies {
-    includeLibrary(project(":api"))
+    includeLibrary(project(":api", configuration = "shadow"))
 
     includeLibrary(rootProject.libs.brigadier)
 }

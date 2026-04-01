@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import xyz.bitsquidd.includeLibrary
 
 /*
@@ -42,19 +43,31 @@ dependencies {
     modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
     modImplementation("me.lucko:fabric-permissions-api:0.5.0")
 
-    includeLibrary(project(":minecraft"))
+    includeLibrary(project(":minecraft", configuration = "shadow"))
 }
 
 tasks {
-    jar {
+    val mergedJar by registering(ShadowJar::class) {
+        archiveClassifier.set("merged")
         from(sourceSets.main.get().output)
         from(sourceSets["client"].output)
+        from(zipTree(project(":minecraft").tasks.named<ShadowJar>("shadowJar").flatMap { it.archiveFile }))
+    }
 
-        // TODO improve this to use "actual shadow"
-        //  this is messy but it does the job for now: I hate loom's shading...
-        from(project(":minecraft").sourceSets.main.get().output)
-        from(project(":api").sourceSets.main.get().output)
+    remapJar {
+        dependsOn(mergedJar)
+        inputFile.set(mergedJar.flatMap { it.archiveFile })
+        archiveClassifier.set("")
+    }
 
+    processResources {
+        filteringCharset = "UTF-8"
+
+        filesMatching("fabric.mod.json") {
+            expand(
+                "version" to project.version
+            )
+        }
     }
 }
 
