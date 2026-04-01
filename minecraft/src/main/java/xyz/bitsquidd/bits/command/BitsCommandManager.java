@@ -19,9 +19,8 @@ import xyz.bitsquidd.bits.command.util.BitsCommandSourceContext;
 import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -181,9 +180,9 @@ public abstract class BitsCommandManager<T> implements CoreManager {
      *
      * @since 0.0.10
      */
-    protected Collection<BitsCommand> getAllCommands() {
+    protected AddableSet<BitsCommand> getAllCommands() {
         // Override this method to provide a collection of commands to be registered on startup.
-        return Collections.emptyList();
+        return AddableSet.empty();
     }
 
     /**

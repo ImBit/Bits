@@ -19,6 +19,7 @@ import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.command.argument.parser.impl.primitive.PrimitiveArgumentParser;
 import xyz.bitsquidd.bits.paper.command.argument.parser.impl.*;
 import xyz.bitsquidd.bits.paper.command.argument.parser.impl.primitive.EntitySelectorArgumentParser;
+import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.util.ArrayList;
@@ -49,17 +50,14 @@ public class PaperBitsArgumentRegistry extends BitsArgumentRegistry<CommandSourc
     }
 
     @Override
-    protected List<AbstractArgumentParser<?>> initialiseParsers() {
-        List<AbstractArgumentParser<?>> parsers = new ArrayList<>(super.initialiseParsers());
-        parsers.addAll(List.of(
+    protected AddableSet<AbstractArgumentParser<?>> initialiseParsers() {
+        return super.initialiseParsers().addAll(List.of(
           new WorldArgumentParser(),
           new LocationArgumentParser(),
           new BlockPosArgumentParser(),
           new PlayerCollectionArgumentParser(),
           new PlayerSingleArgumentParser()
         ));
-
-        return parsers;
     }
 
 }

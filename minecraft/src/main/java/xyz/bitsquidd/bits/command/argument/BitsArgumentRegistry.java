@@ -23,6 +23,7 @@ import xyz.bitsquidd.bits.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.wrapper.GreedyString;
+import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public abstract class BitsArgumentRegistry<T> {
 
     public BitsArgumentRegistry() {
         List<AbstractArgumentParser<?>> initialParsers = new ArrayList<>(initialisePrimitiveParsers());
-        initialParsers.addAll(initialiseParsers());
+        initialParsers.addAll(initialiseParsers().build());
         initialParsers.forEach(parser -> parsers.put(parser.getTypeSignature(), parser));
     }
 
@@ -112,9 +113,9 @@ public abstract class BitsArgumentRegistry<T> {
      *
      * @since 0.0.10
      */
-    protected List<AbstractArgumentParser<?>> initialiseParsers() {
+    protected AddableSet<AbstractArgumentParser<?>> initialiseParsers() {
         // Override to add custom parsers
-        return List.of(
+        return AddableSet.of(
           new GreedyStringArgumentParser(),
           new LinkArgumentParser(),
           new UUIDArgumentParser()
