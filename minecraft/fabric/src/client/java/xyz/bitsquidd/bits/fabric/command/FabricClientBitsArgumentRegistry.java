@@ -1,15 +1,14 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.fabric.command;
 
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.commands.CommandSourceStack;
 
 import xyz.bitsquidd.bits.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.command.argument.parser.AbstractArgumentParser;
@@ -18,7 +17,7 @@ import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 
 import static xyz.bitsquidd.bits.fabric.command.FabricBitsCommandManager.COMMAND_INSTANCE_ENTRYPOINT;
 
-public class FabricBitsArgumentRegistry extends BitsArgumentRegistry<CommandSourceStack> {
+public class FabricClientBitsArgumentRegistry extends BitsArgumentRegistry<FabricClientCommandSource> {
 
     /**
      * Fabric mods must use the {@code COMMAND_INSTANCE_ENTRYPOINT} entrypoint to provide command parsers.

@@ -7,7 +7,6 @@
 
 package xyz.bitsquidd.bits.config;
 
-import xyz.bitsquidd.bits.fabric.command.FabricBitsCommandManager;
 import xyz.bitsquidd.bits.fabric.log.FabricBitsLogger;
 import xyz.bitsquidd.bits.log.Logger;
 
@@ -35,17 +34,6 @@ public abstract class FabricBitsConfig extends MinecraftBitsConfig {
     }
 
     @Override
-    protected FabricBitsCommandManager createCommandManager() {
-        return new FabricBitsCommandManager();
-    }
-
-    @Override
-    public FabricBitsCommandManager getCommandManager() {
-        return (FabricBitsCommandManager)super.getCommandManager();
-    }
-
-
-    @Override
     public void runLater(Runnable runnable, long delayMs) {
         pendingTasks.add(new ScheduledTask(runnable, delayMs));
     }
@@ -58,6 +46,9 @@ public abstract class FabricBitsConfig extends MinecraftBitsConfig {
     protected final void tickAll() {
         pendingTasks.removeIf(ScheduledTask::tick);
     }
+
+
+    public abstract void registerAllCommands();
 
 
     private static final class ScheduledTask {

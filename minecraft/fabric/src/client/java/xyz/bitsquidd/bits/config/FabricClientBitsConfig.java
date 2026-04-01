@@ -7,6 +7,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
 import net.minecraft.client.Minecraft;
 
+import xyz.bitsquidd.bits.fabric.command.FabricClientBitsCommandManager;
 import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
@@ -20,6 +21,16 @@ public class FabricClientBitsConfig extends FabricBitsConfig {
 
     public static FabricClientBitsConfig get() {
         return (FabricClientBitsConfig)BitsConfig.get();
+    }
+
+    @Override
+    protected FabricClientBitsCommandManager createCommandManager() {
+        return new FabricClientBitsCommandManager();
+    }
+
+    @Override
+    public FabricClientBitsCommandManager getCommandManager() {
+        return (FabricClientBitsCommandManager)super.getCommandManager();
     }
 
     @Override
@@ -55,6 +66,11 @@ public class FabricClientBitsConfig extends FabricBitsConfig {
     public boolean hasPermission(Audience audience, Permission permission) {
         // TODO have MinecraftServer interface
         return true;
+    }
+
+
+    @Override
+    public void registerAllCommands() {
     }
 
 }
