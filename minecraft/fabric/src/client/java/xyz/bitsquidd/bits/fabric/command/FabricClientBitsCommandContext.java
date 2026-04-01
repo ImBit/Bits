@@ -9,7 +9,7 @@ package xyz.bitsquidd.bits.fabric.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.kyori.adventure.audience.Audience;
 
 import xyz.bitsquidd.bits.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.command.util.BitsCommandSourceContext;
@@ -27,9 +27,8 @@ public class FabricClientBitsCommandContext extends BitsCommandContext<FabricCli
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public CommandSourceStack getSender() {
-        return source.getSender();
+    public <S extends Audience> S getSender() {
+        return getSource().getSender();
     }
 
 

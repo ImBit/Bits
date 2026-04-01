@@ -42,7 +42,7 @@ public final class FabricClientBitsCommandManager extends FabricBitsCommandManag
             getAllCommands().build().forEach(this::registerCommand);
             getRegisteredCommands().forEach(bitsCommand -> {
                 brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))
-                  .forEach(node -> dispatcher.register(node.createBuilder()));
+                  .forEach(node -> dispatcher.getRoot().addChild(node));
                 bitsCommand.onRegister();
             });
         });

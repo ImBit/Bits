@@ -18,8 +18,8 @@ public class FabricClientBitsCommandSourceContext extends BitsCommandSourceConte
         super(source);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public Audience getSender() {
         // Fabric's sender will always be the client.
         return MinecraftClientAudiences.of().audience();
