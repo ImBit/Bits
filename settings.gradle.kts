@@ -10,6 +10,8 @@ pluginManagement {
     repositories {
         mavenLocal()
 
+        maven { url = uri("https://jitpack.io") }
+
         maven {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
@@ -41,9 +43,6 @@ rootProject.name = "Bits"
 include("api")
 
 include("minecraft")
-
 include("minecraft:paper")
-
 include("minecraft:velocity")
-
 include("minecraft:fabric")
