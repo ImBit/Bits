@@ -7,7 +7,7 @@
 
 package xyz.bitsquidd.bits.config;
 
-import xyz.bitsquidd.bits.fabric.log.FabricBitsLogger;
+import xyz.bitsquidd.bits.log.FabricBitsLogger;
 import xyz.bitsquidd.bits.log.Logger;
 
 import java.util.ArrayList;

@@ -13,8 +13,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.audience.Audience;
 
 import xyz.bitsquidd.bits.log.Logger;
-import xyz.bitsquidd.bits.velocity.command.VelocityBitsCommandManager;
-import xyz.bitsquidd.bits.velocity.log.VelocityBitsLogger;
+import xyz.bitsquidd.bits.log.VelocityBitsLogger;
+import xyz.bitsquidd.bits.mc.command.VelocityBitsCommandManager;
 import xyz.bitsquidd.bits.velocity.util.velocity.runnable.Tasks;
 
 import java.security.Permission;

@@ -7,8 +7,8 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
 import net.minecraft.client.Minecraft;
 
-import xyz.bitsquidd.bits.fabric.command.FabricClientBitsCommandManager;
-import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.mc.command.FabricClientBitsCommandManager;
+import xyz.bitsquidd.bits.mc.permission.Permission;
 
 import java.util.Locale;
 
