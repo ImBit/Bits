@@ -1,4 +1,4 @@
-import xyz.bitsquidd.includeLibrary
+import xyz.bitsquidd.util.shadeApi
 
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
@@ -9,8 +9,12 @@ import xyz.bitsquidd.includeLibrary
  */
 
 dependencies {
-    includeLibrary(project(":minecraft"))
+    shadeApi(project(":minecraft"))
 
-    implementation(rootProject.velocityLibs.velocity.api.get())
+    compileOnly(rootProject.velocityLibs.velocity.api.get())
     annotationProcessor(rootProject.velocityLibs.velocity.api.get())
+}
+
+repositories {
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
 }

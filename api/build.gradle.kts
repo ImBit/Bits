@@ -1,4 +1,6 @@
-import xyz.bitsquidd.relocate
+import xyz.bitsquidd.util.includeLibrary
+import xyz.bitsquidd.util.relocate
+import xyz.bitsquidd.util.shade
 
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
@@ -13,6 +15,13 @@ description = "🦑 Utility API for Bits Plugin development."
 dependencies {
     shade(rootProject.libs.classgraph)
 
+    implementation(rootProject.libs.joml)
+    implementation(rootProject.libs.logger)
+    implementation(rootProject.libs.adventure.text.serializer.plain)
+
+    includeLibrary(rootProject.libs.gson)
+    includeLibrary(rootProject.libs.guava)
+    includeLibrary(rootProject.libs.adventure)
 }
 
-relocate("io.github.classgraph" to "xyz.bitsquidd.internal.classgraph")
+relocate("io.github.classgraph" to "xyz.bitsquidd.lib.classgraph")

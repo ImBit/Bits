@@ -31,12 +31,12 @@ repositories {
 
 dependencies {
     // Core API (required)
-    implementation("com.github.imbit.bits:api:0.0.10")
+    implementation("xyz.bitsquidd:api:0.0.10")
 
     // Platform implementation (optional)
-    implementation("com.github.imbit.bits:paper:0.0.10")
-    implementation("com.github.imbit.bits:velocity:0.0.10")
-    implementation("com.github.imbit.bits:fabric:0.0.10")
+    implementation("xyz.bitsquidd:paper:0.0.10")
+    implementation("xyz.bitsquidd:velocity:0.0.10")
+    implementation("xyz.bitsquidd:fabric:0.0.10")
 }
 ```
 
@@ -54,14 +54,14 @@ dependencies {
 <dependencies>
 <!-- Core API (required) -->
 <dependency>
-    <groupId>com.github.imbit.bits</groupId>
+    <groupId>xyz.bitsquidd</groupId>
     <artifactId>api</artifactId>
     <version>0.0.10</version>
 </dependency>
 
 <!-- Platform implementation (optional) -->
 <dependency>
-    <groupId>com.github.imbit.bits</groupId>
+    <groupId>xyz.bitsquidd</groupId>
     <artifactId>paper/velocity/fabric</artifactId>
     <version>0.0.10</version>
 </dependency>

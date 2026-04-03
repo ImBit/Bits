@@ -17,7 +17,7 @@ adventure-text-serializer-plain = { group = "net.kyori", name = "adventure-text-
 errorprone = { group = "com.google.errorprone", name = "error_prone_core", version = "2.45.0" }
 
 [plugins]
-imbit-convention = { id = "xyz.bitsquidd.convention", version = "1.0.3" }
+imbit-convention = { id = "xyz.bitsquidd.convention", version = "1.0.4" }
 
 shadow = { id = "com.gradleup.shadow", version = "9.0.1" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0" }

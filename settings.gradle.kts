@@ -10,12 +10,9 @@ pluginManagement {
     repositories {
         mavenLocal()
 
-        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://repo.bitsquidd.xyz/repository/bit/") }
 
-        maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
-        }
+        maven { url = uri("https://maven.fabricmc.net/") }
 
         mavenCentral()
         gradlePluginPortal()
