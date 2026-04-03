@@ -56,14 +56,14 @@ dependencies {
 <dependency>
     <groupId>xyz.bitsquidd</groupId>
     <artifactId>api</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
 </dependency>
 
 <!-- Platform implementation (optional) -->
 <dependency>
     <groupId>xyz.bitsquidd</groupId>
     <artifactId>paper/velocity/fabric</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
 </dependency>
 </dependencies>
 ```
