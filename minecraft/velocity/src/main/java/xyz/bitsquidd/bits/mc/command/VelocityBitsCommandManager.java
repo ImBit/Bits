@@ -42,7 +42,7 @@ public class VelocityBitsCommandManager extends BitsCommandManager<CommandSource
     protected void enableAllCommands() {
         CommandManager velocityCommandManager = VelocityBitsConfig.get().getServer().getCommandManager();
 
-        getAllCommands().forEach(this::registerCommand);
+        getAllCommands().build().forEach(this::registerCommand);
         getRegisteredCommands()
           .forEach(bitsCommand -> {
               brigadierTreeGenerator.createNodes(new BitsCommandBuilder(bitsCommand))

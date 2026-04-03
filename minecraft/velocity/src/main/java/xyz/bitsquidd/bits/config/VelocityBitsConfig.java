@@ -15,9 +15,9 @@ import net.kyori.adventure.audience.Audience;
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.log.VelocityBitsLogger;
 import xyz.bitsquidd.bits.mc.command.VelocityBitsCommandManager;
+import xyz.bitsquidd.bits.mc.permission.Permission;
 import xyz.bitsquidd.bits.velocity.util.velocity.runnable.Tasks;
 
-import java.security.Permission;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 

@@ -11,17 +11,16 @@ import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.mc.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.GreedyStringArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.LinkArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.UUIDArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.VoidArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.generic.GenericEnumParser;
-import xyz.bitsquidd.bits.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.primitive.*;
 import xyz.bitsquidd.bits.mc.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.mc.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.wrapper.GreedyString;
 import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
