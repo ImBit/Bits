@@ -31,13 +31,12 @@ repositories {
 
 dependencies {
     // Core API (required)
-    implementation("com.github.ImBit.Bits:API:0.0.10")
+    implementation("xyz.bitsquidd:api:0.0.10")
 
-    // Paper implementation
-    implementation("com.github.ImBit.Bits:Paper:0.0.10")
-
-    // Velocity implementation
-    implementation("com.github.ImBit.Bits:Velocity:0.0.10")
+    // Platform implementation (optional)
+    implementation("xyz.bitsquidd:paper:0.0.10")
+    implementation("xyz.bitsquidd:velocity:0.0.10")
+    implementation("xyz.bitsquidd:fabric:0.0.10")
 }
 ```
 
@@ -55,22 +54,15 @@ dependencies {
 <dependencies>
 <!-- Core API (required) -->
 <dependency>
-    <groupId>com.github.ImBit.Bits</groupId>
-    <artifactId>API</artifactId>
+    <groupId>xyz.bitsquidd</groupId>
+    <artifactId>api</artifactId>
     <version>0.0.10</version>
 </dependency>
 
-<!-- Paper implementation -->
+<!-- Platform implementation (optional) -->
 <dependency>
-    <groupId>com.github.ImBit.Bits</groupId>
-    <artifactId>Paper</artifactId>
-    <version>0.0.10</version>
-</dependency>
-
-<!-- Velocity implementation -->
-<dependency>
-    <groupId>com.github.ImBit.Bits</groupId>
-    <artifactId>Velocity</artifactId>
+    <groupId>xyz.bitsquidd</groupId>
+    <artifactId>paper/velocity/fabric</artifactId>
     <version>0.0.10</version>
 </dependency>
 </dependencies>
@@ -81,6 +73,9 @@ dependencies {
 - **API** - Core interfaces and abstractions
 - **Paper** - Paper platform implementation
 - **Velocity** - Velocity platform implementation
+- **Fabric** - Fabric platform implementation
+    - **Client** - Fabric client implementation
+    - **Server** - Fabric server implementation
 
 ---
 Made with 🦑 by [ImBit](https://github.com/ImBit)

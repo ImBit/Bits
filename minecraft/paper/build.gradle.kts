@@ -1,4 +1,4 @@
-import xyz.bitsquidd.includeLibrary
+import xyz.bitsquidd.util.shadeApi
 
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
@@ -17,6 +17,6 @@ repositories {
 }
 
 dependencies {
-    includeLibrary(project(":minecraft"))
+    shadeApi(project(":minecraft"))
     paperweight.paperDevBundle(rootProject.paperLibs.versions.paper.api.get())
 }

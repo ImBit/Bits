@@ -1,4 +1,5 @@
-import xyz.bitsquidd.includeLibrary
+import xyz.bitsquidd.util.includeLibrary
+import xyz.bitsquidd.util.shadeApi
 
 /*
  * This file is part of a Bit libraries package.
@@ -9,7 +10,7 @@ import xyz.bitsquidd.includeLibrary
 
 
 dependencies {
-    includeLibrary(project(":api", configuration = "shadow"))
+    shadeApi(project(":api"))
 
     includeLibrary(rootProject.libs.brigadier)
 }

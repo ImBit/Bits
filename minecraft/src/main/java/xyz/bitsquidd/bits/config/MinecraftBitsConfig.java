@@ -9,8 +9,8 @@ package xyz.bitsquidd.bits.config;
 
 import net.kyori.adventure.audience.Audience;
 
-import xyz.bitsquidd.bits.command.BitsCommandManager;
-import xyz.bitsquidd.bits.permission.Permission;
+import xyz.bitsquidd.bits.mc.command.BitsCommandManager;
+import xyz.bitsquidd.bits.mc.permission.Permission;
 
 import java.util.Locale;
 

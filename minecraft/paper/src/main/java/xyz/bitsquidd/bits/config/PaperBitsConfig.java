@@ -14,11 +14,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.bitsquidd.bits.log.Logger;
-import xyz.bitsquidd.bits.paper.command.PaperBitsCommandManager;
+import xyz.bitsquidd.bits.log.PaperBitsLogger;
+import xyz.bitsquidd.bits.mc.command.PaperBitsCommandManager;
+import xyz.bitsquidd.bits.mc.permission.Permission;
 import xyz.bitsquidd.bits.paper.format.CommonPaperFormatters;
-import xyz.bitsquidd.bits.paper.log.PaperBitsLogger;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
-import xyz.bitsquidd.bits.permission.Permission;
 
 import java.util.Locale;
 

@@ -6,11 +6,11 @@
  * Enjoy the Bits and Bobs :)
  */
 
-group = "com.github.imbit.bits"
+group = "xyz.bitsquidd.bits"
 version = property("bits_version") as String
 
 plugins {
-    alias(libs.plugins.imbit.convention)
+    alias(libs.plugins.bit.convention)
 }
 
 allprojects {
@@ -20,19 +20,17 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-
-        maven { url = uri("https://jitpack.io") }
     }
 
-    dependencies {
-        implementation(rootProject.libs.joml)
-        implementation(rootProject.libs.logger)
-        implementation(rootProject.libs.adventure.text.serializer.plain)
-
-        api(rootProject.libs.gson)
-        api(rootProject.libs.guava)
-        api(rootProject.libs.adventure)
-
-        errorprone(rootProject.libs.errorprone)
+    publishing {
+        repositories {
+            maven {
+                url = uri("https://repo.bitsquidd.xyz/repository/bit/")
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        }
     }
 }

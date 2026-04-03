@@ -10,10 +10,9 @@ pluginManagement {
     repositories {
         mavenLocal()
 
-        maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
-        }
+        maven { url = uri("https://repo.bitsquidd.xyz/repository/bit/") }
+
+        maven { url = uri("https://maven.fabricmc.net/") }
 
         mavenCentral()
         gradlePluginPortal()
@@ -41,9 +40,6 @@ rootProject.name = "Bits"
 include("api")
 
 include("minecraft")
-
 include("minecraft:paper")
-
 include("minecraft:velocity")
-
 include("minecraft:fabric")
