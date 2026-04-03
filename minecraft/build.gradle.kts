@@ -8,6 +8,9 @@ import xyz.bitsquidd.util.shadeApi
  * Copyright (c) 2023-2026 ImBit
  */
 
+repositories {
+    maven { url = uri("https://libraries.minecraft.net") }
+}
 
 dependencies {
     shadeApi(project(":api"))
