@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.paper.util.location.wrapper;
 
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -24,11 +25,24 @@ public interface Locatable {
     Block asBlock(World world);
 
     Vector asVector();
+
+    YawAndPitch direction();
+
     //endregion
 
 
-    //region Getters
-    YawAndPitch getDirection();
+    //region Util
+    default double distance(Location location) {
+        return distance(BlockPos.of(location));
+    }
+
+    default double distanceSquared(Location location) {
+        return distanceSquared(BlockPos.of(location));
+    }
+
+    default double distance(Block block) {
+        return distance(BlockPos.of(block));
+    }
 
     default double distance(Locatable locatable) {
         return Math.sqrt(distanceSquared(locatable));
@@ -48,9 +62,66 @@ public interface Locatable {
 
 
     //region Math Functionality
+    Locatable mult(Locatable other);
 
-    // TODO
+    default Locatable mult(Vector vector) {
+        return mult(BlockPos.of(vector.getX(), vector.getY(), vector.getZ()));
+    }
+
+    default Locatable mult(double scalar) {
+        return mult(new Vector(scalar, scalar, scalar));
+    }
+
+
+    Locatable add(Locatable other);
+
+    default Locatable add(Vector vector) {
+        return add(BlockPos.of(vector.getX(), vector.getY(), vector.getZ()));
+    }
+
+    default Locatable add(double x, double y, double z) {
+        return add(new Vector(x, y, z));
+    }
+
+    default Location addTo(Location location) {
+        Vector vector = asVector();
+        YawAndPitch direction = YawAndPitch.from(location).add(direction());
+        return direction.applyTo(location.clone().add(vector));
+    }
+
+    default Vector addTo(Vector vector) {
+        return asVector().add(vector);
+    }
 
     //endregion
+
+
+    //region Rotation Functionality
+    Locatable withYawPitch(YawAndPitch rotation);
+
+    default Locatable withYaw(float yaw) {
+        return withYawPitch(direction().withYaw(yaw));
+    }
+
+    default Locatable withPitch(float pitch) {
+        return withYawPitch(direction().withPitch(pitch));
+    }
+
+    Locatable rotate(YawAndPitch rotation);
+
+    default Locatable rotateYaw(float yaw) {
+        return rotate(YawAndPitch.of(yaw, 0));
+    }
+
+    default Locatable rotatePitch(float pitch) {
+        return rotate(YawAndPitch.of(0, pitch));
+    }
+
+    default Locatable rotate(Rotation rotation) {
+        return rotate(YawAndPitch.from(rotation));
+    }
+
+    //endregion
+
 
 }

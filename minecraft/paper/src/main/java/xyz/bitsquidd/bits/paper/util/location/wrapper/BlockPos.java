@@ -38,20 +38,24 @@ public final class BlockPos implements Locatable {
     }
 
     //region Static Constructors
-    public static BlockPos of(double x, double y, double z) {
-        return new BlockPos(x, y, z, 0, 0);
-    }
-
     public static BlockPos of(double x, double y, double z, float yaw, float pitch) {
         return new BlockPos(x, y, z, yaw, pitch);
     }
 
-    public static BlockPos of(Entity entity) {
-        return new BlockPos(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+    public static BlockPos of(double x, double y, double z) {
+        return of(x, y, z, 0, 0);
     }
 
     public static BlockPos of(Location location) {
-        return new BlockPos(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        return of(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    }
+
+    public static BlockPos of(Entity entity) {
+        return of(entity.getLocation());
+    }
+
+    public static BlockPos of(Block block) {
+        return of(block.getLocation().toCenterLocation());
     }
 
     public static BlockPos fromString(String str) {
@@ -125,127 +129,104 @@ public final class BlockPos implements Locatable {
     //region Getters
 
     @Override
-    public YawAndPitch getDirection() {
+    public YawAndPitch direction() {
         return YawAndPitch.of(yaw, pitch);
     }
 
     //endregion
 
-    public BlockPos add(BlockPos other) {
-        return new BlockPos(this.x + other.x, this.y + other.y, this.z + other.z, this.yaw, this.pitch);
+    //region Math Functionality
+
+    @Override
+    public BlockPos mult(Locatable other) {
+        Vector otherVector = other.asVector();
+        YawAndPitch newDirection = direction(); // Not too sure what yaw and pitch should be when multiplying.
+
+        return new BlockPos(
+          (int)(x * otherVector.getX()),
+          (int)(y * otherVector.getY()),
+          (int)(z * otherVector.getZ()),
+          newDirection.yaw,
+          newDirection.pitch
+        );
     }
 
-    public BlockPos add(Location loc) {
-        return new BlockPos(this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    @Override
+    public BlockPos mult(Vector vector) {
+        return (BlockPos)Locatable.super.mult(vector);
     }
 
-    public Location addTo(Location loc) {
-        return new Location(loc.getWorld(), this.x + loc.getX(), this.y + loc.getY(), this.z + loc.getZ(), this.yaw, this.pitch);
+    @Override
+    public BlockPos mult(double scalar) {
+        return (BlockPos)Locatable.super.mult(scalar);
     }
 
-    public BlockPos add(Vector vec) {
-        return new BlockPos(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ(), this.yaw, this.pitch);
+
+    @Override
+    public BlockPos add(Locatable other) {
+        Vector newVector = other.asVector().add(asVector());
+        YawAndPitch newDirection = direction().addWrap(other.direction());
+
+        return new BlockPos(
+          newVector.getX(),
+          newVector.getY(),
+          newVector.getZ(),
+          newDirection.yaw,
+          newDirection.pitch
+        );
     }
 
-    public Vector addTo(Vector vec) {
-        return new Vector(this.x + vec.getX(), this.y + vec.getY(), this.z + vec.getZ());
+    @Override
+    public BlockPos add(Vector vector) {
+        return (BlockPos)Locatable.super.add(vector);
     }
 
+    @Override
     public BlockPos add(double x, double y, double z) {
-        return new BlockPos(this.x + x, this.y + y, this.z + z, this.yaw, this.pitch);
+        return (BlockPos)Locatable.super.add(x, y, z);
     }
 
-    public BlockPos subtract(BlockPos other) {
-        return new BlockPos(this.x - other.x, this.y - other.y, this.z - other.z, this.yaw, this.pitch);
+    //endregion
+
+
+    //region Rotation Functionality
+    @Override
+    public BlockPos withYawPitch(YawAndPitch rotation) {
+        return new BlockPos(this.x, this.y, this.z, rotation.yaw, rotation.pitch);
     }
 
-    public BlockPos subtract(Location loc) {
-        return new BlockPos(this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
-    }
-
-    public Location subtractFrom(Location loc) {
-        return new Location(loc.getWorld(), this.x - loc.getX(), this.y - loc.getY(), this.z - loc.getZ(), this.yaw, this.pitch);
-    }
-
-    public BlockPos subtract(Vector vec) {
-        return new BlockPos(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ(), this.yaw, this.pitch);
-    }
-
-    public Vector subtractFrom(Vector vec) {
-        return new Vector(this.x - vec.getX(), this.y - vec.getY(), this.z - vec.getZ());
-    }
-
-    public BlockPos subtract(double x, double y, double z) {
-        return new BlockPos(this.x - x, this.y - y, this.z - z, this.yaw, this.pitch);
-    }
-
-    public BlockPos multiply(BlockPos other) {
-        return new BlockPos(this.x * other.x, this.y * other.y, this.z * other.z, this.yaw, this.pitch);
-    }
-
-    public BlockPos multiply(Vector vec) {
-        return new BlockPos(this.x * vec.getX(), this.y * vec.getY(), this.z * vec.getZ(), this.yaw, this.pitch);
-    }
-
-    public BlockPos multiply(double scalar) {
-        return new BlockPos(this.x * scalar, this.y * scalar, this.z * scalar, this.yaw, this.pitch);
-    }
-
-    public BlockPos divide(BlockPos other) {
-        return new BlockPos(this.x / other.x, this.y / other.y, this.z / other.z, this.yaw, this.pitch);
-    }
-
-    public BlockPos divide(Vector vec) {
-        return new BlockPos(this.x / vec.getX(), this.y / vec.getY(), this.z / vec.getZ(), this.yaw, this.pitch);
-    }
-
-    public BlockPos divide(double scalar) {
-        return new BlockPos(this.x / scalar, this.y / scalar, this.z / scalar, this.yaw, this.pitch);
-    }
-
-
-    public BlockPos withYawPitch(YawAndPitch yawAndPitch) {
-        return new BlockPos(this.x, this.y, this.z, yawAndPitch.yaw, yawAndPitch.pitch);
-    }
-
+    @Override
     public BlockPos withYaw(float yaw) {
-        return new BlockPos(this.x, this.y, this.z, yaw, this.pitch);
+        return (BlockPos)Locatable.super.withYaw(yaw);
     }
 
+    @Override
     public BlockPos withPitch(float pitch) {
-        return new BlockPos(this.x, this.y, this.z, this.yaw, pitch);
+        return (BlockPos)Locatable.super.withPitch(pitch);
     }
 
+    @Override
     public BlockPos rotate(YawAndPitch yawAndPitch) {
         float newYaw = this.yaw + yawAndPitch.yaw;
         float newPitch = this.pitch + yawAndPitch.pitch;
         return new BlockPos(this.x, this.y, this.z, newYaw, newPitch);
     }
 
-    public BlockPos rotateYaw(float degrees) {
-        float newYaw = this.yaw + degrees;
-        return new BlockPos(this.x, this.y, this.z, newYaw, this.pitch);
+    @Override
+    public BlockPos rotateYaw(float yaw) {
+        return (BlockPos)Locatable.super.rotateYaw(yaw);
     }
 
-    public BlockPos rotatePitch(float degrees) {
-        float newPitch = this.pitch + degrees;
-        return new BlockPos(this.x, this.y, this.z, this.yaw, newPitch);
+    @Override
+    public BlockPos rotatePitch(float pitch) {
+        return (BlockPos)Locatable.super.rotatePitch(pitch);
     }
 
+    @Override
     public BlockPos rotate(Rotation rotation) {
-        float newYaw = switch (rotation) {
-            case CLOCKWISE_45 -> this.yaw + 45;
-            case CLOCKWISE -> this.yaw + 90;
-            case CLOCKWISE_135 -> this.yaw + 135;
-            case FLIPPED -> this.yaw + 180;
-            case FLIPPED_45 -> this.yaw + 270;
-            case COUNTER_CLOCKWISE -> this.yaw - 90;
-            case COUNTER_CLOCKWISE_45 -> this.yaw - 45;
-            default -> this.yaw;
-        };
-
-        return new BlockPos(this.x, this.y, this.z, newYaw, this.pitch);
+        return (BlockPos)Locatable.super.rotate(rotation);
     }
 
+    //endregion
 
 }

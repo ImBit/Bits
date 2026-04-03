@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.paper.util.location.wrapper;
 
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
@@ -87,6 +88,19 @@ public final class YawAndPitch {
         Vector3f euler = new Vector3f();
         quaternion.getEulerAnglesYXZ(euler);
         return new YawAndPitch((float)Math.toDegrees(-euler.y + Math.PI), (float)Math.toDegrees(euler.x));
+    }
+
+    public static YawAndPitch from(Rotation rotation) {
+        return switch (rotation) {
+            case NONE -> YawAndPitch.ZERO;
+            case CLOCKWISE_45 -> YawAndPitch.of(45, 0);
+            case CLOCKWISE -> YawAndPitch.of(90, 0);
+            case CLOCKWISE_135 -> YawAndPitch.of(135, 0);
+            case FLIPPED -> YawAndPitch.of(180, 0);
+            case FLIPPED_45 -> YawAndPitch.of(270, 0);
+            case COUNTER_CLOCKWISE -> YawAndPitch.of(-90, 0);
+            case COUNTER_CLOCKWISE_45 -> YawAndPitch.of(-45, 0);
+        };
     }
 
 

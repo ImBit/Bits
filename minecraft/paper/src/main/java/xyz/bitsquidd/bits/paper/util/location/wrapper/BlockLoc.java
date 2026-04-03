@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.paper.util.location.wrapper;
 
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -28,6 +29,27 @@ public record BlockLoc(
   int y,
   int z
 ) implements Locatable {
+
+    //region Static Constructors
+    public static final BlockLoc ORIGIN = new BlockLoc(0, 0, 0);
+
+    public static BlockLoc of(int x, int y, int z) {
+        return new BlockLoc(x, y, z);
+    }
+
+    public static BlockLoc of(Location location) {
+        return of(
+          (int)Math.round(location.getX()),
+          (int)Math.round(location.getY()),
+          (int)Math.round(location.getZ())
+        );
+    }
+
+    public static BlockLoc of(Block block) {
+        return of(block.getX(), block.getY(), block.getZ());
+    }
+    //endregion
+
 
     //region Java Methods
     @Override
@@ -73,10 +95,96 @@ public record BlockLoc(
     //region Getters
 
     @Override
-    public YawAndPitch getDirection() {
+    public YawAndPitch direction() {
         return YawAndPitch.ZERO;
     }
 
+    //endregion
+
+    //region Math Functionality
+
+    @Override
+    public BlockLoc mult(Locatable other) {
+        Vector otherVector = other.asVector();
+
+        return new BlockLoc(
+          (int)(x * otherVector.getX()),
+          (int)(y * otherVector.getY()),
+          (int)(z * otherVector.getZ())
+        );
+    }
+
+    @Override
+    public BlockLoc mult(Vector vector) {
+        return (BlockLoc)Locatable.super.mult(vector);
+    }
+
+    @Override
+    public BlockLoc mult(double scalar) {
+        return (BlockLoc)Locatable.super.mult(scalar);
+    }
+
+
+    @Override
+    public BlockLoc add(Locatable other) {
+        Vector newVector = other.asVector().add(asVector());
+
+        return new BlockLoc(
+          (int)(newVector.getX()),
+          (int)(newVector.getY()),
+          (int)(newVector.getZ())
+        );
+    }
+
+    @Override
+    public BlockLoc add(Vector vector) {
+        return (BlockLoc)Locatable.super.add(vector);
+    }
+
+    @Override
+    public BlockLoc add(double x, double y, double z) {
+        return (BlockLoc)Locatable.super.add(x, y, z);
+    }
+
+    //endregion
+
+
+    //region Rotation Functionality
+    // Note that BlockLocs do not rotate, we simply just return this.
+    @Override
+    public BlockLoc withYawPitch(YawAndPitch rotation) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc withYaw(float yaw) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc withPitch(float pitch) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc rotate(YawAndPitch yawAndPitch) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc rotateYaw(float yaw) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc rotatePitch(float pitch) {
+        return this;
+    }
+
+    @Override
+    public BlockLoc rotate(Rotation rotation) {
+        return this;
+    }
 
     //endregion
 

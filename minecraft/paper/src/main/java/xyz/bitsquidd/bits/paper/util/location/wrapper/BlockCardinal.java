@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.paper.util.location.wrapper;
 
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -32,6 +33,31 @@ public record BlockCardinal(
   int z,
   Cardinal cardinal
 ) implements Locatable {
+
+    //region Static Constructors
+    public static final BlockCardinal ORIGIN = new BlockCardinal(0, 0, 0, Cardinal.NORTH);
+
+    public static BlockCardinal of(int x, int y, int z, Cardinal cardinal) {
+        return new BlockCardinal(x, y, z, cardinal);
+    }
+
+    public static BlockCardinal of(int x, int y, int z) {
+        return of(x, y, z, Cardinal.NORTH);
+    }
+
+    public static BlockCardinal of(Location location) {
+        return of(
+          (int)Math.round(location.getX()),
+          (int)Math.round(location.getY()),
+          (int)Math.round(location.getZ()),
+          YawAndPitch.from(location).toCardinal()
+        );
+    }
+
+    public static BlockCardinal of(Block block) {
+        return of(block.getLocation());
+    }
+    //endregion
 
     //region Java Methods
     @Override
@@ -73,31 +99,102 @@ public record BlockCardinal(
     public Vector asVector() {
         return new Vector(x, y, z);
     }
-    //endregion
-
-
-    //region Getters
 
     @Override
-    public YawAndPitch getDirection() {
+    public YawAndPitch direction() {
         return YawAndPitch.from(cardinal);
     }
+    //endregion
 
+
+    //region Math Functionality
+
+    @Override
+    public BlockCardinal mult(Locatable other) {
+        Vector otherVector = other.asVector();
+        YawAndPitch newDirection = direction(); // Not too sure what yaw and pitch should be when multiplying.
+
+        return new BlockCardinal(
+          (int)(x * otherVector.getX()),
+          (int)(y * otherVector.getY()),
+          (int)(z * otherVector.getZ()),
+          newDirection.toCardinal()
+        );
+    }
+
+    @Override
+    public BlockCardinal mult(Vector vector) {
+        return (BlockCardinal)Locatable.super.mult(vector);
+    }
+
+    @Override
+    public BlockCardinal mult(double scalar) {
+        return (BlockCardinal)Locatable.super.mult(scalar);
+    }
+
+
+    @Override
+    public BlockCardinal add(Locatable other) {
+        Vector newVector = other.asVector().add(asVector());
+        YawAndPitch newDirection = direction().addWrap(other.direction());
+
+        return new BlockCardinal(
+          (int)(newVector.getX()),
+          (int)(newVector.getY()),
+          (int)(newVector.getZ()),
+          newDirection.toCardinal()
+        );
+    }
+
+    @Override
+    public BlockCardinal add(Vector vector) {
+        return (BlockCardinal)Locatable.super.add(vector);
+    }
+
+    @Override
+    public BlockCardinal add(double x, double y, double z) {
+        return (BlockCardinal)Locatable.super.add(x, y, z);
+    }
 
     //endregion
 
 
-    public BlockCardinal add(int x, int y, int z) {
-        return new BlockCardinal(this.x + x, this.y + y, this.z + z, cardinal);
+    //region Rotation Functionality
+    @Override
+    public BlockCardinal withYawPitch(YawAndPitch rotation) {
+        return new BlockCardinal(this.x, this.y, this.z, rotation.toCardinal());
     }
 
-    public BlockCardinal add(BlockCardinal other) {
-        return new BlockCardinal(
-          this.x + other.x,
-          this.y + other.y,
-          this.z + other.z,
-          YawAndPitch.from(cardinal).addWrap(YawAndPitch.from(other.cardinal)).toCardinal()
-        );
+    @Override
+    public BlockCardinal withYaw(float yaw) {
+        return (BlockCardinal)Locatable.super.withYaw(yaw);
     }
+
+    @Override
+    public BlockCardinal withPitch(float pitch) {
+        return (BlockCardinal)Locatable.super.withPitch(pitch);
+    }
+
+    @Override
+    public BlockCardinal rotate(YawAndPitch yawAndPitch) {
+        return new BlockCardinal(this.x, this.y, this.z, direction().add(yawAndPitch).toCardinal());
+    }
+
+    @Override
+    public BlockCardinal rotateYaw(float yaw) {
+        return (BlockCardinal)Locatable.super.rotateYaw(yaw);
+    }
+
+    @Override
+    public BlockCardinal rotatePitch(float pitch) {
+        return (BlockCardinal)Locatable.super.rotatePitch(pitch);
+    }
+
+    @Override
+    public BlockCardinal rotate(Rotation rotation) {
+        return (BlockCardinal)Locatable.super.rotate(rotation);
+    }
+
+    //endregion
 
 }
