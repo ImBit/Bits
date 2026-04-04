@@ -13,7 +13,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-import xyz.bitsquidd.bits.paper.util.location.util.Cardinal;
+import xyz.bitsquidd.bits.data.world.Cardinal;
 
 import java.util.Objects;
 
