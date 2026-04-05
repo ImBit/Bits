@@ -28,8 +28,8 @@ import java.util.function.Supplier;
  * as well as helper methods for primitive type conversions and package scanning.
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public final class ClassGraph {
-    private ClassGraph() {}
+public final class ReflectionUtils {
+    private ReflectionUtils() {}
 
     private static volatile Function<? super String, ? extends io.github.classgraph.ClassGraph> CLASSGRAPH_SUPPLIER =
       packageName -> new io.github.classgraph.ClassGraph()
