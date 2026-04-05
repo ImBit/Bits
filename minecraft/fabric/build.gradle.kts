@@ -1,5 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import xyz.bitsquidd.util.shadeApi
+import xyz.bitsquidd.util.includeLibrary
 
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
@@ -43,7 +43,7 @@ dependencies {
     modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
     modImplementation("me.lucko:fabric-permissions-api:0.5.0")
 
-    shadeApi(project(":minecraft"))
+    includeLibrary(project(":minecraft"))
 }
 
 tasks {

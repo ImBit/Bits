@@ -1,4 +1,4 @@
-import xyz.bitsquidd.util.shadeApi
+import xyz.bitsquidd.util.includeLibrary
 
 /*
  * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
@@ -9,7 +9,7 @@ import xyz.bitsquidd.util.shadeApi
  */
 
 dependencies {
-    shadeApi(project(":minecraft"))
+    includeLibrary(project(":minecraft"))
 
     compileOnly(rootProject.velocityLibs.velocity.api.get())
     annotationProcessor(rootProject.velocityLibs.velocity.api.get())
