@@ -45,6 +45,14 @@ public record BlockCardinal(
         return of(x, y, z, Cardinal.NORTH);
     }
 
+    public static BlockCardinal of(Vector vector) {
+        return of(
+          (int)Math.round(vector.getX()),
+          (int)Math.round(vector.getY()),
+          (int)Math.round(vector.getZ())
+        );
+    }
+
     public static BlockCardinal of(Location location) {
         return of(
           (int)Math.round(location.getX()),
@@ -56,6 +64,10 @@ public record BlockCardinal(
 
     public static BlockCardinal of(Block block) {
         return of(block.getLocation());
+    }
+
+    public static BlockCardinal of(Locatable locatable) {
+        return of(locatable.asVector());
     }
     //endregion
 
@@ -194,7 +206,12 @@ public record BlockCardinal(
     public BlockCardinal rotate(Rotation rotation) {
         return (BlockCardinal)Locatable.super.rotate(rotation);
     }
-
     //endregion
 
+
+    //region BlockCardinal-specific Functionality
+    public BlockCardinal flip() {
+        return new BlockCardinal(x, y, z, cardinal.flip());
+    }
+    //endregion
 }

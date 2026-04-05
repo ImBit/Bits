@@ -37,6 +37,14 @@ public record BlockLoc(
         return new BlockLoc(x, y, z);
     }
 
+    public static BlockLoc of(Vector vector) {
+        return of(
+          (int)Math.round(vector.getX()),
+          (int)Math.round(vector.getY()),
+          (int)Math.round(vector.getZ())
+        );
+    }
+
     public static BlockLoc of(Location location) {
         return of(
           (int)Math.round(location.getX()),
@@ -47,6 +55,10 @@ public record BlockLoc(
 
     public static BlockLoc of(Block block) {
         return of(block.getX(), block.getY(), block.getZ());
+    }
+
+    public static BlockLoc of(Locatable locatable) {
+        return of(locatable.asVector());
     }
     //endregion
 

@@ -58,6 +58,10 @@ public final class BlockPos implements Locatable {
         return of(block.getLocation().toCenterLocation());
     }
 
+    public static BlockPos of(Locatable locatable) {
+        return of(locatable.asVector().getX(), locatable.asVector().getY(), locatable.asVector().getZ(), locatable.direction().yaw, locatable.direction().pitch);
+    }
+
     public static BlockPos fromString(String str) {
         String trimmed = str.trim();
         String[] parts = trimmed.split(",");

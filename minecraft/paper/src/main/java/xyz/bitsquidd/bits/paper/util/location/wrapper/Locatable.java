@@ -28,6 +28,18 @@ public interface Locatable {
 
     YawAndPitch direction();
 
+    default BlockPos asBlockPos() {
+        return BlockPos.of(this);
+    }
+
+    default BlockLoc asBlockLoc() {
+        return BlockLoc.of(this);
+    }
+
+    default BlockCardinal asBlockCardinal() {
+        return BlockCardinal.of(this);
+    }
+
     //endregion
 
 

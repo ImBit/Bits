@@ -9,16 +9,27 @@ package xyz.bitsquidd.bits.data.world;
 
 /**
  * Represents the six cardinal directions in a 3D space.
+ * <p>
+ * <b>IMPORTANT NOTE:</b> this API is intended for use in a Minecraft world, which has unique rotation conventions:
+ * North = <b>-</b>Z, South = <b>+</b>Z
+ * See <a href="https://minecraft.wiki/w/Coordinates">Minecraft Wiki: Coordinates</a> for more info
  *
  * @since 0.0.11
  */
 public enum Cardinal {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST,
-    UP,
-    DOWN;
+    NORTH(new int[]{0, 0, -1}),
+    EAST(new int[]{1, 0, 0}),
+    SOUTH(new int[]{0, 0, 1}),
+    WEST(new int[]{-1, 0, 0}),
+    UP(new int[]{0, 1, 0}),
+    DOWN(new int[]{0, -1, 0}),
+    ;
+
+    public final int[] unitVector;
+
+    Cardinal(int[] unitVector) {
+        this.unitVector = unitVector;
+    }
 
     //region Flipping
     public Cardinal flip() {
