@@ -2,7 +2,6 @@
 
 💾 A Utility library for Minecraft development.
 
-[![JitPack](https://jitpack.io/v/ImBit/Bits.svg)](https://jitpack.io/#ImBit/Bits)
 [![License](https://img.shields.io/github/license/ImBit/Bits)](LICENSE)
 
 ## About
@@ -26,17 +25,17 @@ Bits is a multi-platform Minecraft utility library designed to streamline plugin
 ```kotlin
 repositories {
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://repo.bitsquidd.xyz/repository/bit/") }
 }
 
 dependencies {
     // Core API (required)
-    implementation("xyz.bitsquidd:api:0.0.10")
+    implementation("xyz.bitsquidd:api:0.0.11")
 
     // Platform implementation (optional)
-    implementation("xyz.bitsquidd:paper:0.0.10")
-    implementation("xyz.bitsquidd:velocity:0.0.10")
-    implementation("xyz.bitsquidd:fabric:0.0.10")
+    implementation("xyz.bitsquidd:paper:0.0.11")
+    implementation("xyz.bitsquidd:velocity:0.0.11")
+    implementation("xyz.bitsquidd:fabric:0.0.11")
 }
 ```
 
@@ -46,8 +45,8 @@ dependencies {
 
 <repositories>
     <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
+        <id>repo.bitsquidd.xyz</id>
+        <url>https://repo.bitsquidd.xyz/repository/bit/</url>
     </repository>
 </repositories>
 
