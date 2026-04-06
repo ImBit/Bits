@@ -10,6 +10,8 @@ package xyz.bitsquidd.bits.util.reflection;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
@@ -31,16 +33,24 @@ import java.util.function.Supplier;
 public final class ReflectionUtils {
     private ReflectionUtils() {}
 
-    private static volatile Function<? super String, ? extends io.github.classgraph.ClassGraph> CLASSGRAPH_SUPPLIER =
-      packageName -> new io.github.classgraph.ClassGraph()
+    private static volatile ClassLoader CLASSLOADER = Thread.currentThread().getContextClassLoader();
+    private static final Function<? super String, ? extends ClassGraph> CLASSGRAPH_SUPPLIER =
+      packageName -> new ClassGraph()
         .enableClassInfo()
         .enableAnnotationInfo()
-        .overrideClassLoaders(Thread.currentThread().getContextClassLoader())
+        .overrideClassLoaders(CLASSLOADER)
         .acceptPackages(packageName);
 
-    public static void setSupplier(Function<? super String, ? extends io.github.classgraph.ClassGraph> supplier) {
-        if (supplier == null) throw new IllegalArgumentException("Supplier cannot be null");
-        CLASSGRAPH_SUPPLIER = supplier;
+
+    /**
+     * Sets the classloader used for all reflection operations.
+     * Useful for Minecraft Paper plugins to ensure compatibility with the server's classloader.
+     *
+     * @since 0.0.12
+     */
+    public static void setClassloader(ClassLoader classLoader) {
+        if (classLoader == null) throw new IllegalArgumentException("ClassLoader cannot be null");
+        CLASSLOADER = classLoader;
     }
 
 
@@ -377,8 +387,8 @@ public final class ReflectionUtils {
 
         }
 
-        private static Class<?> getCorrectLoader(io.github.classgraph.ClassInfo info, Class<?> base) throws ClassNotFoundException {
-            return Class.forName(info.getName(), true, base.getClassLoader());
+        private static Class<?> getCorrectLoader(ClassInfo info, Class<?> base) throws ClassNotFoundException {
+            return Class.forName(info.getName(), true, CLASSLOADER);
         }
 
         public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass) {
