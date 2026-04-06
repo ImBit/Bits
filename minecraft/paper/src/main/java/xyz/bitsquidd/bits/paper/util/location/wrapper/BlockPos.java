@@ -7,6 +7,8 @@
 
 package xyz.bitsquidd.bits.paper.util.location.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bukkit.Location;
 import org.bukkit.Rotation;
 import org.bukkit.World;
@@ -29,7 +31,14 @@ public final class BlockPos implements Locatable {
 
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0, 0, 0);
 
-    private BlockPos(double x, double y, double z, float yaw, float pitch) {
+    @JsonCreator
+    private BlockPos(
+      @JsonProperty("x") double x,
+      @JsonProperty("y") double y,
+      @JsonProperty("z") double z,
+      @JsonProperty("yaw") float yaw,
+      @JsonProperty("pitch") float pitch
+    ) {
         this.x = x;
         this.y = y;
         this.z = z;

@@ -18,8 +18,10 @@ dependencies {
     implementation(rootProject.libs.joml)
     implementation(rootProject.libs.logger)
     implementation(rootProject.libs.adventure.text.serializer.plain)
+    implementation(rootProject.libs.adventure.text.minimessage)
 
-    includeLibrary(rootProject.libs.gson)
+    includeLibrary(rootProject.libs.jackson.core)
+    includeLibrary(rootProject.libs.jackson.databind)
     includeLibrary(rootProject.libs.guava)
     includeLibrary(rootProject.libs.adventure)
 }
