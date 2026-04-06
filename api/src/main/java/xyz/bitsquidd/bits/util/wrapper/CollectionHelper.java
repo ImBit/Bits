@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -47,8 +48,8 @@ public final class CollectionHelper {
     }
 
     /**
-     * Safely retrieves an element from a list, returning an empty {@link Optional}
-     * if the index is out of range.
+     * Safely retrieves an element from a list,
+     * returning an empty {@link Optional} if the index is out of range.
      *
      * @param <T>   the element type
      * @param list  the list to query
@@ -62,6 +63,24 @@ public final class CollectionHelper {
         if (index < 0 || index >= list.size()) return Optional.empty();
         return Optional.of(list.get(index));
     }
+
+    /**
+     * Safely retrieves an element from a map,
+     * returning an empty {@link Optional} if the key is not present or the value is null.
+     *
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param map the map to query
+     * @param key the key to look up
+     *
+     * @return an optional containing the value, or empty if the key is absent or maps to null
+     *
+     * @since 0.0.12
+     */
+    public static <K, V> Optional<V> get(Map<K, V> map, K key) {
+        return Optional.ofNullable(map.get(key));
+    }
+
 
     /**
      * Updates an element at a specific index, automatically expanding the list
