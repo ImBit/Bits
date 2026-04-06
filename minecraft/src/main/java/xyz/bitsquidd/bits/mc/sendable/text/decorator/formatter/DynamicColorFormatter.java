@@ -11,6 +11,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
+import xyz.bitsquidd.bits.util.color.Colors;
+
 /**
  * A formatter that dynamically resolves colors from tag data, supporting hex codes and named colors.
  *
@@ -30,27 +32,11 @@ public class DynamicColorFormatter extends AbstractFormatter {
             if (data.matches("[0-9a-fA-F]{6}")) {
                 color = TextColor.color(Integer.parseInt(data, 16));
             } else if (!data.isEmpty()) {
-                color = parseNamedColor(data);
+                color = TextColor.color(Colors.fromName(data));
             }
         } catch (Exception ignored) {}
 
         return color != null ? new BasicColorFormatter(color) : new BasicColorFormatter(NamedTextColor.WHITE);
-    }
-
-    private TextColor parseNamedColor(String colorName) {
-        return switch (colorName.toLowerCase()) {
-            case "red" -> NamedTextColor.RED;
-            case "green" -> NamedTextColor.GREEN;
-            case "blue" -> NamedTextColor.BLUE;
-            case "yellow" -> NamedTextColor.YELLOW;
-            case "white" -> NamedTextColor.WHITE;
-            case "black" -> NamedTextColor.BLACK;
-            case "gray", "grey" -> NamedTextColor.GRAY;
-            case "purple" -> NamedTextColor.LIGHT_PURPLE;
-            case "orange" -> NamedTextColor.GOLD;
-            case "pink" -> NamedTextColor.LIGHT_PURPLE;
-            default -> null;
-        };
     }
 
 }

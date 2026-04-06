@@ -52,7 +52,7 @@ public final class TypeSignature<T> {
         if (clazz.isPrimitive()) {
             @SuppressWarnings("unchecked")
             Class<X> boxed = (Class<X>)PRIMITIVE_TO_BOXED.get(clazz);
-            return boxed;
+            return Objects.requireNonNull(boxed, "No boxed type found for primitive: " + clazz.getName());
         }
         return clazz;
     }

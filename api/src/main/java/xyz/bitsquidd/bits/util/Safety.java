@@ -92,7 +92,9 @@ public final class Safety {
      */
     public static void logExceptionNicely(String message, Throwable exception) {
         if (exception instanceof InvocationTargetException invocationTargetException) {
-            logExceptionNicely(message, invocationTargetException.getCause());
+            Throwable cause = invocationTargetException.getCause();
+            if (cause == null) cause = exception; // Fallback to the original exception if cause is null
+            logExceptionNicely(message, cause);
         } else {
             Logger.exception(message, exception);
         }
