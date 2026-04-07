@@ -12,7 +12,7 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
 
-import xyz.bitsquidd.bits.log.Logger;
+import xyz.bitsquidd.bits.util.reflection.ReflectionException;
 import xyz.bitsquidd.bits.util.reflection.ReflectionUtils;
 
 import java.util.Objects;
@@ -45,9 +45,8 @@ public final class SerializationManager {
           .filter(MultiSerializer.class::isAssignableFrom)
           .map(clazz -> {
               try {
-                  return clazz.getConstructor().newInstance();
-              } catch (Exception e) {
-                  Logger.warn("Failed to instantiate serializer: " + clazz.getName());
+                  return ReflectionUtils.Instance.create(clazz);
+              } catch (ReflectionException e) {
                   return null;
               }
           })

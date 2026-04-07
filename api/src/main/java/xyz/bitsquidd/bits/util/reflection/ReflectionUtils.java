@@ -33,12 +33,12 @@ import java.util.function.Supplier;
 public final class ReflectionUtils {
     private ReflectionUtils() {}
 
-    private static volatile ClassLoader CLASSLOADER = Thread.currentThread().getContextClassLoader();
+    private static volatile ClassLoader[] CLASSLOADERS = {Thread.currentThread().getContextClassLoader()};
     private static final Function<? super String, ? extends ClassGraph> CLASSGRAPH_SUPPLIER =
       packageName -> new ClassGraph()
         .enableClassInfo()
         .enableAnnotationInfo()
-        .overrideClassLoaders(CLASSLOADER)
+        .overrideClassLoaders(CLASSLOADERS)
         .acceptPackages(packageName);
 
 
@@ -48,9 +48,9 @@ public final class ReflectionUtils {
      *
      * @since 0.0.12
      */
-    public static void setClassloader(ClassLoader classLoader) {
-        if (classLoader == null) throw new IllegalArgumentException("ClassLoader cannot be null");
-        CLASSLOADER = classLoader;
+    public static void setClassloader(ClassLoader... classLoaders) {
+        if (classLoaders == null || classLoaders.length == 0) throw new IllegalArgumentException("At least one ClassLoader required");
+        CLASSLOADERS = classLoaders;
     }
 
 
@@ -388,7 +388,12 @@ public final class ReflectionUtils {
         }
 
         private static Class<?> getCorrectLoader(ClassInfo info, Class<?> base) throws ClassNotFoundException {
-            return Class.forName(info.getName(), true, CLASSLOADER);
+            for (ClassLoader cl : CLASSLOADERS) {
+                try {
+                    return Class.forName(info.getName(), true, cl);
+                } catch (ClassNotFoundException ignored) {}
+            }
+            throw new ClassNotFoundException("Cannot load " + info.getName() + " from any registered classloader");
         }
 
         public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass) {
