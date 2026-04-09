@@ -12,17 +12,23 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
+import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
+import xyz.bitsquidd.bits.mc.command.annotation.Command;
 import xyz.bitsquidd.bits.mc.command.argument.BitsArgumentRegistry;
 import xyz.bitsquidd.bits.mc.command.requirement.BitsRequirementRegistry;
 import xyz.bitsquidd.bits.mc.command.util.BitsCommandContext;
 import xyz.bitsquidd.bits.mc.command.util.BitsCommandSourceContext;
-import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
-import xyz.bitsquidd.bits.lifecycle.manager.CoreManager;
 import xyz.bitsquidd.bits.mc.permission.Permission;
+import xyz.bitsquidd.bits.util.reflection.ReflectionException;
+import xyz.bitsquidd.bits.util.reflection.ReflectionUtils;
+import xyz.bitsquidd.bits.util.reflection.ScannerFlags;
 import xyz.bitsquidd.bits.wrapper.collection.AddableSet;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 // TODO:
 //  - Allow for @Range annotations for Numbers.
@@ -180,9 +186,21 @@ public abstract class BitsCommandManager<T> implements CoreManager {
      *
      * @since 0.0.10
      */
+    @SuppressWarnings("unchecked")
     protected AddableSet<BitsCommand> getAllCommands() {
-        // Override this method to provide a collection of commands to be registered on startup.
-        return AddableSet.empty();
+        return AddableSet.of((Set<BitsCommand>)ReflectionUtils.Scanner.tryGetAnnotatedClasses("*", Command.class, ScannerFlags.DEFAULT)
+          .stream()
+          .filter(BitsCommand.class::isAssignableFrom)
+          .map(clazz -> {
+              try {
+                  return ReflectionUtils.Instance.create(clazz);
+              } catch (ReflectionException e) {
+                  return null;
+              }
+          })
+          .filter(Objects::nonNull)
+          .collect(Collectors.toSet())
+        );
     }
 
     /**

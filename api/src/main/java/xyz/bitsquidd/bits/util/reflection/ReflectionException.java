@@ -8,7 +8,7 @@
 
 package xyz.bitsquidd.bits.util.reflection;
 
-public class ReflectionException extends RuntimeException {
+public class ReflectionException extends Exception {
     public ReflectionException(String message) {
         super(message);
     }

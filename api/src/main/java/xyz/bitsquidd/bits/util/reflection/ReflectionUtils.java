@@ -121,7 +121,7 @@ public final class ReflectionUtils {
 
         }
 
-        private static java.lang.reflect.Method resolveMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+        private static java.lang.reflect.Method resolveMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) throws ReflectionException {
             if (clazz == null || methodName == null || methodName.isEmpty()) {
                 throw new IllegalArgumentException("Class and methodName must be non-null and non-empty");
             }
@@ -150,7 +150,7 @@ public final class ReflectionUtils {
          * unchecked cast.
          */
         @SuppressWarnings("unchecked")
-        public static <T> T invoke(Object object, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
+        public static <T> T invoke(Object object, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) throws ReflectionException {
             if (object == null) throw new IllegalArgumentException("Object cannot be null");
             try {
                 return (T)resolveMethod(object.getClass(), methodName, paramTypes).invoke(object, args);
@@ -163,7 +163,7 @@ public final class ReflectionUtils {
          * Invokes a static method on {@code clazz}.
          */
         @SuppressWarnings("unchecked")
-        public static <T> T invokeStatic(Class<?> clazz, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
+        public static <T> T invokeStatic(Class<?> clazz, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) throws ReflectionException {
             if (clazz == null) throw new IllegalArgumentException("Class cannot be null");
             try {
                 return (T)resolveMethod(clazz, methodName, paramTypes).invoke(null, args);
@@ -200,7 +200,7 @@ public final class ReflectionUtils {
 
         }
 
-        private static Field resolveField(Class<?> clazz, String fieldName) {
+        private static Field resolveField(Class<?> clazz, String fieldName) throws ReflectionException {
             if (clazz == null || fieldName == null || fieldName.isEmpty()) {
                 throw new IllegalArgumentException("Class and fieldName must be non-null and non-empty");
             }
@@ -224,7 +224,7 @@ public final class ReflectionUtils {
         }
 
         @SuppressWarnings("unchecked")
-        public static <T> T get(Object object, String fieldName, Class<T> fieldType) {
+        public static <T> T get(Object object, String fieldName, Class<T> fieldType) throws ReflectionException {
             if (object == null) throw new IllegalArgumentException("Object cannot be null");
             try {
                 return (T)resolveField(object.getClass(), fieldName).get(object);
@@ -234,7 +234,7 @@ public final class ReflectionUtils {
         }
 
         @SuppressWarnings("unchecked")
-        public static <T> T getStatic(Class<?> clazz, String fieldName, Class<T> fieldType) {
+        public static <T> T getStatic(Class<?> clazz, String fieldName, Class<T> fieldType) throws ReflectionException {
             try {
                 return (T)resolveField(clazz, fieldName).get(null);
             } catch (IllegalAccessException e) {
@@ -242,7 +242,7 @@ public final class ReflectionUtils {
             }
         }
 
-        public static <T> void set(Object object, String fieldName, T value) {
+        public static <T> void set(Object object, String fieldName, T value) throws ReflectionException {
             if (object == null) throw new IllegalArgumentException("Object cannot be null");
             try {
                 resolveField(object.getClass(), fieldName).set(object, value);
@@ -251,7 +251,7 @@ public final class ReflectionUtils {
             }
         }
 
-        public static <T> void setStatic(Class<?> clazz, String fieldName, T value) {
+        public static <T> void setStatic(Class<?> clazz, String fieldName, T value) throws ReflectionException {
             try {
                 resolveField(clazz, fieldName).set(null, value);
             } catch (IllegalAccessException e) {
@@ -300,7 +300,7 @@ public final class ReflectionUtils {
         }
 
         @SuppressWarnings("unchecked")
-        private static <T> Constructor<T> resolveConstructor(Class<T> clazz, Class<?>[] parameterTypes) {
+        private static <T> Constructor<T> resolveConstructor(Class<T> clazz, Class<?>[] parameterTypes) throws ReflectionException {
             if (clazz == null) throw new IllegalArgumentException("Class must be non-null");
 
             ConstructorKey key = new ConstructorKey(clazz, parameterTypes);
@@ -317,7 +317,7 @@ public final class ReflectionUtils {
             }
         }
 
-        public static <T> T create(Class<T> clazz, Object... args) {
+        public static <T> T create(Class<T> clazz, Object... args) throws ReflectionException {
             try {
                 return resolveConstructor(clazz, paramTypesFrom(args)).newInstance(args);
             } catch (InvocationTargetException e) {
@@ -330,24 +330,20 @@ public final class ReflectionUtils {
             }
         }
 
+        public static <T> Optional<T> tryCreate(Class<T> clazz, Object... args) {
+            try {
+                return Optional.of(create(clazz, args));
+            } catch (ReflectionException e) {
+                return Optional.empty();
+            }
+        }
+
         /**
-         * Returns a {@link Supplier} that repeatedly creates instances using a pre-resolved constructor.
+         * Returns a {@link Supplier} that can create instances using a pre-resolved constructor.
          * Any exception thrown during instantiation includes the original cause.
          */
         public static <T> Supplier<T> supplier(Class<T> clazz, Object... args) {
-            Class<?>[] paramTypes = paramTypesFrom(args);
-            Constructor<T> ctor = resolveConstructor(clazz, paramTypes);
-
-            return () -> {
-                try {
-                    return ctor.newInstance(args);
-                } catch (InvocationTargetException e) {
-                    Throwable cause = e.getCause();
-                    throw new ReflectionException("Supplier instantiation failed for " + clazz.getName(), cause != null ? cause : e);
-                } catch (Exception e) {
-                    throw new ReflectionException("Supplier instantiation failed for " + clazz.getName(), e);
-                }
-            };
+            return () -> tryCreate(clazz, args).orElseThrow(() -> new RuntimeException("Failed to create instance of " + clazz.getName() + " with args: " + Arrays.toString(args)));
         }
 
     }
@@ -358,42 +354,6 @@ public final class ReflectionUtils {
     public static final class Scanner {
         private Scanner() {}
 
-        /**
-         * Controls which classes are included in a scan.
-         *
-         * <p>Start from {@link ScannerFlags#DEFAULT} and compose with the {@code with*} methods:
-         * <pre>{@code
-         *   ScannerFlags flags = ScannerFlags.DEFAULT.withAbstract().withDeprecated();
-         * }</pre>
-         */
-        public record ScannerFlags(
-          boolean includeAbstract,
-          boolean includeDeprecated,
-          boolean includeInnerClasses
-        ) {
-            public static final ScannerFlags DEFAULT = new ScannerFlags(false, false, false);
-
-            public boolean isValid(ClassInfo info) {
-                if (!includeAbstract && (info.isAbstract() || info.isInterface())) return false;
-                if (!includeDeprecated && info.hasAnnotation(Deprecated.class.getName())) return false;
-                if (!includeInnerClasses && info.isInnerClass()) return false;
-                return true;
-            }
-
-            public ScannerFlags withAbstract() {
-                return new ScannerFlags(true, includeDeprecated, includeInnerClasses);
-            }
-
-            public ScannerFlags withDeprecated() {
-                return new ScannerFlags(includeAbstract, true, includeInnerClasses);
-            }
-
-            public ScannerFlags withInnerClasses() {
-                return new ScannerFlags(includeAbstract, includeDeprecated, true);
-            }
-
-        }
-
         private static Class<?> getCorrectLoader(ClassInfo info, Class<?> base) throws ClassNotFoundException {
             for (ClassLoader cl : CLASSLOADERS) {
                 try {
@@ -403,11 +363,8 @@ public final class ReflectionUtils {
             throw new ClassNotFoundException("Cannot load " + info.getName() + " from any registered classloader");
         }
 
-        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> baseClass) {
-            return getClasses(packageName, baseClass, ScannerFlags.DEFAULT);
-        }
 
-        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> clazz, ScannerFlags flags) {
+        public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> clazz, ScannerFlags flags) throws ReflectionException {
             List<Class<? extends T>> classes = new ArrayList<>();
 
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
@@ -426,11 +383,16 @@ public final class ReflectionUtils {
             return classes;
         }
 
-        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz) {
-            return getAnnotatedClasses(packageName, clazz, ScannerFlags.DEFAULT);
+        public static <T> List<Class<? extends T>> tryGetClasses(String packageName, Class<? extends T> clazz, ScannerFlags flags) {
+            try {
+                return getClasses(packageName, clazz, flags);
+            } catch (ReflectionException e) {
+                return Collections.emptyList();
+            }
         }
 
-        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz, ScannerFlags flags) {
+
+        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz, ScannerFlags flags) throws ReflectionException {
             List<Class<?>> classes = new ArrayList<>();
 
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
@@ -445,6 +407,14 @@ public final class ReflectionUtils {
             }
 
             return classes;
+        }
+
+        public static List<Class<?>> tryGetAnnotatedClasses(String packageName, Class<? extends Annotation> clazz, ScannerFlags flags) {
+            try {
+                return getAnnotatedClasses(packageName, clazz, flags);
+            } catch (ReflectionException e) {
+                return Collections.emptyList();
+            }
         }
 
     }
