@@ -12,7 +12,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.bitsquidd.bits.mc.command.argument.InputTypeContainer;
 import xyz.bitsquidd.bits.mc.command.argument.parser.AbstractArgumentParser;
 import xyz.bitsquidd.bits.mc.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.paper.util.location.wrapper.BlockPos;
+import xyz.bitsquidd.bits.paper.location.wrapper.BlockPos;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.util.List;
