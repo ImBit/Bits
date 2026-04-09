@@ -8,12 +8,16 @@
 package xyz.bitsquidd.bits.util.serializer;
 
 
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
 
 import xyz.bitsquidd.bits.util.reflection.ReflectionException;
 import xyz.bitsquidd.bits.util.reflection.ReflectionUtils;
+import xyz.bitsquidd.bits.util.reflection.ScannerFlags;
+import xyz.bitsquidd.bits.util.serializer.jackson.NullableAwareIntrospector;
 
 import java.util.Objects;
 import java.util.Set;
@@ -25,7 +29,13 @@ public final class SerializationManager {
     public static final ObjectMapper SERIALIZER = createMapper();
 
     private static ObjectMapper createMapper() {
-        JsonMapper.Builder builder = JsonMapper.builder();
+        JsonMapper.Builder builder = JsonMapper.builder()
+          .enable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES)
+          .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+          .enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+          .enable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+          .annotationIntrospector(new NullableAwareIntrospector());
+
         getSerializers().forEach(serializer -> registerSerializer(serializer, builder));
         return builder.build();
     }
@@ -40,7 +50,7 @@ public final class SerializationManager {
 
     @SuppressWarnings("unchecked")
     private static Set<MultiSerializer<?>> getSerializers() {
-        return (Set<MultiSerializer<?>>)ReflectionUtils.Scanner.getAnnotatedClasses("*", Serializer.class)
+        return (Set<MultiSerializer<?>>)ReflectionUtils.Scanner.tryGetAnnotatedClasses("*", Serializer.class, ScannerFlags.DEFAULT)
           .stream()
           .filter(MultiSerializer.class::isAssignableFrom)
           .map(clazz -> {
