@@ -12,6 +12,8 @@ import org.bukkit.World;
 
 /**
  * Immutable representation of a Bukkit Location.
+ *
+ * @since 0.0.11
  */
 public record ImmutableLocation(
   World world,
