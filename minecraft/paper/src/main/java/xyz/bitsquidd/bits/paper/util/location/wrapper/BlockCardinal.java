@@ -148,13 +148,12 @@ public record BlockCardinal(
     @Override
     public BlockCardinal add(Locatable other) {
         Vector newVector = other.asVector().add(asVector());
-        YawAndPitch newDirection = direction().addWrap(other.direction());
 
         return new BlockCardinal(
           (int)(newVector.getX()),
           (int)(newVector.getY()),
           (int)(newVector.getZ()),
-          newDirection.toCardinal()
+          cardinal // Note: we do not add direction here.
         );
     }
 

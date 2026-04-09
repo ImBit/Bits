@@ -178,14 +178,13 @@ public final class BlockPos implements Locatable {
     @Override
     public BlockPos add(Locatable other) {
         Vector newVector = other.asVector().add(asVector());
-        YawAndPitch newDirection = direction().addWrap(other.direction());
 
         return new BlockPos(
           newVector.getX(),
           newVector.getY(),
           newVector.getZ(),
-          newDirection.yaw,
-          newDirection.pitch
+          yaw,  // Note: we do not add direction here.
+          pitch
         );
     }
 
