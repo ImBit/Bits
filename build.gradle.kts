@@ -7,7 +7,7 @@
  */
 
 group = "xyz.bitsquidd.bits"
-version = property("bits_version") as String
+version = property("version") as String
 
 plugins {
     alias(libs.plugins.bit.convention)

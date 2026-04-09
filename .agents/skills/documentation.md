@@ -4,12 +4,14 @@ description: Guide for creating Javadocs.
 ---
 
 # Documentation Standards
+
 This document defines how Javadoc should be written across the Bits codebase.
 Agents and contributors must follow these standards when adding or modifying public API.
 
 ---
 
 ## Where to Document
+
 Javadoc is **required** on all `public` and `protected` declarations.
 
 > Platform modules (e.g. `Paper`, `Velocity`) implement API contracts defined in `API`.
@@ -25,11 +27,12 @@ the contract, write full Javadoc instead.
 ---
 
 ## General Rules
+
 - Write in **British English**, using full sentences with correct punctuation.
     - The **first sentence** is the summary - it appears in overview tables. Keep it concise and specific.
     - If additional explanation is needed, add a blank line containing only `<p>`, then continue on the next line.
 - The `@since` tag is **required** on every public API type and member.
-    - Always match the current version in `gradle.properties` under `bits_version`.
+    - Always match the current version in `gradle.properties` under `version`.
 - Line length should be limited to 100 characters for readability.
     - If a sentence exceeds this, break it into multiple lines at logical points (e.g., after clauses or before conjunctions).
 - All classes are `@NotNull` by default unless otherwise specified. No need to document nullability.
@@ -42,6 +45,7 @@ the contract, write full Javadoc instead.
 ---
 
 ## Tag Order
+
 Tags must always appear in this order at the bottom of the comment. Leave a blank line between
 each group of tags of a different kind:
 
@@ -57,7 +61,9 @@ each group of tags of a different kind:
 ---
 
 ## Element Reference
+
 ### Classes and Interfaces
+
 Every public class and interface in `API` must have:
 
 - A **summary sentence** describing its purpose and responsibility.
@@ -91,6 +97,7 @@ public interface CommandManager {
 ---
 
 ### Generic Types
+
 Document type parameters using `@param <T>` at the type or method level, placed before any
 `@return` tag and in declaration order alongside other `@param` entries.
 
@@ -125,6 +132,7 @@ public interface Registry<K, V> {
 ---
 
 ### Abstract Classes
+
 Same requirements as interfaces. Additionally, document any `abstract` methods with their
 expected contract - what the implementor must guarantee.
 
@@ -156,7 +164,9 @@ public abstract class BitPlugin {
 ---
 
 ### Methods and Constructors
+
 Every public and protected method must have:
+
 - A **summary sentence** stating what the method does (not how).
 - `@param` for every parameter - describe the meaning, not just the type. Note null-safety where relevant.
 - `@return` for any non-void return - describe what is returned, not just its type.
@@ -197,6 +207,7 @@ Logger getLogger();
 ---
 
 ### Annotations
+
 Document public annotations only when their purpose or behaviour is non-obvious. A simple
 marker annotation with a self-explanatory name does not require Javadoc. When documented,
 follow the same class-level standards - summary sentence, `<p>` continuation if needed,
@@ -222,6 +233,7 @@ public @interface Command {
 ---
 
 ### Records
+
 Document at the **type level** using `@param` for each component.
 Do not add separate Javadoc blocks to the record's accessor methods.
 
@@ -241,6 +253,7 @@ public record TextSnapshot(String raw, Component formatted) {
 ---
 
 ### Enums
+
 Document at the **type level** only.
 Individual constants do not require Javadoc unless a constant has non-obvious behaviour that must be called out.
 
@@ -269,6 +282,7 @@ public enum BitsPlatform {
 ---
 
 ### Sealed Classes and Interfaces
+
 Document sealed types using the same class-level standards. Do not list permitted subtypes
 in the Javadoc - the compiler and IDE surface these automatically. Focus the documentation
 on the contract shared across all permitted implementations.
@@ -291,6 +305,7 @@ public sealed interface CommandResult permits CommandResult.Success, CommandResu
 ---
 
 ### Deprecated API
+
 Mark deprecated elements with both the `@Deprecated` annotation and a `@deprecated` Javadoc
 tag. The `@since` value must reflect when the element was **originally introduced**, not when
 it was deprecated. Include a separate prose note stating the version in which the element was
@@ -315,12 +330,13 @@ LegacyDispatcher legacyDispatcher();
 ---
 
 ## `@since` Version Policy
-The `@since` value must always match `bits_version` in `gradle.properties` at the time the
+
+The `@since` value must always match `version` in `gradle.properties` at the time the
 element is introduced. Do not backfill speculative versions or copy versions from nearby code.
 
 ```properties
 # gradle.properties
-bits_version=0.0.10
+version=0.0.10
 ```
 
 ```java
@@ -330,19 +346,20 @@ bits_version=0.0.10
 ---
 
 ## Forbidden Patterns
+
 The following patterns must not appear in any Javadoc:
 
-| Pattern                                                                    | Why it is forbidden                                        |
-|----------------------------------------------------------------------------|------------------------------------------------------------|
-| `@param foo the foo` - restating the parameter name                        | Adds no information                                        |
-| `@return the result` - restating the return type                           | Adds no information                                        |
-| Javadoc on `private` members                                               | Not part of public API surface                             |
-| Javadoc in `Paper` or `Velocity` on inherited methods                      | Inherited docs flow from `API`                             |
-| `{@inheritDoc}` used as a default on `@Override` methods                   | Must be a conscious decision; write full Javadoc if the    |
-|                                                                            | contract changes or the parent doc is insufficient         |
-| `<p>` at the start of a continuation sentence (inline)                     | Must be on its own line before the paragraph               |
-| `@throws Exception` or `@throws Throwable` without specificity             | Too broad; use the actual thrown type                      |
-| Omitting `@throws` for any exception this method can throw                 | All throwable exceptions must be documented                |
-| Omitting `@since` on any new public API element                            | Required without exception                                 |
-| Copying Javadoc verbatim between overloads without adapting it             | Misleads consumers                                         |
-| Using `{@code}` to reference a type or method that could use `{@link}`     | Prefer `{@link}` for navigable references                  |
+| Pattern                                                                | Why it is forbidden                                     |
+|------------------------------------------------------------------------|---------------------------------------------------------|
+| `@param foo the foo` - restating the parameter name                    | Adds no information                                     |
+| `@return the result` - restating the return type                       | Adds no information                                     |
+| Javadoc on `private` members                                           | Not part of public API surface                          |
+| Javadoc in `Paper` or `Velocity` on inherited methods                  | Inherited docs flow from `API`                          |
+| `{@inheritDoc}` used as a default on `@Override` methods               | Must be a conscious decision; write full Javadoc if the |
+|                                                                        | contract changes or the parent doc is insufficient      |
+| `<p>` at the start of a continuation sentence (inline)                 | Must be on its own line before the paragraph            |
+| `@throws Exception` or `@throws Throwable` without specificity         | Too broad; use the actual thrown type                   |
+| Omitting `@throws` for any exception this method can throw             | All throwable exceptions must be documented             |
+| Omitting `@since` on any new public API element                        | Required without exception                              |
+| Copying Javadoc verbatim between overloads without adapting it         | Misleads consumers                                      |
+| Using `{@code}` to reference a type or method that could use `{@link}` | Prefer `{@link}` for navigable references               |
