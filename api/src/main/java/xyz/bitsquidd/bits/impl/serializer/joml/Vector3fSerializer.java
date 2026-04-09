@@ -9,6 +9,7 @@ package xyz.bitsquidd.bits.impl.serializer.joml;
 
 import org.joml.Vector3f;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 
 import xyz.bitsquidd.bits.util.serializer.MultiSerializer;
@@ -22,7 +23,7 @@ public final class Vector3fSerializer extends MultiSerializer<Vector3f> {
 
     @Override
     protected JsonNode serialize(Vector3f value) {
-        ObjectNode node = new ObjectNode(null);
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("x", value.x);
         node.put("y", value.y);
         node.put("z", value.z);

@@ -44,7 +44,7 @@ public final class Safety {
         try {
             task.run();
         } catch (final Exception e) {
-            Logger.exception("Error during " + name + " task execution.", e);
+            logExceptionNicely("Error during " + name + " task execution.", e);
         }
     }
 
@@ -75,7 +75,7 @@ public final class Safety {
         try {
             return task.get();
         } catch (final Exception e) {
-            Logger.exception("Error during " + name + " task execution.", e);
+            logExceptionNicely("Error during " + name + " task execution.", e);
             return defaultValue;
         }
     }

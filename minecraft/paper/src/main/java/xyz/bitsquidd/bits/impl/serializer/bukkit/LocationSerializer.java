@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.impl.serializer.bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 
 import xyz.bitsquidd.bits.util.serializer.MultiSerializer;
@@ -26,7 +27,7 @@ public final class LocationSerializer extends MultiSerializer<Location> {
 
     @Override
     protected JsonNode serialize(Location value) {
-        ObjectNode node = new ObjectNode(null);
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.set("world", SERIALIZER.valueToTree(value.getWorld()));
         node.put("x", value.getX());
         node.put("y", value.getY());

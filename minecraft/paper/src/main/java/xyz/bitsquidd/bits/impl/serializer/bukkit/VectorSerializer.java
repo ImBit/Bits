@@ -9,6 +9,7 @@ package xyz.bitsquidd.bits.impl.serializer.bukkit;
 
 import org.bukkit.util.Vector;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 
 import xyz.bitsquidd.bits.util.serializer.MultiSerializer;
@@ -23,7 +24,7 @@ public final class VectorSerializer extends MultiSerializer<Vector> {
 
     @Override
     protected JsonNode serialize(Vector value) {
-        ObjectNode node = new ObjectNode(null);
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("x", value.getX());
         node.put("y", value.getY());
         node.put("z", value.getZ());

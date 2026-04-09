@@ -9,6 +9,7 @@ package xyz.bitsquidd.bits.impl.serializer.joml;
 
 import org.joml.Quaternionf;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 
 import xyz.bitsquidd.bits.util.serializer.MultiSerializer;
@@ -23,7 +24,7 @@ public final class QuaternionfSerializer extends MultiSerializer<Quaternionf> {
 
     @Override
     protected JsonNode serialize(Quaternionf value) {
-        ObjectNode node = new ObjectNode(null);
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("x", value.x);
         node.put("y", value.y);
         node.put("z", value.z);
