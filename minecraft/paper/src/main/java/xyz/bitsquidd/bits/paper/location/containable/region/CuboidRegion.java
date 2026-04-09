@@ -5,7 +5,7 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.paper.location.region;
+package xyz.bitsquidd.bits.paper.location.containable.region;
 
 import org.bukkit.Location;
 import org.bukkit.World;

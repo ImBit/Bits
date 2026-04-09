@@ -10,6 +10,8 @@ package xyz.bitsquidd.bits.paper.location;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Collection;
+
 /**
  * Suite of location-related utility methods.
  */
@@ -52,6 +54,38 @@ public final class Locations {
         double midZ = (loc1.getZ() + loc2.getZ()) / 2;
 
         return new Location(world1, midX, midY, midZ);
+    }
+
+    /**
+     * Calculates the minimum x, y, and z coordinates from a collection of {@link Location}s.
+     *
+     * @since 0.0.13
+     */
+    public static Location getMinLocation(Collection<Location> locations) {
+        if (locations.isEmpty()) throw new IllegalArgumentException("Locations set cannot be empty");
+
+        return new Location(
+          locations.iterator().next().getWorld(),
+          locations.stream().mapToDouble(Location::getX).min().orElseThrow(() -> new IllegalArgumentException("Error computing min x")),
+          locations.stream().mapToDouble(Location::getY).min().orElseThrow(() -> new IllegalArgumentException("Error computing min y")),
+          locations.stream().mapToDouble(Location::getZ).min().orElseThrow(() -> new IllegalArgumentException("Error computing min z"))
+        );
+    }
+
+    /**
+     * Calculates the maximum x, y, and z coordinates from a collection of {@link Location}s.
+     *
+     * @since 0.0.13
+     */
+    public static Location getMaxLocation(Collection<Location> locations) {
+        if (locations.isEmpty()) throw new IllegalArgumentException("Locations set cannot be empty");
+
+        return new Location(
+          locations.iterator().next().getWorld(),
+          locations.stream().mapToDouble(Location::getX).max().orElseThrow(() -> new IllegalArgumentException("Error computing max x")),
+          locations.stream().mapToDouble(Location::getY).max().orElseThrow(() -> new IllegalArgumentException("Error computing max y")),
+          locations.stream().mapToDouble(Location::getZ).max().orElseThrow(() -> new IllegalArgumentException("Error computing max z"))
+        );
     }
 
 }

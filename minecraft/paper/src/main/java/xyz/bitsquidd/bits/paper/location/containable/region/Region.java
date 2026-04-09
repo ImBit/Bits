@@ -5,7 +5,7 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.paper.location.region;
+package xyz.bitsquidd.bits.paper.location.containable.region;
 
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
@@ -14,9 +14,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.joml.Vector3d;
 
+import xyz.bitsquidd.bits.paper.location.containable.Containable;
 import xyz.bitsquidd.bits.paper.location.wrapper.BlockLoc;
 import xyz.bitsquidd.bits.paper.location.wrapper.BlockPos;
-import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
 
 import java.util.*;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  *
  * @since 0.0.13
  */
-public abstract class Region {
+public abstract class Region implements Containable {
     protected final World world;
 
 
@@ -47,7 +47,6 @@ public abstract class Region {
         return contains(BlockPos.of(location));
     }
 
-    public abstract boolean contains(Locatable locatable);
     //endregion
 
 
