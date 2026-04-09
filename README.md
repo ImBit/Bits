@@ -2,7 +2,7 @@
 
 💾 A Utility library for Minecraft development.
 
-[![License](https://img.shields.io/github/license/ImBit/Bits)](LICENSE)
+[![License](https://img.shields.io/github/license/Orbitary/Bits)](LICENSE)
 
 ## About
 

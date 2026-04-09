@@ -8,7 +8,7 @@ on:
 
 jobs:
   release:
-    uses: ImBit/bit-build/.github/workflows/publish.yml@main
+    uses: Orbitary/Convention/.github/workflows/publish.yml@main
     with:
       modules: "."
     secrets: inherit
