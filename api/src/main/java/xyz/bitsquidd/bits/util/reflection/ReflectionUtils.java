@@ -373,6 +373,13 @@ public final class ReflectionUtils {
         ) {
             public static final ScannerFlags DEFAULT = new ScannerFlags(false, false, false);
 
+            public boolean isValid(ClassInfo info) {
+                if (!includeAbstract && (info.isAbstract() || info.isInterface())) return false;
+                if (!includeDeprecated && info.hasAnnotation(Deprecated.class.getName())) return false;
+                if (!includeInnerClasses && info.isInnerClass()) return false;
+                return true;
+            }
+
             public ScannerFlags withAbstract() {
                 return new ScannerFlags(true, includeDeprecated, includeInnerClasses);
             }
@@ -403,18 +410,13 @@ public final class ReflectionUtils {
         public static <T> List<Class<? extends T>> getClasses(String packageName, Class<? extends T> clazz, ScannerFlags flags) {
             List<Class<? extends T>> classes = new ArrayList<>();
 
-            // CLASSGRAPH_SUPPLIER already applies enableClassInfo() and enableAnnotationInfo()
-            // they are not called again here.
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
                 ClassInfoList classInfoList = clazz.isInterface()
                                               ? scanResult.getClassesImplementing(clazz.getName())
                                               : scanResult.getSubclasses(clazz.getName());
 
-                for (io.github.classgraph.ClassInfo info : classInfoList) {
-                    if (!flags.includeAbstract() && (info.isAbstract() || info.isInterface())) continue;
-                    if (!flags.includeDeprecated() && info.hasAnnotation(Deprecated.class.getName())) continue;
-                    if (!flags.includeInnerClasses() && info.isInnerClass()) continue;
-
+                for (ClassInfo info : classInfoList) {
+                    if (!flags.isValid(info)) continue;
                     classes.add(getCorrectLoader(info, clazz).asSubclass(clazz));
                 }
             } catch (Exception e) {
@@ -425,14 +427,23 @@ public final class ReflectionUtils {
         }
 
         public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz) {
+            return getAnnotatedClasses(packageName, clazz, ScannerFlags.DEFAULT);
+        }
+
+        public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> clazz, ScannerFlags flags) {
             List<Class<?>> classes = new ArrayList<>();
+
             try (ScanResult scanResult = CLASSGRAPH_SUPPLIER.apply(packageName).scan()) {
-                for (io.github.classgraph.ClassInfo info : scanResult.getClassesWithAnnotation(clazz.getName())) {
+                ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(clazz.getName());
+
+                for (ClassInfo info : classInfoList) {
+                    if (!flags.isValid(info)) continue;
                     classes.add(getCorrectLoader(info, clazz));
                 }
             } catch (Exception e) {
                 throw new ReflectionException("Failed to scan package: " + packageName, e);
             }
+
             return classes;
         }
 
