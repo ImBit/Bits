@@ -10,8 +10,11 @@ package xyz.bitsquidd.bits.util.wrapper;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -25,7 +28,7 @@ public final class Enums {
     /**
      * Resolves an enum constant by its name, ignoring case sensitivity.
      *
-     * @param <T>       the enum type
+     * @param <E>       the enum type
      * @param enumClass the class of the enum
      * @param name      the name of the constant to find, may be null
      *
@@ -33,14 +36,14 @@ public final class Enums {
      *
      * @since 0.0.10
      */
-    public static <T extends Enum<T>> @Nullable T valueOf(Class<T> enumClass, @Nullable String name) {
-        return valueOfOrDefault(enumClass, name, null);
+    public static <E extends Enum<E>> Optional<E> valueOf(Class<E> enumClass, @Nullable String name) {
+        return Optional.ofNullable(valueOfOrDefault(enumClass, name, null));
     }
 
     /**
      * Resolves an enum constant by its name (case-insensitive), or returns a default value if not found.
      *
-     * @param <T>          the enum type
+     * @param <E>          the enum type
      * @param enumClass    the class of the enum
      * @param name         the name of the constant to find, may be null
      * @param defaultValue the value to return if resolution fails
@@ -49,7 +52,7 @@ public final class Enums {
      *
      * @since 0.0.10
      */
-    public static <T extends Enum<T>> @Nullable T valueOfOrDefault(Class<T> enumClass, @Nullable String name, @Nullable T defaultValue) {
+    public static <E extends Enum<E>> @Nullable E valueOfOrDefault(Class<E> enumClass, @Nullable String name, @Nullable E defaultValue) {
         if (name == null) return defaultValue;
 
         try {
@@ -62,7 +65,7 @@ public final class Enums {
     /**
      * Searches for an enum constant that matches a specific predicate.
      *
-     * @param <T>        the enum type
+     * @param <E>        the enum type
      * @param enumClass  the class of the enum
      * @param identifier the condition to match against each constant
      *
@@ -70,13 +73,38 @@ public final class Enums {
      *
      * @since 0.0.10
      */
-    public static <T extends Enum<T>> Optional<T> getFromIdentifier(Class<T> enumClass, Predicate<T> identifier) {
-        for (T constant : enumClass.getEnumConstants()) {
-            if (identifier.test(constant)) {
-                return Optional.of(constant);
-            }
+    public static <E extends Enum<E>> Optional<E> getFromIdentifier(Class<E> enumClass, Predicate<E> identifier) {
+        for (E constant : enumClass.getEnumConstants()) {
+            if (identifier.test(constant)) return Optional.of(constant);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Returns the set of values obtained by applying a mapping function to each constant of the enum.
+     *
+     * @param <E>         the enum type
+     * @param <V>         the type of values to return
+     * @param enumClass   the class of the enum
+     * @param valueMapper a function that maps each enum constant to a value
+     *
+     * @return a collection of values obtained from the enum constants
+     *
+     * @since 0.0.13
+     */
+    public static <E extends Enum<E>, V> Collection<V> getValuesFromEnum(Class<E> enumClass, Function<E, V> valueMapper) {
+        return Arrays.stream(enumClass.getEnumConstants())
+          .map(valueMapper)
+          .toList();
+    }
+
+    /**
+     * Overload, returning the set of names of the constants of the enum, ignoring case sensitivity.
+     *
+     * @since 0.0.13
+     */
+    public static <E extends Enum<E>> Collection<String> getValuesFromEnum(Class<E> enumClass) {
+        return getValuesFromEnum(enumClass, Enum::name);
     }
 
 }
