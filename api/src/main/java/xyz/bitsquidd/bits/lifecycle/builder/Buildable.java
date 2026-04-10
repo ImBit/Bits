@@ -8,6 +8,8 @@
 
 package xyz.bitsquidd.bits.lifecycle.builder;
 
+import java.util.function.Supplier;
+
 /**
  * A functional interface for objects that can be built into a final instance.
  *
@@ -15,7 +17,7 @@ package xyz.bitsquidd.bits.lifecycle.builder;
  *
  * @since 0.0.10
  */
-public interface Buildable<B> {
+public interface Buildable<B> extends Supplier<B> {
     /**
      * Constructs and returns the final object instance.
      *
@@ -24,5 +26,11 @@ public interface Buildable<B> {
      * @since 0.0.10
      */
     B build();
+
+
+    @Override
+    default B get() {
+        return build();
+    }
 
 }
