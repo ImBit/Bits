@@ -10,10 +10,15 @@ package xyz.bitsquidd.bits.paper.location;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import xyz.bitsquidd.bits.paper.location.wrapper.BlockPos;
+import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
+
 import java.util.Collection;
 
 /**
  * Suite of location-related utility methods.
+ *
+ * @since 0.0.11
  */
 public final class Locations {
     private Locations() {}
@@ -21,6 +26,8 @@ public final class Locations {
     /**
      * Safe distance check between two locations.
      * Returns false if either location is null or they are in different worlds.
+     *
+     * @since 0.0.11
      */
     public static boolean isWithinDistance(Location loc1, Location loc2, double distance) {
         if (loc1 == null || loc2 == null) return false;
@@ -34,57 +41,48 @@ public final class Locations {
     }
 
     /**
-     * Calculates the midpoint between two {@link Location}s.
-     *
-     * @param loc1 The first location.
-     * @param loc2 The second location.
-     *
-     * @return A new Location representing the midpoint between the two locations.
-     */
-    public static Location getMidpoint(Location loc1, Location loc2) {
-        if (loc1 == null || loc2 == null) throw new IllegalArgumentException("Locations cannot be null");
-
-        World world1 = loc1.getWorld();
-        World world2 = loc2.getWorld();
-
-        if (world1 == null || !world1.equals(world2)) throw new IllegalArgumentException("Locations must be in the same world");
-
-        double midX = (loc1.getX() + loc2.getX()) / 2;
-        double midY = (loc1.getY() + loc2.getY()) / 2;
-        double midZ = (loc1.getZ() + loc2.getZ()) / 2;
-
-        return new Location(world1, midX, midY, midZ);
-    }
-
-    /**
-     * Calculates the minimum x, y, and z coordinates from a collection of {@link Location}s.
+     * Calculates the midpoint BlockPos coordinates from a collection of {@link Locatable}s.
      *
      * @since 0.0.13
      */
-    public static Location getMinLocation(Collection<Location> locations) {
-        if (locations.isEmpty()) throw new IllegalArgumentException("Locations set cannot be empty");
+    public static BlockPos getMidpoint(Collection<? extends Locatable> locatables) {
+        if (locatables.isEmpty()) throw new IllegalArgumentException("Locatables cannot be empty");
 
-        return new Location(
-          locations.iterator().next().getWorld(),
-          locations.stream().mapToDouble(Location::getX).min().orElseThrow(() -> new IllegalArgumentException("Error computing min x")),
-          locations.stream().mapToDouble(Location::getY).min().orElseThrow(() -> new IllegalArgumentException("Error computing min y")),
-          locations.stream().mapToDouble(Location::getZ).min().orElseThrow(() -> new IllegalArgumentException("Error computing min z"))
+        int amount = locatables.size();
+        double sumX = locatables.stream().mapToDouble(l -> l.asVector().getX()).sum();
+        double sumY = locatables.stream().mapToDouble(l -> l.asVector().getY()).sum();
+        double sumZ = locatables.stream().mapToDouble(l -> l.asVector().getZ()).sum();
+
+        return BlockPos.of(sumX / amount, sumY / amount, sumZ / amount);
+    }
+
+    /**
+     * Calculates the minimum BlockPos coordinates from a collection of {@link Locatable}s.
+     *
+     * @since 0.0.13
+     */
+    public static BlockPos getMinLocation(Collection<? extends Locatable> locatables) {
+        if (locatables.isEmpty()) throw new IllegalArgumentException("Locatables cannot be empty");
+
+        return BlockPos.of(
+          locatables.stream().mapToDouble(l -> l.asVector().getX()).min().orElseThrow(() -> new IllegalArgumentException("Error computing min x")),
+          locatables.stream().mapToDouble(l -> l.asVector().getY()).min().orElseThrow(() -> new IllegalArgumentException("Error computing min y")),
+          locatables.stream().mapToDouble(l -> l.asVector().getZ()).min().orElseThrow(() -> new IllegalArgumentException("Error computing min z"))
         );
     }
 
     /**
-     * Calculates the maximum x, y, and z coordinates from a collection of {@link Location}s.
+     * Calculates the maximum BlockPos coordinates from a collection of {@link Locatable}s.
      *
      * @since 0.0.13
      */
-    public static Location getMaxLocation(Collection<Location> locations) {
-        if (locations.isEmpty()) throw new IllegalArgumentException("Locations set cannot be empty");
+    public static BlockPos getMaxLocation(Collection<? extends Locatable> locatables) {
+        if (locatables.isEmpty()) throw new IllegalArgumentException("Locatables cannot be empty");
 
-        return new Location(
-          locations.iterator().next().getWorld(),
-          locations.stream().mapToDouble(Location::getX).max().orElseThrow(() -> new IllegalArgumentException("Error computing max x")),
-          locations.stream().mapToDouble(Location::getY).max().orElseThrow(() -> new IllegalArgumentException("Error computing max y")),
-          locations.stream().mapToDouble(Location::getZ).max().orElseThrow(() -> new IllegalArgumentException("Error computing max z"))
+        return BlockPos.of(
+          locatables.stream().mapToDouble(l -> l.asVector().getX()).max().orElseThrow(() -> new IllegalArgumentException("Error computing max x")),
+          locatables.stream().mapToDouble(l -> l.asVector().getY()).max().orElseThrow(() -> new IllegalArgumentException("Error computing max y")),
+          locatables.stream().mapToDouble(l -> l.asVector().getZ()).max().orElseThrow(() -> new IllegalArgumentException("Error computing max z"))
         );
     }
 

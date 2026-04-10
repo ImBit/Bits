@@ -100,7 +100,7 @@ public final class CylinderRegion extends Region {
     }
 
     @Override
-    public BlockPos centre() {
+    public BlockPos center() {
         return switch (axis) {
             case Y -> BlockPos.of(centerBottom.x, centerBottom.y + height / 2, centerBottom.z);
             case X -> BlockPos.of(centerBottom.x + height / 2, centerBottom.y, centerBottom.z);

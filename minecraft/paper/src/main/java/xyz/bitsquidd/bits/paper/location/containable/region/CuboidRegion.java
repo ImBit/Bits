@@ -82,7 +82,7 @@ public final class CuboidRegion extends Region {
     }
 
     @Override
-    public BlockPos centre() {
+    public BlockPos center() {
         return BlockPos.of(
           (minX + maxX) / 2,
           (minY + maxY) / 2,

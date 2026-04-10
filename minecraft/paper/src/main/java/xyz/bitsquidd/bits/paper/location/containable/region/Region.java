@@ -151,15 +151,10 @@ public abstract class Region implements Containable {
 
 
     //region Basic getters
+    @Override
     public final World world() {
         return world;
     }
-
-    public abstract BlockPos centre();
-
-    public abstract BlockPos min();
-
-    public abstract BlockPos max();
     //endregion
 
 

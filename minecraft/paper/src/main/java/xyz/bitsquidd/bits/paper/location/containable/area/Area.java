@@ -8,9 +8,12 @@
 package xyz.bitsquidd.bits.paper.location.containable.area;
 
 import com.google.common.collect.ImmutableList;
+import org.bukkit.World;
 
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
+import xyz.bitsquidd.bits.paper.location.Locations;
 import xyz.bitsquidd.bits.paper.location.containable.Containable;
+import xyz.bitsquidd.bits.paper.location.wrapper.BlockPos;
 import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 
 import java.util.ArrayList;
@@ -79,25 +82,53 @@ public final class Area implements Containable {
         return result;
     }
 
+    @Override
+    public World world() {
+        return entries.getFirst().containable().world();
+    }
+
+    @Override
+    public BlockPos center() {
+        // It makes more sense for the center to be the midpoint of the bounding box rather than the midpoint of the centers of the individual containables!
+        return Locations.getMidpoint(List.of(min(), max()));
+    }
+
+    @Override
+    public BlockPos min() {
+        return Locations.getMinLocation(entries.stream().map(e -> e.containable.min()).toList());
+    }
+
+    @Override
+    public BlockPos max() {
+        return Locations.getMaxLocation(entries.stream().map(e -> e.containable.max()).toList());
+    }
 
     public static final class Builder implements Buildable<Area> {
         private final List<AreaEntry> entries = new ArrayList<>();
 
         private Builder(Containable initial) {
-            union(initial);
+            entries.add(new AreaEntry(initial, Operation.UNION));
+        }
+
+        private void validateContainable(Containable containable) {
+            if (containable == null) throw new IllegalArgumentException("Containable cannot be null");
+            if (!containable.world().equals(entries.getFirst().containable().world())) throw new IllegalArgumentException("All containables must be in the same world");
         }
 
         public Builder union(Containable containable) {
+            validateContainable(containable);
             entries.add(new AreaEntry(containable, Operation.UNION));
             return this;
         }
 
         public Builder subtract(Containable containable) {
+            validateContainable(containable);
             entries.add(new AreaEntry(containable, Operation.SUBTRACT));
             return this;
         }
 
         public Builder intersect(Containable containable) {
+            validateContainable(containable);
             entries.add(new AreaEntry(containable, Operation.INTERSECT));
             return this;
         }
