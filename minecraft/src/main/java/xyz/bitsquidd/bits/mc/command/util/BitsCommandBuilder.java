@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.mc.command.util;
 
 import org.jetbrains.annotations.Nullable;
 
+import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 import xyz.bitsquidd.bits.mc.command.BitsCommand;
 import xyz.bitsquidd.bits.mc.command.annotation.Command;
 import xyz.bitsquidd.bits.mc.command.annotation.Permission;
@@ -17,7 +18,6 @@ import xyz.bitsquidd.bits.mc.command.annotation.Requirement;
 import xyz.bitsquidd.bits.mc.command.exception.CommandBuildException;
 import xyz.bitsquidd.bits.mc.command.requirement.BitsCommandRequirement;
 import xyz.bitsquidd.bits.mc.command.requirement.impl.PermissionRequirement;
-import xyz.bitsquidd.bits.config.MinecraftBitsConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -233,7 +233,7 @@ public final class BitsCommandBuilder {
      * @since 0.0.10
      */
     public List<xyz.bitsquidd.bits.mc.permission.Permission> getPermissions() {
-        return Collections.unmodifiableList(permissions);
+        return List.copyOf(permissions);
     }
 
     /**
