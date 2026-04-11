@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for common reflection operations and classpath scanning.
@@ -415,6 +416,32 @@ public final class ReflectionUtils {
             } catch (ReflectionException e) {
                 return Collections.emptyList();
             }
+        }
+
+    }
+
+    /**
+     * General useful utility methods.
+     */
+    public static final class General {
+        private General() {}
+
+        public static <T> Set<T> createClassesInDir(String packageName, Class<T> clazz, ScannerFlags flags) {
+            return Scanner.tryGetClasses(packageName, clazz, flags)
+              .stream().map(ReflectionUtils.Instance::tryCreate)
+              .map(optional -> optional.orElse(null))
+              .filter(Objects::nonNull)
+              .collect(HashSet::new, Set::add, Set::addAll);
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <T> Map<Class<?>, T> createClassesInDirMapped(String packageName, Class<? extends T> clazz, ScannerFlags flags) {
+            return Scanner.tryGetClasses(packageName, clazz, flags)
+              .stream().map(ReflectionUtils.Instance::tryCreate)
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .map(i -> Map.entry(i.getClass(), i))
+              .collect(Collectors.toMap(e -> (Class<? extends T>)e.getKey(), Map.Entry::getValue));
         }
 
     }
