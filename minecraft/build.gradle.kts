@@ -15,4 +15,6 @@ dependencies {
     includeLibrary(project(":api"))
 
     includeLibrary(rootProject.libs.brigadier)
+
+    compileOnly(rootProject.libs.joml)
 }
