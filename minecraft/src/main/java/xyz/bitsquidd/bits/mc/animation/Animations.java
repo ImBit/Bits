@@ -81,6 +81,22 @@ public final class Animations {
           .build();
     }
 
+    public static Animation zoomIn(int duration) {
+        return Animation.of()
+          .duration(duration)
+          .keyframe(0.00f, AnimationPose.builder().scale(0).build(), Easings.OUT_BACK)
+          .keyframe(1.00f, AnimationPose.builder().scale(1f).build(), Easings.OUT_BACK)
+          .build();
+    }
+
+    public static Animation zoomOut(int duration) {
+        return Animation.of()
+          .duration(duration)
+          .keyframe(0.00f, AnimationPose.builder().scale(1f).build(), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationPose.builder().scale(0).build(), Easings.IN_BACK)
+          .build();
+    }
+
 
     //region Composite Animations
     public static Animation floatSpin() {

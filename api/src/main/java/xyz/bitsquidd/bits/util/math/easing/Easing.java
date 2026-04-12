@@ -183,7 +183,7 @@ public abstract class Easing {
     public static final class InSin extends Easing {
         @Override
         public float progress(@Range(from = 0, to = 1) float t) {
-            return (float)(1 - Math.cos((t * PI) / 2f));
+            return (float)(1 - Math.cos(t * HALF_PI));
         }
 
     }
@@ -191,7 +191,7 @@ public abstract class Easing {
     public static final class OutSin extends Easing {
         @Override
         public float progress(@Range(from = 0, to = 1) float t) {
-            return (float)(Math.sin((t * PI) / 2f));
+            return (float)(Math.sin(t * HALF_PI));
         }
 
     }

@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.mc.animation.impl;
 
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
 import xyz.bitsquidd.bits.mc.animation.AnimationLoopMode;
@@ -34,7 +35,7 @@ public final class BasicAnimation extends Animation {
         this.durationTicks = builder.durationTicks;
         this.framerate = builder.framerate;
         this.animationLoopMode = builder.loopMode;
-        this.loopCount = builder.loopCount;
+        this.loopCount = builder.loopCount == null ? 1 : builder.loopCount;
         this.delayTicks = builder.delayTicks;
     }
 
@@ -75,7 +76,7 @@ public final class BasicAnimation extends Animation {
         private int durationTicks = 20;
         private int framerate = 1;
         private AnimationLoopMode loopMode = AnimationLoopMode.STRAIGHT;
-        private int loopCount = -1;
+        private @Nullable Integer loopCount = null;
         private int delayTicks = 0;
 
         public Builder duration(int ticks) {
@@ -90,6 +91,7 @@ public final class BasicAnimation extends Animation {
 
         public Builder loop(AnimationLoopMode mode) {
             this.loopMode = mode;
+            if (loopCount == null) this.loopCount = -1;
             return this;
         }
 
