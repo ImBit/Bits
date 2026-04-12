@@ -28,4 +28,18 @@ public abstract class Animation {
         return new BasicAnimation.Builder();
     }
 
+    public static Animation constant(AnimationPose pose) {
+        return new Animation() {
+            @Override
+            public AnimationPose evaluate(int ticks) {
+                return pose;
+            }
+
+            @Override
+            public boolean isFinished(int ticks) {
+                return false;
+            }
+        };
+    }
+
 }

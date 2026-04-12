@@ -69,6 +69,8 @@ public record AnimationPose(
         private Quaternionf rotation = new Quaternionf();
         private Vector3f scale = new Vector3f(1);
 
+        private Builder() {}
+
         public Builder translation(float x, float y, float z) {
             this.translation = new Vector3f(x, y, z);
             return this;

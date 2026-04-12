@@ -28,7 +28,7 @@ public abstract class AnimationPlayer {
 
     public final void play() {
         ticker = Runnables.cleanup(ticker);
-        ticker = Runnables.timer(this::tick, 0, 1);
+        ticker = Runnables.timer(() -> tick(currentTick++), 0, 1);
     }
 
     public final void pause() {
@@ -46,13 +46,13 @@ public abstract class AnimationPlayer {
         return this;
     }
 
-    public final void tick() {
-        if (animation.isFinished(currentTick)) {
+    public final void tick(int tick) {
+        if (animation.isFinished(tick)) {
             stop();
             return;
         }
-        
-        AnimationPose pose = animation.evaluate(currentTick++);
+
+        AnimationPose pose = animation.evaluate(tick);
         applyPose(pose);
     }
 

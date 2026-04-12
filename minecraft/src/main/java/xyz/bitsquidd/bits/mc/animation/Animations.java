@@ -13,6 +13,10 @@ import xyz.bitsquidd.bits.util.math.easing.Easings;
 public final class Animations {
     private Animations() {}
 
+    public static Animation floating() {
+        return floating(40, 0.5f);
+    }
+
     public static Animation floating(int duration, float height) {
         return Animation.of()
           .duration(duration)
