@@ -1,0 +1,96 @@
+/*
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
+ *
+ * Copyright (c) 2023-2026 ImBit
+ */
+
+package xyz.bitsquidd.bits.mc.animation;
+
+import xyz.bitsquidd.bits.mc.animation.impl.Animation;
+import xyz.bitsquidd.bits.util.math.easing.Easings;
+
+public final class Animations {
+    private Animations() {}
+
+    public static Animation floating(int duration, float height) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().translateY(0f).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().translateY(height).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+    public static Animation spin(int duration) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.STRAIGHT)
+          .keyframe(0.00f, AnimationPose.builder().rotateY(0f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(1.00f, AnimationPose.builder().rotateY(360f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .build();
+    }
+
+    public static Animation pulse(int duration, float minScale, float maxScale) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().scale(minScale).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().scale(maxScale).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+
+    public static Animation swayX(int duration, float angle) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().rotateX(-angle).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().rotateX(angle).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+    public static Animation swayZ(int duration, float angle) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().rotateZ(-angle).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().rotateZ(angle).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+    public static Animation wiggleX(int duration, float amplitude) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().translateX(-amplitude).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().translateX(amplitude).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+    public static Animation wiggleZ(int duration, float amplitude) {
+        return Animation.of()
+          .duration(duration)
+          .loop(AnimationLoopMode.PING_PONG)
+          .keyframe(0.00f, AnimationPose.builder().translateZ(-amplitude).build(), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationPose.builder().translateZ(amplitude).build(), Easings.IN_OUT_SIN)
+          .build();
+    }
+
+
+    //region Composite Animations
+    public static Animation floatSpin() {
+        return floating(40, 0.5f).and(spin(30));
+    }
+
+    public static Animation hotAirBalloon() {
+        return floating(400, 1.0f)      // slow rise and fall
+          .and(wiggleX(80, 0.15f))   // drift X
+          .and(wiggleZ(100, 0.09f))  // drift Z - slight different duration to give an offset feel
+          .and(swayX(90, 2.0f))         // atmospheric tilt X
+          .and(swayZ(110, 1.5f))        // atmospheric tilt Z
+          .and(spin(2000));
+    }
+    //endregion
+
+}

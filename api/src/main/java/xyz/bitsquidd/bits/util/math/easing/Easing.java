@@ -58,7 +58,7 @@ public abstract class Easing {
     /**
      * Blends this easing with another by a factor (0 = this, 1 = other)
      */
-    public Easing blendWith(Easing other, float factor) {
+    public Easing blend(Easing other, float factor) {
         Easing self = this;
         return new Easing() {
             @Override
