@@ -1,9 +1,8 @@
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
 
 package xyz.bitsquidd.bits.util.reflection;
@@ -157,6 +156,14 @@ public final class ReflectionUtils {
                 return (T)resolveMethod(object.getClass(), methodName, paramTypes).invoke(object, args);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectionException("Unable to invoke method: " + methodName, e);
+            }
+        }
+
+        public static <T> Optional<T> tryInvoke(Object object, String methodName, Class<?>[] paramTypes, Class<T> returnType, Object... args) {
+            try {
+                return Optional.of(invoke(object, methodName, paramTypes, returnType, args));
+            } catch (ReflectionException e) {
+                return Optional.empty();
             }
         }
 

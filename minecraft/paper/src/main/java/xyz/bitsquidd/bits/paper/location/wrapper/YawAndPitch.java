@@ -28,6 +28,10 @@ public final class YawAndPitch {
 
     public static final YawAndPitch ZERO = new YawAndPitch(0f, 0f);
 
+    public static Location remove(Location location) {
+        return YawAndPitch.ZERO.applyTo(location);
+    }
+
     // Yaw is normalized between [-180, 180]
     // Pitch is normalized between [-90, 90]
     private YawAndPitch(float yaw, float pitch) {
