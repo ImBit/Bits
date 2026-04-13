@@ -108,6 +108,17 @@ public final class YawAndPitch {
     }
 
 
+    public YawAndPitch roundYaw(float multiple) {
+        float roundedYaw = Math.round(yaw / multiple) * multiple;
+        return new YawAndPitch(roundedYaw, pitch);
+    }
+
+    public YawAndPitch roundPitch(float multiple) {
+        float roundedPitch = Math.round(pitch / multiple) * multiple;
+        return new YawAndPitch(yaw, roundedPitch);
+    }
+
+
     public YawAndPitch add(YawAndPitch yawAndPitch) {
         return new YawAndPitch(this.yaw + yawAndPitch.yaw, this.pitch + yawAndPitch.pitch);
     }
