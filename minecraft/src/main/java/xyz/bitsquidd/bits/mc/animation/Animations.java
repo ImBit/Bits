@@ -17,6 +17,20 @@ public final class Animations {
         return floating(40, 0.5f);
     }
 
+
+    public static Animation xTranslation(float distance) {
+        return Animation.constant(AnimationPose.builder().translateX(distance).build());
+    }
+
+    public static Animation yTranslation(float height) {
+        return Animation.constant(AnimationPose.builder().translateY(height).build());
+    }
+
+    public static Animation zTranslation(float distance) {
+        return Animation.constant(AnimationPose.builder().translateZ(distance).build());
+    }
+
+
     public static Animation floating(int duration, float height) {
         return Animation.of()
           .duration(duration)
