@@ -1,13 +1,11 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import xyz.bitsquidd.util.includeLibrary
-
 /*
- * This file is part of Bits, licensed under the GNU Lesser General Public License v3.0.
+ * This file is part of a Bit libraries package.
+ * Licensed under the GNU Lesser General Public License v3.0.
  *
- * Copyright (c) 2024-2026 ImBit
- *
- * Enjoy the Bits and Bobs :)
+ * Copyright (c) 2023-2026 ImBit
  */
+
+import xyz.bitsquidd.util.includeLibrary
 
 plugins {
     alias(fabricLibs.plugins.fabric.loom)
@@ -34,31 +32,30 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.21.11")
-    mappings(loom.officialMojangMappings())
+    minecraft("com.mojang:minecraft:26.1.2")
 
-    modImplementation(rootProject.fabricLibs.fabric.loader)
-    modImplementation(rootProject.fabricLibs.fabric.api)
+    implementation(rootProject.fabricLibs.fabric.loader)
+    implementation(rootProject.fabricLibs.fabric.api)
 
-    modImplementation("net.kyori:adventure-platform-fabric:6.8.0")
-    modImplementation("me.lucko:fabric-permissions-api:0.5.0")
+    implementation("net.kyori:adventure-platform-fabric:6.8.0")
+    implementation("me.lucko:fabric-permissions-api:0.5.0")
 
     includeLibrary(project(":minecraft"))
 }
 
 tasks {
-    val mergedJar by registering(ShadowJar::class) {
-        archiveClassifier.set("merged")
-        from(sourceSets.main.get().output)
-        from(sourceSets["client"].output)
-        from(zipTree(project(":minecraft").tasks.named<ShadowJar>("shadowJar").flatMap { it.archiveFile }))
-    }
-
-    remapJar {
-        dependsOn(mergedJar)
-        inputFile.set(mergedJar.flatMap { it.archiveFile })
-        archiveClassifier.set("")
-    }
+//    val mergedJar by registering(ShadowJar::class) {
+//        archiveClassifier.set("merged")
+//        from(sourceSets.main.get().output)
+//        from(sourceSets["client"].output)
+//        from(zipTree(project(":minecraft").tasks.named<ShadowJar>("shadowJar").flatMap { it.archiveFile }))
+//    }
+//
+//    remapJar {
+//        dependsOn(mergedJar)
+//        inputFile.set(mergedJar.flatMap { it.archiveFile })
+//        archiveClassifier.set("")
+//    }
 
     processResources {
         filteringCharset = "UTF-8"
@@ -71,15 +68,15 @@ tasks {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            named<MavenPublication>("maven") {
-                artifacts.clear()
-                artifact(tasks.named("remapJar"))
-                artifact(tasks.named("sourcesJar"))
-                artifact(tasks.named("javadocJar"))
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            named<MavenPublication>("maven") {
+//                artifacts.clear()
+//                artifact(tasks.named("remapJar"))
+//                artifact(tasks.named("sourcesJar"))
+//                artifact(tasks.named("javadocJar"))
+//            }
+//        }
+//    }
+//}
