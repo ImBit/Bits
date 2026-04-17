@@ -37,7 +37,7 @@ dependencies {
     implementation(rootProject.fabricLibs.fabric.loader)
     implementation(rootProject.fabricLibs.fabric.api)
 
-    implementation("net.kyori:adventure-platform-fabric:6.8.0")
+    implementation("net.kyori:adventure-platform-fabric:6.9.0")
     implementation("me.lucko:fabric-permissions-api:0.5.0")
 
     includeLibrary(project(":minecraft"))
