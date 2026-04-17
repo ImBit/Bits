@@ -1,5 +1,5 @@
 [versions]
-paper-api = "26.1.1.build.+"
+paper-api = "26.1.2.build.+"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
