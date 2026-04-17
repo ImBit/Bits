@@ -8,6 +8,7 @@
 package xyz.bitsquidd.bits.util.serializer.jackson;
 
 
+import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
@@ -19,7 +20,12 @@ public class NullableAwareIntrospector extends JacksonAnnotationIntrospector {
 
     @Override
     public Boolean hasRequiredMarker(AnnotatedMember m) {
-        return !m.hasAnnotation(org.jetbrains.annotations.Nullable.class) && !m.hasAnnotation(org.jspecify.annotations.Nullable.class);
+        return !isNullable(m);
+    }
+
+    private boolean isNullable(Annotated a) {
+        return a.hasAnnotation(org.jetbrains.annotations.Nullable.class)
+          || a.hasAnnotation(org.jspecify.annotations.Nullable.class);
     }
 
 }
