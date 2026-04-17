@@ -363,12 +363,20 @@ public final class ReflectionUtils {
         private Scanner() {}
 
         private static Class<?> getCorrectLoader(ClassInfo info, Class<?> base) throws ClassNotFoundException {
+            // We prefer the loader that loaded the base type - this should generally guarantee constraint compatibility
+            ClassLoader baseLoader = base.getClassLoader();
+            if (baseLoader != null) {
+                try {
+                    return Class.forName(info.getName(), true, baseLoader);
+                } catch (ClassNotFoundException ignored) {}
+            }
+
             for (ClassLoader cl : CLASSLOADERS) {
                 try {
                     return Class.forName(info.getName(), true, cl);
                 } catch (ClassNotFoundException ignored) {}
             }
-            throw new ClassNotFoundException("Cannot load " + info.getName() + " from any registered classloader");
+            throw new ClassNotFoundException("Cannot load " + info.getName());
         }
 
 
