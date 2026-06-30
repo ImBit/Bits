@@ -154,7 +154,7 @@ public class PaperBossbarManager extends BossbarManager {
 
         for (int i = 0; i < MAX_BOSSBARS; i++) {
             BossEvent bossEvent = new CustomBossEvent(UUID.randomUUID(), Identifier.parse(Bits.key("bossbar_" + i).toString()), CommonComponents.EMPTY, () -> {});
-            paperReceiver.sendPacket(ClientboundBossEventPacket.createAddPacket(bossEvent));
+            paperReceiver.sendPackets(ClientboundBossEventPacket.createAddPacket(bossEvent));
 
             bossEvents.put(i, bossEvent);
         }

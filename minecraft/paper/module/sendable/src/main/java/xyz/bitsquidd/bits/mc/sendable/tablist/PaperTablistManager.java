@@ -45,7 +45,7 @@ public class PaperTablistManager extends TablistManager {
             positionContentMap.put(value, content);
         }
 
-        paperReceiver.sendPacket(new ClientboundTabListPacket(
+        paperReceiver.sendPackets(new ClientboundTabListPacket(
           PaperAdventure.asVanillaNullToEmpty(positionContentMap.get(TablistPosition.HEADER)),
           PaperAdventure.asVanillaNullToEmpty(positionContentMap.get(TablistPosition.FOOTER))
         ));

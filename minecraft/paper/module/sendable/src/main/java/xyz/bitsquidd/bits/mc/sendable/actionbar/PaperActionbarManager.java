@@ -28,7 +28,7 @@ public class PaperActionbarManager extends ActionbarManager {
         ComponentBuilder<?, ?> builder = Component.text();
         storage.getAll().forEach(actionbarHandle -> merge(builder, actionbarHandle.definition().content(actionbarHandle.state(receiver))));
 
-        paperReceiver.sendPacket(new ClientboundSetActionBarTextPacket(
+        paperReceiver.sendPackets(new ClientboundSetActionBarTextPacket(
           PaperAdventure.asVanillaNullToEmpty(builder.build())
         ));
     }

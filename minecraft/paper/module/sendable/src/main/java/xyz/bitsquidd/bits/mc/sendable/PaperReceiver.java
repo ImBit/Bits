@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -23,9 +24,15 @@ public interface PaperReceiver extends Receiver {
     static PaperReceiver from(final Player player) {
         return new PaperReceiver() {
             @Override
-            public void sendPacket(Packet<?> packet) {
-                ((CraftPlayer)player).getHandle().connection.send(packet);
+            public void sendPackets(Packet<?> packets) {
+                ((CraftPlayer)player).getHandle().connection.send(packets);
             }
+
+            @Override
+            public void sendPackets(Collection<? extends Packet<?>> packets) {
+                packets.forEach(this::sendPackets);
+            }
+
 
             @Override
             public Player getPlayer() {
@@ -52,10 +59,12 @@ public interface PaperReceiver extends Receiver {
 
     Player getPlayer();
 
-    void sendPacket(final Packet<?> packet);
+    void sendPackets(final Packet<?> packets);
 
-    default void sendPackets(final Collection<? extends Packet<?>> packets) {
-        packets.forEach(this::sendPacket);
+    default void sendPackets(final Packet<?>... packets) {
+        sendPackets(List.of(packets));
     }
+
+    void sendPackets(final Collection<? extends Packet<?>> packets);
 
 }

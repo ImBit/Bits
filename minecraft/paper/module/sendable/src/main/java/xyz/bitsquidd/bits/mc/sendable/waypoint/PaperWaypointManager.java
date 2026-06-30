@@ -133,7 +133,7 @@ public class PaperWaypointManager extends WaypointManager {
         UUID receiverUUID = receiver.getUniqueId();
 
         if (waypointDefinition instanceof AbstractLocationWaypoint) {
-            paperReceiver.sendPacket(ClientboundTrackedWaypointPacket.removeWaypoint(waypointUUID));
+            paperReceiver.sendPackets(ClientboundTrackedWaypointPacket.removeWaypoint(waypointUUID));
             Set<UUID> receiverTracked = tracked.get(receiverUUID);
             if (receiverTracked != null) {
                 receiverTracked.remove(waypointUUID);

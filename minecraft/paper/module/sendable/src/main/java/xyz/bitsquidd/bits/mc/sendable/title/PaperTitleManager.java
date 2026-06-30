@@ -40,9 +40,9 @@ public class PaperTitleManager extends TitleManager {
         List<? extends SendableHandle<? extends AbstractTitle>> titles = storage.getAll();
         if (titles.isEmpty()) {
             if (Boolean.TRUE.equals(hasActiveTitle.put(uuid, false))) {
-                paperReceiver.sendPacket(new ClientboundSetTitlesAnimationPacket(0, 0, 0));
-                paperReceiver.sendPacket(new ClientboundSetSubtitleTextPacket(Component.empty()));
-                paperReceiver.sendPacket(new ClientboundSetTitleTextPacket(Component.empty()));
+                paperReceiver.sendPackets(new ClientboundSetTitlesAnimationPacket(0, 0, 0));
+                paperReceiver.sendPackets(new ClientboundSetSubtitleTextPacket(Component.empty()));
+                paperReceiver.sendPackets(new ClientboundSetTitleTextPacket(Component.empty()));
             }
             return;
         }
@@ -52,17 +52,17 @@ public class PaperTitleManager extends TitleManager {
         SendableState state = handle.state(receiver);
 
         Title.Times times = handle.definition().getTimes(state);
-        paperReceiver.sendPacket(new ClientboundSetTitlesAnimationPacket(
+        paperReceiver.sendPackets(new ClientboundSetTitlesAnimationPacket(
           Time.TO_TICKS(times.fadeIn()),
           Time.TO_TICKS(times.stay()),
           Time.TO_TICKS(times.fadeOut())
         ));
 
-        paperReceiver.sendPacket(new ClientboundSetSubtitleTextPacket(
+        paperReceiver.sendPackets(new ClientboundSetSubtitleTextPacket(
           PaperAdventure.asVanillaNullToEmpty(handle.definition().subtitle(state))
         ));
 
-        paperReceiver.sendPacket(new ClientboundSetTitleTextPacket(
+        paperReceiver.sendPackets(new ClientboundSetTitleTextPacket(
           PaperAdventure.asVanillaNullToEmpty(handle.definition().title(state))
         ));
     }
