@@ -173,6 +173,10 @@ public final class AttributeData {
         return new Builder(attribute).operation(AttributeModifier.Operation.MULTIPLY_SCALAR_1).value(-1).build();
     }
 
+    public static AttributeData inf(Attribute attribute) {
+        return new Builder(attribute).operation(AttributeModifier.Operation.ADD_NUMBER).value(10_000).build(); // Effectively larger than all attributes will allow. //TODO: look for a Attribute#maxValue()?
+    }
+
     public static final class Builder implements Buildable<AttributeData> {
         private final Attribute attribute;
         private double value = 1;
