@@ -19,7 +19,9 @@ import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
 
 /**
  * An immutable boolean composition of {@link Containable}s (Regions or other Areas),
@@ -127,6 +129,23 @@ public final class Area implements Containable {
     @Override
     public BlockPos max() {
         return Locations.getMaxLocation(entries.stream().map(e -> e.containable.max()).toList());
+    }
+
+    @Override
+    public Optional<BlockPos> getRandomLocation() {
+        // This is a naive implementation that just tries random locations within the bounding box until it finds one that is contained.
+        BlockPos min = min();
+        BlockPos max = max();
+
+        for (int i = 0; i < 100; i++) {
+            double x = min.x + Math.random() * (max.x - min.x);
+            double y = min.y + Math.random() * (max.y - min.y);
+            double z = min.z + Math.random() * (max.z - min.z);
+            BlockPos randomPos = BlockPos.of(x, y, z);
+            if (contains(randomPos)) return Optional.of(randomPos);
+        }
+
+        return Optional.empty(); // Couldn't find a contained location :(
     }
 
     public static final class Builder implements Buildable<Area> {

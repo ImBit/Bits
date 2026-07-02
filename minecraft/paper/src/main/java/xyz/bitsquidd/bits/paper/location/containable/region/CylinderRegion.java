@@ -23,7 +23,9 @@ import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+
 
 public final class CylinderRegion extends Region {
     private final BlockPos centerBottom;
@@ -132,6 +134,22 @@ public final class CylinderRegion extends Region {
             case Y -> BlockPos.of(centerBottom.x + radius, centerBottom.y + height, centerBottom.z + radius);
             case X -> BlockPos.of(centerBottom.x + height, centerBottom.y + radius, centerBottom.z + radius);
             case Z -> BlockPos.of(centerBottom.x + radius, centerBottom.y + radius, centerBottom.z + height);
+        };
+    }
+
+
+    @Override
+    public Optional<BlockPos> getRandomLocation() {
+        double angle = Math.random() * 2 * Math.PI;
+        double distance = Math.random() * radius;
+        double xOffset = distance * Math.cos(angle);
+        double zOffset = distance * Math.sin(angle);
+        double yOffset = Math.random() * height;
+
+        return switch (axis) {
+            case Y -> Optional.of(BlockPos.of(centerBottom.x + xOffset, centerBottom.y + yOffset, centerBottom.z + zOffset));
+            case X -> Optional.of(BlockPos.of(centerBottom.x + yOffset, centerBottom.y + xOffset, centerBottom.z + zOffset));
+            case Z -> Optional.of(BlockPos.of(centerBottom.x + xOffset, centerBottom.y + zOffset, centerBottom.z + yOffset));
         };
     }
 

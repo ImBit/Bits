@@ -23,7 +23,9 @@ import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+
 
 public final class CuboidRegion extends Region {
     private final BlockPos min;
@@ -106,6 +108,16 @@ public final class CuboidRegion extends Region {
     @Override
     public BlockPos max() {
         return max;
+    }
+
+
+    @Override
+    public Optional<BlockPos> getRandomLocation() {
+        double x = minX + Math.random() * (maxX - minX);
+        double y = minY + Math.random() * (maxY - minY);
+        double z = minZ + Math.random() * (maxZ - minZ);
+
+        return Optional.of(BlockPos.of(x, y, z));
     }
 
     @Override

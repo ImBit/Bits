@@ -18,10 +18,17 @@ import xyz.bitsquidd.bits.paper.location.wrapper.BlockPos;
 import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 
 public interface Containable {
     boolean contains(Locatable locatable);
@@ -29,7 +36,7 @@ public interface Containable {
     default boolean contains(Location location) {
         if (location == null) return false;
         if (location.getWorld() == null || !location.getWorld().equals(world())) return false;
-        
+
         return contains(BlockPos.of(location));
     }
 
@@ -46,6 +53,8 @@ public interface Containable {
     BlockPos min();
 
     BlockPos max();
+
+    Optional<BlockPos> getRandomLocation();
 
 
     //region Blocks

@@ -21,7 +21,9 @@ import xyz.bitsquidd.bits.paper.location.wrapper.Locatable;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+
 
 public final class EllipsoidRegion extends Region {
     private final BlockPos center;
@@ -100,6 +102,25 @@ public final class EllipsoidRegion extends Region {
         return BlockPos.of(center.x + radiusX, center.y + radiusY, center.z + radiusZ);
     }
 
+
+    @Override
+    public Optional<BlockPos> getRandomLocation() {
+        double u = Math.random();
+        double v = Math.random();
+        double theta = 2 * Math.PI * u;
+        double phi = Math.acos(2 * v - 1);
+        double r = Math.cbrt(Math.random());
+
+        double x = r * Math.sin(phi) * Math.cos(theta);
+        double y = r * Math.sin(phi) * Math.sin(theta);
+        double z = r * Math.cos(phi);
+
+        return Optional.of(BlockPos.of(
+          center.x + x * radiusX,
+          center.y + y * radiusY,
+          center.z + z * radiusZ
+        ));
+    }
 
     @Override
     public EllipsoidRegion expand(double x, double y, double z) {
