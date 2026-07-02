@@ -14,9 +14,12 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
 import net.minecraft.client.Minecraft;
 
+import xyz.bitsquidd.bits.lifecycle.manager.BitsModule;
 import xyz.bitsquidd.bits.log.FabricBitsLogger;
 import xyz.bitsquidd.bits.log.Logger;
+import xyz.bitsquidd.bits.mc.command.FabricClientBitsCommandManager;
 import xyz.bitsquidd.bits.mc.permission.Permission;
+import xyz.bitsquidd.bits.wrapper.collection.AddableList;
 
 import java.util.Locale;
 
@@ -71,6 +74,11 @@ public class ClientBitsFabric extends BitsFabric {
         return true;
     }
 
+
+    @Override
+    protected AddableList<BitsModule> modules() {
+        return super.modules().add(new FabricClientBitsCommandManager());
+    }
 
     @Override
     public void registerAllCommands() {

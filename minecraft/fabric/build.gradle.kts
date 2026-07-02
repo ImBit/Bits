@@ -39,8 +39,8 @@ dependencies {
     shade(project(":minecraft"), transitive = true)
     shade(project(":minecraft:module:command"), transitive = true)
 
-    api("net.kyori:adventure-platform-fabric:6.9.0")
-    api("me.lucko:fabric-permissions-api:0.5.0")
+    api("net.kyori:adventure-platform-fabric:7.1.0")
+    api("me.lucko:fabric-permissions-api:0.7.0")
 }
 
 tasks {
