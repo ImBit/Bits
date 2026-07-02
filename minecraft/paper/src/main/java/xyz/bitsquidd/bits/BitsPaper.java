@@ -82,7 +82,7 @@ public class BitsPaper extends BitsMinecraft {
     }
 
     @Override
-    public final boolean hasPermission(Audience audience, Permission permission) {
+    public boolean hasPermission(Audience audience, Permission permission) {
         if (audience instanceof CommandSender commandSender) {
             return commandSender.hasPermission(permission.toString());
         } else {
@@ -91,12 +91,12 @@ public class BitsPaper extends BitsMinecraft {
     }
 
     @Override
-    public final void registerPermission(Permission permission) {
+    public void registerPermission(Permission permission) {
         Bukkit.getPluginManager().addPermission(new org.bukkit.permissions.Permission(permission.toString()));
     }
 
     @Override
-    public final Locale getLocale(Audience audience) {
+    public Locale getLocale(Audience audience) {
         if (audience instanceof Player player) return player.locale();
         return Locale.getDefault();
     }
