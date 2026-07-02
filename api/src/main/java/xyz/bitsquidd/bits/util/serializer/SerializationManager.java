@@ -41,10 +41,10 @@ public final class SerializationManager {
         mapper.disable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_IS_GETTERS);
         mapper.setDefaultPropertyInclusion(JsonInclude.Value.ALL_NON_NULL);
-        mapper.setAnnotationIntrospector(new NullableAwareIntrospector());
+        mapper.setAnnotationIntrospector(new NullableAwareIntrospector()); // TODO readd if loading bug is fixed
 
         getSerializers().forEach(serializer -> registerSerializer(serializer, mapper));
-        
+
         mapper.registerModule(new GuavaModule());
         mapper.registerModule(new JavaTimeModule());
         return mapper;

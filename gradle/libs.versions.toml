@@ -1,6 +1,6 @@
 [versions]
 adventure = "5.1.1"
-jackson = "2.21.4"
+jackson = "2.22.0"
 
 [libraries]
 joml = { group = "org.joml", name = "joml", version = "1.10.8" }
