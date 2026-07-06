@@ -79,6 +79,16 @@ public final class Effect {
 
 
     /**
+     * Returns the unique identifier for this effect.
+     *
+     * @since 0.0.22
+     */
+    public Key id() {
+        return id;
+    }
+
+
+    /**
      * Returns the behaviours directly attached to this effect, executed in registration order.
      *
      * @return an unmodifiable list of behaviours
@@ -258,10 +268,12 @@ public final class Effect {
                 case PotionEffect potionEffect -> {
                     convenience.merge(CommonEffectData.NAME, Component.translatable(potionEffect.bukkitEffect().translationKey()));
                     convenience.merge(CommonEffectData.COLOR, PotionColorRegistry.getEffectiveColor(potionEffect.bukkitEffect()));
+                    convenience.merge(CommonEffectData.CATEGORY, potionEffect.bukkitEffect().getCategory());
                 }
                 case AttributeEffect attributeEffect -> {
                     convenience.merge(CommonEffectData.NAME, Component.translatable(attributeEffect.attribute().translationKey()));
                     convenience.merge(CommonEffectData.COLOR, AttributeColorRegistry.getEffectiveColor(attributeEffect.attribute()));
+                    // No such definition for a "positive/negative attribute"
                 }
                 default -> {}
             }

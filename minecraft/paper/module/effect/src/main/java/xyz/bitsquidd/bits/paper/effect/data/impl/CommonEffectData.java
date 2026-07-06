@@ -16,10 +16,19 @@ package xyz.bitsquidd.bits.paper.effect.data.impl;
 public final class CommonEffectData {
     private CommonEffectData() {}
 
-    /** Packed ARGB color integer for the effect's visual representation. */
+    /**
+     * Packed ARGB color integer for the effect's visual representation.
+     */
     public static final ColorEffectData COLOR = new ColorEffectData();
 
-    /** Display name {@link net.kyori.adventure.text.Component} for the effect. */
+    /**
+     * Display name {@link net.kyori.adventure.text.Component} for the effect.
+     */
     public static final NameEffectData NAME = new NameEffectData();
+
+    /**
+     * Category of the effect, used for stating if its beneficial or not.
+     */
+    public static final CategoryEffectData CATEGORY = new CategoryEffectData();
 
 }
