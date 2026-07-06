@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.log.Logger;
 import xyz.bitsquidd.bits.mc.command.argument.parser.ArgumentParser;
+import xyz.bitsquidd.bits.mc.command.argument.parser.impl.GreedyStringArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.VoidArgumentParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.generic.GenericEnumParser;
 import xyz.bitsquidd.bits.mc.command.argument.parser.impl.primitive.PrimitiveArgumentParser;
@@ -206,8 +207,8 @@ public abstract class BitsArgumentRegistry<T> {
         for (InputTypeContainer inputType : inputTypes) {
             ArgumentParser<?, ?> nestedParser = getParser(inputType.typeSignature());
 
-            if (nestedParser instanceof PrimitiveArgumentParser<?>) {
-                // it's a vanilla/terminal type (String, Double, etc.) take the primitive as-is.
+            if (nestedParser instanceof PrimitiveArgumentParser<?> || nestedParser instanceof GreedyStringArgumentParser) {
+                // it's a vanilla/terminal type (String, Double, GreedyString, etc.) take the primitive as-is.
                 if (primitiveList.isEmpty()) throw new CommandBuildException("Not enough arguments for " + inputType.typeName());
                 parsedObjects.add(primitiveList.removeFirst());
                 continue;

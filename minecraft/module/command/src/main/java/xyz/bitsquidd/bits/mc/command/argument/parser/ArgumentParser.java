@@ -13,10 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.mc.command.BitsCommandManager;
 import xyz.bitsquidd.bits.mc.command.argument.InputTypeContainer;
-import xyz.bitsquidd.bits.mc.command.argument.parser.impl.GreedyStringArgumentParser;
 import xyz.bitsquidd.bits.mc.command.exception.ExceptionBuilder;
 import xyz.bitsquidd.bits.mc.command.util.BitsCommandContext;
-import xyz.bitsquidd.bits.wrapper.GreedyString;
 import xyz.bitsquidd.bits.wrapper.type.TypeSignature;
 
 import java.lang.reflect.Constructor;
@@ -113,9 +111,6 @@ public abstract class ArgumentParser<O, D> {
      * @since 0.0.20
      */
     public final List<InputTypeContainer> getInputTypes() {
-        // Special case for GreedyString: it captures all remaining input as a single string.
-        if (this instanceof GreedyStringArgumentParser) return List.of(new InputTypeContainer(TypeSignature.of(GreedyString.class), getArgumentName()));
-
         // Special case for non-record types: treat the entire data class the input.
         if (!dataClass.isRecord()) return List.of(new InputTypeContainer(TypeSignature.of(dataClass), argumentName));
 
