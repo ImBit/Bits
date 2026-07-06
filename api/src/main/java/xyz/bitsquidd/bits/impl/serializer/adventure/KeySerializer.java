@@ -7,16 +7,20 @@
 
 package xyz.bitsquidd.bits.impl.serializer.adventure;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.KeyDeserializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import net.kyori.adventure.key.Key;
 
 import xyz.bitsquidd.bits.util.serializer.MultiSerializer;
 import xyz.bitsquidd.bits.util.serializer.Serializer;
+
+import java.io.IOException;
+
 
 @Serializer
 public final class KeySerializer extends MultiSerializer<Key> {
@@ -37,7 +41,12 @@ public final class KeySerializer extends MultiSerializer<Key> {
 
     @Override
     public JsonSerializer<? super Key> jacksonKeySerializer() {
-        return new StdKeySerializers.StringKeySerializer();
+        return new JsonSerializer<>() {
+            @Override
+            public void serialize(Key value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+                gen.writeFieldName(value.asString());
+            }
+        };
     }
 
     @Override
