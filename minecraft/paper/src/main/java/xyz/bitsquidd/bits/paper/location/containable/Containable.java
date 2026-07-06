@@ -54,6 +54,20 @@ public interface Containable {
 
     BlockPos max();
 
+
+    default double xSize() {
+        return max().x - min().x;
+    }
+
+    default double ySize() {
+        return max().y - min().y;
+    }
+
+    default double zSize() {
+        return max().z - min().z;
+    }
+
+
     Optional<BlockPos> getRandomLocation();
 
 
