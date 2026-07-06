@@ -122,6 +122,17 @@ public abstract class BitsArgumentRegistry<T> {
         // Developers should design their command functions accordingly to use the lowest available type.
         ArgumentParser<?, ?> parser = parsers.get(typeSignature);
 
+        // Exact HashMap lookup misses wildcard type arguments (e.g. Collection<? extends Player>);
+        // fall back to a wildcard-tolerant scan before giving up.
+        if (parser == null) {
+            for (Map.Entry<TypeSignature<?>, ArgumentParser<?, ?>> entry : parsers.entrySet()) {
+                if (entry.getKey().matches(typeSignature)) {
+                    parser = entry.getValue();
+                    break;
+                }
+            }
+        }
+
         // If no parser found, we allow generic enums to be parsed.
         if (parser == null) {
             Class<?> rawType = typeSignature.toRawType();
@@ -148,44 +159,40 @@ public abstract class BitsArgumentRegistry<T> {
      * @since 0.0.10
      */
     public List<BrigadierArgumentMapping> getArgumentTypeContainer(ArgumentParser<?, ?> parser, String baseName) {
+        // Terminal parsers are backed directly by a single Brigadier primitive - resolve from the
+        // parser's own type signature rather than decomposing it, since decomposing a terminal parser
+        // (e.g. GreedyStringArgumentParser, whose data class is String but type signature is GreedyString)
+        // and re-looking it up by that data class would resolve the wrong parser entirely.
+        if (isTerminal(parser)) {
+            ArgumentType<?> brigadierType = toArgumentType(parser.getTypeSignature());
+            if (brigadierType == null) throw new CommandBuildException("No Brigadier argument type mapped for: " + parser.getTypeSignature());
+            return List.of(new BrigadierArgumentMapping(brigadierType, parser.getTypeSignature(), baseName));
+        }
+
         List<BrigadierArgumentMapping> holders = new ArrayList<>();
         List<InputTypeContainer> inputTypes = parser.getInputTypes();
 
-        // Break down the type signature into its primitives.
+        // Break down the type signature into its constituent fields.
         for (int i = 0; i < inputTypes.size(); i++) {
             InputTypeContainer nestedTypeSigature = inputTypes.get(i);
 
             // Get the command parser required for this input type
             ArgumentParser<?, ?> nestedParser = getParser(nestedTypeSigature.typeSignature());
 
-            boolean handled = false;
+            String argumentName = inputTypes.size() > 1
+                                  ? baseName + "_" + nestedTypeSigature.typeName()
+                                  : baseName;
 
-            // If it's a primitive, we can directly add it
-            if (nestedParser.getInputTypes().size() == 1) {
-                InputTypeContainer inputType = nestedParser.getInputTypes().getFirst();
-                ArgumentType<?> brigadierType = toArgumentType(inputType.typeSignature());
-
-                if (brigadierType != null) {
-                    String argumentName = inputTypes.size() > 1
-                                          ? baseName + "_" + nestedTypeSigature.typeName()
-                                          : baseName;
-
-                    holders.add(new BrigadierArgumentMapping(
-                      brigadierType,
-                      inputType.typeSignature(),
-                      argumentName
-                    ));
-                    handled = true;
-                }
-            }
-
-            if (!handled) {
-                // Recurse into non-primitive parsers
-                holders.addAll(getArgumentTypeContainer(nestedParser, baseName + "_" + nestedTypeSigature.typeName()));
-            }
+            holders.addAll(getArgumentTypeContainer(nestedParser, argumentName));
         }
 
         return holders;
+    }
+
+    // A terminal parser is backed directly by a raw Brigadier primitive value - its input list
+    // is never decomposed further; the raw value is taken as-is.
+    private static boolean isTerminal(ArgumentParser<?, ?> parser) {
+        return parser instanceof PrimitiveArgumentParser<?> || parser instanceof GreedyStringArgumentParser;
     }
 
     /**
@@ -207,7 +214,7 @@ public abstract class BitsArgumentRegistry<T> {
         for (InputTypeContainer inputType : inputTypes) {
             ArgumentParser<?, ?> nestedParser = getParser(inputType.typeSignature());
 
-            if (nestedParser instanceof PrimitiveArgumentParser<?> || nestedParser instanceof GreedyStringArgumentParser) {
+            if (isTerminal(nestedParser)) {
                 // it's a vanilla/terminal type (String, Double, GreedyString, etc.) take the primitive as-is.
                 if (primitiveList.isEmpty()) throw new CommandBuildException("Not enough arguments for " + inputType.typeName());
                 parsedObjects.add(primitiveList.removeFirst());

@@ -236,7 +236,9 @@ public final class BrigadierTreeGenerator<T> {
                     Object primitiveValue;
                     try {
                         Class<?> checkType = holder.typeSignature().toRawType();
-                        if (checkType == GreedyString.class) checkType = String.class; // Special case for greedy strings as they require a GreedyString input, but parse into String
+                        // GreedyString is a semantic marker only; Brigadier's greedyString() argument type
+                        // physically stores and returns a plain String, so fetch it as one.
+                        if (checkType == GreedyString.class) checkType = String.class;
 
                         primitiveValue = ctx.getArgument(holder.argumentName(), checkType);
                     } catch (IllegalArgumentException e) {
