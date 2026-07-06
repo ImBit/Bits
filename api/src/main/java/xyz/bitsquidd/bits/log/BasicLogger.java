@@ -88,16 +88,22 @@ public class BasicLogger extends Logger {
             return;
         }
 
-        StackTraceElement origin = throwable.getStackTrace()[0];
-        String header = String.format(
-          "%s |-> Exception at %s.%s (%s:%d) - %s",
-          msg,
-          origin.getClassName(),
-          origin.getMethodName(),
-          origin.getFileName(),
-          origin.getLineNumber(),
-          throwable.getMessage()
-        );
+        StackTraceElement[] stackTrace = throwable.getStackTrace();
+        String header;
+        if (stackTrace.length == 0) {
+            header = String.format("%s |-> Exception (no stack trace) - %s", msg, throwable.getMessage());
+        } else {
+            StackTraceElement origin = stackTrace[0];
+            header = String.format(
+              "%s |-> Exception at %s.%s (%s:%d) - %s",
+              msg,
+              origin.getClassName(),
+              origin.getMethodName(),
+              origin.getFileName(),
+              origin.getLineNumber(),
+              throwable.getMessage()
+            );
+        }
         System.out.println(LogType.ERROR.format(header));
 
         if (flags.logExtendedError()) {
