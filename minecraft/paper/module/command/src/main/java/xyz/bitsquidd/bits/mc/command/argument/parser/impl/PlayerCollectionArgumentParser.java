@@ -72,12 +72,13 @@ public final class PlayerCollectionArgumentParser extends ArgumentParser<Collect
 
     @Override
     public <T> SuggestionSupplier<T> getSuggestions() {
-        List<String> suggestions = new ArrayList<>();
-        suggestions.add(SelectorType.ALL.selector);
-        suggestions.add(SelectorType.SELF.selector);
-
-        suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-        return _ -> suggestions;
+        return _ -> {
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add(SelectorType.ALL.selector);
+            suggestions.add(SelectorType.SELF.selector);
+            suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+            return suggestions;
+        };
     }
 
 }
