@@ -61,10 +61,45 @@ public final class CollectionHelper {
      *
      * @since 0.0.10
      */
-    public static <T> Optional<T> get(List<T> list, int index) {
+    public static <T> Optional<T> get(List<? extends T> list, int index) {
         if (index < 0 || index >= list.size()) return Optional.empty();
         return Optional.of(list.get(index));
     }
+
+    /**
+     * Retrieves an element from a list in a looping manner, allowing for negative and out-of-bounds indices.
+     *
+     * @param <T>   the element type
+     * @param list  the list to query
+     * @param index the target index, can be negative or exceed list size
+     *
+     * @return the element at the normalized index
+     *
+     * @since 0.0.22
+     */
+    public static <T> Optional<T> getLooping(List<? extends T> list, int index) {
+        if (list.isEmpty()) return Optional.empty();
+        int normalizedIndex = ((index % list.size()) + list.size()) % list.size();
+        return Optional.of(list.get(normalizedIndex));
+    }
+
+    /**
+     * Retrieves the next element in a list relative to a given current element, wrapping around if necessary.
+     *
+     * @param list    the list to query
+     * @param current the current element to find the next of
+     * @param <T>     the element type
+     *
+     * @return an optional containing the next element, or empty if the current element is not found
+     *
+     * @since 0.0.22
+     */
+    public static <T> Optional<T> getNext(List<? extends T> list, T current) {
+        int currentIndex = list.indexOf(current);
+        if (currentIndex == -1) return Optional.empty();
+        return getLooping(list, currentIndex + 1);
+    }
+
 
     /**
      * Safely retrieves an element from a map,
