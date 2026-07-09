@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Set;
 
 
-public abstract class SendableOrchestrator extends ManagerContainer implements BitsModule {
+public abstract class SendableOrchestrator extends ManagerContainer<SendableManager<?>> implements BitsModule {
     private static @Nullable SendableOrchestrator instance;
 
     private final ActionbarManager actionbarManager = registerManager(createActionbarManager());
