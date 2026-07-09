@@ -10,8 +10,9 @@ package xyz.bitsquidd.bits.paper.location.wrapper;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+
 /**
- * Immutable representation of a Bukkit Location.
+ * Immutable representation of a Bukkit {@link Location}.
  *
  * @since 0.0.11
  */
