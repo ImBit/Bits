@@ -7,6 +7,7 @@
 
 package xyz.bitsquidd.bits.paper.location.wrapper;
 
+import net.kyori.adventure.key.Key;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.bukkit.Chunk;
@@ -24,14 +25,14 @@ import java.util.Objects;
 public record ChunkCoordinate(
   int x,
   int z,
-  World world
+  Key world
 ) {
 
     public static ChunkCoordinate fromLocation(Location location) {
         return new ChunkCoordinate(
           location.getBlockX() >> 4,
           location.getBlockZ() >> 4,
-          location.getWorld()
+          location.getWorld().key()
         );
     }
 
@@ -39,7 +40,7 @@ public record ChunkCoordinate(
         return new ChunkCoordinate(
           chunk.getX(),
           chunk.getZ(),
-          chunk.getWorld()
+          chunk.getWorld().key()
         );
     }
 
@@ -49,7 +50,7 @@ public record ChunkCoordinate(
         return new ChunkCoordinate(
           levelChunk.getPos().x(),
           levelChunk.getPos().z(),
-          levelChunk.getLevel().getWorld()
+          levelChunk.getLevel().getWorld().key()
         );
     }
 
