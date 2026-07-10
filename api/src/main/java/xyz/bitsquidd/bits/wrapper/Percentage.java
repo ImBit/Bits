@@ -11,6 +11,8 @@ import xyz.bitsquidd.bits.util.math.MathHelper;
 
 import java.util.Collection;
 
+import static xyz.bitsquidd.bits.util.Randomness.RANDOM;
+
 
 /**
  * Represents a numerical value clamped between 0 and 1, inclusive.
@@ -31,10 +33,19 @@ public final class Percentage {
     public static final Percentage ZERO = new Percentage(0.0f);
     public static final Percentage FULL = new Percentage(1.0f);
 
+    public static final Percentage HALF = new Percentage(1f / 2f);
+    public static final Percentage THIRD = new Percentage(1f / 3f);
+    public static final Percentage QUARTER = new Percentage(1f / 4f);
+    public static final Percentage FIFTH = new Percentage(1f / 5f);
+    public static final Percentage SIXTH = new Percentage(1f / 6f);
 
     //region Constructors
     public static Percentage of(final double value) {
         return new Percentage(value);
+    }
+
+    public static Percentage random(final double min, final double max) {
+        return new Percentage(RANDOM.nextFloat((float)min, (float)max));
     }
 
     public static Percentage ofFraction(final double numerator, final double denominator) {
@@ -42,15 +53,14 @@ public final class Percentage {
         return new Percentage(numerator / denominator);
     }
 
-    public static Percentage ofFractionReverse(final double denominator, final double numerator) {
-        if (numerator == 0.0) return FULL;
-        return new Percentage(1 - (numerator / denominator));
-    }
-
     public static Percentage ofAverage(Collection<Percentage> percentages) {
         if (percentages.isEmpty()) return ZERO;
         double sum = percentages.stream().mapToDouble(Percentage::get).sum();
         return new Percentage(sum / (float)percentages.size());
+    }
+
+    public static Percentage clamp(Percentage percentage, Percentage min, Percentage max) {
+        return new Percentage(Math.clamp(percentage.get(), min.get(), max.get()));
     }
     //endregion
 
@@ -62,6 +72,27 @@ public final class Percentage {
 
     public Percentage subtract(final Percentage other) {
         return new Percentage(this.value - other.value);
+    }
+
+
+    public boolean greaterThan(final Percentage other) {
+        return this.value > other.value;
+    }
+
+    public boolean lessThan(final Percentage other) {
+        return this.value < other.value;
+    }
+
+    public boolean equalTo(final Percentage other) {
+        return this.value == other.value;
+    }
+
+    public boolean greaterThanOrEqualTo(final Percentage other) {
+        return this.value >= other.value;
+    }
+
+    public boolean lessThanOrEqualTo(final Percentage other) {
+        return this.value <= other.value;
     }
     //endregion
 
