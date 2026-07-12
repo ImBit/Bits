@@ -12,7 +12,7 @@ allprojects {
     group = "xyz.bitsquidd.bits.velocity"
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     repositories {
