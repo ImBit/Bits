@@ -47,6 +47,7 @@ public class PaperSidebarManager extends SidebarManager {
 
     private final Map<UUID, Integer> playerLineCount = new ConcurrentHashMap<>();
     private final Map<UUID, Component> playerTitle = new ConcurrentHashMap<>();
+    private final Map<UUID, List<Component>> playerLines = new ConcurrentHashMap<>();
 
     @Override
     protected void render(Receiver receiver, WeakStorage<? extends AbstractSidebar> storage) {
@@ -99,11 +100,13 @@ public class PaperSidebarManager extends SidebarManager {
             }
         }
 
-        // Add/update current lines
+        // Add/update lines that changed
+        List<Component> lastLines = playerLines.get(receiver.getUniqueId());
         for (int i = 0; i < newLineCount; i++) {
             Component lineComponent = lineComponents.get(i);
-            int displayPosition = MAX_LINES - 1 - i;
+            if (lastLines != null && i < lastLines.size() && lineComponent.equals(lastLines.get(i))) continue;
 
+            int displayPosition = MAX_LINES - 1 - i;
             packets.add(new ClientboundSetScorePacket(
               entryNames[displayPosition],
               id,
@@ -114,6 +117,7 @@ public class PaperSidebarManager extends SidebarManager {
         }
 
         playerLineCount.put(receiver.getUniqueId(), newLineCount);
+        playerLines.put(receiver.getUniqueId(), lineComponents);
 
         paperReceiver.sendPackets(packets);
     }
@@ -153,6 +157,7 @@ public class PaperSidebarManager extends SidebarManager {
         super.shutdownReceiver(receiver);
         playerLineCount.remove(receiver.getUniqueId());
         playerTitle.remove(receiver.getUniqueId());
+        playerLines.remove(receiver.getUniqueId());
     }
 
 }

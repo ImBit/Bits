@@ -37,38 +37,37 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-// TODO: Optimise, no need to re-render blank bossbars.
 public class PaperBossbarManager extends BossbarManager {
     private static final int MAX_BOSSBARS = 10; // Arbitrary limit for allowed bossbars
 
     private final ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, BossEvent>> bossbarIds = new ConcurrentHashMap<>();
+    private final Map<UUID, boolean[]> blankSlots = new ConcurrentHashMap<>();
 
     @Override
     protected void render(Receiver receiver, WeakStorage<? extends AbstractBossbar> storage) {
         if (!(receiver instanceof PaperReceiver paperReceiver)) return;
 
-        for (int i = 0; i < MAX_BOSSBARS; i++) {
-            Component content = Component.empty();
-            BossBarColor color = BossBarColor.DEFAULT;
-            BossBarOverlay overlay = BossBarOverlay.DEFAULT;
-            Percentage progress = Percentage.ZERO;
+        boolean[] blank = blankSlots.computeIfAbsent(receiver.getUniqueId(), _ -> new boolean[MAX_BOSSBARS]);
 
+        for (int i = 0; i < MAX_BOSSBARS; i++) {
             SendableHandle<? extends AbstractBossbar> handle = storage.getFirst(SendableFilter.withData(BOSSBAR_INDEX, i)).orElse(null);
-            if (handle != null) {
-                SendableState state = handle.state(receiver);
-                content = handle.definition().content(state);
-                color = handle.definition().color(state);
-                overlay = handle.definition().overlay(state);
-                progress = handle.definition().progress(state);
+
+            if (handle == null) {
+                if (blank[i]) continue; // Already blank, nothing to re-render
+                blank[i] = true;
+                sendEventPacket(paperReceiver, i, Component.empty(), BossBarColor.DEFAULT, BossBarOverlay.DEFAULT, Percentage.ZERO);
+                continue;
             }
 
+            blank[i] = false;
+            SendableState state = handle.state(receiver);
             sendEventPacket(
               paperReceiver,
               i,
-              content,
-              color,
-              overlay,
-              progress
+              handle.definition().content(state),
+              handle.definition().color(state),
+              handle.definition().overlay(state),
+              handle.definition().progress(state)
             );
         }
     }
@@ -166,6 +165,7 @@ public class PaperBossbarManager extends BossbarManager {
     protected void shutdownReceiver(Receiver receiver) {
         super.shutdownReceiver(receiver);
         bossbarIds.remove(receiver.getUniqueId());
+        blankSlots.remove(receiver.getUniqueId());
     }
 
 }

@@ -15,22 +15,45 @@ import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import xyz.bitsquidd.bits.mc.sendable.PaperReceiver;
 import xyz.bitsquidd.bits.mc.sendable.Receiver;
 import xyz.bitsquidd.bits.mc.sendable.collection.WeakStorage;
+import xyz.bitsquidd.bits.mc.sendable.impl.SendableState;
 import xyz.bitsquidd.bits.mc.sendable.impl.actionbar.AbstractActionbar;
 import xyz.bitsquidd.bits.mc.sendable.impl.actionbar.ActionbarManager;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class PaperActionbarManager extends ActionbarManager {
+    private final Map<UUID, Component> lastContent = new ConcurrentHashMap<>();
 
     @Override
     protected void render(Receiver receiver, WeakStorage<? extends AbstractActionbar> storage) {
         if (!(receiver instanceof PaperReceiver paperReceiver)) return;
 
         ComponentBuilder<?, ?> builder = Component.text();
-        storage.getAll().forEach(actionbarHandle -> merge(builder, actionbarHandle.definition().content(actionbarHandle.state(receiver))));
+
+        storage.getAll().forEach(actionbarHandle -> {
+            SendableState state = actionbarHandle.state(receiver);
+            merge(builder, actionbarHandle.definition().content(state));
+        });
+
+        Component content = builder.build();
+        UUID uuid = receiver.getUniqueId();
+
+        Component last = lastContent.put(uuid, content);
+
+        if (content.equals(last)) return;
 
         paperReceiver.sendPackets(new ClientboundSetActionBarTextPacket(
-          PaperAdventure.asVanillaNullToEmpty(builder.build())
+          PaperAdventure.asVanillaNullToEmpty(content)
         ));
+    }
+
+    @Override
+    protected void shutdownReceiver(Receiver receiver) {
+        super.shutdownReceiver(receiver);
+        lastContent.remove(receiver.getUniqueId());
     }
 
     /**

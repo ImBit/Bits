@@ -23,9 +23,14 @@ import xyz.bitsquidd.bits.mc.sendable.impl.tablist.data.TablistPosition;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PaperTablistManager extends TablistManager {
+    private final Map<UUID, Component> lastHeader = new ConcurrentHashMap<>();
+    private final Map<UUID, Component> lastFooter = new ConcurrentHashMap<>();
 
     @Override
     protected void render(Receiver receiver, WeakStorage<? extends AbstractTablist> storage) {
@@ -45,10 +50,26 @@ public class PaperTablistManager extends TablistManager {
             positionContentMap.put(value, content);
         }
 
+        UUID uuid = receiver.getUniqueId();
+        Component header = positionContentMap.get(TablistPosition.HEADER);
+        Component footer = positionContentMap.get(TablistPosition.FOOTER);
+
+        if (Objects.equals(header, lastHeader.get(uuid)) && Objects.equals(footer, lastFooter.get(uuid))) return;
+
+        lastHeader.put(uuid, header);
+        lastFooter.put(uuid, footer);
+
         paperReceiver.sendPackets(new ClientboundTabListPacket(
-          PaperAdventure.asVanillaNullToEmpty(positionContentMap.get(TablistPosition.HEADER)),
-          PaperAdventure.asVanillaNullToEmpty(positionContentMap.get(TablistPosition.FOOTER))
+          PaperAdventure.asVanillaNullToEmpty(header),
+          PaperAdventure.asVanillaNullToEmpty(footer)
         ));
+    }
+
+    @Override
+    protected void shutdownReceiver(Receiver receiver) {
+        super.shutdownReceiver(receiver);
+        lastHeader.remove(receiver.getUniqueId());
+        lastFooter.remove(receiver.getUniqueId());
     }
 
 }
