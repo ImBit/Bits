@@ -12,7 +12,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 import java.util.Objects;
 
@@ -74,7 +73,7 @@ public record ChunkCoordinate(
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof ChunkCoordinate(int x1, int z1, World world1))) return false;
+        if (!(obj instanceof ChunkCoordinate(int x1, int z1, Key world1))) return false;
         return this.x == x1 && this.z == z1 && Objects.equals(this.world, world1);
     }
 
