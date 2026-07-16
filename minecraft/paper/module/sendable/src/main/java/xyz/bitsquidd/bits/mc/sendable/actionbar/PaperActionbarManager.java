@@ -32,18 +32,22 @@ public class PaperActionbarManager extends ActionbarManager {
         if (!(receiver instanceof PaperReceiver paperReceiver)) return;
 
         ComponentBuilder<?, ?> builder = Component.text();
+        boolean keepalive = false;
 
-        storage.getAll().forEach(actionbarHandle -> {
+        for (var actionbarHandle : storage.getAll()) {
             SendableState state = actionbarHandle.state(receiver);
             merge(builder, actionbarHandle.definition().content(state));
-        });
+
+            long tick = state.tick();
+            if (tick >= 0 && tick % actionbarHandle.definition().config().keepaliveTicks == 0) keepalive = true;
+        }
 
         Component content = builder.build();
         UUID uuid = receiver.getUniqueId();
 
         Component last = lastContent.put(uuid, content);
 
-        if (content.equals(last)) return;
+        if (!keepalive && content.equals(last)) return;
 
         paperReceiver.sendPackets(new ClientboundSetActionBarTextPacket(
           PaperAdventure.asVanillaNullToEmpty(content)
