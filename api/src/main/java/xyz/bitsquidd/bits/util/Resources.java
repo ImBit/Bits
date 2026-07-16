@@ -120,20 +120,26 @@ public final class Resources {
 
     }
 
+    public static List<String> stringList(String resourceFileName) {
+        return stringList(Resources.class, resourceFileName);
+    }
+
     /**
-     * Reads a resource file from the classpath and returns its non-empty, non-comment lines as a list of strings.
+     * Reads a resource file from the classpath of the given caller's classloader and returns its
+     * non-empty, non-comment lines as a list of strings.
      * <p>
      * Lines starting with '#' are considered comments and ignored. Lines are trimmed of whitespace.
      *
+     * @param callerClass      a class loaded by the same classloader as the resource (typically the caller's own class)
      * @param resourceFileName the name of the resource file to read
      *
      * @return a list of non-empty, non-comment lines from the resource file, or an empty list if the file cannot be read
      *
      * @since 0.0.17
      */
-    public static List<String> stringList(String resourceFileName) {
+    public static List<String> stringList(Class<?> callerClass, String resourceFileName) {
         List<String> lines = new ArrayList<>();
-        try (InputStream in = Resources.class.getClassLoader().getResourceAsStream(resourceFileName)) {
+        try (InputStream in = callerClass.getClassLoader().getResourceAsStream(resourceFileName)) {
             if (in == null) throw new IOException("Resource not found: " + resourceFileName);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                 String line;
