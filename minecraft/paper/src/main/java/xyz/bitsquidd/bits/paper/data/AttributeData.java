@@ -23,7 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import xyz.bitsquidd.bits.Bits;
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
 import xyz.bitsquidd.bits.log.Logger;
+import xyz.bitsquidd.bits.util.attribute.SerializedAttribute;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -69,6 +71,31 @@ public final class AttributeData {
 
     public NamespacedKey key() {
         return key;
+    }
+
+
+    public SerializedAttribute serialize() {
+        return new SerializedAttribute(
+          attribute.key(),
+          value,
+          switch (operation) {
+              case ADD_NUMBER -> SerializedAttribute.Operation.ADD_NUMBER;
+              case ADD_SCALAR -> SerializedAttribute.Operation.ADD_SCALAR;
+              case MULTIPLY_SCALAR_1 -> SerializedAttribute.Operation.MULTIPLY_SCALAR_1;
+          }
+        );
+    }
+
+    public static AttributeData deserialize(SerializedAttribute serializedAttribute) {
+        return new Builder(Objects.requireNonNull(Registry.ATTRIBUTE.get(serializedAttribute.attributeId()), "Attribute not found for key: " + serializedAttribute.attributeId()))
+          .value(serializedAttribute.value())
+          .operation(switch (serializedAttribute.operation()) {
+              case ADD_NUMBER -> AttributeModifier.Operation.ADD_NUMBER;
+              case ADD_SCALAR -> AttributeModifier.Operation.ADD_SCALAR;
+              case MULTIPLY_SCALAR_1 -> AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+          })
+          .key(serializedAttribute.attributeId())
+          .build();
     }
 
 
