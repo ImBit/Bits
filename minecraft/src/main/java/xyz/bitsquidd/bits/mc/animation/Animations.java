@@ -10,6 +10,7 @@ package xyz.bitsquidd.bits.mc.animation;
 import xyz.bitsquidd.bits.mc.animation.impl.Animation;
 import xyz.bitsquidd.bits.util.math.easing.Easings;
 
+
 public final class Animations {
     private Animations() {}
 
@@ -45,6 +46,7 @@ public final class Animations {
           .duration(duration)
           .loop(AnimationLoopMode.STRAIGHT)
           .keyframe(0.00f, AnimationPose.builder().rotateY(0f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(0.50f, AnimationPose.builder().rotateY(180f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
           .keyframe(1.00f, AnimationPose.builder().rotateY(360f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
           .build();
     }
