@@ -15,20 +15,23 @@ import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
 
 import java.util.function.Consumer;
 
-public abstract class AnimationPlayer {
+
+// TODO
+//  Refine animation system.
+public abstract class AnimationPlayer<D> {
     private final Animation animation;
 
     private int currentTick = 0;
-    private @Nullable Consumer<AnimationPlayer> onComplete;
+    private @Nullable Consumer<AnimationPlayer<D>> onComplete;
     private @Nullable BukkitTask ticker;
 
     public AnimationPlayer(Animation animation) {
         this.animation = animation;
     }
 
-    public final void play() {
+    public final void play(D display) {
         ticker = Runnables.cleanup(ticker);
-        ticker = Runnables.timer(() -> tick(currentTick++), 0, 1);
+        ticker = Runnables.timer(() -> tick(display, currentTick++), 0, 1);
     }
 
     public final void pause() {
@@ -41,21 +44,21 @@ public abstract class AnimationPlayer {
         if (onComplete != null) onComplete.accept(this);
     }
 
-    public final AnimationPlayer onComplete(Consumer<AnimationPlayer> callback) {
+    public final AnimationPlayer<D> onComplete(Consumer<AnimationPlayer<D>> callback) {
         this.onComplete = callback;
         return this;
     }
 
-    public final void tick(int tick) {
+    public final void tick(D display, int tick) {
         if (animation.isFinished(tick)) {
             stop();
             return;
         }
 
         AnimationPose pose = animation.evaluate(tick);
-        applyPose(pose);
+        applyPose(display, pose);
     }
 
-    protected abstract void applyPose(AnimationPose pose);
+    protected abstract void applyPose(D display, AnimationPose pose);
 
 }

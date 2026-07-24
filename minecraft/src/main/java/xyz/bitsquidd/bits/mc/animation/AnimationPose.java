@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
 
+
 /**
  * Represents the pose of an animation at a specific point in time, consisting of translation, rotation, and scale.
  * <p>
