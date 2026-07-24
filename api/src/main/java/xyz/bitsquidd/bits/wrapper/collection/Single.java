@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -109,6 +110,19 @@ public final class Single<T> {
     public void removeIf(Predicate<? super T> filter) {
         final T currentValue = value;
         if (currentValue != null && filter.test(currentValue)) this.value = null;
+    }
+
+
+    /**
+     * If a value is present, performs the given action with the value, otherwise does nothing.
+     *
+     * @param action the action to perform if a value is present
+     *
+     * @since 0.0.22
+     */
+    public void ifPresent(Consumer<? super T> action) {
+        final T currentValue = value;
+        if (currentValue != null) action.accept(currentValue);
     }
 
 
