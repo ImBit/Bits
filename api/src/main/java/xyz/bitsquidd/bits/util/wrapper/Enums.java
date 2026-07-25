@@ -68,7 +68,7 @@ public final class Enums {
      *
      * @since 0.0.15
      */
-    public static <E extends Enum<E>> String toIdentifier(E constant) {
+    public static String toIdentifier(Enum<?> constant) {
         return constant.name().toLowerCase(Locale.ROOT);
     }
 
