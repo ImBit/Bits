@@ -14,10 +14,10 @@ import xyz.bitsquidd.bits.util.math.easing.Easings;
 public final class Animations {
     private Animations() {}
 
-    public static Animation floating() {
-        return floating(40, 0.5f);
+    //region Generic transformations
+    public static Animation translation(float x, float y, float z) {
+        return Animation.constant(AnimationPose.builder().translation(x, y, z).build());
     }
-
 
     public static Animation xTranslation(float distance) {
         return Animation.constant(AnimationPose.builder().translateX(distance).build());
@@ -31,6 +31,47 @@ public final class Animations {
         return Animation.constant(AnimationPose.builder().translateZ(distance).build());
     }
 
+    public static Animation scale(float scale) {
+        return Animation.constant(AnimationPose.builder().scale(scale).build());
+    }
+
+    public static Animation scale(float x, float y, float z) {
+        return Animation.constant(AnimationPose.builder().scale(x, y, z).build());
+    }
+
+    public static Animation xScale(float scale) {
+        return Animation.constant(AnimationPose.builder().scaleX(scale).build());
+    }
+
+    public static Animation yScale(float scale) {
+        return Animation.constant(AnimationPose.builder().scaleY(scale).build());
+    }
+
+    public static Animation zScale(float scale) {
+        return Animation.constant(AnimationPose.builder().scaleZ(scale).build());
+    }
+
+    public static Animation rotation(float x, float y, float z) {
+        return Animation.constant(AnimationPose.builder().rotateX(x).rotateY(y).rotateZ(z).build());
+    }
+
+    public static Animation xRotation(float angle) {
+        return Animation.constant(AnimationPose.builder().rotateX(angle).build());
+    }
+
+    public static Animation yRotation(float angle) {
+        return Animation.constant(AnimationPose.builder().rotateY(angle).build());
+    }
+
+    public static Animation zRotation(float angle) {
+        return Animation.constant(AnimationPose.builder().rotateZ(angle).build());
+    }
+    //endregion
+
+    //region Floating
+    public static Animation floating() {
+        return floating(40, 0.5f);
+    }
 
     public static Animation floating(int duration, float height) {
         return Animation.of()
@@ -40,6 +81,8 @@ public final class Animations {
           .keyframe(1.00f, AnimationPose.builder().translateY(height).build(), Easings.IN_OUT_SIN)
           .build();
     }
+    //endregion
+
 
     public static Animation spin(int duration) {
         return Animation.of()
@@ -98,19 +141,51 @@ public final class Animations {
     }
 
     public static Animation zoomIn(int duration) {
+        return zoomIn(duration, 0f);
+    }
+
+    public static Animation zoomIn(int duration, float startScale) {
         return Animation.of()
           .duration(duration)
-          .keyframe(0.00f, AnimationPose.builder().scale(0).build(), Easings.OUT_BACK)
+          .keyframe(0.00f, AnimationPose.builder().scale(startScale).build(), Easings.OUT_BACK)
           .keyframe(1.00f, AnimationPose.builder().scale(1f).build(), Easings.OUT_BACK)
           .build();
     }
 
     public static Animation zoomOut(int duration) {
+        return zoomOut(duration, 0f);
+    }
+
+    public static Animation zoomOut(int duration, float endScale) {
         return Animation.of()
           .duration(duration)
           .keyframe(0.00f, AnimationPose.builder().scale(1f).build(), Easings.IN_BACK)
-          .keyframe(1.00f, AnimationPose.builder().scale(0).build(), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationPose.builder().scale(endScale).build(), Easings.IN_BACK)
           .build();
+    }
+
+    public static Animation moveUp(int duration, float distance) {
+        return Animation.of()
+          .duration(duration)
+          .keyframe(0.00f, AnimationPose.builder().translateY(-distance).build(), Easings.OUT_BACK)
+          .keyframe(1.00f, AnimationPose.builder().translateY(0).build(), Easings.OUT_BACK)
+          .build();
+    }
+
+    public static Animation moveUp(int duration) {
+        return moveUp(duration, 1.0f);
+    }
+
+    public static Animation moveDown(int duration, float distance) {
+        return Animation.of()
+          .duration(duration)
+          .keyframe(0.00f, AnimationPose.builder().translateY(0).build(), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationPose.builder().translateY(-distance).build(), Easings.IN_BACK)
+          .build();
+    }
+
+    public static Animation moveDown(int duration) {
+        return moveDown(duration, 1.0f);
     }
 
 
