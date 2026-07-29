@@ -8,10 +8,8 @@
 package xyz.bitsquidd.bits.mc.animation;
 
 import org.bukkit.entity.Display;
-
 import org.bukkit.util.Transformation;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 
 public class PaperDisplay implements Animatable {
@@ -25,21 +23,6 @@ public class PaperDisplay implements Animatable {
         return new PaperDisplay(display);
     }
 
-
-    @Override
-    public Vector3f getTranslation() {
-        return display.getTransformation().getTranslation();
-    }
-
-    @Override
-    public Quaternionf getRotation() {
-        return display.getTransformation().getLeftRotation();
-    }
-
-    @Override
-    public Vector3f getScale() {
-        return display.getTransformation().getScale();
-    }
 
     @Override
     public void applyPose(AnimationPoseNew pose) {

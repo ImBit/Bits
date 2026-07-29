@@ -7,8 +7,6 @@
 
 package xyz.bitsquidd.bits.mc.animation;
 
-import org.joml.Quaternionf;
-
 import xyz.bitsquidd.bits.util.math.easing.Easings;
 
 
@@ -34,7 +32,8 @@ public final class Animations {
         return Animation.basic(duration)
           .loop(AnimationProgressMode.STRAIGHT)
           .keyframe(0.00f, AnimationKeyframe.Rotation.empty(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
-          .keyframe(1.00f, new AnimationKeyframe.Rotation(d -> new Quaternionf().rotateY((float)(Math.PI * 2f))), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(0.50f, AnimationKeyframe.Rotation.y(180f), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(1.00f, AnimationKeyframe.Rotation.y(360f), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
           .build();
     }
 
@@ -79,30 +78,43 @@ public final class Animations {
           .build();
     }
 
+    public static Animation zoomIn(int duration, float startScale, float endScale) {
+        return Animation.basic(duration)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Scale.of(startScale), Easings.OUT_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Scale.of(endScale), Easings.OUT_BACK)
+          .build();
+    }
+
+    public static Animation zoomIn(int duration, float startScale) {
+        return zoomIn(duration, startScale, 1f);
+    }
+
     public static Animation zoomIn(int duration) {
         return zoomIn(duration, 0f);
     }
 
-    public static Animation zoomIn(int duration, float startScale) {
+
+    public static Animation zoomOut(int duration, float startScale, float endScale) {
         return Animation.basic(duration)
-          .keyframe(0.00f, AnimationKeyframe.Scale.of(startScale), Easings.OUT_BACK)
-          .keyframe(1.00f, AnimationKeyframe.Scale.empty(), Easings.OUT_BACK)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Scale.of(startScale), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Scale.of(endScale), Easings.IN_BACK)
           .build();
+    }
+
+    public static Animation zoomOut(int duration, float startScale) {
+        return zoomOut(duration, startScale, 0f);
     }
 
     public static Animation zoomOut(int duration) {
         return zoomOut(duration, 0f);
     }
 
-    public static Animation zoomOut(int duration, float endScale) {
-        return Animation.basic(duration)
-          .keyframe(0.00f, AnimationKeyframe.Scale.empty(), Easings.IN_BACK)
-          .keyframe(1.00f, AnimationKeyframe.Scale.of(endScale), Easings.IN_BACK)
-          .build();
-    }
 
     public static Animation moveUp(int duration, float distance) {
         return Animation.basic(duration)
+          .loops(1)
           .keyframe(0.00f, AnimationKeyframe.Translation.y(-distance), Easings.OUT_BACK)
           .keyframe(1.00f, AnimationKeyframe.Translation.empty(), Easings.OUT_BACK)
           .build();
@@ -114,6 +126,7 @@ public final class Animations {
 
     public static Animation moveDown(int duration, float distance) {
         return Animation.basic(duration)
+          .loops(1)
           .keyframe(0.00f, AnimationKeyframe.Translation.empty(), Easings.IN_BACK)
           .keyframe(1.00f, AnimationKeyframe.Translation.y(-distance), Easings.IN_BACK)
           .build();

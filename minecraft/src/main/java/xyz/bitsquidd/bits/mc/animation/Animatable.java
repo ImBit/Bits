@@ -7,18 +7,8 @@
 
 package xyz.bitsquidd.bits.mc.animation;
 
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-
 
 public interface Animatable {
-    Vector3f getTranslation();
-
-    Quaternionf getRotation();
-
-    Vector3f getScale();
-
-
     void applyPose(AnimationPoseNew pose);
 
 }

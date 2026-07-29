@@ -17,26 +17,10 @@ public sealed interface AnimationKeyframe {
 
     void applyTo(AnimationPoseNew pose, AnimationData data, float proportion);
 
-    default AnimationKeyframe and(AnimationKeyframe other) {
-        return new Combined(this, other);
+    default void applyBlended(AnimationPoseNew pose, AnimationData data, AnimationKeyframe other, float proportion) {
+        this.applyTo(pose, data, 1f - proportion);
+        other.applyTo(pose, data, proportion);
     }
-
-    final class Combined implements AnimationKeyframe {
-        private final AnimationKeyframe[] keyframes;
-
-        public Combined(AnimationKeyframe... keyframes) {
-            this.keyframes = keyframes;
-        }
-
-        @Override
-        public void applyTo(AnimationPoseNew pose, AnimationData data, float proportion) {
-            for (AnimationKeyframe keyframe : keyframes) {
-                keyframe.applyTo(pose, data, proportion);
-            }
-        }
-
-    }
-
 
     record Translation(
       Function<AnimationData, Vector3f> translation
@@ -91,16 +75,16 @@ public sealed interface AnimationKeyframe {
             return new Rotation(d -> new Quaternionf(x, y, z, w));
         }
 
-        public static Rotation x(float x) {
-            return new Rotation(d -> new Quaternionf().rotateX(x));
+        public static Rotation x(float degrees) {
+            return new Rotation(d -> new Quaternionf().rotateX((float)Math.toRadians(degrees)));
         }
 
-        public static Rotation y(float y) {
-            return new Rotation(d -> new Quaternionf().rotateY(y));
+        public static Rotation y(float degrees) {
+            return new Rotation(d -> new Quaternionf().rotateY((float)Math.toRadians(degrees)));
         }
 
-        public static Rotation z(float z) {
-            return new Rotation(d -> new Quaternionf().rotateZ(z));
+        public static Rotation z(float degrees) {
+            return new Rotation(d -> new Quaternionf().rotateZ((float)Math.toRadians(degrees)));
         }
 
 
@@ -108,6 +92,18 @@ public sealed interface AnimationKeyframe {
         public void applyTo(AnimationPoseNew pose, AnimationData data, float proportion) {
             Quaternionf effective = rotation.apply(data).slerp(new Quaternionf(), 1 - proportion);
             pose.rotation().mul(effective); // Rotation combines multiplicatively
+        }
+
+        @Override
+        public void applyBlended(AnimationPoseNew pose, AnimationData data, AnimationKeyframe other, float proportion) {
+            if (other instanceof Rotation(Function<AnimationData, Quaternionf> otherRotation)) {
+                Quaternionf from = this.rotation.apply(data);
+                Quaternionf to = otherRotation.apply(data);
+                Quaternionf blended = new Quaternionf(from).slerp(to, proportion);
+                pose.rotation().mul(blended);
+            } else {
+                AnimationKeyframe.super.applyBlended(pose, data, other, proportion);
+            }
         }
 
     }
@@ -149,6 +145,18 @@ public sealed interface AnimationKeyframe {
         public void applyTo(AnimationPoseNew pose, AnimationData data, float proportion) {
             Vector3f effective = scale.apply(data).lerp(new Vector3f(1), 1 - proportion);
             pose.scale().mul(effective); // Scale combines multiplicatively
+        }
+
+        @Override
+        public void applyBlended(AnimationPoseNew pose, AnimationData data, AnimationKeyframe other, float proportion) {
+            if (other instanceof Scale(Function<AnimationData, Vector3f> otherScale)) {
+                Vector3f from = this.scale.apply(data);
+                Vector3f to = otherScale.apply(data);
+                Vector3f blended = new Vector3f(from).lerp(to, proportion);
+                pose.scale().mul(blended);
+            } else {
+                AnimationKeyframe.super.applyBlended(pose, data, other, proportion);
+            }
         }
 
     }

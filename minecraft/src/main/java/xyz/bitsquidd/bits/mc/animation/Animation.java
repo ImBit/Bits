@@ -5,13 +5,7 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.mc.animation;/*
- * This file is part of a Bit libraries package.
- * Licensed under the GNU Lesser General Public License v3.0.
- *
- * Copyright (c) 2023-2026 ImBit
- */
-
+package xyz.bitsquidd.bits.mc.animation;
 
 import xyz.bitsquidd.bits.lifecycle.builder.Buildable;
 import xyz.bitsquidd.bits.util.math.easing.Easing;
@@ -29,12 +23,27 @@ public sealed interface Animation {
     boolean isFinished(AnimationData data);
 
     default Animation and(Animation other) {
-        return new Compound(List.of(this, other));
+        List<Animation> flattened = new ArrayList<>();
+        if (this instanceof Compound c) {
+            flattened.addAll(c.animations);
+        } else {
+            flattened.add(this);
+        }
+        if (other instanceof Compound c) {
+            flattened.addAll(c.animations);
+        } else {
+            flattened.add(other);
+        }
+        return new Compound(flattened);
     }
 
 
     static Basic.Builder basic(long ticks) {
         return new Basic.Builder(ticks);
+    }
+
+    static Constant constant(AnimationKeyframe frame) {
+        return new Constant(frame);
     }
 
 
@@ -60,11 +69,27 @@ public sealed interface Animation {
             int size = baked.size();
             long tick = data.currentTick();
 
-            float progress = loopMode.transform((float)tick / size);
-            int effectiveIndex = Math.min(size - 1, Math.round(progress * size));
+            int effectiveIndex = switch (loopMode) {
+                case STRAIGHT -> (int)(tick % size);
+                case PING_PONG -> {
+                    long cycle = tick / size;
+                    int cycleTick = (int)(tick % size);
+                    yield (cycle % 2 == 1) ? size - 1 - cycleTick : cycleTick;
+                }
+            };
 
             KeyframeRecord record = baked.get(effectiveIndex);
-            record.keyframes().forEach(pair -> pair.getFirst().applyTo(pose, data, pair.getSecond()));
+            List<Pair<AnimationKeyframe, Float>> keyframes = record.keyframes();
+
+            // Crossfade tick: blend the two active keyframes directly rather than composing two independently-faded values, which is not equivalent for rotation.
+            if (keyframes.size() == 2) {
+                AnimationKeyframe from = keyframes.get(0).getFirst();
+                AnimationKeyframe to = keyframes.get(1).getFirst();
+                float proportion = keyframes.get(1).getSecond();
+                from.applyBlended(pose, data, to, proportion);
+            } else {
+                keyframes.forEach(pair -> pair.getFirst().applyTo(pose, data, pair.getSecond()));
+            }
         }
 
         @Override
