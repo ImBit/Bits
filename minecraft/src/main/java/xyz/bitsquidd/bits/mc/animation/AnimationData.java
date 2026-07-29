@@ -5,7 +5,7 @@
  * Copyright (c) 2023-2026 ImBit
  */
 
-package xyz.bitsquidd.bits.mc.animation.newe;
+package xyz.bitsquidd.bits.mc.animation;
 
 public record AnimationData(
   long currentTick

@@ -10,32 +10,26 @@ package xyz.bitsquidd.bits.mc.animation;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
-import xyz.bitsquidd.bits.mc.animation.impl.Animation;
 import xyz.bitsquidd.bits.paper.util.bukkit.runnable.Runnables;
 
 import java.util.function.Consumer;
 
 
-// TODO
-//  Refine animation system.
-public abstract class AnimationPlayer<D> {
+public final class AnimationPlayer<A extends Animatable> {
     private final Animation animation;
 
-    private int currentTick = 0;
-    private @Nullable Consumer<AnimationPlayer<D>> onComplete;
+    private long currentTick = 0;
+    private @Nullable Consumer<AnimationPlayer<A>> onComplete;
     private @Nullable BukkitTask ticker;
 
     public AnimationPlayer(Animation animation) {
         this.animation = animation;
     }
 
-    public final void play(D display) {
+    public final void play(A animatable) {
         ticker = Runnables.cleanup(ticker);
-        ticker = Runnables.timer(() -> tick(display, currentTick++), 0, 1);
-    }
-
-    public final void pause() {
-        ticker = Runnables.cleanup(ticker);
+        currentTick = 0;
+        ticker = Runnables.timer(() -> tick(animatable, currentTick++), 0, 1);
     }
 
     public final void stop() {
@@ -44,21 +38,23 @@ public abstract class AnimationPlayer<D> {
         if (onComplete != null) onComplete.accept(this);
     }
 
-    public final AnimationPlayer<D> onComplete(Consumer<AnimationPlayer<D>> callback) {
+    public final AnimationPlayer<A> onComplete(Consumer<AnimationPlayer<A>> callback) {
         this.onComplete = callback;
         return this;
     }
 
-    public final void tick(D display, int tick) {
-        if (animation.isFinished(tick)) {
+    public final void tick(A animatable, long tick) {
+        AnimationData data = new AnimationData(tick);
+
+        if (animation.isFinished(data)) {
             stop();
             return;
         }
 
-        AnimationPose pose = animation.evaluate(tick);
-        applyPose(display, pose);
+        // Fresh identity every tick: animation.mutate() computes this tick's complete snapshot,
+        AnimationPoseNew pose = AnimationPoseNew.identity();
+        animation.mutate(pose, data);
+        animatable.applyPose(pose);
     }
-
-    protected abstract void applyPose(D display, AnimationPose pose);
 
 }
