@@ -7,110 +7,133 @@
 
 package xyz.bitsquidd.bits.mc.animation;
 
-import xyz.bitsquidd.bits.mc.animation.impl.Animation;
 import xyz.bitsquidd.bits.util.math.easing.Easings;
 
 
 public final class Animations {
     private Animations() {}
 
+    //region Floating
     public static Animation floating() {
         return floating(40, 0.5f);
     }
 
-
-    public static Animation xTranslation(float distance) {
-        return Animation.constant(AnimationPose.builder().translateX(distance).build());
-    }
-
-    public static Animation yTranslation(float height) {
-        return Animation.constant(AnimationPose.builder().translateY(height).build());
-    }
-
-    public static Animation zTranslation(float distance) {
-        return Animation.constant(AnimationPose.builder().translateZ(distance).build());
-    }
-
-
     public static Animation floating(int duration, float height) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().translateY(0f).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().translateY(height).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Translation.y(0f), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Translation.y(height), Easings.IN_OUT_SIN)
           .build();
     }
+    //endregion
+
 
     public static Animation spin(int duration) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.STRAIGHT)
-          .keyframe(0.00f, AnimationPose.builder().rotateY(0f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
-          .keyframe(0.50f, AnimationPose.builder().rotateY(180f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
-          .keyframe(1.00f, AnimationPose.builder().rotateY(360f).build(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.STRAIGHT)
+          .keyframe(0.00f, AnimationKeyframe.Rotation.empty(), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(0.50f, AnimationKeyframe.Rotation.y(180f), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
+          .keyframe(1.00f, AnimationKeyframe.Rotation.y(360f), Easings.IN_OUT_SIN.blend(Easings.LINEAR, 0.5f))
           .build();
     }
 
     public static Animation pulse(int duration, float minScale, float maxScale) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().scale(minScale).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().scale(maxScale).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Scale.of(minScale), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Scale.of(maxScale), Easings.IN_OUT_SIN)
           .build();
     }
 
 
     public static Animation swayX(int duration, float angle) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().rotateX(-angle).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().rotateX(angle).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Rotation.x(-angle), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Rotation.x(angle), Easings.IN_OUT_SIN)
           .build();
     }
 
     public static Animation swayZ(int duration, float angle) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().rotateZ(-angle).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().rotateZ(angle).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Rotation.z(-angle), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Rotation.z(angle), Easings.IN_OUT_SIN)
           .build();
     }
 
     public static Animation wiggleX(int duration, float amplitude) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().translateX(-amplitude).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().translateX(amplitude).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Translation.x(-amplitude), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Translation.x(amplitude), Easings.IN_OUT_SIN)
           .build();
     }
 
     public static Animation wiggleZ(int duration, float amplitude) {
-        return Animation.of()
-          .duration(duration)
-          .loop(AnimationLoopMode.PING_PONG)
-          .keyframe(0.00f, AnimationPose.builder().translateZ(-amplitude).build(), Easings.IN_OUT_SIN)
-          .keyframe(1.00f, AnimationPose.builder().translateZ(amplitude).build(), Easings.IN_OUT_SIN)
+        return Animation.basic(duration)
+          .loop(AnimationProgressMode.PING_PONG)
+          .keyframe(0.00f, AnimationKeyframe.Translation.z(-amplitude), Easings.IN_OUT_SIN)
+          .keyframe(1.00f, AnimationKeyframe.Translation.z(amplitude), Easings.IN_OUT_SIN)
           .build();
+    }
+
+    public static Animation zoomIn(int duration, float startScale, float endScale) {
+        return Animation.basic(duration)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Scale.of(startScale), Easings.OUT_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Scale.of(endScale), Easings.OUT_BACK)
+          .build();
+    }
+
+    public static Animation zoomIn(int duration, float startScale) {
+        return zoomIn(duration, startScale, 1f);
     }
 
     public static Animation zoomIn(int duration) {
-        return Animation.of()
-          .duration(duration)
-          .keyframe(0.00f, AnimationPose.builder().scale(0).build(), Easings.OUT_BACK)
-          .keyframe(1.00f, AnimationPose.builder().scale(1f).build(), Easings.OUT_BACK)
+        return zoomIn(duration, 0f);
+    }
+
+
+    public static Animation zoomOut(int duration, float startScale, float endScale) {
+        return Animation.basic(duration)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Scale.of(startScale), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Scale.of(endScale), Easings.IN_BACK)
           .build();
     }
 
+    public static Animation zoomOut(int duration, float startScale) {
+        return zoomOut(duration, startScale, 0f);
+    }
+
     public static Animation zoomOut(int duration) {
-        return Animation.of()
-          .duration(duration)
-          .keyframe(0.00f, AnimationPose.builder().scale(1f).build(), Easings.IN_BACK)
-          .keyframe(1.00f, AnimationPose.builder().scale(0).build(), Easings.IN_BACK)
+        return zoomOut(duration, 0f);
+    }
+
+
+    public static Animation moveUp(int duration, float distance) {
+        return Animation.basic(duration)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Translation.y(-distance), Easings.OUT_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Translation.empty(), Easings.OUT_BACK)
           .build();
+    }
+
+    public static Animation moveUp(int duration) {
+        return moveUp(duration, 1.0f);
+    }
+
+    public static Animation moveDown(int duration, float distance) {
+        return Animation.basic(duration)
+          .loops(1)
+          .keyframe(0.00f, AnimationKeyframe.Translation.empty(), Easings.IN_BACK)
+          .keyframe(1.00f, AnimationKeyframe.Translation.y(-distance), Easings.IN_BACK)
+          .build();
+    }
+
+    public static Animation moveDown(int duration) {
+        return moveDown(duration, 1.0f);
     }
 
 

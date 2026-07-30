@@ -88,10 +88,13 @@ public class BasicLogger extends Logger {
             return;
         }
 
-        StackTraceElement[] stackTrace = throwable.getStackTrace();
+        Throwable real = throwable;
+        while (real.getCause() != null && real.getCause() != real) real = real.getCause();
+
+        StackTraceElement[] stackTrace = real.getStackTrace();
         String header;
         if (stackTrace.length == 0) {
-            header = String.format("%s |-> Exception (no stack trace) - %s", msg, throwable.getMessage());
+            header = String.format("%s |-> Exception (no stack trace) - %s", msg, real.getMessage());
         } else {
             StackTraceElement origin = stackTrace[0];
             header = String.format(
@@ -101,13 +104,13 @@ public class BasicLogger extends Logger {
               origin.getMethodName(),
               origin.getFileName(),
               origin.getLineNumber(),
-              throwable.getMessage()
+              real.getMessage()
             );
         }
         System.out.println(LogType.ERROR.format(header));
 
         if (flags.logExtendedError()) {
-            for (StackTraceElement element : throwable.getStackTrace()) {
+            for (StackTraceElement element : real.getStackTrace()) {
                 System.out.println(PrettyLogLevel.RED.formatMessage("\tat " + element));
             }
         }

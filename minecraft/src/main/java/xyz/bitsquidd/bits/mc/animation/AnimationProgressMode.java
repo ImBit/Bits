@@ -11,12 +11,13 @@ import org.jetbrains.annotations.Range;
 
 import java.util.function.Function;
 
+
 /**
  * Defines how an animation should play.
  *
  * @since 0.0.13
  */
-public enum AnimationLoopMode {
+public enum AnimationProgressMode {
     // Loops back to the start
     STRAIGHT(progress -> progress % 1),
     // Reverses direction each cycle
@@ -33,7 +34,7 @@ public enum AnimationLoopMode {
 
     private final Function<Float, Float> progressTransformer;
 
-    AnimationLoopMode(Function<Float, Float> progressTransformer) {
+    AnimationProgressMode(Function<Float, Float> progressTransformer) {
         this.progressTransformer = progressTransformer;
     }
 
