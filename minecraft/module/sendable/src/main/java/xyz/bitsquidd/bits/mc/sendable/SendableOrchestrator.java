@@ -7,9 +7,7 @@
 
 package xyz.bitsquidd.bits.mc.sendable;
 
-import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import xyz.bitsquidd.bits.exception.BitsException;
 import xyz.bitsquidd.bits.lifecycle.manager.BitsModule;
@@ -22,7 +20,6 @@ import xyz.bitsquidd.bits.mc.sendable.impl.title.TitleManager;
 import xyz.bitsquidd.bits.mc.sendable.impl.waypoint.WaypointManager;
 
 import java.util.Collection;
-import java.util.Set;
 
 
 public abstract class SendableOrchestrator extends ManagerContainer<SendableManager<?>> implements BitsModule {
@@ -35,7 +32,6 @@ public abstract class SendableOrchestrator extends ManagerContainer<SendableMana
     private final TitleManager titleManager = registerManager(createTitleManager());
     private final WaypointManager waypointManager = registerManager(createWaypointManager());
 
-    private final ImmutableSet<SendableManager<?>> cachedManagers = ImmutableSet.copyOf(getAllManagers().stream().filter(m -> m instanceof SendableManager).map(m -> (SendableManager<?>)m).toList());
 
     protected SendableOrchestrator() {
         if (instance != null) throw BitsException.INSTANCE_ALREADY_EXISTS(SendableOrchestrator.class);
@@ -48,17 +44,11 @@ public abstract class SendableOrchestrator extends ManagerContainer<SendableMana
     }
 
 
-    @Unmodifiable
-    public final Set<SendableManager<?>> getSendableManagers() {
-        return cachedManagers;
-    }
-
-
     public abstract Collection<? extends Receiver> getAllReceivers();
 
 
     protected final void tickAll() {
-        getSendableManagers().forEach(SendableManager::tickAll);
+        getAllManagers().forEach(SendableManager::tickAll);
     }
 
 

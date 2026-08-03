@@ -89,12 +89,12 @@ public class PaperSendableOrchestrator extends SendableOrchestrator implements P
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        getSendableManagers().forEach(manager -> manager.startupReceiver(createReceiver(event.getPlayer())));
+        getAllManagers().forEach(manager -> manager.startupReceiver(createReceiver(event.getPlayer())));
     }
 
     @EventHandler
     public final void onPlayerQuit(PlayerQuitEvent event) {
-        getSendableManagers().forEach(manager -> manager.shutdownReceiver(createReceiver(event.getPlayer())));
+        getAllManagers().forEach(manager -> manager.shutdownReceiver(createReceiver(event.getPlayer())));
     }
 
 
