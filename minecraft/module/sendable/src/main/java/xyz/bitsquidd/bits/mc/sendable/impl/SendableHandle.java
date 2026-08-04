@@ -13,6 +13,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import xyz.bitsquidd.bits.mc.sendable.Receiver;
+import xyz.bitsquidd.bits.mc.sendable.RelayReceiver;
 import xyz.bitsquidd.bits.mc.sendable.SendableConfig;
 import xyz.bitsquidd.bits.mc.sendable.SendableManager;
 import xyz.bitsquidd.bits.wrapper.Percentage;
@@ -150,7 +151,12 @@ public final class SendableHandle<S extends Sendable> {
 
     private void triggerExpire() {
         definition.onExpire(state(receiver));
-        manager.onExpire(receiver, this);
+
+        if (receiver instanceof RelayReceiver relay) {
+            relay.getChildren().forEach(child -> manager.onExpire(child, this));
+        } else {
+            manager.onExpire(receiver, this);
+        }
     }
 
 
