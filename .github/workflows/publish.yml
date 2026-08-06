@@ -10,6 +10,6 @@ jobs:
   release:
     uses: Orbitary/Convention/.github/workflows/publish.yml@main
     with:
-      modules: "api,fabric,paper,velocity"
+      modules: "api,minecraft/fabric,minecraft/paper/bundle,minecraft/velocity/bundle"
       gradleGroup: "xyz.bitsquidd.bits"
     secrets: inherit
