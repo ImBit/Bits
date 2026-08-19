@@ -7,13 +7,14 @@
 
 package xyz.bitsquidd.bits.mc.sendable;
 
+import java.util.Collection;
 import java.util.UUID;
 
 
 /**
  * Storage for all globally sent sendables. This is a singleton, and should only be used for sendables sent to all players.
  */
-public final class GlobalReceiver implements Receiver {
+public final class GlobalReceiver implements RelayReceiver {
     public static final GlobalReceiver INSTANCE = new GlobalReceiver();
     private static final UUID GLOBAL_RECEIVER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
@@ -22,6 +23,11 @@ public final class GlobalReceiver implements Receiver {
     @Override
     public UUID getUniqueId() {
         return GLOBAL_RECEIVER_UUID;
+    }
+
+    @Override
+    public Collection<? extends Receiver> getChildren() {
+        return SendableOrchestrator.get().getAllReceivers();
     }
 
     @Override

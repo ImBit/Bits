@@ -44,7 +44,7 @@ public interface Receiver {
      * @since 0.0.20
      */
     default void removeSendables(SendableFilter<? super Sendable> filter) {
-        SendableOrchestrator.get().getSendableManagers().forEach(manager -> manager.remove(this, filter));
+        SendableOrchestrator.get().getAllManagers().forEach(manager -> manager.remove(this, filter));
     }
 
     /**
@@ -82,7 +82,7 @@ public interface Receiver {
      * @since 0.0.20
      */
     default List<? extends SendableHandle<? extends Sendable>> getSendables(SendableFilter<? super Sendable> filter) {
-        return SendableOrchestrator.get().getSendableManagers().stream()
+        return SendableOrchestrator.get().getAllManagers().stream()
           .flatMap(manager -> manager.getOrCreateCollection(this).get(filter).stream())
           .toList();
     }
