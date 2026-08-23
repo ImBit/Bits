@@ -57,7 +57,7 @@ public final class PrettyLogLevel {
     }
 
     private static String findCallerClass() {
-        return StackWalker.getInstance().walk(frames -> frames
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(frames -> frames
           .map(StackWalker.StackFrame::getDeclaringClass)
           .filter(clazz -> clazz != PrettyLogLevel.class && clazz != LogType.class && !Logger.class.isAssignableFrom(clazz))
           .findFirst()
