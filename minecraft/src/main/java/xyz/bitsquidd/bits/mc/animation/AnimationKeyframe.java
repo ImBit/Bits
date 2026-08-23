@@ -22,6 +22,18 @@ public sealed interface AnimationKeyframe {
         other.applyTo(pose, data, proportion);
     }
 
+
+    record Empty() implements AnimationKeyframe {
+        public static final Empty INSTANCE = new Empty();
+
+        @Override
+        public void applyTo(AnimationPose pose, AnimationData data, float proportion) {
+            // No-op
+        }
+
+    }
+
+
     record Translation(
       Function<AnimationData, Vector3f> translation
     ) implements AnimationKeyframe {

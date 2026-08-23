@@ -13,6 +13,12 @@ import xyz.bitsquidd.bits.util.math.easing.Easings;
 public final class Animations {
     private Animations() {}
 
+
+    public static Animation empty() {
+        return Animation.constant(AnimationKeyframe.Empty.INSTANCE);
+    }
+
+
     //region Floating
     public static Animation floating() {
         return floating(40, 0.5f);
