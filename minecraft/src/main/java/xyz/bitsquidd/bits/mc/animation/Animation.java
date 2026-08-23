@@ -18,7 +18,7 @@ import java.util.List;
 
 public sealed interface Animation {
 
-    void mutate(AnimationPoseNew pose, AnimationData data);
+    void mutate(AnimationPose pose, AnimationData data);
 
     boolean isFinished(AnimationData data);
 
@@ -55,9 +55,9 @@ public sealed interface Animation {
 
         private final List<KeyframeRecord> baked;
         private final long loops;
-        private final AnimationProgressMode loopMode;
+        private final AnimationLoopMode loopMode;
 
-        private Basic(List<KeyframeRecord> baked, long loops, AnimationProgressMode loopMode) {
+        private Basic(List<KeyframeRecord> baked, long loops, AnimationLoopMode loopMode) {
             this.baked = baked;
             this.loops = loops;
             this.loopMode = loopMode;
@@ -65,18 +65,11 @@ public sealed interface Animation {
 
 
         @Override
-        public void mutate(AnimationPoseNew pose, AnimationData data) {
+        public void mutate(AnimationPose pose, AnimationData data) {
             int size = baked.size();
             long tick = data.currentTick();
 
-            int effectiveIndex = switch (loopMode) {
-                case STRAIGHT -> (int)(tick % size);
-                case PING_PONG -> {
-                    long cycle = tick / size;
-                    int cycleTick = (int)(tick % size);
-                    yield (cycle % 2 == 1) ? size - 1 - cycleTick : cycleTick;
-                }
-            };
+            int effectiveIndex = loopMode.effectiveIndex(tick, size);
 
             KeyframeRecord record = baked.get(effectiveIndex);
             List<Pair<AnimationKeyframe, Float>> keyframes = record.keyframes();
@@ -103,7 +96,7 @@ public sealed interface Animation {
             private final List<TimelineEntry> entries = new ArrayList<>();
 
             private long loops = -1;
-            private AnimationProgressMode loopMode = AnimationProgressMode.STRAIGHT;
+            private AnimationLoopMode loopMode = AnimationLoopMode.STRAIGHT;
 
             private Builder(long ticks) {
                 this.ticks = ticks;
@@ -126,7 +119,7 @@ public sealed interface Animation {
                 return this;
             }
 
-            public Builder loop(AnimationProgressMode loopMode) {
+            public Builder loop(AnimationLoopMode loopMode) {
                 this.loopMode = loopMode;
                 return this;
             }
@@ -186,7 +179,7 @@ public sealed interface Animation {
         }
 
         @Override
-        public void mutate(AnimationPoseNew pose, AnimationData data) {
+        public void mutate(AnimationPose pose, AnimationData data) {
             for (Animation animation : animations) {
                 if (animation.isFinished(data)) continue;
                 animation.mutate(pose, data);
@@ -208,7 +201,7 @@ public sealed interface Animation {
         }
 
         @Override
-        public void mutate(AnimationPoseNew pose, AnimationData data) {
+        public void mutate(AnimationPose pose, AnimationData data) {
             frame.applyTo(pose, data, 1f);
         }
 
