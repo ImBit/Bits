@@ -10,12 +10,14 @@ package xyz.bitsquidd.bits.paper.location.containable.region;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.bukkit.World;
+import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
 import xyz.bitsquidd.bits.paper.location.containable.Containable;
 import xyz.bitsquidd.bits.paper.location.containable.area.visualisation.impl.RegionVisualiser;
 
 import java.util.Set;
+
 
 /**
  * Represents a region in a world: a defined area that can contain locations and blocks.
@@ -32,9 +34,15 @@ import java.util.Set;
 public abstract class Region implements Containable {
     protected final World world;
 
+    protected final Quaternionf rotation;
 
     protected Region(World world) {
+        this(world, new Quaternionf());
+    }
+
+    protected Region(World world, Quaternionf rotation) {
         this.world = world;
+        this.rotation = new Quaternionf(rotation);
     }
 
 
@@ -43,7 +51,18 @@ public abstract class Region implements Containable {
     public final World world() {
         return world;
     }
+
+    public final Quaternionf rotation() {
+        return new Quaternionf(rotation);
+    }
     //endregion
+
+    
+    protected final Vector3d toLocal(double x, double y, double z, double centerX, double centerY, double centerZ) {
+        Vector3d local = new Vector3d(x - centerX, y - centerY, z - centerZ);
+        if (!rotation.equals(new Quaternionf(), 1.0e-6f)) new Quaternionf(rotation).conjugate().transform(local);
+        return local;
+    }
 
 
     //region Mutators
