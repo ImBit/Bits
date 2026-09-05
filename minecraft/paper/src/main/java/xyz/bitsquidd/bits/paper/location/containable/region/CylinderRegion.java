@@ -30,43 +30,53 @@ import java.util.Set;
 
 public final class CylinderRegion extends Region {
     private final BlockPos centerBottom;
-    private final double radius;
+    private final double radiusX;
+    private final double radiusZ;
     private final double height;
 
     @JsonCreator
-    public CylinderRegion(@JsonProperty("world") World world, @JsonProperty("centerBottom") BlockPos centerBottom, @JsonProperty("radius") double radius, @JsonProperty("height") double height) {
-        this(world, centerBottom, radius, height, new Quaternionf());
+    public CylinderRegion(
+      @JsonProperty("world") World world, @JsonProperty("centerBottom") BlockPos centerBottom,
+      @JsonProperty("radiusX") double radiusX, @JsonProperty("radiusZ") double radiusZ, @JsonProperty("height") double height
+    ) {
+        this(world, centerBottom, radiusX, radiusZ, height, new Quaternionf());
     }
 
-    public CylinderRegion(World world, BlockPos centerBottom, double radius, double height, Quaternionf rotation) {
+    public CylinderRegion(World world, BlockPos centerBottom, double radiusX, double radiusZ, double height, Quaternionf rotation) {
         super(world, rotation);
-        if (radius <= 0) throw new IllegalArgumentException("Radius must be positive");
+        if (radiusX <= 0 || radiusZ <= 0) throw new IllegalArgumentException("Radii must be positive");
         if (height <= 0) throw new IllegalArgumentException("Height must be positive");
         this.centerBottom = centerBottom;
-        this.radius = radius;
+        this.radiusX = radiusX;
+        this.radiusZ = radiusZ;
         this.height = height;
     }
 
-    public CylinderRegion(Location centerBottom, double radius, double height) {
-        this(centerBottom.getWorld(), BlockPos.of(centerBottom), radius, height);
+    public CylinderRegion(World world, BlockPos centerBottom, double radius, double height) {
+        this(world, centerBottom, radius, radius, height, new Quaternionf());
     }
 
-    /**
-     * @since 0.0.26
-     **/
-    public CylinderRegion(Location centerBottom, double radius, double height, Quaternionf rotation) {
-        this(centerBottom.getWorld(), BlockPos.of(centerBottom), radius, height, rotation);
+    public CylinderRegion(Location centerBottom, double radiusX, double radiusZ, double height) {
+        this(centerBottom.getWorld(), BlockPos.of(centerBottom), radiusX, radiusZ, height);
+    }
+
+    public CylinderRegion(Location centerBottom, double radiusX, double radiusZ, double height, Quaternionf rotation) {
+        this(centerBottom.getWorld(), BlockPos.of(centerBottom), radiusX, radiusZ, height, rotation);
+    }
+
+    public CylinderRegion(Location centerBottom, double radius, double height) {
+        this(centerBottom, radius, radius, height);
     }
 
     //region Java Object Overrides
     @Override
     public String toString() {
-        return "CylinderRegion{centerBottom=" + centerBottom + ", radius=" + radius + ", height=" + height + ", rotation=" + rotation + "}";
+        return "CylinderRegion{centerBottom=" + centerBottom + ", rx=" + radiusX + ", rz=" + radiusZ + ", height=" + height + ", rotation=" + rotation + "}";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(world, centerBottom, radius, height, rotation);
+        return Objects.hash(world, centerBottom, radiusX, radiusZ, height, rotation);
     }
 
     @Override
@@ -75,7 +85,8 @@ public final class CylinderRegion extends Region {
         if (!(obj instanceof CylinderRegion other)) return false;
         return Objects.equals(world, other.world) &&
           Objects.equals(centerBottom, other.centerBottom) &&
-          Double.compare(radius, other.radius) == 0 &&
+          Double.compare(radiusX, other.radiusX) == 0 &&
+          Double.compare(radiusZ, other.radiusZ) == 0 &&
           Double.compare(height, other.height) == 0 &&
           rotation.equals(other.rotation, 1.0e-6f);
     }
@@ -89,7 +100,9 @@ public final class CylinderRegion extends Region {
         BlockPos c = center();
         Vector3d local = toLocal(v.getX(), v.getY(), v.getZ(), c.x, c.y, c.z);
 
-        return Math.abs(local.y) <= height / 2.0 && (local.x * local.x + local.z * local.z) <= (radius * radius);
+        double dx = local.x / radiusX;
+        double dz = local.z / radiusZ;
+        return Math.abs(local.y) <= height / 2.0 && (dx * dx + dz * dz) <= 1.0;
     }
 
     @Override
@@ -99,21 +112,22 @@ public final class CylinderRegion extends Region {
 
     @Override
     public BlockPos min() {
-        return BlockPos.of(centerBottom.x - radius, centerBottom.y, centerBottom.z - radius);
+        return BlockPos.of(centerBottom.x - radiusX, centerBottom.y, centerBottom.z - radiusZ);
     }
 
     @Override
     public BlockPos max() {
-        return BlockPos.of(centerBottom.x + radius, centerBottom.y + height, centerBottom.z + radius);
+        return BlockPos.of(centerBottom.x + radiusX, centerBottom.y + height, centerBottom.z + radiusZ);
     }
 
 
     @Override
     public Optional<BlockPos> getRandomLocation() {
         double angle = Math.random() * 2 * Math.PI;
-        double distance = Math.random() * radius;
-        double x = distance * Math.cos(angle);
-        double z = distance * Math.sin(angle);
+        double distance = Math.random();
+        double x = distance * Math.cos(angle) * radiusX;
+        double z = distance * Math.sin(angle) * radiusZ;
+        // Relative to center, not centerBottom - rotation() is defined about center().
         double y = Math.random() * height - height / 2.0;
 
         Vector3d local = new Vector3d(x, y, z);
@@ -125,12 +139,11 @@ public final class CylinderRegion extends Region {
 
     @Override
     public CylinderRegion expand(double x, double y, double z) {
-        // TODO independent radial and axial expansion
-        double radialExpand = Math.max(x, z);
         return new CylinderRegion(
           world,
           BlockPos.of(centerBottom.x, centerBottom.y - y, centerBottom.z),
-          radius + radialExpand,
+          radiusX + x,
+          radiusZ + z,
           height + y * 2,
           rotation
         );
@@ -141,7 +154,7 @@ public final class CylinderRegion extends Region {
         return new CylinderRegion(
           world,
           BlockPos.of(centerBottom.x + x, centerBottom.y + y, centerBottom.z + z),
-          radius, height, rotation
+          radiusX, radiusZ, height, rotation
         );
     }
 
@@ -150,8 +163,12 @@ public final class CylinderRegion extends Region {
         return centerBottom;
     }
 
-    public double getRadius() {
-        return radius;
+    public double getRadiusX() {
+        return radiusX;
+    }
+
+    public double getRadiusZ() {
+        return radiusZ;
     }
 
     public double getHeight() {
@@ -159,6 +176,7 @@ public final class CylinderRegion extends Region {
     }
 
 
+    // TODO: Not rotation-aware
     @Override
     protected Set<RegionVisualiser> createVisualiser() {
         Set<RegionVisualiser> visualisers = new HashSet<>();
@@ -166,14 +184,10 @@ public final class CylinderRegion extends Region {
         int edges = 8;
         BlockPos c = center();
 
-        // TODO: Not rotation-aware.
-        visualisers.add(Edge.arc(BlockPos.of(c.x, min().y, c.z), radius, 0, 360, 0, 0));
-        visualisers.add(Edge.arc(BlockPos.of(c.x, max().y, c.z), radius, 0, 360, 0, 0));
-
         for (int i = 0; i < edges; i++) {
             double angle = 2 * Math.PI * i / edges;
-            double x = c.x + radius * Math.cos(angle);
-            double z = c.z + radius * Math.sin(angle);
+            double x = c.x + radiusX * Math.cos(angle);
+            double z = c.z + radiusZ * Math.sin(angle);
             visualisers.add(Edge.straight(
               BlockPos.of(x, min().y, z),
               BlockPos.of(x, max().y, z)
